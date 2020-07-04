@@ -59,21 +59,19 @@ class PostCell: UITableViewCell {
         if post.image != nil {
             cell.attachedImageView.image = post.image
 
-            let myImageWidth = post.image!.size.width
-            let myImageHeight = post.image!.size.height
-            let myViewWidth = cell.attachedImageView.frame.size.width
+            let imageWidth = post.image!.size.width
+            //let myImageHeight = post.image!.size.height
+            //let myViewWidth = cell.attachedImageView.frame.size.width
 
-            let ratio = myViewWidth / myImageWidth
-            let scaledHeight = myImageHeight * ratio
+            //let ratio = myViewWidth / myImageWidth
+            //let scaledHeight = myImageHeight * ratio
 
-            let lol = post.image?.size.height
-
-            // return CGSize(width: myViewWidth, height: scaledHeight)
+            let imageHeight = post.image?.size.height
 
             // cell.attachedImageView.image = UIImage(systemName: "person")
             cell.attachedImageView.snp.makeConstraints { make in
-                make.width.equalTo(myImageWidth)
-                make.height.equalTo(lol! / 6)
+                make.width.equalTo(imageWidth)
+                make.height.equalTo(imageHeight! / 6)
             }
         } else {
             cell.attachedImageView.image = nil

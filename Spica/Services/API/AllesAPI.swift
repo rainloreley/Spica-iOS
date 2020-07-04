@@ -21,14 +21,14 @@ public class AllesAPI {
         ], encoding: JSONEncoding.default).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
             case .success:
-                let responseJSON = JSON(response.data)
+                let responseJSON = JSON(response.data!)
 
                 if !responseJSON["err"].exists() {
                     KeychainWrapper.standard.set(responseJSON["token"].string!, forKey: "dev.abmgrt.spica.user.token")
                     KeychainWrapper.standard.set(username, forKey: "dev.abmgrt.spica.user.username")
                     completion!(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
                 } else {
-                    var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                     completion!(.failure(apiError))
                 }
             case .failure:
@@ -44,18 +44,18 @@ public class AllesAPI {
         ]).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
             case .success:
-                let responseJSON = JSON(response.data)
+                let responseJSON = JSON(response.data!)
 
                 if !responseJSON["err"].exists() {
                     var tempPosts: [Post] = []
                     DispatchQueue.global(qos: .utility).async {
-                        for (key, subJSON) in responseJSON["feed"] {
+                        for (_, subJSON) in responseJSON["feed"] {
                             tempPosts.append(Post(id: subJSON["slug"].string!, author: User(id: subJSON["author"]["id"].string!, username: subJSON["author"]["username"].string!, displayName: subJSON["author"]["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"])")!, isPlus: subJSON["author"]["plus"].bool!, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"])")!), isFollowing: false, followsMe: false, about: ""), date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : nil, voteStatus: subJSON["vote"].int!))
                         }
                         completion!(.success(tempPosts))
                     }
                 } else {
-                    var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
 
                     completion!(.failure(apiError))
                 }
@@ -90,14 +90,14 @@ public class AllesAPI {
         ]).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
             case .success:
-                let responseJSON = JSON(response.data)
+                let responseJSON = JSON(response.data!)
 
                 if !responseJSON["err"].exists() {
                     // self.user = nil
                     let newUser = User(id: responseJSON["id"].string!, username: responseJSON["username"].string!, displayName: responseJSON["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(responseJSON["username"])")!, isPlus: responseJSON["plus"].bool!, rubies: responseJSON["rubies"].int!, followers: responseJSON["followers"].int!, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(responseJSON["username"])")!), isFollowing: responseJSON["following"].bool!, followsMe: responseJSON["followingUser"].bool!, about: responseJSON["about"].string!)
                     completion!(.success(newUser))
                 } else {
-                    var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                     completion!(.failure(apiError))
                 }
 
@@ -114,18 +114,18 @@ public class AllesAPI {
         ]).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
             case .success:
-                let responseJSON = JSON(response.data)
+                let responseJSON = JSON(response.data!)
 
                 if !responseJSON["err"].exists() {
                     var tempPosts: [Post] = []
 
                     DispatchQueue.global(qos: .utility).async {
-                        for (key, subJSON) in responseJSON["posts"] {
+                        for (_, subJSON) in responseJSON["posts"] {
                             var uiImage: UIImage?
                             if subJSON["image"].string == nil {
                                 uiImage = nil
                             } else {
-                                var imageURL = URL(string: subJSON["image"].string!)
+                                let imageURL = URL(string: subJSON["image"].string!)
 
                                 uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
                             }
@@ -137,7 +137,7 @@ public class AllesAPI {
                         completion!(.success(tempPosts))
                     }
                 } else {
-                    var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                     completion!(.failure(apiError))
                 }
 
@@ -154,18 +154,18 @@ public class AllesAPI {
         ]).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
             case .success:
-                let responseJSON = JSON(response.data)
+                let responseJSON = JSON(response.data!)
 
                 if !responseJSON["err"].exists() {
                     var tempPosts: [Post] = []
 
                     DispatchQueue.global(qos: .utility).async {
-                        for (key, subJSON) in responseJSON["mentions"] {
+                        for (_, subJSON) in responseJSON["mentions"] {
                             var uiImage: UIImage?
                             if subJSON["image"].string == nil {
                                 uiImage = nil
                             } else {
-                                var imageURL = URL(string: subJSON["image"].string!)
+                                let imageURL = URL(string: subJSON["image"].string!)
 
                                 uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
                             }
@@ -177,7 +177,7 @@ public class AllesAPI {
                         completion!(.success(tempPosts))
                     }
                 } else {
-                    var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                     completion!(.failure(apiError))
                 }
             case .failure:
@@ -193,31 +193,31 @@ public class AllesAPI {
         ]).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
             case .success:
-                let responseJSON = JSON(response.data)
+                let responseJSON = JSON(response.data!)
 
                 if !responseJSON["err"].exists() {
                     var uiImage: UIImage?
                     if responseJSON["image"].string == nil {
                         uiImage = nil
                     } else {
-                        var imageURL = URL(string: responseJSON["image"].string!)
+                        let imageURL = URL(string: responseJSON["image"].string!)
 
                         uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
                     }
 
                     var tempPostDetail = PostDetail(ancestors: [], post: Post(id: "", author: User(id: "", username: "", displayName: "", imageURL: URL(string: "https://avatar.alles.cx/u/adrian")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person")!, isFollowing: false, followsMe: false, about: ""), date: Date(), repliesCount: 0, score: 0, content: "", image: UIImage(systemName: "person"), voteStatus: 0), replies: [])
 
-                    var postCreator = AllesAPI.default.loadUser(username: responseJSON["author"]["username"].string!) { userResult in
+                    AllesAPI.default.loadUser(username: responseJSON["author"]["username"].string!) { userResult in
                         switch userResult {
                         case let .success(postUser):
                             tempPostDetail.post = Post(id: responseJSON["slug"].string!, author: postUser, date: Date.dateFromISOString(string: responseJSON["createdAt"].string!)!, repliesCount: responseJSON["replyCount"].int!, score: responseJSON["score"].int!, content: responseJSON["content"].string!, image: uiImage, voteStatus: responseJSON["vote"].int!)
 
-                            for (key, subJSON) in responseJSON["ancestors"] {
+                            for (_, subJSON) in responseJSON["ancestors"] {
                                 var uiImage: UIImage?
                                 if subJSON["image"].string == nil {
                                     uiImage = nil
                                 } else {
-                                    var imageURL = URL(string: subJSON["image"].string!)
+                                    let imageURL = URL(string: subJSON["image"].string!)
 
                                     uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
                                 }
@@ -226,12 +226,12 @@ public class AllesAPI {
                                 tempPostDetail.ancestors.append(Post(id: subJSON["slug"].string!, author: User(id: subJSON["author"]["id"].string!, username: subJSON["author"]["username"].string!, displayName: subJSON["author"]["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!, isPlus: subJSON["author"]["plus"].bool!, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!), isFollowing: false, followsMe: false, about: ""), date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: uiImage, voteStatus: subJSON["vote"].int!))
                             }
 
-                            for (key, subJSON) in responseJSON["replies"] {
+                            for (_, subJSON) in responseJSON["replies"] {
                                 var uiImage: UIImage?
                                 if subJSON["image"].string == nil {
                                     uiImage = nil
                                 } else {
-                                    var imageURL = URL(string: subJSON["image"].string!)
+                                    let imageURL = URL(string: subJSON["image"].string!)
 
                                     uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
                                 }
@@ -247,7 +247,7 @@ public class AllesAPI {
                         }
                     }
                 } else {
-                    var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                     completion!(.failure(apiError))
                 }
 
@@ -276,14 +276,14 @@ public class AllesAPI {
         ]).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
             case .success:
-                let responseJSON = JSON(response.data)
+                let responseJSON = JSON(response.data!)
 
                 if !responseJSON["err"].exists() {
                     if responseJSON["slug"].exists() {
                         completion!(.success(SentPost(id: responseJSON["slug"].string!, username: responseJSON["username"].string!)))
                     }
                 } else {
-                    var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                     completion!(.failure(apiError))
                 }
 
@@ -301,12 +301,12 @@ public class AllesAPI {
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {
                 case .success:
-                    let responseJSON = JSON(response.data)
+                    let responseJSON = JSON(response.data!)
 
                     if !responseJSON["err"].exists() {
                         completion!(.success(post))
                     } else {
-                        var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                        let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                         completion!(.failure(apiError))
                     }
 
@@ -318,6 +318,36 @@ public class AllesAPI {
             completion!(.failure(AllesAPIErrorMessage(message: "The specified value is not allowed", error: .unknown, actionParameter: nil, action: nil)))
         }
     }
+
+    public func performFollowAction(username: String, action: FollowAction, completion: ((Result<FollowAction, AllesAPIErrorMessage>) -> Void)?) {
+        let actionString = action == .follow ? "follow" : "unfollow"
+        let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token")
+        AF.request("https://alles.cx/api/users/\(username)/\(actionString)", method: .post, headers: [
+            "Authorization": authKey!,
+        ]).responseJSON(queue: .global(qos: .utility)) { response in
+            switch response.result {
+            case .success:
+                let responseJSON = JSON(response.data!)
+
+                if !responseJSON["err"].exists() {
+                    completion!(.success(action))
+                } else {
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+
+                    completion!(.failure(apiError))
+                }
+
+            case .failure:
+
+                completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+            }
+        }
+    }
+}
+
+public enum FollowAction {
+    case follow
+    case unfollow
 }
 
 struct PostDetail {

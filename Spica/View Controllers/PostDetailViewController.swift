@@ -116,7 +116,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
         AllesAPI.default.votePost(post: subSelectedPost, value: selectedVoteStatus) { result in
             switch result {
-            case let .success(posts):
+				case .success(_):
                 DispatchQueue.main.async {
                     if section == 0 {
                         if self.postAncestors[row].voteStatus == -1 {
@@ -186,7 +186,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
         AllesAPI.default.votePost(post: subSelectedPost, value: selectedVoteStatus) { result in
             switch result {
-            case let .success(posts):
+				case .success(_):
                 DispatchQueue.main.async {
                     if section == 0 {
                         if self.postAncestors[row].voteStatus == 1 {
@@ -277,7 +277,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             post = postAncestors[indexPath.row]
 
-            var builtCell = cell.buildCell(cell: cell, post: post)
+			let builtCell = cell.buildCell(cell: cell, post: post)
             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
             builtCell.pfpView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
             builtCell.pfpView.addGestureRecognizer(tap)
@@ -317,7 +317,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             post = postReplies[indexPath.row]
 
-            var builtCell = cell.buildCell(cell: cell, post: post)
+			let builtCell = cell.buildCell(cell: cell, post: post)
             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
             builtCell.pfpView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
             builtCell.pfpView.addGestureRecognizer(tap)

@@ -119,7 +119,7 @@ class LoginViewController: UIViewController {
         if !usernameField.text!.isEmpty && !passwordField.text!.isEmpty {
             AllesAPI.default.signInUser(username: usernameField.text!, password: passwordField.text!) { result in
                 switch result {
-                case let .success(user):
+					case .success(_):
                     DispatchQueue.main.async {
                         let tabBar = UITabBarController()
                         let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
