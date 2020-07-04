@@ -31,8 +31,8 @@ public class AllesAPI {
                     var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                     completion!(.failure(apiError))
                 }
-            case .failure:
-                completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+            case let .failure(err):
+                completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
             }
         }
     }
@@ -60,8 +60,8 @@ public class AllesAPI {
                     completion!(.failure(apiError))
                 }
 
-            case .failure:
-                completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+            case let .failure(err):
+                completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
             }
         }
     }
@@ -101,8 +101,8 @@ public class AllesAPI {
                     completion!(.failure(apiError))
                 }
 
-            case .failure:
-                completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+            case let .failure(err):
+                completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
             }
         }
     }
@@ -141,8 +141,8 @@ public class AllesAPI {
                     completion!(.failure(apiError))
                 }
 
-            case .failure:
-                completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+            case let .failure(err):
+                completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
             }
         }
     }
@@ -180,8 +180,8 @@ public class AllesAPI {
                     var apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                     completion!(.failure(apiError))
                 }
-            case .failure:
-                completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+            case let .failure(err):
+                completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
             }
         }
     }
@@ -251,8 +251,8 @@ public class AllesAPI {
                     completion!(.failure(apiError))
                 }
 
-            case .failure:
-                completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+            case let .failure(err):
+                completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
             }
         }
     }
@@ -260,18 +260,24 @@ public class AllesAPI {
     public func sendPost(newPost: NewPost, completion: ((Result<SentPost, AllesAPIErrorMessage>) -> Void)?) {
         let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token")
         // TODO: Handle Image Upload
-        if newPost.image != nil {
-            // DO SOMETHING COOL
-        }
-        var newPostConstruct: [String: Any] = [
+        
+        var newPostConstruct: [String: String] = [
             "content": newPost.content,
         ]
+		
+		if newPost.image != nil {
+			//let base64Image = newPost.image!.toBase64()
+			let base64Image = "data:image/jpeg;base64,\((newPost.image!.jpegData(compressionQuality: 0.5)?.base64EncodedString())!)"
+			
+			print(base64Image.suffix(20))
+			newPostConstruct["image"] = "\(base64Image)"
+		}
 
         if newPost.parent != nil {
             newPostConstruct["parent"] = newPost.parent
         }
 
-        AF.request("https://alles.cx/api/post", method: .post, parameters: newPostConstruct, encoding: JSONEncoding.default, headers: [
+		AF.request("https://alles.cx/api/post", method: .post, parameters: newPostConstruct, encoding: JSONEncoding.prettyPrinted, headers: [
             "Authorization": authKey!,
         ]).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
@@ -287,8 +293,8 @@ public class AllesAPI {
                     completion!(.failure(apiError))
                 }
 
-            case .failure:
-                completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+            case let .failure(err):
+				completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
             }
         }
     }
@@ -310,8 +316,8 @@ public class AllesAPI {
                         completion!(.failure(apiError))
                     }
 
-                case .failure:
-                    completion!(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+                case let .failure(err):
+                    completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
                 }
             }
         } else {
