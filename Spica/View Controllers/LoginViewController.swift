@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     var usernameLabel: UILabel!
     var passwordLabel: UILabel!
     var usernameField: UITextField!
@@ -15,14 +15,21 @@ class LoginViewController: UIViewController {
     var signInButton: UIButton!
 
     var createAccountButton: UIButton!
+	
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+		self.view.endEditing(true)
+		return false
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
 
         hideKeyboardWhenTappedAround()
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+		
+		
+        /*NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)*/
         navigationItem.title = "Alles Login"
         navigationController?.navigationBar.prefersLargeTitles = true
 
@@ -35,7 +42,7 @@ class LoginViewController: UIViewController {
 
         usernameField.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
-            make.centerY.equalTo(view.snp.centerY).offset(-32)
+            make.centerY.equalTo(view.snp.centerY).offset(-90)
             make.width.equalTo(view.snp.width).offset(-64)
             make.height.equalTo(40)
         }
@@ -73,6 +80,9 @@ class LoginViewController: UIViewController {
             make.width.equalTo(view.snp.width).offset(-64)
             make.height.equalTo(40)
         }
+		
+		self.usernameField.delegate = self
+		self.passwordField.delegate = self
 
         signInButton = UIButton(type: .system)
         signInButton.backgroundColor = UIColor(named: "PostButtonColor")
