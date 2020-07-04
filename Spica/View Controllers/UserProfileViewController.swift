@@ -112,7 +112,7 @@ class UserProfileViewController: UIViewController {
 
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
-            case let .success(posts):
+            case .success:
                 DispatchQueue.main.async {
                     if self.userPosts[sender.tag].voteStatus == -1 {
                         self.userPosts[sender.tag].score += 2
@@ -158,7 +158,7 @@ class UserProfileViewController: UIViewController {
 
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
-            case let .success(posts):
+            case .success:
                 DispatchQueue.main.async {
                     if self.userPosts[sender.tag].voteStatus == 1 {
                         self.userPosts[sender.tag].score -= 2
@@ -174,6 +174,36 @@ class UserProfileViewController: UIViewController {
                     self.tableView.endUpdates()
                 }
                 self.loadPosts()
+
+            case let .failure(apiError):
+                DispatchQueue.main.async {
+                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+                        if apiError.action != nil, apiError.actionParameter != nil {
+                            if apiError.action == AllesAPIErrorAction.navigate {
+                                if apiError.actionParameter == "login" {
+                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                                    mySceneDelegate.window?.makeKeyAndVisible()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @objc func followUnfollowUser() {
+        AllesAPI.default.performFollowAction(username: user.username, action: user.isFollowing ? .unfollow : .follow) { result in
+            switch result {
+            case let .success(followStatus):
+                DispatchQueue.main.async {
+                    self.user.isFollowing = followStatus == .follow ? true : false
+
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -265,11 +295,13 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
                 cell.followBtn.layer.cornerRadius = 12
             }
 
+            cell.followBtn.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
+
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
             let post = userPosts[indexPath.row]
-            var builtCell = cell.buildCell(cell: cell, post: post)
+            let builtCell = cell.buildCell(cell: cell, post: post)
             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
             builtCell.pfpView.tag = indexPath.row
             builtCell.pfpView.addGestureRecognizer(tap)

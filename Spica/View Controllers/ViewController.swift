@@ -114,7 +114,7 @@ class ViewController: UIViewController, PostCreateDelegate {
 
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
-            case let .success(posts):
+				case .success(_):
                 DispatchQueue.main.async {
                     if self.posts[sender.tag].voteStatus == -1 {
                         self.posts[sender.tag].score += 2
@@ -160,7 +160,7 @@ class ViewController: UIViewController, PostCreateDelegate {
 
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
-            case let .success(posts):
+				case .success(_):
                 DispatchQueue.main.async {
                     if self.posts[sender.tag].voteStatus == 1 {
                         self.posts[sender.tag].score -= 2
@@ -220,7 +220,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
         let post = posts[indexPath.section]
 
-        var builtCell = cell.buildCell(cell: cell, post: post)
+		let builtCell = cell.buildCell(cell: cell, post: post)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
         builtCell.pfpView.tag = indexPath.section
         builtCell.pfpView.addGestureRecognizer(tap)

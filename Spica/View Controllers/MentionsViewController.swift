@@ -83,7 +83,7 @@ class MentionsViewController: UIViewController {
 
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
-            case let .success(posts):
+				case .success(_):
                 DispatchQueue.main.async {
                     if self.mentions[sender.tag].voteStatus == -1 {
                         self.mentions[sender.tag].score += 2
@@ -129,7 +129,7 @@ class MentionsViewController: UIViewController {
 
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
-            case let .success(posts):
+				case .success(_):
                 DispatchQueue.main.async {
                     if self.mentions[sender.tag].voteStatus == 1 {
                         self.mentions[sender.tag].score -= 2
@@ -183,7 +183,7 @@ extension MentionsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
         let post = mentions[indexPath.row]
-        var builtCell = cell.buildCell(cell: cell, post: post)
+		let builtCell = cell.buildCell(cell: cell, post: post)
         let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
         builtCell.pfpView.tag = indexPath.row
         builtCell.pfpView.addGestureRecognizer(tap)
