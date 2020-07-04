@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests-frameworks.sh
+${BUILT_PRODUCTS_DIR}/KMPlaceholderTextView/KMPlaceholderTextView.framework
+${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework

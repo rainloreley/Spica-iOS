@@ -1,0 +1,20 @@
+PODS:
+  - KMPlaceholderTextView (1.4.0)
+  - SwiftKeychainWrapper (3.4.0)
+
+DEPENDENCIES:
+  - KMPlaceholderTextView (~> 1.4.0)
+  - SwiftKeychainWrapper
+
+SPEC REPOS:
+  trunk:
+    - KMPlaceholderTextView
+    - SwiftKeychainWrapper
+
+SPEC CHECKSUMS:
+  KMPlaceholderTextView: 2206c3df39979e9396e2d96fa9f427a8951121b0
+  SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
+
+PODFILE CHECKSUM: ab09ff98717c792d8802c9e88b2c50f75b4e9290
+
+COCOAPODS: 1.9.3

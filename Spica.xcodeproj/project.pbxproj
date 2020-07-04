@@ -1,0 +1,1046 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 52;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0252C224ADE30700A4E4FD /* LoginViewController.swift */; };
+		3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */; };
+		3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4B92F924AA9176000534FD /* SnapKit */; };
+		3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */; };
+		3A57CF8324AD0AFE00DCA057 /* PostCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */; };
+		3A57CF8624AD12E900DCA057 /* UITextView+Placeholder in Frameworks */ = {isa = PBXBuildFile; productRef = 3A57CF8524AD12E900DCA057 /* UITextView+Placeholder */; };
+		3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */; };
+		3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */; };
+		3A7145E324AA8753000FA3C3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E224AA8753000FA3C3 /* ViewController.swift */; };
+		3A7145E924AA8753000FA3C3 /* Alles_App.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E724AA8753000FA3C3 /* Alles_App.xcdatamodeld */; };
+		3A7145EB24AA8755000FA3C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A7145EA24AA8755000FA3C3 /* Assets.xcassets */; };
+		3A7145EE24AA8755000FA3C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */; };
+		3A7145F924AA8756000FA3C3 /* Alles_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145F824AA8756000FA3C3 /* Alles_AppTests.swift */; };
+		3A71460424AA8756000FA3C3 /* Alles_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71460324AA8756000FA3C3 /* Alles_AppUITests.swift */; };
+		3A71461224AA88FC000FA3C3 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461124AA88FC000FA3C3 /* Post.swift */; };
+		3A71461424AA8907000FA3C3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461324AA8907000FA3C3 /* User.swift */; };
+		3A8BE09C24AB4B55001F313F /* UserHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BE09A24AB4B55001F313F /* UserHeaderCell.swift */; };
+		3A8BE09D24AB4B55001F313F /* UserHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A8BE09B24AB4B55001F313F /* UserHeaderCell.xib */; };
+		3A96F69724AAA31A00482C5A /* PostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A96F69624AAA31A00482C5A /* PostCell.xib */; };
+		3A96F69924AAA52400482C5A /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F69824AAA52400482C5A /* PostCell.swift */; };
+		3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */; };
+		3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F69E24AB3FD100482C5A /* AllesAPI.swift */; };
+		3A96F6A224AB403100482C5A /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 3A96F6A124AB403100482C5A /* Alamofire */; };
+		3A96F6A524AB404100482C5A /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 3A96F6A424AB404100482C5A /* SwiftyJSON */; };
+		3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F6A624AB410900482C5A /* Extensions.swift */; };
+		3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */; };
+		3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA12EF324B0F3CD009C904A /* EZAlertController.swift */; };
+		3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */; };
+		3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */; };
+		3AD689BA24ADDB5E001F485E /* AllesAPIErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD689B924ADDB5E001F485E /* AllesAPIErrorAction.swift */; };
+		3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBFC7C24ADE7FB0064A7A4 /* SignedInUser.swift */; };
+		3ADDC58124AD162500B58DA9 /* NewPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58024AD162500B58DA9 /* NewPost.swift */; };
+		3ADDC58324AD182100B58DA9 /* SentPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58224AD182100B58DA9 /* SentPost.swift */; };
+		3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */; };
+		3ADDC58724AD213A00B58DA9 /* ReplyButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3ADDC58524AD213900B58DA9 /* ReplyButtonCell.xib */; };
+		3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */; };
+		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
+		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
+		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
+		B011E23BAC69FBCB992F7BCE /* Pods_Spica_SpicaUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AD6E55241BF74B8FFA2529 /* Pods_Spica_SpicaUITests.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3A7145F524AA8756000FA3C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A7145D324AA8753000FA3C3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A7145DA24AA8753000FA3C3;
+			remoteInfo = "Alles App";
+		};
+		3A71460024AA8756000FA3C3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A7145D324AA8753000FA3C3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3A7145DA24AA8753000FA3C3;
+			remoteInfo = "Alles App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1360C14D6EC95C923EBA37A3 /* Pods-Spica-SpicaUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica-SpicaUITests.debug.xcconfig"; path = "Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A0252C224ADE30700A4E4FD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewPlaceholder.swift; sourceTree = "<group>"; };
+		3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionsViewController.swift; sourceTree = "<group>"; };
+		3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateViewController.swift; sourceTree = "<group>"; };
+		3A7145DB24AA8753000FA3C3 /* Spica.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spica.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		3A7145E224AA8753000FA3C3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3A7145E824AA8753000FA3C3 /* Alles_App.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Alles_App.xcdatamodel; sourceTree = "<group>"; };
+		3A7145EA24AA8755000FA3C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3A7145ED24AA8755000FA3C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3A7145EF24AA8755000FA3C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A7145F424AA8756000FA3C3 /* SpicaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpicaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A7145F824AA8756000FA3C3 /* Alles_AppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alles_AppTests.swift; sourceTree = "<group>"; };
+		3A7145FA24AA8756000FA3C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A7145FF24AA8756000FA3C3 /* SpicaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpicaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A71460324AA8756000FA3C3 /* Alles_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alles_AppUITests.swift; sourceTree = "<group>"; };
+		3A71460524AA8756000FA3C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3A71461124AA88FC000FA3C3 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		3A71461324AA8907000FA3C3 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		3A8BE09A24AB4B55001F313F /* UserHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderCell.swift; sourceTree = "<group>"; };
+		3A8BE09B24AB4B55001F313F /* UserHeaderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserHeaderCell.xib; sourceTree = "<group>"; };
+		3A96F69624AAA31A00482C5A /* PostCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostCell.xib; sourceTree = "<group>"; };
+		3A96F69824AAA52400482C5A /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
+		3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		3A96F69E24AB3FD100482C5A /* AllesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPI.swift; sourceTree = "<group>"; };
+		3A96F6A624AB410900482C5A /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
+		3AA12EF324B0F3CD009C904A /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
+		3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
+		3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorMessage.swift; sourceTree = "<group>"; };
+		3AD689B924ADDB5E001F485E /* AllesAPIErrorAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorAction.swift; sourceTree = "<group>"; };
+		3ADBFC7C24ADE7FB0064A7A4 /* SignedInUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignedInUser.swift; sourceTree = "<group>"; };
+		3ADDC58024AD162500B58DA9 /* NewPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPost.swift; sourceTree = "<group>"; };
+		3ADDC58224AD182100B58DA9 /* SentPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentPost.swift; sourceTree = "<group>"; };
+		3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
+		3ADDC58524AD213900B58DA9 /* ReplyButtonCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReplyButtonCell.xib; sourceTree = "<group>"; };
+		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
+		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
+		3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.release.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.release.xcconfig"; sourceTree = "<group>"; };
+		3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
+		4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpicaTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C524B582904A24CAE1C8E21 /* Pods-Spica-SpicaUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica-SpicaUITests.release.xcconfig"; path = "Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests.release.xcconfig"; sourceTree = "<group>"; };
+		7FECC3EF9CCC0CB2A935F552 /* Pods-Spica.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.debug.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.debug.xcconfig"; sourceTree = "<group>"; };
+		80DA433143489FFFA45A5CB9 /* Pods-SpicaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpicaTests.debug.xcconfig"; path = "Target Support Files/Pods-SpicaTests/Pods-SpicaTests.debug.xcconfig"; sourceTree = "<group>"; };
+		93A13955EBB303004062ACA2 /* Pods-Alles App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App.debug.xcconfig"; path = "Target Support Files/Pods-Alles App/Pods-Alles App.debug.xcconfig"; sourceTree = "<group>"; };
+		998BED3FF0DAF05341F36F09 /* Pods-Alles App-Alles AppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.debug.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		A5F9A14A11DADF85C50E7B06 /* Pods-Alles App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App.release.xcconfig"; path = "Target Support Files/Pods-Alles App/Pods-Alles App.release.xcconfig"; sourceTree = "<group>"; };
+		A9AD6E55241BF74B8FFA2529 /* Pods_Spica_SpicaUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica_SpicaUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA1A75DABA2B3D91959C757F /* Pods-Alles AppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles AppTests.debug.xcconfig"; path = "Target Support Files/Pods-Alles AppTests/Pods-Alles AppTests.debug.xcconfig"; sourceTree = "<group>"; };
+		AC5A993F7F94C2C87F7CABDD /* Pods-SpicaTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpicaTests.release.xcconfig"; path = "Target Support Files/Pods-SpicaTests/Pods-SpicaTests.release.xcconfig"; sourceTree = "<group>"; };
+		F4682F64B75DB9ACA7B0AFCF /* Pods-Alles AppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles AppTests.release.xcconfig"; path = "Target Support Files/Pods-Alles AppTests/Pods-Alles AppTests.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3A7145D824AA8753000FA3C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A96F6A524AB404100482C5A /* SwiftyJSON in Frameworks */,
+				3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */,
+				3A57CF8624AD12E900DCA057 /* UITextView+Placeholder in Frameworks */,
+				3A96F6A224AB403100482C5A /* Alamofire in Frameworks */,
+				A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7145F124AA8756000FA3C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7145FC24AA8756000FA3C3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B011E23BAC69FBCB992F7BCE /* Pods_Spica_SpicaUITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3A5CF34B24ACBCC0002A829A /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3ADF6BC124AD24D600B7C510 /* ReplyButtonCell */,
+				3A5CF34D24ACBCD2002A829A /* UserHeaderCell */,
+				3A5CF34C24ACBCCA002A829A /* PostCell */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		3A5CF34C24ACBCCA002A829A /* PostCell */ = {
+			isa = PBXGroup;
+			children = (
+				3A96F69624AAA31A00482C5A /* PostCell.xib */,
+				3A96F69824AAA52400482C5A /* PostCell.swift */,
+			);
+			path = PostCell;
+			sourceTree = "<group>";
+		};
+		3A5CF34D24ACBCD2002A829A /* UserHeaderCell */ = {
+			isa = PBXGroup;
+			children = (
+				3A8BE09A24AB4B55001F313F /* UserHeaderCell.swift */,
+				3A8BE09B24AB4B55001F313F /* UserHeaderCell.xib */,
+			);
+			path = UserHeaderCell;
+			sourceTree = "<group>";
+		};
+		3A7145D224AA8753000FA3C3 = {
+			isa = PBXGroup;
+			children = (
+				3A7145DD24AA8753000FA3C3 /* Spica */,
+				3A7145F724AA8756000FA3C3 /* SpicaTests */,
+				3A71460224AA8756000FA3C3 /* SpicaUITests */,
+				3A7145DC24AA8753000FA3C3 /* Products */,
+				9D4452CB43DE6F344B507525 /* Pods */,
+				A1EDC432870BF5A9756658AC /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3A7145DC24AA8753000FA3C3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3A7145DB24AA8753000FA3C3 /* Spica.app */,
+				3A7145F424AA8756000FA3C3 /* SpicaTests.xctest */,
+				3A7145FF24AA8756000FA3C3 /* SpicaUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3A7145DD24AA8753000FA3C3 /* Spica */ = {
+			isa = PBXGroup;
+			children = (
+				3A5CF34B24ACBCC0002A829A /* Cells */,
+				3A96F6A924AB445100482C5A /* View Controllers */,
+				3A96F69D24AB3F9C00482C5A /* Services */,
+				3A96F69C24AB3F9300482C5A /* Data */,
+				3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */,
+				3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */,
+				3A7145EA24AA8755000FA3C3 /* Assets.xcassets */,
+				3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */,
+				3A7145EF24AA8755000FA3C3 /* Info.plist */,
+				3A7145E724AA8753000FA3C3 /* Alles_App.xcdatamodeld */,
+			);
+			path = Spica;
+			sourceTree = "<group>";
+		};
+		3A7145F724AA8756000FA3C3 /* SpicaTests */ = {
+			isa = PBXGroup;
+			children = (
+				3A7145F824AA8756000FA3C3 /* Alles_AppTests.swift */,
+				3A7145FA24AA8756000FA3C3 /* Info.plist */,
+			);
+			path = SpicaTests;
+			sourceTree = "<group>";
+		};
+		3A71460224AA8756000FA3C3 /* SpicaUITests */ = {
+			isa = PBXGroup;
+			children = (
+				3A71460324AA8756000FA3C3 /* Alles_AppUITests.swift */,
+				3A71460524AA8756000FA3C3 /* Info.plist */,
+			);
+			path = SpicaUITests;
+			sourceTree = "<group>";
+		};
+		3A96F69C24AB3F9300482C5A /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				3A71461324AA8907000FA3C3 /* User.swift */,
+				3A71461124AA88FC000FA3C3 /* Post.swift */,
+				3ADDC58024AD162500B58DA9 /* NewPost.swift */,
+				3ADDC58224AD182100B58DA9 /* SentPost.swift */,
+				3ADBFC7C24ADE7FB0064A7A4 /* SignedInUser.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		3A96F69D24AB3F9C00482C5A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3AD689B624ADDAD2001F485E /* API */,
+				3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */,
+				3A96F6A624AB410900482C5A /* Extensions.swift */,
+				3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */,
+				3AA12EF324B0F3CD009C904A /* EZAlertController.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3A96F6A924AB445100482C5A /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				3A7145E224AA8753000FA3C3 /* ViewController.swift */,
+				3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */,
+				3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */,
+				3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */,
+				3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */,
+				3A0252C224ADE30700A4E4FD /* LoginViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		3AD689B524ADDACC001F485E /* Error Handling */ = {
+			isa = PBXGroup;
+			children = (
+				3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */,
+				3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */,
+				3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */,
+				3AD689B924ADDB5E001F485E /* AllesAPIErrorAction.swift */,
+			);
+			path = "Error Handling";
+			sourceTree = "<group>";
+		};
+		3AD689B624ADDAD2001F485E /* API */ = {
+			isa = PBXGroup;
+			children = (
+				3A96F69E24AB3FD100482C5A /* AllesAPI.swift */,
+				3AD689B524ADDACC001F485E /* Error Handling */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		3ADF6BC124AD24D600B7C510 /* ReplyButtonCell */ = {
+			isa = PBXGroup;
+			children = (
+				3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */,
+				3ADDC58524AD213900B58DA9 /* ReplyButtonCell.xib */,
+			);
+			path = ReplyButtonCell;
+			sourceTree = "<group>";
+		};
+		9D4452CB43DE6F344B507525 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				93A13955EBB303004062ACA2 /* Pods-Alles App.debug.xcconfig */,
+				A5F9A14A11DADF85C50E7B06 /* Pods-Alles App.release.xcconfig */,
+				998BED3FF0DAF05341F36F09 /* Pods-Alles App-Alles AppUITests.debug.xcconfig */,
+				3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */,
+				AA1A75DABA2B3D91959C757F /* Pods-Alles AppTests.debug.xcconfig */,
+				F4682F64B75DB9ACA7B0AFCF /* Pods-Alles AppTests.release.xcconfig */,
+				7FECC3EF9CCC0CB2A935F552 /* Pods-Spica.debug.xcconfig */,
+				3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */,
+				1360C14D6EC95C923EBA37A3 /* Pods-Spica-SpicaUITests.debug.xcconfig */,
+				7C524B582904A24CAE1C8E21 /* Pods-Spica-SpicaUITests.release.xcconfig */,
+				80DA433143489FFFA45A5CB9 /* Pods-SpicaTests.debug.xcconfig */,
+				AC5A993F7F94C2C87F7CABDD /* Pods-SpicaTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A1EDC432870BF5A9756658AC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */,
+				A9AD6E55241BF74B8FFA2529 /* Pods_Spica_SpicaUITests.framework */,
+				4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3A7145DA24AA8753000FA3C3 /* Spica */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A71460824AA8756000FA3C3 /* Build configuration list for PBXNativeTarget "Spica" */;
+			buildPhases = (
+				83BC64E8F8E61D3A7AD0FF16 /* [CP] Check Pods Manifest.lock */,
+				3A7145D724AA8753000FA3C3 /* Sources */,
+				3A7145D824AA8753000FA3C3 /* Frameworks */,
+				3ADBFC7E24AE00870064A7A4 /* Increment build number */,
+				3A7145D924AA8753000FA3C3 /* Resources */,
+				8A713FC4F24B6F9C7CA07E37 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Spica;
+			packageProductDependencies = (
+				3A4B92F924AA9176000534FD /* SnapKit */,
+				3A96F6A124AB403100482C5A /* Alamofire */,
+				3A96F6A424AB404100482C5A /* SwiftyJSON */,
+				3A57CF8524AD12E900DCA057 /* UITextView+Placeholder */,
+			);
+			productName = "Alles App";
+			productReference = 3A7145DB24AA8753000FA3C3 /* Spica.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3A7145F324AA8756000FA3C3 /* SpicaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A71460B24AA8756000FA3C3 /* Build configuration list for PBXNativeTarget "SpicaTests" */;
+			buildPhases = (
+				ACAEB5DDC3C7B3113EEE08C4 /* [CP] Check Pods Manifest.lock */,
+				3A7145F024AA8756000FA3C3 /* Sources */,
+				3A7145F124AA8756000FA3C3 /* Frameworks */,
+				3A7145F224AA8756000FA3C3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3A7145F624AA8756000FA3C3 /* PBXTargetDependency */,
+			);
+			name = SpicaTests;
+			productName = "Alles AppTests";
+			productReference = 3A7145F424AA8756000FA3C3 /* SpicaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3A7145FE24AA8756000FA3C3 /* SpicaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A71460E24AA8756000FA3C3 /* Build configuration list for PBXNativeTarget "SpicaUITests" */;
+			buildPhases = (
+				0258F27F128B79ECEE945CE7 /* [CP] Check Pods Manifest.lock */,
+				3A7145FB24AA8756000FA3C3 /* Sources */,
+				3A7145FC24AA8756000FA3C3 /* Frameworks */,
+				3A7145FD24AA8756000FA3C3 /* Resources */,
+				6F1551079CF1564F02D770DA /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3A71460124AA8756000FA3C3 /* PBXTargetDependency */,
+			);
+			name = SpicaUITests;
+			productName = "Alles AppUITests";
+			productReference = 3A7145FF24AA8756000FA3C3 /* SpicaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3A7145D324AA8753000FA3C3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1200;
+				LastUpgradeCheck = 1200;
+				TargetAttributes = {
+					3A7145DA24AA8753000FA3C3 = {
+						CreatedOnToolsVersion = 12.0;
+					};
+					3A7145F324AA8756000FA3C3 = {
+						CreatedOnToolsVersion = 12.0;
+						TestTargetID = 3A7145DA24AA8753000FA3C3;
+					};
+					3A7145FE24AA8756000FA3C3 = {
+						CreatedOnToolsVersion = 12.0;
+						TestTargetID = 3A7145DA24AA8753000FA3C3;
+					};
+				};
+			};
+			buildConfigurationList = 3A7145D624AA8753000FA3C3 /* Build configuration list for PBXProject "Spica" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3A7145D224AA8753000FA3C3;
+			packageReferences = (
+				3A4B92F824AA9176000534FD /* XCRemoteSwiftPackageReference "SnapKit" */,
+				3A96F6A024AB403100482C5A /* XCRemoteSwiftPackageReference "Alamofire" */,
+				3A96F6A324AB404100482C5A /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				3A57CF8424AD12E900DCA057 /* XCRemoteSwiftPackageReference "UITextView-Placeholder" */,
+			);
+			productRefGroup = 3A7145DC24AA8753000FA3C3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3A7145DA24AA8753000FA3C3 /* Spica */,
+				3A7145F324AA8756000FA3C3 /* SpicaTests */,
+				3A7145FE24AA8756000FA3C3 /* SpicaUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3A7145D924AA8753000FA3C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7145EE24AA8755000FA3C3 /* LaunchScreen.storyboard in Resources */,
+				3A96F69724AAA31A00482C5A /* PostCell.xib in Resources */,
+				3A7145EB24AA8755000FA3C3 /* Assets.xcassets in Resources */,
+				3ADDC58724AD213A00B58DA9 /* ReplyButtonCell.xib in Resources */,
+				3A8BE09D24AB4B55001F313F /* UserHeaderCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7145F224AA8756000FA3C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7145FD24AA8756000FA3C3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0258F27F128B79ECEE945CE7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Spica-SpicaUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3ADBFC7E24AE00870064A7A4 /* Increment build number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Increment build number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\n#buildNumber=$(($buildNumber + 1))\n#/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+		6F1551079CF1564F02D770DA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		83BC64E8F8E61D3A7AD0FF16 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Spica-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8A713FC4F24B6F9C7CA07E37 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Spica/Pods-Spica-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Spica/Pods-Spica-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Spica/Pods-Spica-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ACAEB5DDC3C7B3113EEE08C4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SpicaTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3A7145D724AA8753000FA3C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
+				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
+				3ADDC58324AD182100B58DA9 /* SentPost.swift in Sources */,
+				3A7145E324AA8753000FA3C3 /* ViewController.swift in Sources */,
+				3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */,
+				3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */,
+				3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */,
+				3A71461424AA8907000FA3C3 /* User.swift in Sources */,
+				3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */,
+				3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */,
+				3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */,
+				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
+				3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */,
+				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
+				3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */,
+				3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */,
+				3A57CF8324AD0AFE00DCA057 /* PostCreateViewController.swift in Sources */,
+				3A7145E924AA8753000FA3C3 /* Alles_App.xcdatamodeld in Sources */,
+				3A71461224AA88FC000FA3C3 /* Post.swift in Sources */,
+				3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */,
+				3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */,
+				3A96F69924AAA52400482C5A /* PostCell.swift in Sources */,
+				3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */,
+				3ADDC58124AD162500B58DA9 /* NewPost.swift in Sources */,
+				3A8BE09C24AB4B55001F313F /* UserHeaderCell.swift in Sources */,
+				3AD689BA24ADDB5E001F485E /* AllesAPIErrorAction.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7145F024AA8756000FA3C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A7145F924AA8756000FA3C3 /* Alles_AppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3A7145FB24AA8756000FA3C3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3A71460424AA8756000FA3C3 /* Alles_AppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3A7145F624AA8756000FA3C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A7145DA24AA8753000FA3C3 /* Spica */;
+			targetProxy = 3A7145F524AA8756000FA3C3 /* PBXContainerItemProxy */;
+		};
+		3A71460124AA8756000FA3C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3A7145DA24AA8753000FA3C3 /* Spica */;
+			targetProxy = 3A71460024AA8756000FA3C3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3A7145ED24AA8755000FA3C3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3A71460624AA8756000FA3C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3A71460724AA8756000FA3C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3A71460924AA8756000FA3C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7FECC3EF9CCC0CB2A935F552 /* Pods-Spica.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 198;
+				DEVELOPMENT_TEAM = G8434KY9GR;
+				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.9.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3A71460A24AA8756000FA3C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 198;
+				DEVELOPMENT_TEAM = G8434KY9GR;
+				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.9.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3A71460C24AA8756000FA3C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 80DA433143489FFFA45A5CB9 /* Pods-SpicaTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8D5R3DJUXM;
+				INFOPLIST_FILE = "Alles AppTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.abmgrt.Alles-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spica.app/Spica";
+			};
+			name = Debug;
+		};
+		3A71460D24AA8756000FA3C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AC5A993F7F94C2C87F7CABDD /* Pods-SpicaTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8D5R3DJUXM;
+				INFOPLIST_FILE = "Alles AppTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.abmgrt.Alles-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Spica.app/Spica";
+			};
+			name = Release;
+		};
+		3A71460F24AA8756000FA3C3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1360C14D6EC95C923EBA37A3 /* Pods-Spica-SpicaUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8D5R3DJUXM;
+				INFOPLIST_FILE = "Alles AppUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.abmgrt.Alles-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Alles App";
+			};
+			name = Debug;
+		};
+		3A71461024AA8756000FA3C3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C524B582904A24CAE1C8E21 /* Pods-Spica-SpicaUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 8D5R3DJUXM;
+				INFOPLIST_FILE = "Alles AppUITests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "dev.abmgrt.Alles-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Alles App";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A7145D624AA8753000FA3C3 /* Build configuration list for PBXProject "Spica" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A71460624AA8756000FA3C3 /* Debug */,
+				3A71460724AA8756000FA3C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A71460824AA8756000FA3C3 /* Build configuration list for PBXNativeTarget "Spica" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A71460924AA8756000FA3C3 /* Debug */,
+				3A71460A24AA8756000FA3C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A71460B24AA8756000FA3C3 /* Build configuration list for PBXNativeTarget "SpicaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A71460C24AA8756000FA3C3 /* Debug */,
+				3A71460D24AA8756000FA3C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3A71460E24AA8756000FA3C3 /* Build configuration list for PBXNativeTarget "SpicaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A71460F24AA8756000FA3C3 /* Debug */,
+				3A71461024AA8756000FA3C3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3A4B92F824AA9176000534FD /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.1;
+			};
+		};
+		3A57CF8424AD12E900DCA057 /* XCRemoteSwiftPackageReference "UITextView-Placeholder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/UITextView-Placeholder";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
+			};
+		};
+		3A96F6A024AB403100482C5A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.2.1;
+			};
+		};
+		3A96F6A324AB404100482C5A /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3A4B92F924AA9176000534FD /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A4B92F824AA9176000534FD /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		3A57CF8524AD12E900DCA057 /* UITextView+Placeholder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A57CF8424AD12E900DCA057 /* XCRemoteSwiftPackageReference "UITextView-Placeholder" */;
+			productName = "UITextView+Placeholder";
+		};
+		3A96F6A124AB403100482C5A /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A96F6A024AB403100482C5A /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		3A96F6A424AB404100482C5A /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A96F6A324AB404100482C5A /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		3A7145E724AA8753000FA3C3 /* Alles_App.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3A7145E824AA8753000FA3C3 /* Alles_App.xcdatamodel */,
+			);
+			currentVersion = 3A7145E824AA8753000FA3C3 /* Alles_App.xcdatamodel */;
+			path = Alles_App.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 3A7145D324AA8753000FA3C3 /* Project object */;
+}
