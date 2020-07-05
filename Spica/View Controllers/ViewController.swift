@@ -7,18 +7,21 @@
 
 import SnapKit
 import UIKit
+import SwiftKeychainWrapper
 
 class ViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
     var createPostBtn: UIButton!
     var posts = [Post]()
+	
+	var refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: nil)
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(self.openOwnProfileView))
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self
@@ -28,6 +31,10 @@ class ViewController: UIViewController, PostCreateDelegate {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
+		
+		refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+		refreshControl.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
+		tableView.addSubview(refreshControl)
 
         createPostBtn = UIButton(type: .system)
         createPostBtn.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
@@ -47,6 +54,14 @@ class ViewController: UIViewController, PostCreateDelegate {
 
         // tableView.rowHeight = UITableView.automaticDimension
     }
+	
+	@objc func openOwnProfileView() {
+		let vc = UserProfileViewController()
+		let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+		vc.user = User(id: "", username: username!, displayName: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "")
+		vc.hidesBottomBarWhenPushed = true
+		navigationController?.pushViewController(vc, animated: true)
+	}
 
     @objc func openPostCreateView() {
         let vc = PostCreateViewController()
@@ -68,7 +83,7 @@ class ViewController: UIViewController, PostCreateDelegate {
         loadFeed()
     }
 
-    func loadFeed() {
+    @objc func loadFeed() {
         AllesAPI.default.loadFeed { [self] result in
             switch result {
             case let .success(posts):
@@ -76,10 +91,16 @@ class ViewController: UIViewController, PostCreateDelegate {
                 DispatchQueue.main.async {
                     self.posts = posts
                     self.tableView.reloadData()
+					if self.refreshControl.isRefreshing {
+						self.refreshControl.endRefreshing()
+					}
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
                     EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+						if self.refreshControl.isRefreshing {
+							self.refreshControl.endRefreshing()
+						}
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {

@@ -7,7 +7,6 @@ target 'Spica' do
 
  pod 'KMPlaceholderTextView', '~> 1.4.0'
  pod 'SwiftKeychainWrapper'
-
   # Pods for Spica
 
   target 'SpicaTests' do

@@ -269,7 +269,6 @@ public class AllesAPI {
 			//let base64Image = newPost.image!.toBase64()
 			let base64Image = "data:image/jpeg;base64,\((newPost.image!.jpegData(compressionQuality: 0.5)?.base64EncodedString())!)"
 			
-			print(base64Image.suffix(20))
 			newPostConstruct["image"] = "\(base64Image)"
 		}
 

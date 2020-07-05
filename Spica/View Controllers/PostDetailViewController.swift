@@ -14,6 +14,8 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
     var postAncestors = [Post]()
     var postReplies = [Post]()
+	
+	var refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +33,10 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
+		
+		refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+		refreshControl.addTarget(self, action: #selector(loadPostDetail), for: .valueChanged)
+		tableView.addSubview(refreshControl)
 
         // Do any additional setup after loading the view.
     }
@@ -43,7 +49,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         loadPostDetail()
     }
 
-    func loadPostDetail() {
+    @objc func loadPostDetail() {
         AllesAPI.default.loadPostDetail(postID: selectedPostID) { result in
             switch result {
             case let .success(newPostDetail):
@@ -53,10 +59,16 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.postAncestors.append(newPostDetail.post)
                     self.postReplies = newPostDetail.replies
                     self.tableView.reloadData()
+					if self.refreshControl.isRefreshing {
+						self.refreshControl.endRefreshing()
+					}
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
                     EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+						if self.refreshControl.isRefreshing {
+							self.refreshControl.endRefreshing()
+						}
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -294,6 +306,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "replyButtonCell", for: indexPath) as! ReplyButtonCell
 
                 cell.replyBtn.addTarget(self, action: #selector(openReplyView(_:)), for: .touchUpInside)
+				cell.backgroundColor = .clear
                 /* var sendButton = UIButton(type: .system)
                  sendButton.setTitle("Reply", for: .normal)
                  sendButton.setTitleColor(.white, for: .normal)

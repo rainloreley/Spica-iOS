@@ -9,12 +9,14 @@ import KMPlaceholderTextView
 import SnapKit
 import UIKit
 import SwiftKeychainWrapper
+import SwiftUI
+import Combine
 
 protocol PostCreateDelegate {
     func didSendPost(sentPost: SentPost)
 }
 
-class PostCreateViewController: UIViewController {
+class PostCreateViewController: UIViewController, UITextViewDelegate {
     //var sendButton: UIButton!
     var userPfp: UIImageView!
     var contentTextView: KMPlaceholderTextView!
@@ -26,6 +28,12 @@ class PostCreateViewController: UIViewController {
 	var imagePicker: UIImagePickerController!
 
     var delegate: PostCreateDelegate!
+	
+	
+	
+	private var progressBarController = ProgressBarController(progress: 0, color: .gray)
+	
+	
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +46,8 @@ class PostCreateViewController: UIViewController {
 		imagePicker.allowsEditing = false
 		imagePicker.mediaTypes = ["public.image"]
 		imagePicker.delegate = self
+		
+		
 		
 		imageButton = UIBarButtonItem(image: UIImage(systemName: "photo"), style: .plain, target: self, action: #selector(self.openImagePicker))
 		
@@ -74,6 +84,7 @@ class PostCreateViewController: UIViewController {
         contentTextView.font = .systemFont(ofSize: 18)
         contentTextView.placeholder = "What's on your mind?"
 		contentTextView.placeholderColor = UIColor.tertiaryLabel
+		contentTextView.delegate = self
 
         view.addSubview(contentTextView)
 
@@ -104,12 +115,37 @@ class PostCreateViewController: UIViewController {
             make.right.equalTo(view.snp.right).offset(-32)
 			make.bottom.equalTo(view.snp.bottom).offset(-16)
         }
+		
+		//progressRing = CircularProgressView()
+		let progressRingUI = UIHostingController(rootView: CircularProgressBar(controller: progressBarController))
+		view.addSubview(progressRingUI.view)
+		
+		
+		
+
+		progressRingUI.view.snp.makeConstraints { (make) in
+			make.width.equalTo(35)
+			make.height.equalTo(35)
+			make.top.equalTo(userPfp.snp.bottom).offset(32)
+			make.left.equalTo(view.snp.left).offset(16)
+		}
 
         // Do any additional setup after loading the view.
     }
 	
+	func textViewDidChange(_ textView: UITextView) { //Handle the text changes here
+		let calculation = Double(textView.text.count) / Double(500)
+		
+		progressBarController.progress = Float(calculation)
+		}
+	
+	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+		 let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+		 return newText.count < 501
+	}
+	
 	@objc func openImagePicker(sender: UIBarButtonItem) {
-		print(selectedImage)
+		
 		if selectedImage != nil {
 			EZAlertController.actionSheet("Image", message: "Select an action", sourceView: view, actions: [
 			UIAlertAction(title: "Select another image", style: .default, handler: { (_) in

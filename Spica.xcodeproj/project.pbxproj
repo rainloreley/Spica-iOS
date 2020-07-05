@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0252C224ADE30700A4E4FD /* LoginViewController.swift */; };
 		3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */; };
+		3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274324B1E02900425999 /* CircularProgressBar.swift */; };
+		3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274524B1E1AC00425999 /* ProgressBarController.swift */; };
 		3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4B92F924AA9176000534FD /* SnapKit */; };
 		3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */; };
 		3A57CF8324AD0AFE00DCA057 /* PostCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */; };
@@ -71,6 +73,8 @@
 		30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A0252C224ADE30700A4E4FD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewPlaceholder.swift; sourceTree = "<group>"; };
+		3A41274324B1E02900425999 /* CircularProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBar.swift; sourceTree = "<group>"; };
+		3A41274524B1E1AC00425999 /* ProgressBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
 		3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionsViewController.swift; sourceTree = "<group>"; };
 		3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateViewController.swift; sourceTree = "<group>"; };
 		3A7145DB24AA8753000FA3C3 /* Spica.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spica.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -155,6 +159,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A4038B124B1EB54002B18F1 /* ProgressBar */ = {
+			isa = PBXGroup;
+			children = (
+				3A41274324B1E02900425999 /* CircularProgressBar.swift */,
+				3A41274524B1E1AC00425999 /* ProgressBarController.swift */,
+			);
+			path = ProgressBar;
+			sourceTree = "<group>";
+		};
 		3A5CF34B24ACBCC0002A829A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,6 +280,7 @@
 		3A96F6A924AB445100482C5A /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3A4038B124B1EB54002B18F1 /* ProgressBar */,
 				3A7145E224AA8753000FA3C3 /* ViewController.swift */,
 				3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */,
 				3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */,
@@ -608,6 +622,7 @@
 			files = (
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
 				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
+				3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */,
 				3ADDC58324AD182100B58DA9 /* SentPost.swift in Sources */,
 				3A7145E324AA8753000FA3C3 /* ViewController.swift in Sources */,
 				3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */,
@@ -629,6 +644,7 @@
 				3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */,
 				3A96F69924AAA52400482C5A /* PostCell.swift in Sources */,
 				3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */,
+				3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */,
 				3ADDC58124AD162500B58DA9 /* NewPost.swift in Sources */,
 				3A8BE09C24AB4B55001F313F /* UserHeaderCell.swift in Sources */,
 				3AD689BA24ADDB5E001F485E /* AllesAPIErrorAction.swift in Sources */,
@@ -801,7 +817,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 198;
+				CURRENT_PROJECT_VERSION = 1593947495;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -824,7 +840,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 198;
+				CURRENT_PROJECT_VERSION = 1593947495;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

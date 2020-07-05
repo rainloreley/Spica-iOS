@@ -11,6 +11,8 @@ class MentionsViewController: UIViewController {
     var tableView: UITableView!
 
     var mentions = [Post]()
+	
+	var refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,10 @@ class MentionsViewController: UIViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
+		
+		refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+		refreshControl.addTarget(self, action: #selector(loadMentions), for: .valueChanged)
+		tableView.addSubview(refreshControl)
 
         // Do any additional setup after loading the view.
     }
@@ -38,17 +44,23 @@ class MentionsViewController: UIViewController {
         loadMentions()
     }
 
-    func loadMentions() {
+    @objc func loadMentions() {
         AllesAPI.default.loadMentions { result in
             switch result {
             case let .success(newPosts):
                 DispatchQueue.main.async {
                     self.mentions = newPosts
                     self.tableView.reloadData()
+					if self.refreshControl.isRefreshing {
+						self.refreshControl.endRefreshing()
+					}
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
                     EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+						if self.refreshControl.isRefreshing {
+							self.refreshControl.endRefreshing()
+						}
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {

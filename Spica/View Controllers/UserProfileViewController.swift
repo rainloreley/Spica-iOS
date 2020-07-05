@@ -6,11 +6,16 @@
 //
 
 import UIKit
+import SwiftKeychainWrapper
 
 class UserProfileViewController: UIViewController {
     var user: User!
     var tableView: UITableView!
     var userPosts = [Post]()
+	
+	var signedInUsername: String!
+	
+	var refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,12 +23,17 @@ class UserProfileViewController: UIViewController {
         view.backgroundColor = .systemBackground
 
         navigationItem.title = "\(user.displayName)"
+		signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
         navigationController?.navigationBar.prefersLargeTitles = false
+		
+		if signedInUsername == user.username {
+			navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: nil)
+		}
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView?.delegate = self
         tableView?.dataSource = self
-        tableView.bounces = false
+        //tableView.bounces = false
         tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
         tableView.register(UINib(nibName: "UserHeaderCell", bundle: nil), forCellReuseIdentifier: "userHeaderCell")
 
@@ -32,6 +42,10 @@ class UserProfileViewController: UIViewController {
         tableView.estimatedRowHeight = 108.0
 
         view.addSubview(tableView)
+		
+		refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+		refreshControl.addTarget(self, action: #selector(loadUser), for: .valueChanged)
+		tableView.addSubview(refreshControl)
         // Do any additional setup after loading the view.
     }
 
@@ -40,44 +54,63 @@ class UserProfileViewController: UIViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-        AllesAPI.default.loadUser(username: user.username) { result in
-            switch result {
-            case let .success(newUser):
-                DispatchQueue.main.async {
-                    self.user = newUser
-                    self.tableView.reloadData()
-                }
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        loadPosts()
+		loadUser()
+        
     }
+	
+	@objc func loadUser() {
+		DispatchQueue.main.async {
+			AllesAPI.default.loadUser(username: self.user.username) { result in
+				switch result {
+				case let .success(newUser):
+					DispatchQueue.main.async {
+						self.user = newUser
+						self.navigationItem.title = "\(self.user.displayName)"
+						self.tableView.reloadData()
+						self.loadPosts()
+					}
+				case let .failure(apiError):
+					DispatchQueue.main.async {
+						EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+							if self.refreshControl.isRefreshing {
+								self.refreshControl.endRefreshing()
+							}
+							if apiError.action != nil, apiError.actionParameter != nil {
+								if apiError.action == AllesAPIErrorAction.navigate {
+									if apiError.actionParameter == "login" {
+										let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+										mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+										mySceneDelegate.window?.makeKeyAndVisible()
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			
+		}
+	}
 
     func loadPosts() {
+		
         AllesAPI.default.loadUserPosts(user: user) { result in
             switch result {
             case let .success(newPosts):
                 DispatchQueue.main.async {
                     self.userPosts = newPosts
                     self.tableView.reloadData()
+					if self.refreshControl.isRefreshing {
+						self.refreshControl.endRefreshing()
+					}
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
                     EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+						if self.refreshControl.isRefreshing {
+							self.refreshControl.endRefreshing()
+						}
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -282,20 +315,31 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             attrFollowers.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.followers).count))
             cell.followerLbl.attributedText = attrFollowers
             cell.aboutTextView.text = user.about
+			
+			if signedInUsername != user.username {
+				cell.followBtn.isEnabled = true
+				if user.isFollowing {
+					cell.followBtn.setTitle("Following", for: .normal)
+					cell.followBtn.backgroundColor = .systemBlue
+					cell.followBtn.setTitleColor(.white, for: .normal)
+					cell.followBtn.layer.cornerRadius = 12
+				} else {
+					cell.followBtn.setTitle("Follow", for: .normal)
+					cell.followBtn.backgroundColor = .white
+					cell.followBtn.setTitleColor(.systemBlue, for: .normal)
+					cell.followBtn.layer.cornerRadius = 12
+				}
 
-            if user.isFollowing {
-                cell.followBtn.setTitle("Following", for: .normal)
-                cell.followBtn.backgroundColor = .systemBlue
-                cell.followBtn.setTitleColor(.white, for: .normal)
-                cell.followBtn.layer.cornerRadius = 12
-            } else {
-                cell.followBtn.setTitle("Follow", for: .normal)
-                cell.followBtn.backgroundColor = .white
-                cell.followBtn.setTitleColor(.systemBlue, for: .normal)
-                cell.followBtn.layer.cornerRadius = 12
-            }
+				cell.followBtn.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
+			}
+			else {
+				cell.followBtn.backgroundColor = .clear
+				cell.followBtn.setTitleColor(.clear, for: .normal)
+				cell.followBtn.setTitle("", for: .normal)
+				cell.followBtn.isEnabled = false
+			}
 
-            cell.followBtn.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
+           
 
             return cell
         } else {

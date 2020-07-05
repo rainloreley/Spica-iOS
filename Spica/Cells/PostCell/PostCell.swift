@@ -59,7 +59,8 @@ class PostCell: UITableViewCell {
         if post.image != nil {
             cell.attachedImageView.image = post.image
 
-            let imageWidth = post.image!.size.width
+            //let imageWidth = post.image!.size.width
+			
             //let myImageHeight = post.image!.size.height
             //let myViewWidth = cell.attachedImageView.frame.size.width
 
@@ -70,8 +71,9 @@ class PostCell: UITableViewCell {
 
             // cell.attachedImageView.image = UIImage(systemName: "person")
             cell.attachedImageView.snp.makeConstraints { make in
-                make.width.equalTo(imageWidth)
-                make.height.equalTo(imageHeight! / 6)
+				make.width.equalTo(contentView.snp.width).offset(-80)
+				make.height.equalTo(imageHeight! / 3)
+                //make.height.equalTo(imageHeight!)
             }
         } else {
             cell.attachedImageView.image = nil
