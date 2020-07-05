@@ -152,22 +152,23 @@ class PostCell: UITableViewCell, UITextViewDelegate {
 	
 
 	func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-		
-		let stringURL = URL.absoluteString
-		
-		if stringURL.hasPrefix("user:@") {
-			let username = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 6)..<stringURL.endIndex]
-			delegate.selectedUser(username: String(username), indexPath: self.indexPath)
+		if interaction == .invokeDefaultAction {
+			let stringURL = URL.absoluteString
 			
-		}
-		else if stringURL.hasPrefix("url:") {
-			let selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4)..<stringURL.endIndex]
-			delegate.selectedURL(url: String(selURL), indexPath: self.indexPath)
-		}
-		else if stringURL.hasPrefix("post:") {
-			
-			let postID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5)..<stringURL.endIndex]
-			delegate.selectedPost(post: String(postID), indexPath: self.indexPath)
+			if stringURL.hasPrefix("user:@") {
+				let username = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 6)..<stringURL.endIndex]
+				delegate.selectedUser(username: String(username), indexPath: self.indexPath)
+				
+			}
+			else if stringURL.hasPrefix("url:") {
+				let selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4)..<stringURL.endIndex]
+				delegate.selectedURL(url: String(selURL), indexPath: self.indexPath)
+			}
+			else if stringURL.hasPrefix("post:") {
+				
+				let postID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5)..<stringURL.endIndex]
+				delegate.selectedPost(post: String(postID), indexPath: self.indexPath)
+			}
 		}
 		return false
 	}
