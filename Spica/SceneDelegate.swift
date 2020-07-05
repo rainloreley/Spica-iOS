@@ -29,7 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBar.viewControllers = [homeView, mentionView]
 
         // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
-        // KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+		// KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
 
         if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token") {
             window?.rootViewController = tabBar
@@ -39,7 +39,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
 
         window?.makeKeyAndVisible()
+		
+		_ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(self.sendOnline), userInfo: nil, repeats: true)
     }
+	
+	@objc func sendOnline() {
+		AllesAPI.default.sendOnlineStatus()
+	}
 
     func sceneDidDisconnect(_: UIScene) {
         // Called as the scene is being released by the system.

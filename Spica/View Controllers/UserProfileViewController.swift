@@ -289,6 +289,12 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 
             cell.contentView.layer.backgroundColor = UIColor(named: "UserBackground")?.cgColor
             cell.contentView.layer.mask = rectShape
+			if user.isOnline {
+				cell.onlineIndicatorView.backgroundColor = .systemGreen
+			}
+			else {
+				cell.onlineIndicatorView.backgroundColor = .gray
+			}
 
             if user.isPlus {
                 // let font:UIFont? = UIFont(name: "Helvetica", size:20)

@@ -58,7 +58,7 @@ class ViewController: UIViewController, PostCreateDelegate {
 	@objc func openOwnProfileView() {
 		let vc = UserProfileViewController()
 		let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-		vc.user = User(id: "", username: username!, displayName: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "")
+		vc.user = User(id: "", username: username!, displayName: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
 		vc.hidesBottomBarWhenPushed = true
 		navigationController?.pushViewController(vc, animated: true)
 	}
