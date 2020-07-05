@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 public struct Post {
+	
     var id: String
     var author: User
     var date: Date

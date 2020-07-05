@@ -64,7 +64,7 @@ class PostCell: UITableViewCell, UITextViewDelegate {
 		let splitContent = post.content.split(separator: " ")
 			for word in splitContent {
 				
-				if word.hasPrefix("@") {
+				if word.hasPrefix("@") && word.count > 1 {
 					let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 					//let username = String(word).replacingOccurrences(of: ".", with: "")
 					let username = removeSpecialCharsFromString(text: String(word))
@@ -74,7 +74,7 @@ class PostCell: UITableViewCell, UITextViewDelegate {
 					selectablePart.addAttribute(.link, value: "user:\(username)", range: NSRange(location: 0, length: username.count))
 					attributedText.append(selectablePart)
 				}
-				else if word.hasPrefix("%") {
+				else if word.hasPrefix("%") && word.count > 1 {
 					let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 					//let username = String(word).replacingOccurrences(of: ".", with: "")
 					
@@ -86,7 +86,7 @@ class PostCell: UITableViewCell, UITextViewDelegate {
 					selectablePart.addAttribute(.link, value: "post:\(postID)", range: NSRange(location: 0, length: selectablePart.length - 1))
 					attributedText.append(selectablePart)
 				}
-				else if String(word).isValidURL {
+				else if String(word).isValidURL && word.count > 1 {
 					let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 					selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
 					//selectablePart.addAttribute(.underlineColor, value: UIColor.blue, range: NSRange(location: 0, length: selectablePart.length))

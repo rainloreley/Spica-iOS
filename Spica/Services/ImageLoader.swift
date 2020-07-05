@@ -13,8 +13,15 @@ public class ImageLoader {
     public func loadImageFromInternet(url: URL) -> UIImage {
         let tempImg: UIImage?
         let data = try? Data(contentsOf: url)
-        tempImg = UIImage(data: data!)
+		if data != nil {
+			tempImg = UIImage(data: data!)
 
-        return tempImg!
+			
+		}
+		else {
+			tempImg = UIImage(systemName: "person")
+		}
+		return tempImg!
+        
     }
 }

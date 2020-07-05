@@ -62,6 +62,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 					if self.refreshControl.isRefreshing {
 						self.refreshControl.endRefreshing()
 					}
+					self.tableView.scrollToRow(at: IndexPath(row: self.postAncestors.firstIndex(where: {$0.id == self.selectedPost.id})!, section: 0), at: .middle, animated: true)
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -378,7 +379,7 @@ extension PostDetailViewController: PostCellDelegate {
 	}
 	
 	func selectedUser(username: String, indexPath: IndexPath) {
-		let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "")
+		let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
 		let vc = UserProfileViewController()
 		vc.user = user
 		vc.hidesBottomBarWhenPushed = true

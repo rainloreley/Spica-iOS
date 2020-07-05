@@ -310,6 +310,7 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             }
 
             cell.usernameLbl.text = "@\(user.username)"
+			cell.followsYouLbl.text = user.followsMe ? "Follows you" : ""
 
             let boldFont: UIFont = UIFont.boldSystemFont(ofSize: 16)
             let notBoldFont: UIFont = UIFont.systemFont(ofSize: 16)
@@ -392,7 +393,7 @@ extension UserProfileViewController: PostCellDelegate {
 	}
 	
 	func selectedUser(username: String, indexPath: IndexPath) {
-		let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "")
+		let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
 		let vc = UserProfileViewController()
 		vc.user = user
 		vc.hidesBottomBarWhenPushed = true
