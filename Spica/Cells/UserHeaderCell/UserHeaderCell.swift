@@ -15,9 +15,9 @@ class UserHeaderCell: UITableViewCell {
     @IBOutlet var rubiesLbl: UILabel!
     @IBOutlet var aboutTextView: UITextView!
     @IBOutlet var followBtn: UIButton!
-	@IBOutlet weak var onlineIndicatorView: UIView!
-	@IBOutlet weak var followsYouLbl: UILabel!
-	
+    @IBOutlet var onlineIndicatorView: UIView!
+    @IBOutlet var followsYouLbl: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

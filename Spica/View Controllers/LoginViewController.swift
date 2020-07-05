@@ -15,21 +15,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var signInButton: UIButton!
 
     var createAccountButton: UIButton!
-	
-	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-		self.view.endEditing(true)
-		return false
-	}
+
+    func textFieldShouldReturn(_: UITextField) -> Bool {
+        view.endEditing(true)
+        return false
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
 
         hideKeyboardWhenTappedAround()
-		
-		
-        /*NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)*/
+
+        /* NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil) */
         navigationItem.title = "Alles Login"
         navigationController?.navigationBar.prefersLargeTitles = true
 
@@ -80,9 +79,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             make.width.equalTo(view.snp.width).offset(-64)
             make.height.equalTo(40)
         }
-		
-		self.usernameField.delegate = self
-		self.passwordField.delegate = self
+
+        usernameField.delegate = self
+        passwordField.delegate = self
 
         signInButton = UIButton(type: .system)
         signInButton.backgroundColor = UIColor(named: "PostButtonColor")
@@ -129,7 +128,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         if !usernameField.text!.isEmpty && !passwordField.text!.isEmpty {
             AllesAPI.default.signInUser(username: usernameField.text!, password: passwordField.text!) { result in
                 switch result {
-					case .success(_):
+                case .success:
                     DispatchQueue.main.async {
                         let tabBar = UITabBarController()
                         let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate

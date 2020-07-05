@@ -14,8 +14,8 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
     var postAncestors = [Post]()
     var postReplies = [Post]()
-	
-	var refreshControl = UIRefreshControl()
+
+    var refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,10 +33,10 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
-		
-		refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-		refreshControl.addTarget(self, action: #selector(loadPostDetail), for: .valueChanged)
-		tableView.addSubview(refreshControl)
+
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(loadPostDetail), for: .valueChanged)
+        tableView.addSubview(refreshControl)
 
         // Do any additional setup after loading the view.
     }
@@ -59,17 +59,17 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.postAncestors.append(newPostDetail.post)
                     self.postReplies = newPostDetail.replies
                     self.tableView.reloadData()
-					if self.refreshControl.isRefreshing {
-						self.refreshControl.endRefreshing()
-					}
-					self.tableView.scrollToRow(at: IndexPath(row: self.postAncestors.firstIndex(where: {$0.id == self.selectedPost.id})!, section: 0), at: .middle, animated: true)
+                    if self.refreshControl.isRefreshing {
+                        self.refreshControl.endRefreshing()
+                    }
+                    self.tableView.scrollToRow(at: IndexPath(row: self.postAncestors.firstIndex(where: { $0.id == self.selectedPost.id })!, section: 0), at: .middle, animated: true)
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
                     EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-						if self.refreshControl.isRefreshing {
-							self.refreshControl.endRefreshing()
-						}
+                        if self.refreshControl.isRefreshing {
+                            self.refreshControl.endRefreshing()
+                        }
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -129,7 +129,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
         AllesAPI.default.votePost(post: subSelectedPost, value: selectedVoteStatus) { result in
             switch result {
-				case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     if section == 0 {
                         if self.postAncestors[row].voteStatus == -1 {
@@ -199,7 +199,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
         AllesAPI.default.votePost(post: subSelectedPost, value: selectedVoteStatus) { result in
             switch result {
-				case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     if section == 0 {
                         if self.postAncestors[row].voteStatus == 1 {
@@ -290,14 +290,14 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section == 0 {
             post = postAncestors[indexPath.row]
 
-			let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
+            let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
             builtCell.pfpView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
             builtCell.pfpView.addGestureRecognizer(tap)
 
             cell.upvoteBtn.tag = Int("9\(indexPath.section)\(indexPath.row)")!
             cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-			cell.delegate = self
+            cell.delegate = self
 
             cell.downvoteBtn.tag = Int("9\(indexPath.section)\(indexPath.row)")!
             cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
@@ -308,7 +308,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "replyButtonCell", for: indexPath) as! ReplyButtonCell
 
                 cell.replyBtn.addTarget(self, action: #selector(openReplyView(_:)), for: .touchUpInside)
-				cell.backgroundColor = .clear
+                cell.backgroundColor = .clear
                 /* var sendButton = UIButton(type: .system)
                  sendButton.setTitle("Reply", for: .normal)
                  sendButton.setTitleColor(.white, for: .normal)
@@ -332,14 +332,14 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
         } else {
             post = postReplies[indexPath.row]
 
-			let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
+            let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
             builtCell.pfpView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
             builtCell.pfpView.addGestureRecognizer(tap)
 
             cell.upvoteBtn.tag = Int("9\(indexPath.section)\(indexPath.row)")!
             cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-			cell.delegate = self
+            cell.delegate = self
 
             cell.downvoteBtn.tag = Int("9\(indexPath.section)\(indexPath.row)")!
             cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
@@ -364,25 +364,24 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension PostDetailViewController: PostCellDelegate {
-	
-	func selectedPost(post: String, indexPath: IndexPath) {
-		let detailVC = PostDetailViewController()
-		detailVC.selectedPostID = post
-		detailVC.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(detailVC, animated: true)
-	}
-	
-	func selectedURL(url: String, indexPath: IndexPath) {
-		if UIApplication.shared.canOpenURL(URL(string: url)!) {
-			UIApplication.shared.open(URL(string: url)!)
-		}
-	}
-	
-	func selectedUser(username: String, indexPath: IndexPath) {
-		let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
-		let vc = UserProfileViewController()
-		vc.user = user
-		vc.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(vc, animated: true)
-	}
+    func selectedPost(post: String, indexPath _: IndexPath) {
+        let detailVC = PostDetailViewController()
+        detailVC.selectedPostID = post
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    func selectedURL(url: String, indexPath _: IndexPath) {
+        if UIApplication.shared.canOpenURL(URL(string: url)!) {
+            UIApplication.shared.open(URL(string: url)!)
+        }
+    }
+
+    func selectedUser(username: String, indexPath _: IndexPath) {
+        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        let vc = UserProfileViewController()
+        vc.user = user
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }

@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 public struct Post {
-	
     var id: String
     var author: User
     var date: Date
@@ -17,5 +16,6 @@ public struct Post {
     var score: Int
     var content: String
     var image: UIImage?
+    var imageURL: String?
     var voteStatus: Int
 }

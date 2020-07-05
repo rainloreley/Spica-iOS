@@ -20,5 +20,5 @@ public struct User {
     var isFollowing: Bool
     var followsMe: Bool
     var about: String
-	var isOnline: Bool
+    var isOnline: Bool
 }

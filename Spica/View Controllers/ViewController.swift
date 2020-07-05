@@ -6,22 +6,22 @@
 //
 
 import SnapKit
-import UIKit
 import SwiftKeychainWrapper
+import UIKit
 
 class ViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
     var createPostBtn: UIButton!
     var posts = [Post]()
-	
-	var refreshControl = UIRefreshControl()
+
+    var refreshControl = UIRefreshControl()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
-		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(self.openOwnProfileView))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self
@@ -31,10 +31,10 @@ class ViewController: UIViewController, PostCreateDelegate {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
-		
-		refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-		refreshControl.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
-		tableView.addSubview(refreshControl)
+
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
+        tableView.addSubview(refreshControl)
 
         createPostBtn = UIButton(type: .system)
         createPostBtn.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
@@ -54,14 +54,14 @@ class ViewController: UIViewController, PostCreateDelegate {
 
         // tableView.rowHeight = UITableView.automaticDimension
     }
-	
-	@objc func openOwnProfileView() {
-		let vc = UserProfileViewController()
-		let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-		vc.user = User(id: "", username: username!, displayName: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
-		vc.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(vc, animated: true)
-	}
+
+    @objc func openOwnProfileView() {
+        let vc = UserProfileViewController()
+        let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+        vc.user = User(id: "", username: username!, displayName: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
 
     @objc func openPostCreateView() {
         let vc = PostCreateViewController()
@@ -91,16 +91,16 @@ class ViewController: UIViewController, PostCreateDelegate {
                 DispatchQueue.main.async {
                     self.posts = posts
                     self.tableView.reloadData()
-					if self.refreshControl.isRefreshing {
-						self.refreshControl.endRefreshing()
-					}
+                    if self.refreshControl.isRefreshing {
+                        self.refreshControl.endRefreshing()
+                    }
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
                     EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-						if self.refreshControl.isRefreshing {
-							self.refreshControl.endRefreshing()
-						}
+                        if self.refreshControl.isRefreshing {
+                            self.refreshControl.endRefreshing()
+                        }
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -135,7 +135,7 @@ class ViewController: UIViewController, PostCreateDelegate {
 
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
-				case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     if self.posts[sender.tag].voteStatus == -1 {
                         self.posts[sender.tag].score += 2
@@ -181,7 +181,7 @@ class ViewController: UIViewController, PostCreateDelegate {
 
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
-				case .success(_):
+            case .success:
                 DispatchQueue.main.async {
                     if self.posts[sender.tag].voteStatus == 1 {
                         self.posts[sender.tag].score -= 2
@@ -238,14 +238,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
         let post = posts[indexPath.section]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
 
-		let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
+        let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
+
         let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
         builtCell.pfpView.tag = indexPath.section
         builtCell.pfpView.addGestureRecognizer(tap)
-		cell.delegate = self
+        cell.delegate = self
 
         cell.upvoteBtn.tag = indexPath.section
         cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
@@ -271,26 +272,25 @@ enum Section {
 }
 
 extension ViewController: PostCellDelegate {
-	
-	func selectedPost(post: String, indexPath: IndexPath) {
-		let detailVC = PostDetailViewController()
-		
-		detailVC.selectedPostID = post
-		detailVC.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(detailVC, animated: true)
-	}
-	
-	func selectedURL(url: String, indexPath: IndexPath) {
-		if UIApplication.shared.canOpenURL(URL(string: url)!) {
-			UIApplication.shared.open(URL(string: url)!)
-		}
-	}
-	
-	func selectedUser(username: String, indexPath: IndexPath) {
-		let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
-		let vc = UserProfileViewController()
-		vc.user = user
-		vc.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(vc, animated: true)
-	}
+    func selectedPost(post: String, indexPath _: IndexPath) {
+        let detailVC = PostDetailViewController()
+
+        detailVC.selectedPostID = post
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    func selectedURL(url: String, indexPath _: IndexPath) {
+        if UIApplication.shared.canOpenURL(URL(string: url)!) {
+            UIApplication.shared.open(URL(string: url)!)
+        }
+    }
+
+    func selectedUser(username: String, indexPath _: IndexPath) {
+        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        let vc = UserProfileViewController()
+        vc.user = user
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }

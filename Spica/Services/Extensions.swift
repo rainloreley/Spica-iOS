@@ -66,19 +66,31 @@ extension UIViewController {
 }
 
 extension String {
-	var isValidURL: Bool {
-		let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
-		if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: self.utf16.count)) {
-			// it is a link, if the match covers the whole string
-			return match.range.length == self.utf16.count
-		} else {
-			return false
-		}
-	}
+    var isValidURL: Bool {
+        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
+        if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: utf16.count)) {
+            // it is a link, if the match covers the whole string
+            return match.range.length == utf16.count
+        } else {
+            return false
+        }
+    }
 }
 
 func removeSpecialCharsFromString(text: String) -> String {
-	let okayChars : Set<Character> =
-		Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890@")
-	return String(text.filter {okayChars.contains($0) })
+    let okayChars: Set<Character> =
+        Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890@")
+    return String(text.filter { okayChars.contains($0) })
+}
+
+extension UIImageView {
+    func downloadImageFrom(link: String, contentMode: UIView.ContentMode) {
+        URLSession.shared.dataTask(with: NSURL(string: link)! as URL, completionHandler: {
+            (data, _, _) -> Void in
+            DispatchQueue.main.async {
+                self.contentMode = contentMode
+                if let data = data { self.image = UIImage(data: data)! }
+            }
+		}).resume()
+    }
 }
