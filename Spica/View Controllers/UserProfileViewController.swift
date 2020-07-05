@@ -345,11 +345,12 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
             let post = userPosts[indexPath.row]
-            let builtCell = cell.buildCell(cell: cell, post: post)
+			let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
             builtCell.pfpView.tag = indexPath.row
             builtCell.pfpView.addGestureRecognizer(tap)
             cell.upvoteBtn.tag = indexPath.row
+			cell.delegate = self
             cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
 
             cell.downvoteBtn.tag = indexPath.row
@@ -367,4 +368,28 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }
+}
+
+extension UserProfileViewController: PostCellDelegate {
+	func selectedPost(post: String, indexPath: IndexPath) {
+		let detailVC = PostDetailViewController()
+		
+		detailVC.selectedPostID = post
+		detailVC.hidesBottomBarWhenPushed = true
+		navigationController?.pushViewController(detailVC, animated: true)
+	}
+	
+	func selectedURL(url: String, indexPath: IndexPath) {
+		if UIApplication.shared.canOpenURL(URL(string: url)!) {
+			UIApplication.shared.open(URL(string: url)!)
+		}
+	}
+	
+	func selectedUser(username: String, indexPath: IndexPath) {
+		let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "")
+		let vc = UserProfileViewController()
+		vc.user = user
+		vc.hidesBottomBarWhenPushed = true
+		navigationController?.pushViewController(vc, animated: true)
+	}
 }
