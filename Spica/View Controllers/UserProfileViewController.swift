@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 30.06.20.
 //
 
+import JGProgressHUD
 import SwiftKeychainWrapper
 import UIKit
 
@@ -16,6 +17,8 @@ class UserProfileViewController: UIViewController {
     var signedInUsername: String!
 
     var refreshControl = UIRefreshControl()
+
+    var loadingHud: JGProgressHUD!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +37,7 @@ class UserProfileViewController: UIViewController {
         tableView?.delegate = self
         tableView?.dataSource = self
         // tableView.bounces = false
-        tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(UINib(nibName: "UserHeaderCell", bundle: nil), forCellReuseIdentifier: "userHeaderCell")
 
         tableView.estimatedRowHeight = 120
@@ -46,6 +49,10 @@ class UserProfileViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadUser), for: .valueChanged)
         tableView.addSubview(refreshControl)
+
+        loadingHud = JGProgressHUD(style: .dark)
+        loadingHud.textLabel.text = "Loading"
+        loadingHud.interactionType = .blockNoTouches
         // Do any additional setup after loading the view.
     }
 
@@ -58,6 +65,9 @@ class UserProfileViewController: UIViewController {
     }
 
     @objc func loadUser() {
+        if user == nil || userPosts.isEmpty {
+            loadingHud.show(in: view)
+        }
         DispatchQueue.main.async {
             AllesAPI.default.loadUser(username: self.user.username) { result in
                 switch result {
@@ -74,6 +84,7 @@ class UserProfileViewController: UIViewController {
                             if self.refreshControl.isRefreshing {
                                 self.refreshControl.endRefreshing()
                             }
+                            self.loadingHud.dismiss()
                             if apiError.action != nil, apiError.actionParameter != nil {
                                 if apiError.action == AllesAPIErrorAction.navigate {
                                     if apiError.actionParameter == "login" {
@@ -100,6 +111,7 @@ class UserProfileViewController: UIViewController {
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
+                    self.loadingHud.dismiss()
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -107,6 +119,7 @@ class UserProfileViewController: UIViewController {
                         if self.refreshControl.isRefreshing {
                             self.refreshControl.endRefreshing()
                         }
+                        self.loadingHud.dismiss()
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -342,21 +355,41 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
             let post = userPosts[indexPath.row]
-			
-            let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
-            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-            builtCell.pfpView.tag = indexPath.row
-            builtCell.pfpView.addGestureRecognizer(tap)
-            cell.upvoteBtn.tag = indexPath.row
+
+            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+
             cell.delegate = self
-            cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+            cell.indexPath = indexPath
+            cell.post = post
 
-            cell.downvoteBtn.tag = indexPath.row
-            cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+            cell.pfpImageView.tag = indexPath.row
+            cell.pfpImageView.isUserInteractionEnabled = true
+            cell.pfpImageView.addGestureRecognizer(tap)
 
-            return builtCell
+            cell.upvoteButton.tag = indexPath.row
+            cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+
+            cell.downvoteButton.tag = indexPath.row
+            cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+            return cell
+            /* let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
+             let post = userPosts[indexPath.row]
+
+             let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
+             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+             builtCell.pfpView.tag = indexPath.row
+             builtCell.pfpView.addGestureRecognizer(tap)
+             cell.upvoteBtn.tag = indexPath.row
+             cell.delegate = self
+             cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+
+             cell.downvoteBtn.tag = indexPath.row
+             cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+             return builtCell */
         }
     }
 
@@ -370,7 +403,7 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
     }
 }
 
-extension UserProfileViewController: PostCellDelegate {
+extension UserProfileViewController: PostCellViewDelegate {
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
 

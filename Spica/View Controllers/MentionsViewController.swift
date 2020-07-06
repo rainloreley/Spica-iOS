@@ -5,7 +5,9 @@
 //  Created by Adrian Baumgart on 30.06.20.
 //
 
+import JGProgressHUD
 import UIKit
+var loadingHud: JGProgressHUD!
 
 class MentionsViewController: UIViewController {
     var tableView: UITableView!
@@ -23,7 +25,7 @@ class MentionsViewController: UIViewController {
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
@@ -32,6 +34,10 @@ class MentionsViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadMentions), for: .valueChanged)
         tableView.addSubview(refreshControl)
+
+        loadingHud = JGProgressHUD(style: .dark)
+        loadingHud.textLabel.text = "Loading"
+        loadingHud.interactionType = .blockNoTouches
 
         // Do any additional setup after loading the view.
     }
@@ -45,6 +51,9 @@ class MentionsViewController: UIViewController {
     }
 
     @objc func loadMentions() {
+        if mentions.isEmpty {
+            loadingHud.show(in: view)
+        }
         AllesAPI.default.loadMentions { result in
             switch result {
             case let .success(newPosts):
@@ -54,6 +63,7 @@ class MentionsViewController: UIViewController {
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
+                    loadingHud.dismiss()
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -61,6 +71,7 @@ class MentionsViewController: UIViewController {
                         if self.refreshControl.isRefreshing {
                             self.refreshControl.endRefreshing()
                         }
+                        loadingHud.dismiss()
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -193,21 +204,41 @@ extension MentionsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
         let post = mentions[indexPath.row]
-        let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-        builtCell.pfpView.tag = indexPath.row
-        builtCell.pfpView.addGestureRecognizer(tap)
 
-        cell.upvoteBtn.tag = indexPath.row
-        cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+
         cell.delegate = self
+        cell.indexPath = indexPath
+        cell.post = post
 
-        cell.downvoteBtn.tag = indexPath.row
-        cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+        let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+        cell.pfpImageView.tag = indexPath.row
+        cell.pfpImageView.isUserInteractionEnabled = true
+        cell.pfpImageView.addGestureRecognizer(tap)
 
-        return builtCell
+        cell.upvoteButton.tag = indexPath.row
+        cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+
+        cell.downvoteButton.tag = indexPath.row
+        cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+        return cell
+        /* let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
+         let post = mentions[indexPath.row]
+         let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
+         let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+         builtCell.pfpView.tag = indexPath.row
+         builtCell.pfpView.addGestureRecognizer(tap)
+
+         cell.upvoteBtn.tag = indexPath.row
+         cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+         cell.delegate = self
+
+         cell.downvoteBtn.tag = indexPath.row
+         cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+         return builtCell */
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -218,7 +249,7 @@ extension MentionsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension MentionsViewController: PostCellDelegate {
+extension MentionsViewController: PostCellViewDelegate {
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = post

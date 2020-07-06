@@ -5,16 +5,19 @@
 //  Created by Adrian Baumgart on 29.06.20.
 //
 
+import JGProgressHUD
 import SnapKit
 import SwiftKeychainWrapper
 import UIKit
 
-class ViewController: UIViewController, PostCreateDelegate {
+class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
     var createPostBtn: UIButton!
     var posts = [Post]()
 
     var refreshControl = UIRefreshControl()
+
+    var loadingHud: JGProgressHUD!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +29,9 @@ class ViewController: UIViewController, PostCreateDelegate {
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        // tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
+
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
@@ -35,6 +40,10 @@ class ViewController: UIViewController, PostCreateDelegate {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
         tableView.addSubview(refreshControl)
+
+        loadingHud = JGProgressHUD(style: .dark)
+        loadingHud.textLabel.text = "Loading"
+        loadingHud.interactionType = .blockNoTouches
 
         createPostBtn = UIButton(type: .system)
         createPostBtn.setImage(UIImage(systemName: "square.and.pencil"), for: .normal)
@@ -84,6 +93,9 @@ class ViewController: UIViewController, PostCreateDelegate {
     }
 
     @objc func loadFeed() {
+        if posts.isEmpty {
+            loadingHud.show(in: view)
+        }
         AllesAPI.default.loadFeed { [self] result in
             switch result {
             case let .success(posts):
@@ -94,6 +106,7 @@ class ViewController: UIViewController, PostCreateDelegate {
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
+                    loadingHud.dismiss()
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -101,6 +114,7 @@ class ViewController: UIViewController, PostCreateDelegate {
                         if self.refreshControl.isRefreshing {
                             self.refreshControl.endRefreshing()
                         }
+                        loadingHud.dismiss()
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -239,22 +253,131 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let post = posts[indexPath.section]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
 
-        let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+
+        cell.delegate = self
+        cell.indexPath = indexPath
+        cell.post = post
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-        builtCell.pfpView.tag = indexPath.section
-        builtCell.pfpView.addGestureRecognizer(tap)
-        cell.delegate = self
+        cell.pfpImageView.tag = indexPath.section
+        cell.pfpImageView.isUserInteractionEnabled = true
+        cell.pfpImageView.addGestureRecognizer(tap)
 
-        cell.upvoteBtn.tag = indexPath.section
-        cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+        cell.upvoteButton.tag = indexPath.section
+        cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
 
-        cell.downvoteBtn.tag = indexPath.section
-        cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+        cell.downvoteButton.tag = indexPath.section
+        cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
 
-        return builtCell
+        return cell
+        // let cell = PostCell()
+
+        // cell.buildCell(post: post, indexPath: indexPath)
+        /* cell.selectionStyle = .none
+         cell.pfpView.image = post.author.image
+
+         if post.image != nil {
+         	cell.attachedImageView.image = post.image!
+
+         	cell.attachedImageView.snp.makeConstraints { (make) in
+         	 //	make.width.equalTo(self.contentView.snp.width).offset(-80)
+         		make.height.equalTo((post.image?.size.height)! / 3)
+         	 }
+         }
+
+         /* let imageHeight = cell.attachedImageView.image?.size.height
+          cell.attachedImageView.snp.makeConstraints { make in
+
+         		make.width.equalTo(self.contentView.snp.width).offset(-80)
+         	make.height.equalTo((post.image?.size.height ?? 0) / 3)
+         		 //make.height.equalTo(imageHeight!)
+         	 } */
+
+         if post.author.isPlus {
+         	// let font:UIFont? = UIFont(name: "Helvetica", size:20)
+         	let font: UIFont? = UIFont.boldSystemFont(ofSize: 18)
+
+         	let fontSuper: UIFont? = UIFont.boldSystemFont(ofSize: 12)
+         	let attrDisplayName = NSMutableAttributedString(string: "\(post.author.displayName)+", attributes: [.font: font!])
+         	attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: post.author.displayName.count, length: 1))
+
+         	cell.displayNameLbl.attributedText = attrDisplayName
+         } else {
+         	cell.displayNameLbl.text = post.author.displayName
+         }
+         cell.usernameLbl.text = "@\(post.author.username)"
+         cell.voteLvl.text = "\(post.score)"
+         cell.dateLbl.text = globalDateFormatter.string(from: post.date)
+         cell.repliesLbl.text = countString(number: post.repliesCount, singleText: "Reply", multiText: "Replies")
+         // contentTextView.text = post.content
+         cell.contentTextView.delegate = self
+
+         let attributedText = NSMutableAttributedString(string: "")
+
+         let normalFont: UIFont? = UIFont.systemFont(ofSize: 15)
+
+         let splitContent = post.content.split(separator: " ")
+         for word in splitContent {
+         	if word.hasPrefix("@"), word.count > 1 {
+         		let selectablePart = NSMutableAttributedString(string: String(word) + " ")
+         		// let username = String(word).replacingOccurrences(of: ".", with: "")
+         		let username = removeSpecialCharsFromString(text: String(word))
+         		print("username: \(username)")
+         		selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: username.count))
+         		// selectablePart.addAttribute(.underlineColor, value: UIColor.blue, range: NSRange(location: 0, length: selectablePart.length))
+         		selectablePart.addAttribute(.link, value: "user:\(username)", range: NSRange(location: 0, length: username.count))
+         		attributedText.append(selectablePart)
+         	} else if word.hasPrefix("%"), word.count > 1 {
+         		let selectablePart = NSMutableAttributedString(string: String(word) + " ")
+         		// let username = String(word).replacingOccurrences(of: ".", with: "")
+
+         		print("madePost: \(word)")
+
+         		selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
+         		// selectablePart.addAttribute(.underlineColor, value: UIColor.blue, range: NSRange(location: 0, length: selectablePart.length))
+         		let postID = word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]
+         		selectablePart.addAttribute(.link, value: "post:\(postID)", range: NSRange(location: 0, length: selectablePart.length - 1))
+         		attributedText.append(selectablePart)
+         	} else if String(word).isValidURL, word.count > 1 {
+         		let selectablePart = NSMutableAttributedString(string: String(word) + " ")
+         		selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
+         		// selectablePart.addAttribute(.underlineColor, value: UIColor.blue, range: NSRange(location: 0, length: selectablePart.length))
+         		selectablePart.addAttribute(.link, value: "url:\(word)", range: NSRange(location: 0, length: selectablePart.length - 1))
+         		attributedText.append(selectablePart)
+         	} else {
+         		attributedText.append(NSAttributedString(string: word + " "))
+         	}
+         }
+
+         attributedText.addAttributes([.font: normalFont!], range: NSRange(location: 0, length: attributedText.length))
+         cell.contentTextView.attributedText = attributedText
+         cell.contentView.resignFirstResponder()
+
+         if post.voteStatus == 1 {
+         	cell.upvoteBtn.setTitleColor(.systemGreen, for: .normal)
+         	cell.downvoteBtn.setTitleColor(.gray, for: .normal)
+         } else if post.voteStatus == -1 {
+         	cell.downvoteBtn.setTitleColor(.systemRed, for: .normal)
+         	cell.upvoteBtn.setTitleColor(.gray, for: .normal)
+         } else {
+         	cell.upvoteBtn.setTitleColor(.systemBlue, for: .normal)
+         	cell.downvoteBtn.setTitleColor(.systemBlue, for: .normal)
+         }
+
+         let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+         cell.pfpView.tag = indexPath.section
+         cell.pfpView.addGestureRecognizer(tap)
+         cell.delegate = self
+
+         cell.upvoteBtn.tag = indexPath.section
+         cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+
+         cell.downvoteBtn.tag = indexPath.section
+         cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+         return cell */
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -271,7 +394,7 @@ enum Section {
     case main
 }
 
-extension ViewController: PostCellDelegate {
+extension ViewController: PostCellViewDelegate {
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
 

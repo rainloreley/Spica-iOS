@@ -33,18 +33,18 @@ class PostCell: UITableViewCell, UITextViewDelegate {
         // Initialization code
     }
 
-    func buildCell(cell: PostCell, post: Post, indexPath: IndexPath) -> PostCell {
+    func buildCell(post: Post, indexPath: IndexPath) {
         self.indexPath = indexPath
-        cell.selectionStyle = .none
-        cell.pfpView.image = post.author.image
+        selectionStyle = .none
+        pfpView.image = post.author.image
 
         if post.image != nil {
-            cell.attachedImageView.image = post.image!
+            attachedImageView.image = post.image!
 
-            /* cell.attachedImageView.snp.makeConstraints { (make) in
-             //	make.width.equalTo(self.contentView.snp.width).offset(-80)
-             	make.height.equalTo((cell.attachedImageView.image?.size.height)! / 3)
-             } */
+            attachedImageView.snp.makeConstraints { make in
+                //	make.width.equalTo(self.contentView.snp.width).offset(-80)
+                make.height.equalTo((post.image?.size.height)! / 3)
+            }
         }
 
         /* let imageHeight = cell.attachedImageView.image?.size.height
@@ -63,16 +63,16 @@ class PostCell: UITableViewCell, UITextViewDelegate {
             let attrDisplayName = NSMutableAttributedString(string: "\(post.author.displayName)+", attributes: [.font: font!])
             attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: post.author.displayName.count, length: 1))
 
-            cell.displayNameLbl.attributedText = attrDisplayName
+            displayNameLbl.attributedText = attrDisplayName
         } else {
-            cell.displayNameLbl.text = post.author.displayName
+            displayNameLbl.text = post.author.displayName
         }
-        cell.usernameLbl.text = "@\(post.author.username)"
-        cell.voteLvl.text = "\(post.score)"
-        cell.dateLbl.text = globalDateFormatter.string(from: post.date)
-        cell.repliesLbl.text = countString(number: post.repliesCount, singleText: "Reply", multiText: "Replies")
-        // cell.contentTextView.text = post.content
-        cell.contentTextView.delegate = self
+        usernameLbl.text = "@\(post.author.username)"
+        voteLvl.text = "\(post.score)"
+        dateLbl.text = globalDateFormatter.string(from: post.date)
+        repliesLbl.text = countString(number: post.repliesCount, singleText: "Reply", multiText: "Replies")
+        // contentTextView.text = post.content
+        contentTextView.delegate = self
 
         let attributedText = NSMutableAttributedString(string: "")
 
@@ -112,18 +112,18 @@ class PostCell: UITableViewCell, UITextViewDelegate {
         }
 
         attributedText.addAttributes([.font: normalFont!], range: NSRange(location: 0, length: attributedText.length))
-        cell.contentTextView.attributedText = attributedText
-        cell.contentView.resignFirstResponder()
+        contentTextView.attributedText = attributedText
+        contentView.resignFirstResponder()
 
         if post.voteStatus == 1 {
-            cell.upvoteBtn.setTitleColor(.systemGreen, for: .normal)
-            cell.downvoteBtn.setTitleColor(.gray, for: .normal)
+            upvoteBtn.setTitleColor(.systemGreen, for: .normal)
+            downvoteBtn.setTitleColor(.gray, for: .normal)
         } else if post.voteStatus == -1 {
-            cell.downvoteBtn.setTitleColor(.systemRed, for: .normal)
-            cell.upvoteBtn.setTitleColor(.gray, for: .normal)
+            downvoteBtn.setTitleColor(.systemRed, for: .normal)
+            upvoteBtn.setTitleColor(.gray, for: .normal)
         } else {
-            cell.upvoteBtn.setTitleColor(.systemBlue, for: .normal)
-            cell.downvoteBtn.setTitleColor(.systemBlue, for: .normal)
+            upvoteBtn.setTitleColor(.systemBlue, for: .normal)
+            downvoteBtn.setTitleColor(.systemBlue, for: .normal)
         }
 
         /* if post.imageURL != nil {
@@ -158,7 +158,6 @@ class PostCell: UITableViewCell, UITextViewDelegate {
              make.height.equalTo(0)
          } */
          } */
-        return cell
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

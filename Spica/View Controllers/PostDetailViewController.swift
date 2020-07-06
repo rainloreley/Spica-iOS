@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 01.07.20.
 //
 
+import JGProgressHUD
 import UIKit
 
 class PostDetailViewController: UIViewController, PostCreateDelegate {
@@ -17,6 +18,8 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
     var refreshControl = UIRefreshControl()
 
+    var loadingHud: JGProgressHUD!
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,7 +30,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(UINib(nibName: "ReplyButtonCell", bundle: nil), forCellReuseIdentifier: "replyButtonCell")
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableView.automaticDimension
@@ -37,6 +40,10 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadPostDetail), for: .valueChanged)
         tableView.addSubview(refreshControl)
+
+        loadingHud = JGProgressHUD(style: .dark)
+        loadingHud.textLabel.text = "Loading"
+        loadingHud.interactionType = .blockNoTouches
 
         // Do any additional setup after loading the view.
     }
@@ -50,6 +57,11 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     @objc func loadPostDetail() {
+        if postAncestors.isEmpty || postReplies.isEmpty {
+            DispatchQueue.main.async {
+                self.loadingHud.show(in: self.view)
+            }
+        }
         AllesAPI.default.loadPostDetail(postID: selectedPostID) { result in
             switch result {
             case let .success(newPostDetail):
@@ -62,6 +74,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
+                    self.loadingHud.dismiss()
                     self.tableView.scrollToRow(at: IndexPath(row: self.postAncestors.firstIndex(where: { $0.id == self.selectedPost.id })!, section: 0), at: .middle, animated: true)
                 }
             case let .failure(apiError):
@@ -70,6 +83,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                         if self.refreshControl.isRefreshing {
                             self.refreshControl.endRefreshing()
                         }
+                        self.loadingHud.dismiss()
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -284,25 +298,28 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
-
-        let post: Post!
         if indexPath.section == 0 {
-            post = postAncestors[indexPath.row]
+            let post = postAncestors[indexPath.row]
 
-            let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
-            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-            builtCell.pfpView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            builtCell.pfpView.addGestureRecognizer(tap)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
-            cell.upvoteBtn.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
             cell.delegate = self
+            cell.indexPath = indexPath
+            cell.post = post
 
-            cell.downvoteBtn.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+            cell.pfpImageView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+            cell.pfpImageView.isUserInteractionEnabled = true
+            cell.pfpImageView.addGestureRecognizer(tap)
 
-            return builtCell
+            cell.upvoteButton.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+            cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+
+            cell.downvoteButton.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+            cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+            return cell
+
         } else if indexPath.section == 1 {
             if selectedPost != nil {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "replyButtonCell", for: indexPath) as! ReplyButtonCell
@@ -330,21 +347,28 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                 return UITableViewCell()
             }
         } else {
-            post = postReplies[indexPath.row]
+            let post = postReplies[indexPath.row]
 
-            let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
-            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-            builtCell.pfpView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            builtCell.pfpView.addGestureRecognizer(tap)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
-            cell.upvoteBtn.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
             cell.delegate = self
+            cell.indexPath = indexPath
+            cell.post = post
 
-            cell.downvoteBtn.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+            cell.pfpImageView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+            cell.pfpImageView.isUserInteractionEnabled = true
+            cell.pfpImageView.addGestureRecognizer(tap)
 
-            return builtCell
+            cell.upvoteButton.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+            cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+
+            cell.downvoteButton.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+            cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+            return cell
+
+            // let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
         }
     }
 
@@ -363,7 +387,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension PostDetailViewController: PostCellDelegate {
+extension PostDetailViewController: PostCellViewDelegate {
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = post

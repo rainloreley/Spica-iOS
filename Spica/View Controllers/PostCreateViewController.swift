@@ -6,6 +6,7 @@
 //
 
 import Combine
+import JGProgressHUD
 import KMPlaceholderTextView
 import SnapKit
 import SwiftKeychainWrapper
@@ -29,6 +30,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
     var delegate: PostCreateDelegate!
 
+    var loadingHud: JGProgressHUD!
+
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
 
     override func viewDidLoad() {
@@ -42,6 +45,10 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         imagePicker.allowsEditing = false
         imagePicker.mediaTypes = ["public.image"]
         imagePicker.delegate = self
+
+        loadingHud = JGProgressHUD(style: .dark)
+        loadingHud.textLabel.text = "Loading"
+        loadingHud.interactionType = .blockAllTouches
 
         imageButton = UIBarButtonItem(image: UIImage(systemName: "photo"), style: .plain, target: self, action: #selector(openImagePicker))
 
@@ -152,6 +159,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
     }
 
     @objc func sendPost() {
+        loadingHud.show(in: view)
         contentTextView.layer.cornerRadius = 0
         contentTextView.layer.borderWidth = 0
         contentTextView.layer.borderColor = UIColor.clear.cgColor
@@ -166,11 +174,13 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
                 case let .success(sentPost):
 
                     DispatchQueue.main.async {
+                        self.loadingHud.dismiss()
                         self.delegate.didSendPost(sentPost: sentPost)
                         self.dismiss(animated: true, completion: nil)
                     }
                 case let .failure(apiError):
                     DispatchQueue.main.async {
+                        self.loadingHud.dismiss()
                         EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
                             if apiError.action != nil, apiError.actionParameter != nil {
                                 if apiError.action == AllesAPIErrorAction.navigate {

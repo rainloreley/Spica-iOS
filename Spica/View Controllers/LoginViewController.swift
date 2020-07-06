@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 02.07.20.
 //
 
+import JGProgressHUD
 import UIKit
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
@@ -15,6 +16,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var signInButton: UIButton!
 
     var createAccountButton: UIButton!
+
+    var loadingHud: JGProgressHUD!
 
     func textFieldShouldReturn(_: UITextField) -> Bool {
         view.endEditing(true)
@@ -38,6 +41,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         usernameField.autocapitalizationType = .none
         usernameField.autocorrectionType = .no
         view.addSubview(usernameField)
+
+        loadingHud = JGProgressHUD(style: .dark)
+        loadingHud.textLabel.text = "Loading"
+        loadingHud.interactionType = .blockAllTouches
 
         usernameField.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
@@ -119,6 +126,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 
     @objc func signIn() {
+        loadingHud.show(in: view)
         usernameField.layer.borderColor = UIColor.clear.cgColor
         usernameField.layer.borderWidth = 0.0
 
@@ -139,11 +147,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         mentionView.tabBarItem = UITabBarItem(title: "Mentions", image: UIImage(systemName: "at"), tag: 1)
 
                         tabBar.viewControllers = [homeView, mentionView]
+                        self.loadingHud.dismiss()
                         mySceneDelegate.window?.rootViewController = tabBar
                         mySceneDelegate.window?.makeKeyAndVisible()
                     }
                 case let .failure(apiError):
                     DispatchQueue.main.async {
+                        self.loadingHud.dismiss()
                         EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
                             if apiError.action != nil, apiError.actionParameter != nil {
                                 /* if apiError.action == AllesAPIErrorAction.navigate  {

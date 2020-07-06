@@ -152,17 +152,8 @@ public class AllesAPI {
 
                     DispatchQueue.global(qos: .utility).async {
                         for (_, subJSON) in responseJSON["posts"] {
-                            var uiImage: UIImage?
-                            if subJSON["image"].string == nil {
-                                uiImage = nil
-                            } else {
-                                let imageURL = URL(string: subJSON["image"].string!)
-
-                                uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
-                            }
-
                             // subJSON["image"] != JSON.null && subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : nil
-                            tempPosts.append(Post(id: subJSON["slug"].string!, author: user, date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: uiImage, voteStatus: subJSON["vote"].int!))
+                            tempPosts.append(Post(id: subJSON["slug"].string!, author: user, date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : UIImage(), voteStatus: subJSON["vote"].int!))
                         }
                         tempPosts.sort(by: { $0.date.compare($1.date) == .orderedDescending })
                         completion!(.success(tempPosts))
@@ -192,17 +183,8 @@ public class AllesAPI {
 
                     DispatchQueue.global(qos: .utility).async {
                         for (_, subJSON) in responseJSON["mentions"] {
-                            var uiImage: UIImage?
-                            if subJSON["image"].string == nil {
-                                uiImage = nil
-                            } else {
-                                let imageURL = URL(string: subJSON["image"].string!)
-
-                                uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
-                            }
-
                             // subJSON["image"] != JSON.null && subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : nil
-                            tempPosts.append(Post(id: subJSON["slug"].string!, author: User(id: subJSON["author"]["id"].string!, username: subJSON["author"]["username"].string!, displayName: subJSON["author"]["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!, isPlus: subJSON["author"]["plus"].bool!, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false), date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: uiImage, voteStatus: subJSON["vote"].int!))
+                            tempPosts.append(Post(id: subJSON["slug"].string!, author: User(id: subJSON["author"]["id"].string!, username: subJSON["author"]["username"].string!, displayName: subJSON["author"]["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!, isPlus: subJSON["author"]["plus"].bool!, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false), date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : UIImage(), voteStatus: subJSON["vote"].int!))
                         }
                         tempPosts.sort(by: { $0.date.compare($1.date) == .orderedDescending })
                         completion!(.success(tempPosts))
@@ -227,48 +209,21 @@ public class AllesAPI {
                 let responseJSON = JSON(response.data!)
 
                 if !responseJSON["err"].exists() {
-                    var uiImage: UIImage?
-                    if responseJSON["image"].string == nil {
-                        uiImage = nil
-                    } else {
-                        let imageURL = URL(string: responseJSON["image"].string!)
-
-                        uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
-                    }
-
                     var tempPostDetail = PostDetail(ancestors: [], post: Post(id: "", author: User(id: "", username: "", displayName: "", imageURL: URL(string: "https://avatar.alles.cx/u/adrian")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person")!, isFollowing: false, followsMe: false, about: "", isOnline: false), date: Date(), repliesCount: 0, score: 0, content: "", image: UIImage(systemName: "person"), voteStatus: 0), replies: [])
 
                     AllesAPI.default.loadUser(username: responseJSON["author"]["username"].string!) { userResult in
                         switch userResult {
                         case let .success(postUser):
-                            tempPostDetail.post = Post(id: responseJSON["slug"].string!, author: postUser, date: Date.dateFromISOString(string: responseJSON["createdAt"].string!)!, repliesCount: responseJSON["replyCount"].int!, score: responseJSON["score"].int!, content: responseJSON["content"].string!, image: uiImage, voteStatus: responseJSON["vote"].int!)
+                            tempPostDetail.post = Post(id: responseJSON["slug"].string!, author: postUser, date: Date.dateFromISOString(string: responseJSON["createdAt"].string!)!, repliesCount: responseJSON["replyCount"].int!, score: responseJSON["score"].int!, content: responseJSON["content"].string!, image: responseJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: responseJSON["image"].string!)!) : UIImage(), voteStatus: responseJSON["vote"].int!)
 
                             for (_, subJSON) in responseJSON["ancestors"] {
-                                var uiImage: UIImage?
-                                if subJSON["image"].string == nil {
-                                    uiImage = nil
-                                } else {
-                                    let imageURL = URL(string: subJSON["image"].string!)
-
-                                    uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
-                                }
-
                                 // subJSON["image"] != JSON.null && subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : nil
-                                tempPostDetail.ancestors.append(Post(id: subJSON["slug"].string!, author: User(id: subJSON["author"]["id"].string!, username: subJSON["author"]["username"].string!, displayName: subJSON["author"]["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!, isPlus: subJSON["author"]["plus"].bool!, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false), date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: uiImage, voteStatus: subJSON["vote"].int!))
+                                tempPostDetail.ancestors.append(Post(id: subJSON["slug"].string!, author: User(id: subJSON["author"]["id"].string!, username: subJSON["author"]["username"].string!, displayName: subJSON["author"]["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!, isPlus: subJSON["author"]["plus"].bool!, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false), date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : UIImage(), voteStatus: subJSON["vote"].int!))
                             }
 
                             for (_, subJSON) in responseJSON["replies"] {
-                                var uiImage: UIImage?
-                                if subJSON["image"].string == nil {
-                                    uiImage = nil
-                                } else {
-                                    let imageURL = URL(string: subJSON["image"].string!)
-
-                                    uiImage = ImageLoader.default.loadImageFromInternet(url: imageURL!)
-                                }
-
                                 // subJSON["image"] != JSON.null && subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : nil
-                                tempPostDetail.replies.append(Post(id: subJSON["slug"].string!, author: User(id: subJSON["author"]["id"].string!, username: subJSON["author"]["username"].string!, displayName: subJSON["author"]["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!, isPlus: subJSON["author"]["plus"].bool!, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false), date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: uiImage, voteStatus: subJSON["vote"].int!))
+                                tempPostDetail.replies.append(Post(id: subJSON["slug"].string!, author: User(id: subJSON["author"]["id"].string!, username: subJSON["author"]["username"].string!, displayName: subJSON["author"]["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!, isPlus: subJSON["author"]["plus"].bool!, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(subJSON["author"]["username"].string!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false), date: Date.dateFromISOString(string: subJSON["createdAt"].string!)!, repliesCount: subJSON["replyCount"].intValue, score: subJSON["score"].int!, content: subJSON["content"].string!, image: subJSON["image"].string != nil ? ImageLoader.default.loadImageFromInternet(url: URL(string: subJSON["image"].string!)!) : UIImage(), voteStatus: subJSON["vote"].int!))
                             }
 
                             completion!(.success(tempPostDetail))
