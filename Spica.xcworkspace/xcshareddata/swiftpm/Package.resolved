@@ -29,21 +29,21 @@
         }
       },
       {
+        "package": "SPAlert",
+        "repositoryURL": "https://github.com/ivanvorobei/SPAlert",
+        "state": {
+          "branch": null,
+          "revision": "18862409586ac547bcdf8957cd96beb872fbc729",
+          "version": "2.1.4"
+        }
+      },
+      {
         "package": "SwiftyJSON",
         "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON",
         "state": {
           "branch": null,
           "revision": "2b6054efa051565954e1d2b9da831680026cd768",
           "version": "5.0.0"
-        }
-      },
-      {
-        "package": "UITextView+Placeholder",
-        "repositoryURL": "https://github.com/devxoul/UITextView-Placeholder",
-        "state": {
-          "branch": null,
-          "revision": "5a133b7efc4e8dd9de91c9eada48270d90c83ef0",
-          "version": "1.4.0"
         }
       }
     ]

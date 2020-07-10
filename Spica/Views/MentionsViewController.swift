@@ -9,7 +9,7 @@ import JGProgressHUD
 import UIKit
 var loadingHud: JGProgressHUD!
 
-class MentionsViewController: UIViewController {
+class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
 
     var mentions = [Post]()
@@ -58,12 +58,16 @@ class MentionsViewController: UIViewController {
             switch result {
             case let .success(newPosts):
                 DispatchQueue.main.async {
+					let isEmpty = self.mentions.isEmpty
                     self.mentions = newPosts
-                    self.tableView.reloadData()
+					if isEmpty {
+						self.tableView.reloadData()
+					}
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
                     loadingHud.dismiss()
+                    self.loadImages()
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -83,6 +87,38 @@ class MentionsViewController: UIViewController {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    func loadImages() {
+        DispatchQueue.global(qos: .utility).async {
+            let dispatchGroup = DispatchGroup()
+
+            for (index, post) in self.mentions.enumerated() {
+                dispatchGroup.enter()
+
+                self.mentions[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+
+                if post.imageURL?.absoluteString != "", post.imageURL != nil {
+                    self.mentions[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                } else {
+                    self.mentions[index].image = UIImage()
+                }
+
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+
+                dispatchGroup.leave()
             }
         }
     }
@@ -121,7 +157,7 @@ class MentionsViewController: UIViewController {
                     self.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-                self.loadMentions()
+                //self.loadMentions()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -167,7 +203,7 @@ class MentionsViewController: UIViewController {
                     self.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-                self.loadMentions()
+                //self.loadMentions()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -196,6 +232,14 @@ class MentionsViewController: UIViewController {
          // Pass the selected object to the new view controller.
      }
      */
+	
+	func didSendPost(sentPost: SentPost) {
+        let detailVC = PostDetailViewController()
+        detailVC.selectedPostID = sentPost.id
+
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 }
 
 extension MentionsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -250,6 +294,22 @@ extension MentionsViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
+    func replyToPost(id: String) {
+        let vc = PostCreateViewController()
+        vc.type = .reply
+        vc.delegate = self
+        vc.parentID = id
+        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+    }
+
+    func copyPostID(id _: String) {
+        //
+    }
+
+    func deletePost(id _: String) {
+        //
+    }
+
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = post

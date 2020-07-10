@@ -9,14 +9,16 @@
 /* Begin PBXBuildFile section */
 		3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0252C224ADE30700A4E4FD /* LoginViewController.swift */; };
 		3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */; };
+		3A25FBA924B753D400324136 /* SPAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 3A25FBA824B753D400324136 /* SPAlert */; };
 		3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3A34226B24B359BE00B8AFA9 /* JGProgressHUD */; };
+		3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */; };
+		3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEC24B8AA2700513028 /* CreditsViewController.swift */; };
 		3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274324B1E02900425999 /* CircularProgressBar.swift */; };
 		3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274524B1E1AC00425999 /* ProgressBarController.swift */; };
 		3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A474AFA24B24EDA003424F5 /* PostCellView.swift */; };
 		3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4B92F924AA9176000534FD /* SnapKit */; };
 		3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */; };
 		3A57CF8324AD0AFE00DCA057 /* PostCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */; };
-		3A57CF8624AD12E900DCA057 /* UITextView+Placeholder in Frameworks */ = {isa = PBXBuildFile; productRef = 3A57CF8524AD12E900DCA057 /* UITextView+Placeholder */; };
 		3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */; };
 		3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */; };
 		3A7145E324AA8753000FA3C3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E224AA8753000FA3C3 /* ViewController.swift */; };
@@ -27,8 +29,11 @@
 		3A71460424AA8756000FA3C3 /* Alles_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71460324AA8756000FA3C3 /* Alles_AppUITests.swift */; };
 		3A71461224AA88FC000FA3C3 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461124AA88FC000FA3C3 /* Post.swift */; };
 		3A71461424AA8907000FA3C3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461324AA8907000FA3C3 /* User.swift */; };
+		3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A741A4F24B8BBC70083925A /* CreditsCell.swift */; };
 		3A8BE09C24AB4B55001F313F /* UserHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A8BE09A24AB4B55001F313F /* UserHeaderCell.swift */; };
 		3A8BE09D24AB4B55001F313F /* UserHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A8BE09B24AB4B55001F313F /* UserHeaderCell.xib */; };
+		3A91971624B89DDB00B7066B /* MainSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A91971524B89DDB00B7066B /* MainSettings.storyboard */; };
+		3A91971824B89E1100B7066B /* MainSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A91971724B89E1100B7066B /* MainSettingsViewController.swift */; };
 		3A96F69724AAA31A00482C5A /* PostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A96F69624AAA31A00482C5A /* PostCell.xib */; };
 		3A96F69924AAA52400482C5A /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F69824AAA52400482C5A /* PostCell.swift */; };
 		3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */; };
@@ -75,6 +80,8 @@
 		30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A0252C224ADE30700A4E4FD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewPlaceholder.swift; sourceTree = "<group>"; };
+		3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedLibrariesViewController.swift; sourceTree = "<group>"; };
+		3A361FEC24B8AA2700513028 /* CreditsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
 		3A41274324B1E02900425999 /* CircularProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBar.swift; sourceTree = "<group>"; };
 		3A41274524B1E1AC00425999 /* ProgressBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
 		3A474AFA24B24EDA003424F5 /* PostCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellView.swift; sourceTree = "<group>"; };
@@ -96,8 +103,11 @@
 		3A71460524AA8756000FA3C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A71461124AA88FC000FA3C3 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		3A71461324AA8907000FA3C3 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		3A741A4F24B8BBC70083925A /* CreditsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsCell.swift; sourceTree = "<group>"; };
 		3A8BE09A24AB4B55001F313F /* UserHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderCell.swift; sourceTree = "<group>"; };
 		3A8BE09B24AB4B55001F313F /* UserHeaderCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserHeaderCell.xib; sourceTree = "<group>"; };
+		3A91971524B89DDB00B7066B /* MainSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainSettings.storyboard; sourceTree = "<group>"; };
+		3A91971724B89E1100B7066B /* MainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsViewController.swift; sourceTree = "<group>"; };
 		3A96F69624AAA31A00482C5A /* PostCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PostCell.xib; sourceTree = "<group>"; };
 		3A96F69824AAA52400482C5A /* PostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -135,9 +145,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A25FBA924B753D400324136 /* SPAlert in Frameworks */,
 				3A96F6A524AB404100482C5A /* SwiftyJSON in Frameworks */,
 				3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */,
-				3A57CF8624AD12E900DCA057 /* UITextView+Placeholder in Frameworks */,
 				3A96F6A224AB403100482C5A /* Alamofire in Frameworks */,
 				3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */,
 				A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */,
@@ -183,6 +193,7 @@
 		3A5CF34B24ACBCC0002A829A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				3AFC695424B8C0F80016FEFA /* Credits Cell */,
 				3A474AF924B24EC0003424F5 /* New Post Cell */,
 				3ADF6BC124AD24D600B7C510 /* ReplyButtonCell */,
 				3A5CF34D24ACBCD2002A829A /* UserHeaderCell */,
@@ -235,7 +246,7 @@
 			isa = PBXGroup;
 			children = (
 				3A5CF34B24ACBCC0002A829A /* Cells */,
-				3A96F6A924AB445100482C5A /* View Controllers */,
+				3A96F6A924AB445100482C5A /* Views */,
 				3A96F69D24AB3F9C00482C5A /* Services */,
 				3A96F69C24AB3F9300482C5A /* Data */,
 				3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */,
@@ -266,6 +277,17 @@
 			path = SpicaUITests;
 			sourceTree = "<group>";
 		};
+		3A91971424B89DC300B7066B /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				3A91971524B89DDB00B7066B /* MainSettings.storyboard */,
+				3A91971724B89E1100B7066B /* MainSettingsViewController.swift */,
+				3A361FEC24B8AA2700513028 /* CreditsViewController.swift */,
+				3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		3A96F69C24AB3F9300482C5A /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -290,9 +312,10 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
-		3A96F6A924AB445100482C5A /* View Controllers */ = {
+		3A96F6A924AB445100482C5A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3A91971424B89DC300B7066B /* Settings */,
 				3A4038B124B1EB54002B18F1 /* ProgressBar */,
 				3A7145E224AA8753000FA3C3 /* ViewController.swift */,
 				3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */,
@@ -301,7 +324,7 @@
 				3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */,
 				3A0252C224ADE30700A4E4FD /* LoginViewController.swift */,
 			);
-			path = "View Controllers";
+			path = Views;
 			sourceTree = "<group>";
 		};
 		3AD689B524ADDACC001F485E /* Error Handling */ = {
@@ -331,6 +354,14 @@
 				3ADDC58524AD213900B58DA9 /* ReplyButtonCell.xib */,
 			);
 			path = ReplyButtonCell;
+			sourceTree = "<group>";
+		};
+		3AFC695424B8C0F80016FEFA /* Credits Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3A741A4F24B8BBC70083925A /* CreditsCell.swift */,
+			);
+			path = "Credits Cell";
 			sourceTree = "<group>";
 		};
 		9D4452CB43DE6F344B507525 /* Pods */ = {
@@ -385,8 +416,8 @@
 				3A4B92F924AA9176000534FD /* SnapKit */,
 				3A96F6A124AB403100482C5A /* Alamofire */,
 				3A96F6A424AB404100482C5A /* SwiftyJSON */,
-				3A57CF8524AD12E900DCA057 /* UITextView+Placeholder */,
 				3A34226B24B359BE00B8AFA9 /* JGProgressHUD */,
+				3A25FBA824B753D400324136 /* SPAlert */,
 			);
 			productName = "Alles App";
 			productReference = 3A7145DB24AA8753000FA3C3 /* Spica.app */;
@@ -466,8 +497,8 @@
 				3A4B92F824AA9176000534FD /* XCRemoteSwiftPackageReference "SnapKit" */,
 				3A96F6A024AB403100482C5A /* XCRemoteSwiftPackageReference "Alamofire" */,
 				3A96F6A324AB404100482C5A /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
-				3A57CF8424AD12E900DCA057 /* XCRemoteSwiftPackageReference "UITextView-Placeholder" */,
 				3A34226A24B359BE00B8AFA9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
+				3A25FBA724B753D400324136 /* XCRemoteSwiftPackageReference "SPAlert" */,
 			);
 			productRefGroup = 3A7145DC24AA8753000FA3C3 /* Products */;
 			projectDirPath = "";
@@ -487,6 +518,7 @@
 			files = (
 				3A7145EE24AA8755000FA3C3 /* LaunchScreen.storyboard in Resources */,
 				3A96F69724AAA31A00482C5A /* PostCell.xib in Resources */,
+				3A91971624B89DDB00B7066B /* MainSettings.storyboard in Resources */,
 				3A7145EB24AA8755000FA3C3 /* Assets.xcassets in Resources */,
 				3ADDC58724AD213A00B58DA9 /* ReplyButtonCell.xib in Resources */,
 				3A8BE09D24AB4B55001F313F /* UserHeaderCell.xib in Resources */,
@@ -638,6 +670,7 @@
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
 				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
 				3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */,
+				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
 				3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */,
 				3ADDC58324AD182100B58DA9 /* SentPost.swift in Sources */,
 				3A7145E324AA8753000FA3C3 /* ViewController.swift in Sources */,
@@ -651,9 +684,12 @@
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
 				3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
+				3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */,
 				3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */,
 				3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */,
+				3A91971824B89E1100B7066B /* MainSettingsViewController.swift in Sources */,
 				3A57CF8324AD0AFE00DCA057 /* PostCreateViewController.swift in Sources */,
+				3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */,
 				3A7145E924AA8753000FA3C3 /* Alles_App.xcdatamodeld in Sources */,
 				3A71461224AA88FC000FA3C3 /* Post.swift in Sources */,
 				3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */,
@@ -833,7 +869,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1593947495;
+				CURRENT_PROJECT_VERSION = 1594400620;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -856,7 +892,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1593947495;
+				CURRENT_PROJECT_VERSION = 1594400620;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1004,6 +1040,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3A25FBA724B753D400324136 /* XCRemoteSwiftPackageReference "SPAlert" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ivanvorobei/SPAlert";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.4;
+			};
+		};
 		3A34226A24B359BE00B8AFA9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD";
@@ -1018,14 +1062,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.1;
-			};
-		};
-		3A57CF8424AD12E900DCA057 /* XCRemoteSwiftPackageReference "UITextView-Placeholder" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/devxoul/UITextView-Placeholder";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.4.0;
 			};
 		};
 		3A96F6A024AB403100482C5A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1047,6 +1083,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3A25FBA824B753D400324136 /* SPAlert */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A25FBA724B753D400324136 /* XCRemoteSwiftPackageReference "SPAlert" */;
+			productName = SPAlert;
+		};
 		3A34226B24B359BE00B8AFA9 /* JGProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3A34226A24B359BE00B8AFA9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */;
@@ -1056,11 +1097,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3A4B92F824AA9176000534FD /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-		};
-		3A57CF8524AD12E900DCA057 /* UITextView+Placeholder */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3A57CF8424AD12E900DCA057 /* XCRemoteSwiftPackageReference "UITextView-Placeholder" */;
-			productName = "UITextView+Placeholder";
 		};
 		3A96F6A124AB403100482C5A /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

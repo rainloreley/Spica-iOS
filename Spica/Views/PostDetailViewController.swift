@@ -10,7 +10,10 @@ import UIKit
 
 class PostDetailViewController: UIViewController, PostCreateDelegate {
     var selectedPostID: String!
+    var mainPost: Post!
+
     var selectedPost: Post!
+
     var tableView: UITableView!
 
     var postAncestors = [Post]()
@@ -50,6 +53,10 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
+        if selectedPost != nil {
+            postAncestors = [selectedPost]
+            tableView.reloadData()
+        }
     }
 
     override func viewDidAppear(_: Bool) {
@@ -66,16 +73,23 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             switch result {
             case let .success(newPostDetail):
                 DispatchQueue.main.async {
-                    self.selectedPost = newPostDetail.post
+					var isEmpty = false
+					if self.postAncestors.isEmpty || self.postReplies.isEmpty {
+						isEmpty = true
+					}
+                    self.mainPost = newPostDetail.post
                     self.postAncestors = newPostDetail.ancestors
                     self.postAncestors.append(newPostDetail.post)
                     self.postReplies = newPostDetail.replies
-                    self.tableView.reloadData()
+					if isEmpty {
+						self.tableView.reloadData()
+					}
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
                     self.loadingHud.dismiss()
-                    self.tableView.scrollToRow(at: IndexPath(row: self.postAncestors.firstIndex(where: { $0.id == self.selectedPost.id })!, section: 0), at: .middle, animated: true)
+                    self.tableView.scrollToRow(at: IndexPath(row: self.postAncestors.firstIndex(where: { $0.id == self.mainPost.id })!, section: 0), at: .middle, animated: true)
+                    self.loadImages()
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -95,6 +109,64 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    func loadImages() {
+        DispatchQueue.global(qos: .utility).async {
+            let dispatchGroup = DispatchGroup()
+
+            for (index, post) in self.postAncestors.enumerated() {
+                dispatchGroup.enter()
+
+                self.postAncestors[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+
+                if post.imageURL?.absoluteString != "", post.imageURL != nil {
+                    self.postAncestors[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                } else {
+                    self.postAncestors[index].image = UIImage()
+                }
+
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+
+                dispatchGroup.leave()
+            }
+
+            for (index, post) in self.postReplies.enumerated() {
+                dispatchGroup.enter()
+
+                self.postReplies[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 2)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+
+                if post.imageURL?.absoluteString != "", post.imageURL != nil {
+                    self.postReplies[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                } else {
+                    self.postReplies[index].image = UIImage()
+                }
+
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 2)], with: .automatic)
+                    self.tableView.endUpdates()
+                }
+
+                dispatchGroup.leave()
             }
         }
     }
@@ -169,7 +241,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-                self.loadPostDetail()
+                //self.loadPostDetail()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -239,7 +311,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-                self.loadPostDetail()
+                //self.loadPostDetail()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -267,11 +339,11 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     @objc func openReplyView(_: UIButton) {
-        if selectedPost != nil {
+        if mainPost != nil {
             let vc = PostCreateViewController()
             vc.type = .reply
             vc.delegate = self
-            vc.parentID = selectedPost.id
+            vc.parentID = mainPost.id
             present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
         }
         /* let userByTag = posts[sender.view!.tag].author
@@ -321,7 +393,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
 
         } else if indexPath.section == 1 {
-            if selectedPost != nil {
+            if mainPost != nil {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "replyButtonCell", for: indexPath) as! ReplyButtonCell
 
                 cell.replyBtn.addTarget(self, action: #selector(openReplyView(_:)), for: .touchUpInside)
@@ -388,6 +460,18 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension PostDetailViewController: PostCellViewDelegate {
+    func replyToPost(id _: String) {
+        //
+    }
+
+    func copyPostID(id _: String) {
+        //
+    }
+
+    func deletePost(id _: String) {
+        //
+    }
+
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = post

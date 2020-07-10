@@ -112,6 +112,7 @@ class UserProfileViewController: UIViewController {
                         self.refreshControl.endRefreshing()
                     }
                     self.loadingHud.dismiss()
+					self.loadImages()
                 }
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -131,6 +132,75 @@ class UserProfileViewController: UIViewController {
                         }
                     }
                 }
+            }
+        }
+    }
+
+	func loadImages() {
+        DispatchQueue.global(qos: .utility).async {
+            let dispatchGroup = DispatchGroup()
+
+            dispatchGroup.enter()
+
+            self.user.image = ImageLoader.default.loadImageFromInternet(url: self.user.imageURL)
+
+            DispatchQueue.main.async {
+                self.tableView.beginUpdates()
+                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
+            }
+
+            dispatchGroup.leave()
+
+            for (index, post) in self.userPosts.enumerated() {
+				
+					if index > self.userPosts.count - 1 {
+						
+					} else {
+						dispatchGroup.enter()
+
+						self.userPosts[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+						
+						if index > 10 {
+							if index % 5 == 0 {
+								
+							}
+						}
+						
+						if index % 5 == 0 {
+							DispatchQueue.main.async {
+								self.tableView.reloadData()
+							}
+						}
+
+						/*DispatchQueue.main.async {
+							self.tableView.beginUpdates()
+							self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .none)
+							self.tableView.endUpdates()
+						}*/
+
+						if post.imageURL?.absoluteString != "", post.imageURL != nil {
+							self.userPosts[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+						} else {
+							self.userPosts[index].image = UIImage()
+						}
+						
+						if index % 5 == 0 {
+							DispatchQueue.main.async {
+								self.tableView.reloadData()
+							}
+						}
+
+						/*DispatchQueue.main.async {
+							self.tableView.beginUpdates()
+							self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .none)
+							self.tableView.endUpdates()
+						}*/
+
+						dispatchGroup.leave()
+					}
+				
+				
             }
         }
     }
@@ -276,6 +346,7 @@ class UserProfileViewController: UIViewController {
      */
 }
 
+
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in _: UITableView) -> Int {
         2
@@ -404,6 +475,18 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 }
 
 extension UserProfileViewController: PostCellViewDelegate {
+    func replyToPost(id _: String) {
+        //
+    }
+
+    func copyPostID(id _: String) {
+        //
+    }
+
+    func deletePost(id _: String) {
+        //
+    }
+
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
 

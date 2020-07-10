@@ -31,7 +31,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
         // KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
 
-        if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token") {
+        if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
             window?.rootViewController = tabBar
         } else {
             window?.rootViewController = UINavigationController(rootViewController: LoginViewController())

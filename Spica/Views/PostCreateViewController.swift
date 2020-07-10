@@ -9,6 +9,7 @@ import Combine
 import JGProgressHUD
 import KMPlaceholderTextView
 import SnapKit
+import SPAlert
 import SwiftKeychainWrapper
 import SwiftUI
 import UIKit
@@ -32,6 +33,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
     var loadingHud: JGProgressHUD!
 
+    var sendButton: UIBarButtonItem!
+
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
 
     override func viewDidLoad() {
@@ -52,7 +55,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
         imageButton = UIBarButtonItem(image: UIImage(systemName: "photo"), style: .plain, target: self, action: #selector(openImagePicker))
 
-        let sendButton = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"), style: .plain, target: self, action: #selector(sendPost))
+        sendButton = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"), style: .plain, target: self, action: #selector(sendPost))
 
         navigationItem.leftBarButtonItem = imageButton
         navigationItem.rightBarButtonItem = sendButton
@@ -71,11 +74,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
          imageButton.addTarget(self, action: #selector(self.openImagePicker), for: .touchUpInside)
          view.addSubview(imageButton) */
 
-        let userUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-
-        let pfpImage = ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(userUsername!)")!)
         userPfp = UIImageView(frame: .zero)
-        userPfp.image = pfpImage
+        userPfp.image = UIImage(systemName: "person.circle")
         userPfp.layer.cornerRadius = 20
         userPfp.contentMode = .scaleAspectFit
         userPfp.clipsToBounds = true
@@ -158,8 +158,17 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         }
     }
 
+    override func viewDidAppear(_: Bool) {
+        let userUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+
+        let pfpImage = ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(userUsername!)")!)
+
+        userPfp.image = pfpImage
+    }
+
     @objc func sendPost() {
         loadingHud.show(in: view)
+        sendButton.isEnabled = false
         contentTextView.layer.cornerRadius = 0
         contentTextView.layer.borderWidth = 0
         contentTextView.layer.borderColor = UIColor.clear.cgColor
@@ -167,6 +176,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             contentTextView.layer.cornerRadius = 12
             contentTextView.layer.borderWidth = 1
             contentTextView.layer.borderColor = UIColor.systemRed.cgColor
+            loadingHud.dismiss()
+            sendButton.isEnabled = true
             return
         } else {
             AllesAPI.default.sendPost(newPost: NewPost(content: contentTextView.text, image: selectedImage, type: type, parent: parentID)) { result in
@@ -175,12 +186,16 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
                     DispatchQueue.main.async {
                         self.loadingHud.dismiss()
+                        self.sendButton.isEnabled = true
                         self.delegate.didSendPost(sentPost: sentPost)
                         self.dismiss(animated: true, completion: nil)
+                        SPAlert.present(title: "Post sent!", preset: .done)
                     }
                 case let .failure(apiError):
                     DispatchQueue.main.async {
                         self.loadingHud.dismiss()
+                        self.sendButton.isEnabled = true
+
                         EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
                             if apiError.action != nil, apiError.actionParameter != nil {
                                 if apiError.action == AllesAPIErrorAction.navigate {

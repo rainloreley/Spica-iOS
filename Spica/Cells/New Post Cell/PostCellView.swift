@@ -5,13 +5,21 @@
 //  Created by Adrian Baumgart on 05.07.20.
 //
 
+import SwiftKeychainWrapper
 import UIKit
-import UITextView_Placeholder
+import KMPlaceholderTextView
+
+//https://github.com/devxoul/UITextView-Placeholder
 
 protocol PostCellViewDelegate {
     func selectedUser(username: String, indexPath: IndexPath)
     func selectedURL(url: String, indexPath: IndexPath)
     func selectedPost(post: String, indexPath: IndexPath)
+
+    func copyPostID(id: String)
+    func deletePost(id: String)
+
+    func replyToPost(id: String)
 }
 
 class PostCellView: UITableViewCell, UITextViewDelegate {
@@ -45,7 +53,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             usernameLabel.text = "@\(post!.author.username)"
             votecountLabel.text = String(post!.score)
             contentTextView.delegate = self
-            print("ENA: \(contentTextView.isUserInteractionEnabled)")
 
             let attributedText = NSMutableAttributedString(string: "")
 
@@ -57,7 +64,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 
                     let username = removeSpecialCharsFromString(text: String(word))
-                    print("username: \(username)")
                     selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: username.count))
 
                     selectablePart.addAttribute(.link, value: "user:\(username)", range: NSRange(location: 0, length: username.count))
@@ -70,11 +76,19 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                     let postID = word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]
                     selectablePart.addAttribute(.link, value: "post:\(postID)", range: NSRange(location: 0, length: selectablePart.length - 1))
                     attributedText.append(selectablePart)
-                } else if String(word).isValidURL, word.count > 1 {
+				} else if String(word).isValidURL, word.count > 1 {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")
                     selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
 
                     selectablePart.addAttribute(.link, value: "url:\(word)", range: NSRange(location: 0, length: selectablePart.length - 1))
+                    attributedText.append(selectablePart)
+                } else if word.hasPrefix("#"), word.count > 1 {
+                    let selectablePart = NSMutableAttributedString(string: String(word) + " ")
+
+                    selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
+
+                    let tag = word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]
+                    selectablePart.addAttribute(.link, value: "tag:\(tag)", range: NSRange(location: 0, length: selectablePart.length - 1))
                     attributedText.append(selectablePart)
                 } else {
                     attributedText.append(NSAttributedString(string: word + " "))
@@ -106,6 +120,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 upvoteButton.setTitleColor(.systemBlue, for: .normal)
                 downvoteButton.setTitleColor(.systemBlue, for: .normal)
             }
+
+            let contextInteraction = UIContextMenuInteraction(delegate: self)
+            // moreImageView.addInteraction(contextInteraction)
+            contentView.addInteraction(contextInteraction)
+            moreImageView.isUserInteractionEnabled = true
         }
     }
 
@@ -133,6 +152,14 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         label.textAlignment = .left
         label.text = "username"
         return label
+    }()
+
+    private var moreImageView: UIImageView = {
+        let imageView = UIImageView(image: UIImage(systemName: "ellipsis.circle"))
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 20
+        return imageView
     }()
 
     private var votecountLabel: UILabel = {
@@ -170,8 +197,8 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         return imgView
     }()
 
-    var contentTextView: UITextView = {
-        let textView = UITextView(frame: .zero)
+    var contentTextView: KMPlaceholderTextView = {
+        let textView = KMPlaceholderTextView(frame: .zero)
         textView.textAlignment = .left
         textView.font = .systemFont(ofSize: 15)
         textView.textColor = .label
@@ -202,10 +229,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         return label
     }()
 
-    @objc func vote() {
-        print("VOTEEEEE")
-    }
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         // ADD SUBVIEWS
@@ -219,6 +242,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         contentView.addSubview(contentTextView)
         contentView.addSubview(replycountLabel)
         contentView.addSubview(dateLabel)
+        // contentView.addSubview(moreImageView)
         contentView.addSubview(mediaImageView)
 
         contentView.isUserInteractionEnabled = true
@@ -227,25 +251,31 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
         contentTextView.translatesAutoresizingMaskIntoConstraints = false
 
+        /* moreImageView.snp.makeConstraints { (make) in
+         	make.width.equalTo(30)
+         	make.height.equalTo(30)
+         	make.top.equalTo(contentView.snp.top).offset(16)
+         	make.right.equalTo(contentView.snp.right).offset(-16)
+         } */
+
         votecountLabel.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.snp.centerY)
-            make.left.equalTo(contentView.snp.left).offset(32)
-            make.left.equalTo(contentView.snp.left).offset(32)
-            make.width.equalTo(50)
+            make.left.equalTo(contentView.snp.left).offset(16)
+            make.width.equalTo(30)
         }
 
         upvoteButton.snp.makeConstraints { make in
             make.bottom.equalTo(votecountLabel.snp.top)
             make.centerX.equalTo(votecountLabel.snp.centerX)
-            make.left.equalTo(contentView.snp.left).offset(32)
-            make.width.equalTo(50)
+            make.left.equalTo(contentView.snp.left).offset(16)
+            make.width.equalTo(30)
         }
 
         downvoteButton.snp.makeConstraints { make in
             make.top.equalTo(votecountLabel.snp.bottom).offset(-8)
             make.centerX.equalTo(votecountLabel.snp.centerX)
-            make.left.equalTo(contentView.snp.left).offset(32)
-            make.width.equalTo(50)
+            make.left.equalTo(contentView.snp.left).offset(16)
+            make.width.equalTo(30)
         }
 
         pfpImageView.snp.makeConstraints { make in
@@ -318,8 +348,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
     func textView(_: UITextView, shouldInteractWith URL: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
         if interaction == .invokeDefaultAction {
-            let stringURL = URL.absoluteString
-            print(stringURL)
+			let stringURL = URL.absoluteString
 
             if stringURL.hasPrefix("user:@") {
                 let username = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 6) ..< stringURL.endIndex]
@@ -327,11 +356,52 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             } else if stringURL.hasPrefix("url:") {
                 let selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
                 delegate.selectedURL(url: String(selURL), indexPath: indexPath)
-            } else if stringURL.hasPrefix("post:") {
+			} else if stringURL.isValidURL {
+				delegate.selectedURL(url: stringURL, indexPath: indexPath)
+			} else if stringURL.hasPrefix("post:") {
                 let postID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
                 delegate.selectedPost(post: String(postID), indexPath: indexPath)
             }
         }
         return false
+    }
+}
+
+extension PostCellView: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+
+            self.makeContextMenu()
+        })
+    }
+
+    func makeContextMenu() -> UIMenu {
+        // Create a UIAction for sharing
+
+        var actionsArray = [UIAction]()
+
+        let copyID = UIAction(title: "Copy ID", image: UIImage(systemName: "doc.on.doc")) { _ in
+            self.delegate.copyPostID(id: self.post!.id)
+        }
+
+        actionsArray.append(copyID)
+
+        let reply = UIAction(title: "Reply", image: UIImage(systemName: "arrowshape.turn.up.left")) { _ in
+            self.delegate.replyToPost(id: self.post!.id)
+        }
+
+        actionsArray.append(reply)
+
+        let userID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+
+        if post?.author.id == userID {
+            let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                self.delegate.deletePost(id: self.post!.id)
+            }
+            actionsArray.append(delete)
+        }
+
+        // Create and return a UIMenu with the share action
+        return UIMenu(title: "Post", children: actionsArray)
     }
 }

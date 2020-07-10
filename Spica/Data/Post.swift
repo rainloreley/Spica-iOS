@@ -16,6 +16,6 @@ public struct Post {
     var score: Int
     var content: String
     var image: UIImage?
-    var imageURL: String?
+    var imageURL: URL?
     var voteStatus: Int
 }
