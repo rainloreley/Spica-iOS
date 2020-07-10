@@ -16,6 +16,7 @@ class MainSettingsViewController: UITableViewController {
 
 	@IBOutlet weak var userPfpImageView: UIImageView!
 	@IBOutlet weak var usernameLabel: UILabel!
+	@IBOutlet weak var versionBuildLabel: UILabel!
 	
 	var username = ""
 	
@@ -69,6 +70,12 @@ class MainSettingsViewController: UITableViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		
+		let dictionary = Bundle.main.infoDictionary!
+		let version = dictionary["CFBundleShortVersionString"] as! String
+		let build = dictionary["CFBundleVersion"] as! String
+		
+		versionBuildLabel.text = "Version \(version) Build \(build)"
+		
 		DispatchQueue.global(qos: .utility).async {
 			self.username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")!
 			
@@ -105,7 +112,7 @@ class MainSettingsViewController: UITableViewController {
 			case 3:
 				return 2
 			case 4:
-				return 1
+				return 2
 			default:
 				return 0
 		}

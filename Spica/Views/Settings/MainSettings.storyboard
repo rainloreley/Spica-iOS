@@ -268,7 +268,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© 2020, Adrian Baumgart. All rights reserved" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a0f-Lx-DBN">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version: --- Build: ---" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a0f-Lx-DBN">
                                                     <rect key="frame" x="20" y="11" width="334" height="28"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -276,10 +276,32 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="a0f-Lx-DBN" firstAttribute="top" secondItem="zmq-yy-ZZM" secondAttribute="topMargin" id="2PF-eE-lZq"/>
-                                                <constraint firstItem="a0f-Lx-DBN" firstAttribute="bottom" secondItem="zmq-yy-ZZM" secondAttribute="bottomMargin" id="Ki2-IZ-PB5"/>
-                                                <constraint firstItem="a0f-Lx-DBN" firstAttribute="trailing" secondItem="zmq-yy-ZZM" secondAttribute="trailingMargin" id="YYG-jq-Z5n"/>
-                                                <constraint firstItem="a0f-Lx-DBN" firstAttribute="leading" secondItem="zmq-yy-ZZM" secondAttribute="leadingMargin" id="nsb-dd-kS1"/>
+                                                <constraint firstItem="a0f-Lx-DBN" firstAttribute="trailing" secondItem="zmq-yy-ZZM" secondAttribute="trailingMargin" id="NYc-4n-f0z"/>
+                                                <constraint firstItem="a0f-Lx-DBN" firstAttribute="top" secondItem="zmq-yy-ZZM" secondAttribute="topMargin" id="VYB-CM-R3S"/>
+                                                <constraint firstItem="a0f-Lx-DBN" firstAttribute="bottom" secondItem="zmq-yy-ZZM" secondAttribute="bottomMargin" id="jo3-DP-Qgz"/>
+                                                <constraint firstItem="a0f-Lx-DBN" firstAttribute="leading" secondItem="zmq-yy-ZZM" secondAttribute="leadingMargin" id="sXy-DB-wGm"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="Vaz-0P-mf1">
+                                        <rect key="frame" x="20" y="829.5" width="374" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Vaz-0P-mf1" id="KXY-wk-dwu">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© 2020, Adrian Baumgart. All rights reserved" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OvF-Bn-Tew">
+                                                    <rect key="frame" x="20" y="11" width="334" height="28"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="OvF-Bn-Tew" firstAttribute="leading" secondItem="KXY-wk-dwu" secondAttribute="leadingMargin" id="cQt-sG-lle"/>
+                                                <constraint firstItem="OvF-Bn-Tew" firstAttribute="top" secondItem="KXY-wk-dwu" secondAttribute="topMargin" id="iAG-lZ-OXT"/>
+                                                <constraint firstItem="OvF-Bn-Tew" firstAttribute="bottom" secondItem="KXY-wk-dwu" secondAttribute="bottomMargin" id="pe9-83-cKK"/>
+                                                <constraint firstItem="OvF-Bn-Tew" firstAttribute="trailing" secondItem="KXY-wk-dwu" secondAttribute="trailingMargin" id="wTc-O9-phZ"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -295,6 +317,7 @@
                     <connections>
                         <outlet property="userPfpImageView" destination="gIJ-HF-6XP" id="XdG-WZ-tLb"/>
                         <outlet property="usernameLabel" destination="im2-ye-Kme" id="9mP-oT-gHD"/>
+                        <outlet property="versionBuildLabel" destination="a0f-Lx-DBN" id="Zg2-hN-O3o"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dDS-Wg-oDP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

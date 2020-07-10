@@ -176,7 +176,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         button.setTitle("+", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 23)
         button.setTitleColor(.systemBlue, for: .normal)
-        button.addTarget(self, action: #selector(vote), for: .touchUpInside)
         return button
     }()
 
@@ -185,7 +184,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         button.setTitle("-", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 29)
         button.setTitleColor(.systemBlue, for: .normal)
-        button.addTarget(self, action: #selector(vote), for: .touchUpInside)
         return button
     }()
 
