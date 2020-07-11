@@ -7,6 +7,7 @@
 
 import JGProgressHUD
 import UIKit
+import SPAlert
 
 class PostDetailViewController: UIViewController, PostCreateDelegate {
     var selectedPostID: String!
@@ -81,9 +82,9 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.postAncestors = newPostDetail.ancestors
                     self.postAncestors.append(newPostDetail.post)
                     self.postReplies = newPostDetail.replies
-					if isEmpty {
-						self.tableView.reloadData()
-					}
+					//if isEmpty {
+					self.tableView.reloadData()
+					//}
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
@@ -460,6 +461,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension PostDetailViewController: PostCellViewDelegate {
+<<<<<<< HEAD
 	func repost(id: String) {
 		//
 	}
@@ -475,6 +477,53 @@ extension PostDetailViewController: PostCellViewDelegate {
     func deletePost(id _: String) {
         //
     }
+=======
+	
+	func replyToPost(id: String) {
+		   let vc = PostCreateViewController()
+		   vc.type = .reply
+		   vc.delegate = self
+		   vc.parentID = id
+		   present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+	   }
+
+	   func copyPostID(id: String) {
+		   let pasteboard = UIPasteboard.general
+		   pasteboard.string = id
+		   SPAlert.present(title: "Copied", preset: .done)
+	   }
+
+	   func deletePost(id: String) {
+		   EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { _, int in
+			   if int == 1 {
+				   AllesAPI.default.deletePost(id: id) { result in
+					   switch result {
+					   case .success:
+						   self.loadPostDetail()
+					   case let .failure(apiError):
+						   DispatchQueue.main.async {
+							   EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+								   if self.refreshControl.isRefreshing {
+									   self.refreshControl.endRefreshing()
+								   }
+								   self.loadingHud.dismiss()
+								   if apiError.action != nil, apiError.actionParameter != nil {
+									   if apiError.action == AllesAPIErrorAction.navigate {
+										   if apiError.actionParameter == "login" {
+											   let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+											   mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+											   mySceneDelegate.window?.makeKeyAndVisible()
+										   }
+									   }
+								   }
+							   }
+						   }
+					   }
+				   }
+			   }
+		   }
+	   }
+>>>>>>> refs/heads/caching
 
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()

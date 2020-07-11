@@ -112,10 +112,9 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
 				let isEmpty = self.posts.isEmpty
                 self.posts = posts
                 DispatchQueue.main.async {
-					if isEmpty {
-						self.tableView.reloadData()
-						
-					}
+					//if isEmpty {
+					self.tableView.reloadData()
+					//}
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }

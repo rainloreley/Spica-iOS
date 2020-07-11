@@ -8,6 +8,7 @@
 import JGProgressHUD
 import SwiftKeychainWrapper
 import UIKit
+import SPAlert
 
 class UserProfileViewController: UIViewController {
     var user: User!
@@ -75,7 +76,8 @@ class UserProfileViewController: UIViewController {
                     DispatchQueue.main.async {
                         self.user = newUser
                         self.navigationItem.title = "\(self.user.displayName)"
-                        self.tableView.reloadData()
+                        //self.tableView.reloadData()
+						self.loadPfp()
                         self.loadPosts()
                     }
                 case let .failure(apiError):
@@ -135,12 +137,30 @@ class UserProfileViewController: UIViewController {
             }
         }
     }
+	
+	func loadPfp() {
+		DispatchQueue.global(qos: .utility).async {
+			let dispatchGroup = DispatchGroup()
+
+			dispatchGroup.enter()
+			
+			self.user.image = ImageLoader.default.loadImageFromInternet(url: self.user.imageURL)
+
+            DispatchQueue.main.async {
+                self.tableView.beginUpdates()
+                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
+            }
+			
+			dispatchGroup.leave()
+		}
+	}
 
 	func loadImages() {
         DispatchQueue.global(qos: .utility).async {
             let dispatchGroup = DispatchGroup()
 
-            dispatchGroup.enter()
+            /*dispatchGroup.enter()
 
             self.user.image = ImageLoader.default.loadImageFromInternet(url: self.user.imageURL)
 
@@ -150,7 +170,7 @@ class UserProfileViewController: UIViewController {
                 self.tableView.endUpdates()
             }
 
-            dispatchGroup.leave()
+            dispatchGroup.leave()*/
 
             for (index, post) in self.userPosts.enumerated() {
 				
@@ -474,23 +494,74 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
     }
 }
 
+extension UserProfileViewController: PostCreateDelegate {
+	func didSendPost(sentPost: SentPost) {
+		let detailVC = PostDetailViewController()
+        detailVC.selectedPostID = sentPost.id
+
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+	}
+	
+	
+}
+
 extension UserProfileViewController: PostCellViewDelegate {
+<<<<<<< HEAD
 	func repost(id: String) {
 		//
 	}
 	
     func replyToPost(id _: String) {
         //
+=======
+	
+    func replyToPost(id: String) {
+        let vc = PostCreateViewController()
+        vc.type = .reply
+        vc.delegate = self
+        vc.parentID = id
+        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+>>>>>>> refs/heads/caching
     }
 
-    func copyPostID(id _: String) {
-        //
+    func copyPostID(id: String) {
+        let pasteboard = UIPasteboard.general
+        pasteboard.string = id
+        SPAlert.present(title: "Copied", preset: .done)
     }
 
-    func deletePost(id _: String) {
-        //
+    func deletePost(id: String) {
+        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { _, int in
+            if int == 1 {
+                AllesAPI.default.deletePost(id: id) { result in
+                    switch result {
+                    case .success:
+						self.loadPosts()
+                    case let .failure(apiError):
+                        DispatchQueue.main.async {
+                            EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+                                if self.refreshControl.isRefreshing {
+                                    self.refreshControl.endRefreshing()
+                                }
+                                self.loadingHud.dismiss()
+                                if apiError.action != nil, apiError.actionParameter != nil {
+                                    if apiError.action == AllesAPIErrorAction.navigate {
+                                        if apiError.actionParameter == "login" {
+                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                                            mySceneDelegate.window?.makeKeyAndVisible()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
-
+	
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
 

@@ -7,7 +7,7 @@
 
 import JGProgressHUD
 import UIKit
-var loadingHud: JGProgressHUD!
+import SPAlert
 
 class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
@@ -15,6 +15,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     var mentions = [Post]()
 
     var refreshControl = UIRefreshControl()
+	
+	var loadingHud: JGProgressHUD!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,13 +62,13 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                 DispatchQueue.main.async {
 					let isEmpty = self.mentions.isEmpty
                     self.mentions = newPosts
-					if isEmpty {
-						self.tableView.reloadData()
-					}
+					//if isEmpty {
+					self.tableView.reloadData()
+					//}
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
-                    loadingHud.dismiss()
+					self.loadingHud.dismiss()
                     self.loadImages()
                 }
             case let .failure(apiError):
@@ -75,7 +77,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                         if self.refreshControl.isRefreshing {
                             self.refreshControl.endRefreshing()
                         }
-                        loadingHud.dismiss()
+						self.loadingHud.dismiss()
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -306,12 +308,41 @@ extension MentionsViewController: PostCellViewDelegate {
         present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
     }
 
-    func copyPostID(id _: String) {
-        //
+    func copyPostID(id: String) {
+        let pasteboard = UIPasteboard.general
+        pasteboard.string = id
+        SPAlert.present(title: "Copied", preset: .done)
     }
 
-    func deletePost(id _: String) {
-        //
+    func deletePost(id: String) {
+        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { _, int in
+            if int == 1 {
+                AllesAPI.default.deletePost(id: id) { result in
+                    switch result {
+                    case .success:
+						self.loadMentions()
+                    case let .failure(apiError):
+                        DispatchQueue.main.async {
+                            EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+                                if self.refreshControl.isRefreshing {
+                                    self.refreshControl.endRefreshing()
+                                }
+                                self.loadingHud.dismiss()
+                                if apiError.action != nil, apiError.actionParameter != nil {
+                                    if apiError.action == AllesAPIErrorAction.navigate {
+                                        if apiError.actionParameter == "login" {
+                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                                            mySceneDelegate.window?.makeKeyAndVisible()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     func selectedPost(post: String, indexPath _: IndexPath) {
