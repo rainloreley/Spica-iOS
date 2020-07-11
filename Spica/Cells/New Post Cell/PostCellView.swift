@@ -21,7 +21,7 @@ protocol PostCellViewDelegate {
 
     func replyToPost(id: String)
 	
-	func repost(id: String)
+	func repost(id: String, username: String)
 }
 
 class PostCellView: UITableViewCell, UITextViewDelegate {
@@ -59,9 +59,32 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             let attributedText = NSMutableAttributedString(string: "")
 
             let normalFont: UIFont? = UIFont.systemFont(ofSize: 15)
+			
+			let postContent = post?.content.replacingOccurrences(of: "\n", with: " \n ")
 
-            let splitContent = post?.content.split(separator: " ")
-            for word in splitContent! {
+			let splitContent = postContent!.split(separator: " ")//post?.content.components(separatedBy: CharacterSet(charactersIn: " \n"))
+			for word in splitContent {
+				
+				/*var newWord = ""
+				if word == "\n" {
+				newWord = "\n"
+				}
+				else {
+					//newWord = String(word).replacingOccurrences(of: "\n", with: "")
+					newWord = String(word)
+				}*/
+				
+				/*if word.contains("%xfa") {
+					
+				}*/
+				
+				/*var newWord = word
+				
+				
+				let formattedWord = word.replacingOccurrences(of: "^\\s*", with: "", options: .regularExpression)
+				newWord = formattedWord.split(separator: "")*/
+
+				
                 if word.hasPrefix("@"), word.count > 1 {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 
@@ -70,7 +93,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
                     selectablePart.addAttribute(.link, value: "user:\(username)", range: NSRange(location: 0, length: username.count))
                     attributedText.append(selectablePart)
-                } else if word.hasPrefix("%"), word.count > 1 {
+				} else if word.hasPrefix("%"), word.count > 1 {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 
                     selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
@@ -93,7 +116,13 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                     selectablePart.addAttribute(.link, value: "tag:\(tag)", range: NSRange(location: 0, length: selectablePart.length - 1))
                     attributedText.append(selectablePart)
                 } else {
-                    attributedText.append(NSAttributedString(string: word + " "))
+					if word == "\n" {
+					attributedText.append(NSAttributedString(string: "\n"))
+					}
+					else {
+					attributedText.append(NSAttributedString(string: word + " "))
+					}
+                    
                 }
             }
 
@@ -354,7 +383,10 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 let username = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 6) ..< stringURL.endIndex]
                 delegate.selectedUser(username: String(username), indexPath: indexPath)
             } else if stringURL.hasPrefix("url:") {
-                let selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
+                var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
+				if !selURL.starts(with: "https://") && !selURL.starts(with: "http://") {
+					selURL = "https://" + selURL
+				}
                 delegate.selectedURL(url: String(selURL), indexPath: indexPath)
 			} else if stringURL.isValidURL {
 				delegate.selectedURL(url: stringURL, indexPath: indexPath)
@@ -392,8 +424,8 @@ extension PostCellView: UIContextMenuInteractionDelegate {
 
         actionsArray.append(reply)
 		
-		let repost = UIAction(title: "Attach to new post", image: UIImage(systemName: "square.and.arrow.up")) { _ in
-			self.delegate.repost(id: self.post!.id)
+		let repost = UIAction(title: "Repost", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+			self.delegate.repost(id: self.post!.id, username: self.post!.author.username)
 		}
 		
 		actionsArray.append(repost)

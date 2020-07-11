@@ -296,7 +296,7 @@ extension MentionsViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
-	func repost(id: String) {
+	func repost(id: String, username: String) {
 		//
 	}
 	

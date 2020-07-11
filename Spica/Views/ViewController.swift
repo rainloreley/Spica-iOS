@@ -458,6 +458,14 @@ extension ViewController: MainSettingsDelegate {
 }
 
 extension ViewController: PostCellViewDelegate {
+	func repost(id: String, username: String) {
+		let vc = PostCreateViewController()
+		vc.type = .post
+		vc.delegate = self
+		vc.preText = "@\(username)\n\n\n\n%\(id)"
+		present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+	}
+	
     func replyToPost(id: String) {
         let vc = PostCreateViewController()
         vc.type = .reply

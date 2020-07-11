@@ -461,23 +461,13 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension PostDetailViewController: PostCellViewDelegate {
-<<<<<<< HEAD
-	func repost(id: String) {
-		//
+	func repost(id: String, username: String) {
+		let vc = PostCreateViewController()
+		vc.type = .post
+		vc.delegate = self
+		vc.preText = "@\(username)\n\n\n\n%\(id)"
+		present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
 	}
-	
-    func replyToPost(id _: String) {
-        //
-    }
-
-    func copyPostID(id _: String) {
-        //
-    }
-
-    func deletePost(id _: String) {
-        //
-    }
-=======
 	
 	func replyToPost(id: String) {
 		   let vc = PostCreateViewController()
@@ -523,7 +513,7 @@ extension PostDetailViewController: PostCellViewDelegate {
 			   }
 		   }
 	   }
->>>>>>> refs/heads/caching
+
 
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()

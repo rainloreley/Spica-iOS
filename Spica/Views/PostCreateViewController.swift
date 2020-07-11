@@ -34,6 +34,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
     var loadingHud: JGProgressHUD!
 
     var sendButton: UIBarButtonItem!
+	
+	var preText: String!
 
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
 
@@ -86,6 +88,9 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         contentTextView.placeholder = "What's on your mind?"
         contentTextView.placeholderColor = UIColor.tertiaryLabel
         contentTextView.delegate = self
+		if preText != nil {
+			contentTextView.text = preText
+		}
 
         view.addSubview(contentTextView)
 
@@ -127,6 +132,10 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             make.top.equalTo(userPfp.snp.bottom).offset(32)
             make.left.equalTo(view.snp.left).offset(16)
         }
+		
+		let calculation = Double(contentTextView.text.count) / Double(500)
+
+        progressBarController.progress = Float(calculation)
 
         // Do any additional setup after loading the view.
     }

@@ -507,22 +507,20 @@ extension UserProfileViewController: PostCreateDelegate {
 }
 
 extension UserProfileViewController: PostCellViewDelegate {
-<<<<<<< HEAD
-	func repost(id: String) {
-		//
+	func repost(id: String, username: String) {
+		let vc = PostCreateViewController()
+		vc.type = .post
+		vc.delegate = self
+		vc.preText = "@\(username)\n\n\n\n%\(id)"
+		present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
 	}
-	
-    func replyToPost(id _: String) {
-        //
-=======
-	
     func replyToPost(id: String) {
         let vc = PostCreateViewController()
         vc.type = .reply
         vc.delegate = self
         vc.parentID = id
         present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
->>>>>>> refs/heads/caching
+
     }
 
     func copyPostID(id: String) {
