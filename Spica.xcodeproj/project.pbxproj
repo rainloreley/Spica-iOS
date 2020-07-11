@@ -44,6 +44,7 @@
 		3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */; };
 		3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA12EF324B0F3CD009C904A /* EZAlertController.swift */; };
 		3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */; };
+		3ACD508824B9EA1B00498F6F /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACD508724B9EA1B00498F6F /* ImageCache.swift */; };
 		3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */; };
 		3AD689BA24ADDB5E001F485E /* AllesAPIErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD689B924ADDB5E001F485E /* AllesAPIErrorAction.swift */; };
 		3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBFC7C24ADE7FB0064A7A4 /* SignedInUser.swift */; };
@@ -116,6 +117,7 @@
 		3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		3AA12EF324B0F3CD009C904A /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
 		3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
+		3ACD508724B9EA1B00498F6F /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorMessage.swift; sourceTree = "<group>"; };
 		3AD689B924ADDB5E001F485E /* AllesAPIErrorAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorAction.swift; sourceTree = "<group>"; };
 		3ADBFC7C24ADE7FB0064A7A4 /* SignedInUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignedInUser.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				3A96F6A624AB410900482C5A /* Extensions.swift */,
 				3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */,
 				3AA12EF324B0F3CD009C904A /* EZAlertController.swift */,
+				3ACD508724B9EA1B00498F6F /* ImageCache.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -669,6 +672,7 @@
 			files = (
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
 				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
+				3ACD508824B9EA1B00498F6F /* ImageCache.swift in Sources */,
 				3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */,
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
 				3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */,
@@ -869,7 +873,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1594401413;
+				CURRENT_PROJECT_VERSION = 1594414280;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -892,7 +896,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1594401413;
+				CURRENT_PROJECT_VERSION = 1594414280;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
