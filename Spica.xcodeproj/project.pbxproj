@@ -193,8 +193,8 @@
 		3A5CF34B24ACBCC0002A829A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				3AFC695424B8C0F80016FEFA /* Credits Cell */,
 				3A474AF924B24EC0003424F5 /* New Post Cell */,
+				3AFC695424B8C0F80016FEFA /* Credits Cell */,
 				3ADF6BC124AD24D600B7C510 /* ReplyButtonCell */,
 				3A5CF34D24ACBCD2002A829A /* UserHeaderCell */,
 				3A5CF34C24ACBCCA002A829A /* PostCell */,

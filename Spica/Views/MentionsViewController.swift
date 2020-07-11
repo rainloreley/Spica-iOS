@@ -294,6 +294,10 @@ extension MentionsViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
+	func repost(id: String) {
+		//
+	}
+	
     func replyToPost(id: String) {
         let vc = PostCreateViewController()
         vc.type = .reply

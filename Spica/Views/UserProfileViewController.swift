@@ -475,6 +475,10 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 }
 
 extension UserProfileViewController: PostCellViewDelegate {
+	func repost(id: String) {
+		//
+	}
+	
     func replyToPost(id _: String) {
         //
     }

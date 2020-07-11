@@ -460,6 +460,10 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension PostDetailViewController: PostCellViewDelegate {
+	func repost(id: String) {
+		//
+	}
+	
     func replyToPost(id _: String) {
         //
     }

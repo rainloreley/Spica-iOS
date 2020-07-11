@@ -20,6 +20,8 @@ protocol PostCellViewDelegate {
     func deletePost(id: String)
 
     func replyToPost(id: String)
+	
+	func repost(id: String)
 }
 
 class PostCellView: UITableViewCell, UITextViewDelegate {
@@ -389,6 +391,12 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         }
 
         actionsArray.append(reply)
+		
+		let repost = UIAction(title: "Attach to new post", image: UIImage(systemName: "square.and.arrow.up")) { _ in
+			self.delegate.repost(id: self.post!.id)
+		}
+		
+		actionsArray.append(repost)
 
         let userID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
