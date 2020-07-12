@@ -136,8 +136,8 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 mediaImageView.snp.remakeConstraints { make in
                     make.bottom.equalTo(replycountLabel.snp.top).offset(-16)
                     make.height.equalTo((post?.image?.size.height)! / 3)
-                    make.right.equalTo(self.snp.right).offset(-16)
-                    make.left.equalTo(votecountLabel.snp.right).offset(16)
+                    make.trailing.equalTo(self.snp.trailing).offset(-16)
+                    make.leading.equalTo(votecountLabel.snp.trailing).offset(16)
                 }
             }
 
@@ -284,58 +284,58 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
          	make.width.equalTo(30)
          	make.height.equalTo(30)
          	make.top.equalTo(contentView.snp.top).offset(16)
-         	make.right.equalTo(contentView.snp.right).offset(-16)
+         	make.trailing.equalTo(contentView.snp.trailing).offset(-16)
          } */
 
         votecountLabel.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.snp.centerY)
-            make.left.equalTo(contentView.snp.left).offset(16)
+            make.leading.equalTo(contentView.snp.leading).offset(16)
             make.width.equalTo(30)
         }
 
         upvoteButton.snp.makeConstraints { make in
             make.bottom.equalTo(votecountLabel.snp.top)
             make.centerX.equalTo(votecountLabel.snp.centerX)
-            make.left.equalTo(contentView.snp.left).offset(16)
+            make.leading.equalTo(contentView.snp.leading).offset(16)
             make.width.equalTo(30)
         }
 
         downvoteButton.snp.makeConstraints { make in
             make.top.equalTo(votecountLabel.snp.bottom).offset(-8)
             make.centerX.equalTo(votecountLabel.snp.centerX)
-            make.left.equalTo(contentView.snp.left).offset(16)
+            make.leading.equalTo(contentView.snp.leading).offset(16)
             make.width.equalTo(30)
         }
 
         pfpImageView.snp.makeConstraints { make in
             make.width.equalTo(40)
             make.height.equalTo(40)
-            make.left.equalTo(upvoteButton.snp.right).offset(16)
+			make.leading.equalTo(upvoteButton.snp.trailing).offset(16)
             make.top.equalTo(contentView.snp.top).offset(16)
         }
 
         displaynameLabel.snp.makeConstraints { make in
-            make.left.equalTo(pfpImageView.snp.right).offset(16)
+            make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
             make.top.equalTo(contentView.snp.top).offset(16)
             make.height.equalTo(25)
-            make.right.equalTo(contentView.snp.right).offset(-16)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
         }
 
         usernameLabel.snp.makeConstraints { make in
-            make.left.equalTo(pfpImageView.snp.right).offset(16)
+            make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
             make.top.equalTo(displaynameLabel.snp.bottom) // .offset(0)
             make.height.equalTo(25)
-            make.right.equalTo(contentView.snp.right).offset(-16)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
         }
 
         dateLabel.snp.makeConstraints { make in
-            make.left.equalTo(contentView.snp.left).offset(16)
+            make.leading.equalTo(contentView.snp.leading).offset(16)
             make.bottom.equalTo(contentView.snp.bottom).offset(-16)
             make.width.equalTo(contentView.frame.width / 2)
         }
 
         replycountLabel.snp.makeConstraints { make in
-            make.right.equalTo(contentView.snp.right).offset(-16)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.bottom.equalTo(contentView.snp.bottom).offset(-16)
             make.width.equalTo(contentView.frame.width / 2)
             make.height.equalTo(30)
@@ -345,14 +345,14 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         mediaImageView.snp.makeConstraints { make in
             make.bottom.equalTo(replycountLabel.snp.top).offset(-16)
             make.height.equalTo(32)
-            make.right.equalTo(contentView.snp.right).offset(-16)
-            make.left.equalTo(votecountLabel.snp.right).offset(16)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+            make.leading.equalTo(votecountLabel.snp.trailing).offset(16)
         }
 
         contentTextView.snp.makeConstraints { make in
             make.top.equalTo(usernameLabel.snp.bottom).offset(16)
-            make.left.equalTo(votecountLabel.snp.right).offset(16)
-            make.right.equalTo(contentView.snp.right).offset(-16)
+            make.leading.equalTo(votecountLabel.snp.trailing).offset(16)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.bottom.equalTo(mediaImageView.snp.top).offset(-16)
         }
     }

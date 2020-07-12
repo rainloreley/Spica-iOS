@@ -54,21 +54,21 @@ class CreditsCell: UITableViewCell {
 		
 		pfpImageView.snp.makeConstraints { (make) in
 			make.centerY.equalTo(contentView.snp.centerY)
-			make.left.equalTo(contentView.snp.left).offset(16)
+			make.leading.equalTo(contentView.snp.leading).offset(16)
 			make.width.equalTo(40)
 			make.height.equalTo(40)
 		}
 		
 		nameLabel.snp.makeConstraints { (make) in
 			make.centerY.equalTo(contentView.snp.centerY).offset(-8)
-			make.left.equalTo(pfpImageView.snp.right).offset(8)
-			make.right.equalTo(contentView.snp.right).offset(-16)
+			make.leading.equalTo(pfpImageView.snp.trailing).offset(8)
+			make.trailing.equalTo(contentView.snp.trailing).offset(-16)
 		}
 		
 		roleLabel.snp.makeConstraints { (make) in
 			make.top.equalTo(nameLabel.snp.bottom)
-			make.left.equalTo(pfpImageView.snp.right).offset(8)
-			make.right.equalTo(contentView.snp.right).offset(-16)
+			make.leading.equalTo(pfpImageView.snp.trailing).offset(8)
+			make.trailing.equalTo(contentView.snp.trailing).offset(-16)
 		}
 	}
 	

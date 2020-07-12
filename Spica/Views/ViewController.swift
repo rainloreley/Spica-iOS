@@ -39,6 +39,13 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
+		
+		tableView.snp.makeConstraints { (make) in
+			make.top.equalTo(view.snp.top)
+			make.leading.equalTo(view.snp.leading)
+			make.trailing.equalTo(view.snp.trailing)
+			make.bottom.equalTo(view.snp.bottom)
+		}
 
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
@@ -61,7 +68,7 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
             make.width.equalTo(50)
             make.height.equalTo(50)
             make.bottom.equalTo(view.snp.bottom).offset(-100)
-            make.right.equalTo(view.snp.right).offset(-16)
+            make.trailing.equalTo(view.snp.trailing).offset(-16)
         }
 
         // tableView.rowHeight = UITableView.automaticDimension

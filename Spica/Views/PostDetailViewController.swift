@@ -35,7 +35,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-        tableView.register(UINib(nibName: "ReplyButtonCell", bundle: nil), forCellReuseIdentifier: "replyButtonCell")
+		tableView.register(ReplyButtonCell.self, forCellReuseIdentifier: "replyButtonCell")
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0

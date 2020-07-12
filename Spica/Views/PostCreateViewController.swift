@@ -105,20 +105,20 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             make.height.equalTo(40)
             make.width.equalTo(40)
             make.top.equalTo(view.snp.top).offset(80)
-            make.left.equalTo(view.snp.left).offset(16)
+            make.leading.equalTo(view.snp.leading).offset(16)
         }
 
         /* imageButton.snp.makeConstraints { (make) in
          	make.height.equalTo(40)
          	make.width.equalTo(40)
          	make.bottom.equalTo(view.snp.bottom).offset(-80)
-         	make.left.equalTo(view.snp.left).offset(16)
+         	make.leading.equalTo(view.snp.leading).offset(16)
          } */
 
         contentTextView.snp.makeConstraints { make in
             make.top.equalTo(view.snp.top).offset(80)
-            make.left.equalTo(view.snp.left).offset(72)
-            make.right.equalTo(view.snp.right).offset(-32)
+            make.leading.equalTo(view.snp.leading).offset(72)
+            make.trailing.equalTo(view.snp.trailing).offset(-32)
             make.bottom.equalTo(view.snp.bottom).offset(-16)
         }
 
@@ -130,7 +130,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             make.width.equalTo(35)
             make.height.equalTo(35)
             make.top.equalTo(userPfp.snp.bottom).offset(32)
-            make.left.equalTo(view.snp.left).offset(16)
+            make.leading.equalTo(view.snp.leading).offset(16)
         }
 		
 		let calculation = Double(contentTextView.text.count) / Double(500)

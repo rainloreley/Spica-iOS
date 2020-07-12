@@ -59,7 +59,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         usernameLabel.snp.makeConstraints { make in
             make.bottom.equalTo(usernameField.snp.top).offset(-8)
-            make.left.equalTo(32)
+            make.leading.equalTo(32)
         }
 
         passwordLabel = UILabel(frame: .zero)
@@ -68,7 +68,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         passwordLabel.snp.makeConstraints { make in
             make.top.equalTo(usernameField.snp.bottom).offset(16)
-            make.left.equalTo(32)
+            make.leading.equalTo(32)
         }
 
         passwordField = UITextField(frame: .zero)
