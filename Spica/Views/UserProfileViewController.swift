@@ -332,7 +332,12 @@ class UserProfileViewController: UIViewController {
             case let .success(followStatus):
                 DispatchQueue.main.async {
                     self.user.isFollowing = followStatus == .follow ? true : false
-
+					if followStatus == .follow {
+						self.user.followers += 1
+					}
+					else {
+						self.user.followers -= 1
+					}
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
@@ -382,7 +387,7 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCellView
             cell.selectionStyle = .none
 			cell.user = user
-
+			cell.followButton.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
             return cell
         } else {
             let post = userPosts[indexPath.row]

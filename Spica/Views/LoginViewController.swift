@@ -144,7 +144,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
 
                         let mentionView = UINavigationController(rootViewController: MentionsViewController())
-                        mentionView.tabBarItem = UITabBarItem(title: "Mentions", image: UIImage(systemName: "at"), tag: 1)
+                        mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
 
                         tabBar.viewControllers = [homeView, mentionView]
                         self.loadingHud.dismiss()

@@ -1,0 +1,49 @@
+/* 
+  Localizable.strings
+  Spica
+
+  Created by Adrian Baumgart on 12.07.20.
+  
+*/
+
+
+"HOME" = "Home";
+"NOTIFICATIONS" = "Notifications";
+"SETTINGS" = "Settings";
+"ACCOUNT" = "Account";
+"REPLY_SINGULAR" = "Reply";
+"REPLY_PLURAL" = "Replies";
+
+"POST_NOUN" = "Post";
+"POST_ACTION" = "Post";
+
+"REPLY_NOUN" = "Reply";
+"REPLY_ACTION" = "Reply";
+
+"NEW_POST_PLACEHOLDER" = "What's on your mind?";
+"SELECT_ANOTHER_IMAGE" = "Select another image";
+"REMOVE" = "Remove";
+"CANCEL" = "Cancel";
+"IMAGE" = "Image";
+"SELECT_ACTION" = "Select an action";
+"POST_SENT" = "Post sent!";
+"COPIED" = "Copied";
+"LOADING" = "Loading";
+"GO_TO_PROFILE" = "Go to profile";
+"SIGN_OUT" = "Sign out";
+"LEGAL_SPICA" = "Legal (Spica)";
+"LEGAL_ALLES" = "Legal (Alles)";
+"SOON" = "soon";
+"PRIVACY_POLICY" = "Privacy Policy";
+"TERMS_OF_SERVICE" = "Terms of Service";
+"USED_LIBRARIES" = "Used Libraries";
+"CREDITS" = "Credits";
+"VERSION" = "Version";
+"BUILD" = "Build";
+"LEGAL_FOOTER" = "© 2020, Adrian Baumgart, All rights reserved.";
+"FOLLOWER_SINGULAR" = "Follower";
+"FOLLOWER_PLURAL" = "Followers";
+"RUBIES_SINGULAR" = "Ruby";
+"RUBIES_PLURAL" = "Rubies";
+
+"PULL_TO_REFRESH" = "Pull to refresh";

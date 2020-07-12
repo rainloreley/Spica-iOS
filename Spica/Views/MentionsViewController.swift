@@ -21,7 +21,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Mentions"
+        navigationItem.title = "Notifications"
         navigationController?.navigationBar.prefersLargeTitles = true
 
         tableView = UITableView(frame: view.bounds, style: .plain)

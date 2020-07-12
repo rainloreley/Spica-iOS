@@ -41,7 +41,7 @@ class UserHeaderCellView: UITableViewCell {
             }
 
             usernameLabel.text = "@\(user.username)"
-            //followsYouLabel.text = user.followsMe ? "Follows you" : ""
+            followsYouLabel.text = user.followsMe ? "Follows you" : ""
 
             let boldFont: UIFont = UIFont.boldSystemFont(ofSize: 16)
             let notBoldFont: UIFont = UIFont.systemFont(ofSize: 16)
@@ -170,7 +170,7 @@ class UserHeaderCellView: UITableViewCell {
 			make.leading.equalTo(self.snp.leading)
 			make.trailing.equalTo(self.snp.trailing)
 			make.bottom.equalTo(self.snp.bottom)
-			make.height.equalTo(400)
+			make.height.equalTo(420)
 		}
 		
 		followButton.snp.makeConstraints { (make) in
@@ -239,7 +239,7 @@ class UserHeaderCellView: UITableViewCell {
 		
 		pfpImageView.snp.makeConstraints { (make) in
 			make.centerX.equalTo(contentView.snp.centerX)
-			make.top.equalTo(contentView.snp.top).offset(64)
+			make.top.equalTo(contentView.snp.top).offset(40)
 			make.width.equalTo(100)
 			make.height.equalTo(100)
 			make.bottom.equalTo(displaynameLabel.snp.top).offset(-32)

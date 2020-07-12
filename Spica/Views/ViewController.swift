@@ -25,7 +25,12 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         navigationItem.title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
+		
+		let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
+		
+		let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(self.openPostCreateView))
+		
+        navigationItem.rightBarButtonItems = [createPostBarButtonItem, accountBarButtonItem]
 		
 		navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.openSettings))
 
