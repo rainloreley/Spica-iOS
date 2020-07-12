@@ -380,69 +380,7 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
         if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCell
             cell.selectionStyle = .none
-            cell.pfpView.image = user.image
-
-            let rectShape = CAShapeLayer()
-            rectShape.bounds = cell.contentView.frame
-            rectShape.position = cell.contentView.center
-            rectShape.path = UIBezierPath(roundedRect: cell.contentView.bounds, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 40, height: 40)).cgPath
-
-            cell.contentView.layer.backgroundColor = UIColor(named: "UserBackground")?.cgColor
-            cell.contentView.layer.mask = rectShape
-            if user.isOnline {
-                cell.onlineIndicatorView.backgroundColor = .systemGreen
-            } else {
-                cell.onlineIndicatorView.backgroundColor = .gray
-            }
-
-            if user.isPlus {
-                // let font:UIFont? = UIFont(name: "Helvetica", size:20)
-                let font: UIFont? = UIFont.boldSystemFont(ofSize: 18)
-
-                let fontSuper: UIFont? = UIFont.boldSystemFont(ofSize: 12)
-                let attrDisplayName = NSMutableAttributedString(string: "\(user.displayName)+", attributes: [.font: font!])
-                attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: user.displayName.count, length: 1))
-
-                cell.displayNameLbl.attributedText = attrDisplayName
-            } else {
-                cell.displayNameLbl.text = user.displayName
-            }
-
-            cell.usernameLbl.text = "@\(user.username)"
-            cell.followsYouLbl.text = user.followsMe ? "Follows you" : ""
-
-            let boldFont: UIFont = UIFont.boldSystemFont(ofSize: 16)
-            let notBoldFont: UIFont = UIFont.systemFont(ofSize: 16)
-            let attrRubies = NSMutableAttributedString(string: countString(number: user.rubies, singleText: "Ruby", multiText: "Rubies"), attributes: [.font: notBoldFont])
-            attrRubies.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.rubies).count))
-            cell.rubiesLbl.attributedText = attrRubies
-
-            let attrFollowers = NSMutableAttributedString(string: countString(number: user.followers, singleText: "Follower", multiText: "Followers"), attributes: [.font: notBoldFont])
-            attrFollowers.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.followers).count))
-            cell.followerLbl.attributedText = attrFollowers
-            cell.aboutTextView.text = user.about
-
-            if signedInUsername != user.username {
-                cell.followBtn.isEnabled = true
-                if user.isFollowing {
-                    cell.followBtn.setTitle("Following", for: .normal)
-                    cell.followBtn.backgroundColor = .systemBlue
-                    cell.followBtn.setTitleColor(.white, for: .normal)
-                    cell.followBtn.layer.cornerRadius = 12
-                } else {
-                    cell.followBtn.setTitle("Follow", for: .normal)
-                    cell.followBtn.backgroundColor = .white
-                    cell.followBtn.setTitleColor(.systemBlue, for: .normal)
-                    cell.followBtn.layer.cornerRadius = 12
-                }
-
-                cell.followBtn.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
-            } else {
-                cell.followBtn.backgroundColor = .clear
-                cell.followBtn.setTitleColor(.clear, for: .normal)
-                cell.followBtn.setTitle("", for: .normal)
-                cell.followBtn.isEnabled = false
-            }
+            
 
             return cell
         } else {

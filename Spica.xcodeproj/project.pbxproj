@@ -10,6 +10,7 @@
 		3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0252C224ADE30700A4E4FD /* LoginViewController.swift */; };
 		3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */; };
 		3A25FBA924B753D400324136 /* SPAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 3A25FBA824B753D400324136 /* SPAlert */; };
+		3A32137124BB48CA008C62E5 /* UserHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */; };
 		3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3A34226B24B359BE00B8AFA9 /* JGProgressHUD */; };
 		3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */; };
 		3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEC24B8AA2700513028 /* CreditsViewController.swift */; };
@@ -50,6 +51,7 @@
 		3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */; };
 		3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */; };
 		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
+		3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */; };
 		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
 		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
 		B011E23BAC69FBCB992F7BCE /* Pods_Spica_SpicaUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AD6E55241BF74B8FFA2529 /* Pods_Spica_SpicaUITests.framework */; };
@@ -77,6 +79,7 @@
 		30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A0252C224ADE30700A4E4FD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewPlaceholder.swift; sourceTree = "<group>"; };
+		3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedLibrariesViewController.swift; sourceTree = "<group>"; };
 		3A361FEC24B8AA2700513028 /* CreditsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
 		3A41274324B1E02900425999 /* CircularProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBar.swift; sourceTree = "<group>"; };
@@ -120,6 +123,7 @@
 		3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
+		3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.release.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
 		4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpicaTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -188,6 +192,7 @@
 		3A5CF34B24ACBCC0002A829A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				3AFAF96124BB4DB0003771B4 /* User Header Cell */,
 				3A474AF924B24EC0003424F5 /* New Post Cell */,
 				3AFC695424B8C0F80016FEFA /* Credits Cell */,
 				3ADF6BC124AD24D600B7C510 /* ReplyButtonCell */,
@@ -214,6 +219,7 @@
 				3A7145DC24AA8753000FA3C3 /* Products */,
 				9D4452CB43DE6F344B507525 /* Pods */,
 				A1EDC432870BF5A9756658AC /* Frameworks */,
+				3AFAF96024BB4D84003771B4 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -339,6 +345,22 @@
 				3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */,
 			);
 			path = ReplyButtonCell;
+			sourceTree = "<group>";
+		};
+		3AFAF96024BB4D84003771B4 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		3AFAF96124BB4DB0003771B4 /* User Header Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */,
+			);
+			path = "User Header Cell";
 			sourceTree = "<group>";
 		};
 		3AFC695424B8C0F80016FEFA /* Credits Cell */ = {
@@ -676,8 +698,10 @@
 				3A7145E924AA8753000FA3C3 /* Alles_App.xcdatamodeld in Sources */,
 				3A71461224AA88FC000FA3C3 /* Post.swift in Sources */,
 				3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */,
+				3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */,
 				3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */,
 				3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */,
+				3A32137124BB48CA008C62E5 /* UserHeaderCellView.swift in Sources */,
 				3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */,
 				3ADDC58124AD162500B58DA9 /* NewPost.swift in Sources */,
 				3A8BE09C24AB4B55001F313F /* UserHeaderCell.swift in Sources */,
