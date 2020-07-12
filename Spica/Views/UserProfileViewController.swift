@@ -39,7 +39,8 @@ class UserProfileViewController: UIViewController {
         tableView?.dataSource = self
         // tableView.bounces = false
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-        tableView.register(UINib(nibName: "UserHeaderCell", bundle: nil), forCellReuseIdentifier: "userHeaderCell")
+        //tableView.register(UINib(nibName: "UserHeaderCell", bundle: nil), forCellReuseIdentifier: "userHeaderCell")
+		tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
 
         tableView.estimatedRowHeight = 120
         tableView.rowHeight = UITableView.automaticDimension
@@ -378,9 +379,9 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCellView
             cell.selectionStyle = .none
-            
+			cell.user = user
 
             return cell
         } else {

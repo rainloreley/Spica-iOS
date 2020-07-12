@@ -41,7 +41,7 @@ class UserHeaderCellView: UITableViewCell {
             }
 
             usernameLabel.text = "@\(user.username)"
-            usernameLabel.text = user.followsMe ? "Follows you" : ""
+            //followsYouLabel.text = user.followsMe ? "Follows you" : ""
 
             let boldFont: UIFont = UIFont.boldSystemFont(ofSize: 16)
             let notBoldFont: UIFont = UIFont.systemFont(ofSize: 16)
@@ -89,13 +89,14 @@ class UserHeaderCellView: UITableViewCell {
         let imgView = UIImageView(frame: .zero)
         imgView.contentMode = .scaleAspectFit
         imgView.clipsToBounds = true
-        imgView.layer.cornerRadius = 20
+        imgView.layer.cornerRadius = 50
         return imgView
     }()
 	
 	private var displaynameLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.text = "Display Name"
+		label.textAlignment = .center
 		label.font = .boldSystemFont(ofSize: 18)
 		return label
 	}()
@@ -103,6 +104,7 @@ class UserHeaderCellView: UITableViewCell {
 	private var usernameLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.text = "username"
+		label.textAlignment = .center
 		label.textColor = .secondaryLabel
 		return label
 	}()
@@ -116,6 +118,7 @@ class UserHeaderCellView: UITableViewCell {
 	private var followsYouLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.textColor = .tertiaryLabel
+		label.textAlignment = .center
 		label.text = "Follows you"
 		return label
 	}()
@@ -123,12 +126,14 @@ class UserHeaderCellView: UITableViewCell {
 	private var followerCountLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.text = "Follower"
+		label.textAlignment = .right
 		return label
 	}()
 	
 	private var rubiesLabel: UILabel = {
 		let label = UILabel(frame: .zero)
 		label.text = "Rubies"
+		label.textAlignment = .left
 		return label
 	}()
 	
@@ -136,6 +141,8 @@ class UserHeaderCellView: UITableViewCell {
 		let textView = UITextView(frame: .zero)
 		textView.text = "About"
 		textView.font = .systemFont(ofSize: 14)
+		textView.textAlignment = .center
+		textView.backgroundColor = .clear
 		return textView
 	}()
 	
@@ -158,10 +165,19 @@ class UserHeaderCellView: UITableViewCell {
 		contentView.addSubview(aboutTextView)
 		contentView.addSubview(followButton)
 		
+		contentView.snp.makeConstraints { (make) in
+			make.top.equalTo(self.snp.top)
+			make.leading.equalTo(self.snp.leading)
+			make.trailing.equalTo(self.snp.trailing)
+			make.bottom.equalTo(self.snp.bottom)
+			make.height.equalTo(400)
+		}
+		
 		followButton.snp.makeConstraints { (make) in
 			make.centerX.equalTo(contentView.snp.centerX)
 			make.width.equalTo(120)
-			make.bottom.equalTo(contentView.snp.bottom).offset(8)
+			make.height.equalTo(40)
+			make.bottom.equalTo(contentView.snp.bottom).offset(-16)
 		}
 		
 		aboutTextView.snp.makeConstraints { (make) in
@@ -169,8 +185,67 @@ class UserHeaderCellView: UITableViewCell {
 			make.leading.equalTo(contentView.snp.leading).offset(32)
 			make.trailing.equalTo(contentView.snp.trailing).offset(-32)
 			make.height.equalTo(60)
+			//make.height.greaterThanOrEqualTo(30)
 			make.centerX.equalTo(contentView.snp.centerX)
 		}
+		
+		followerCountLabel.snp.makeConstraints { (make) in
+			make.centerX.equalTo(contentView.snp.centerX).offset(-70)
+			make.width.equalTo(120)
+			make.height.equalTo(22)
+			make.bottom.equalTo(aboutTextView.snp.top).offset(-16)
+		}
+		
+		rubiesLabel.snp.makeConstraints { (make) in
+			make.centerX.equalTo(contentView.snp.centerX).offset(70)
+			make.width.equalTo(120)
+			make.height.equalTo(22)
+			make.bottom.equalTo(aboutTextView.snp.top).offset(-16)
+		}
+		
+		followsYouLabel.snp.makeConstraints { (make) in
+			make.centerX.equalTo(contentView.snp.centerX)
+			make.bottom.equalTo(rubiesLabel.snp.top).offset(-8)
+			make.leading.equalTo(contentView.snp.leading).offset(16)
+			make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+			make.height.equalTo(22)
+			make.width.equalTo(120)
+		}
+		
+		usernameLabel.snp.makeConstraints { (make) in
+			make.centerX.equalTo(contentView.snp.centerX)
+			make.bottom.equalTo(followsYouLabel.snp.top).offset(-8)
+			//make.width.equalTo(120)
+			/*make.leading.equalTo(contentView.snp.leading).offset(16)
+			make.trailing.equalTo(contentView.snp.trailing).offset(-16)*/
+			make.height.equalTo(22)
+		}
+		
+		onlineIndicatorView.snp.makeConstraints { (make) in
+			make.height.equalTo(16)
+			make.width.equalTo(16)
+			make.leading.equalTo(usernameLabel.snp.trailing).offset(16)
+			//make.top.equalTo(displaynameLabel.snp.bottom)
+			make.centerY.equalTo(usernameLabel.snp.centerY)
+		}
+		
+		displaynameLabel.snp.makeConstraints { (make) in
+			make.centerX.equalTo(contentView.snp.centerX)
+			make.bottom.equalTo(usernameLabel.snp.top)
+			make.leading.equalTo(contentView.snp.leading).offset(16)
+			make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+			make.height.equalTo(30)
+		}
+		
+		pfpImageView.snp.makeConstraints { (make) in
+			make.centerX.equalTo(contentView.snp.centerX)
+			make.top.equalTo(contentView.snp.top).offset(64)
+			make.width.equalTo(100)
+			make.height.equalTo(100)
+			make.bottom.equalTo(displaynameLabel.snp.top).offset(-32)
+		}
+		
+		
 		
 		
 		

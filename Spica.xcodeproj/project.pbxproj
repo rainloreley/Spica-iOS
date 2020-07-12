@@ -10,7 +10,6 @@
 		3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0252C224ADE30700A4E4FD /* LoginViewController.swift */; };
 		3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */; };
 		3A25FBA924B753D400324136 /* SPAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 3A25FBA824B753D400324136 /* SPAlert */; };
-		3A32137124BB48CA008C62E5 /* UserHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */; };
 		3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3A34226B24B359BE00B8AFA9 /* JGProgressHUD */; };
 		3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */; };
 		3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEC24B8AA2700513028 /* CreditsViewController.swift */; };
@@ -686,6 +685,7 @@
 				3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */,
 				3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */,
 				3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */,
+				3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
 				3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
@@ -698,10 +698,8 @@
 				3A7145E924AA8753000FA3C3 /* Alles_App.xcdatamodeld in Sources */,
 				3A71461224AA88FC000FA3C3 /* Post.swift in Sources */,
 				3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */,
-				3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */,
 				3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */,
 				3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */,
-				3A32137124BB48CA008C62E5 /* UserHeaderCellView.swift in Sources */,
 				3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */,
 				3ADDC58124AD162500B58DA9 /* NewPost.swift in Sources */,
 				3A8BE09C24AB4B55001F313F /* UserHeaderCell.swift in Sources */,
