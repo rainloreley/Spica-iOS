@@ -8,101 +8,93 @@
 import UIKit
 
 class CreditsViewController: UIViewController {
-	
-	var tableView: UITableView!
-	
-	var credits = [
-		Credit(name: "Adrian", role: "iOS Developer", url: "https://twitter.com/adrianbaumgart", imageURL: "https://avatar.alles.cx/u/adrian", image: UIImage(systemName: "person.circle")!),
-		Credit(name: "Patrik", role: "iOS Developer", url: "https://twitter.com/PatrikTheDev", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
-		Credit(name: "Archie", role: "Alles Founder", url: "https://twitter.com/onlytruearchie", imageURL: "https://avatar.alles.cx/u/archie", image: UIImage(systemName: "person.circle")!)
-	]
+    var tableView: UITableView!
+
+    var credits = [
+        Credit(name: "Adrian", role: "iOS Developer", url: "https://twitter.com/adrianbaumgart", imageURL: "https://avatar.alles.cx/u/adrian", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Patrik", role: "iOS Developer", url: "https://twitter.com/PatrikTheDev", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Archie", role: "Alles Founder", url: "https://twitter.com/onlytruearchie", imageURL: "https://avatar.alles.cx/u/archie", image: UIImage(systemName: "person.circle")!),
+    ]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		navigationItem.title = "Credits"
-		tableView = UITableView(frame: self.view.bounds, style: .insetGrouped)
-		tableView.delegate = self
-		tableView.dataSource = self
-		tableView.rowHeight = CGFloat(70)
-		tableView.register(CreditsCell.self, forCellReuseIdentifier: "creditsCell")
-		view.addSubview(tableView)
-		//credits.sort(by: {$0.name < $1.name})
+        navigationItem.title = "Credits"
+        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.rowHeight = CGFloat(70)
+        tableView.register(CreditsCell.self, forCellReuseIdentifier: "creditsCell")
+        view.addSubview(tableView)
+        // credits.sort(by: {$0.name < $1.name})
         // Do any additional setup after loading the view.
     }
-	
-	override func viewDidAppear(_ animated: Bool) {
-		DispatchQueue.global(qos: .utility).async {
-			for (index, item) in self.credits.enumerated() {
-				let image = ImageLoader.default.loadImageFromInternet(url: URL(string: item.imageURL)!)
-				self.credits[index].image = image
-				DispatchQueue.main.async {
-					self.tableView.reloadRows(at: [IndexPath(row: 0, section: index)], with: .automatic)
-					
-				}
-			}
-		}
-	}
-    
+
+    override func viewDidAppear(_: Bool) {
+        DispatchQueue.global(qos: .utility).async {
+            for (index, item) in self.credits.enumerated() {
+                let image = ImageLoader.default.loadImageFromInternet(url: URL(string: item.imageURL)!)
+                self.credits[index].image = image
+                DispatchQueue.main.async {
+                    self.tableView.reloadRows(at: [IndexPath(row: 0, section: index)], with: .automatic)
+                }
+            }
+        }
+    }
 
     /*
-    // MARK: - Navigation
+     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+         // Get the new view controller using segue.destination.
+         // Pass the selected object to the new view controller.
+     }
+     */
 }
 
 extension CreditsViewController: UITableViewDelegate, UITableViewDataSource {
-	
-	func numberOfSections(in tableView: UITableView) -> Int {
-		return credits.count
-	}
-	
-	func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-		if section == credits.count - 1 {
-			return """
-			Thank you to everyone that is helping developing this app!
-			
-			This also includes everyone who reports bugs, submits crash reports and makes suggestions!
-			
-			Thank you! <3
-			"""
-		}
-		else {
-			return ""
-		}
-	}
-	
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return 1
-	}
-	
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "creditsCell", for: indexPath) as! CreditsCell
-		
-		cell.creditUser = credits[indexPath.section]
-		
-		return cell
-	}
-	
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let url = URL(string: credits[indexPath.section].url)
-		if UIApplication.shared.canOpenURL(url!) {
-			UIApplication.shared.open(url!)
-		}
-	}
-	
-	
+    func numberOfSections(in _: UITableView) -> Int {
+        return credits.count
+    }
+
+    func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
+        if section == credits.count - 1 {
+            return """
+            Thank you to everyone that is helping developing this app!
+
+            This also includes everyone who reports bugs, submits crash reports and makes suggestions!
+
+            Thank you! <3
+            """
+        } else {
+            return ""
+        }
+    }
+
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "creditsCell", for: indexPath) as! CreditsCell
+
+        cell.creditUser = credits[indexPath.section]
+
+        return cell
+    }
+
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let url = URL(string: credits[indexPath.section].url)
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+    }
 }
 
 struct Credit {
-	var name: String
-	var role: String
-	var url: String
-	var imageURL: String
-	var image: UIImage
+    var name: String
+    var role: String
+    var url: String
+    var imageURL: String
+    var image: UIImage
 }

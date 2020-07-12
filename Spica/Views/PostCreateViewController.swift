@@ -34,8 +34,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
     var loadingHud: JGProgressHUD!
 
     var sendButton: UIBarButtonItem!
-	
-	var preText: String!
+
+    var preText: String!
 
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
 
@@ -88,9 +88,9 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         contentTextView.placeholder = "What's on your mind?"
         contentTextView.placeholderColor = UIColor.tertiaryLabel
         contentTextView.delegate = self
-		if preText != nil {
-			contentTextView.text = preText
-		}
+        if preText != nil {
+            contentTextView.text = preText
+        }
 
         view.addSubview(contentTextView)
 
@@ -132,8 +132,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             make.top.equalTo(userPfp.snp.bottom).offset(32)
             make.leading.equalTo(view.snp.leading).offset(16)
         }
-		
-		let calculation = Double(contentTextView.text.count) / Double(500)
+
+        let calculation = Double(contentTextView.text.count) / Double(500)
 
         progressBarController.progress = Float(calculation)
 
@@ -167,12 +167,16 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         }
     }
 
-    override func viewDidAppear(_: Bool) {
-        let userUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+    override func viewWillAppear(_: Bool) {
+        DispatchQueue.global(qos: .utility).async {
+            let userUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-        let pfpImage = ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(userUsername!)")!)
+            let pfpImage = ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(userUsername!)")!)
 
-        userPfp.image = pfpImage
+            DispatchQueue.main.async {
+                self.userPfp.image = pfpImage
+            }
+        }
     }
 
     @objc func sendPost() {

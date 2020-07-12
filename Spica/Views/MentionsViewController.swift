@@ -6,8 +6,8 @@
 //
 
 import JGProgressHUD
-import UIKit
 import SPAlert
+import UIKit
 
 class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
@@ -15,8 +15,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     var mentions = [Post]()
 
     var refreshControl = UIRefreshControl()
-	
-	var loadingHud: JGProgressHUD!
+
+    var loadingHud: JGProgressHUD!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,15 +60,15 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             switch result {
             case let .success(newPosts):
                 DispatchQueue.main.async {
-					let isEmpty = self.mentions.isEmpty
+                    let isEmpty = self.mentions.isEmpty
                     self.mentions = newPosts
-					//if isEmpty {
-					self.tableView.reloadData()
-					//}
+                    // if isEmpty {
+                    self.tableView.reloadData()
+                    // }
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
-					self.loadingHud.dismiss()
+                    self.loadingHud.dismiss()
                     self.loadImages()
                 }
             case let .failure(apiError):
@@ -77,7 +77,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                         if self.refreshControl.isRefreshing {
                             self.refreshControl.endRefreshing()
                         }
-						self.loadingHud.dismiss()
+                        self.loadingHud.dismiss()
                         if apiError.action != nil, apiError.actionParameter != nil {
                             if apiError.action == AllesAPIErrorAction.navigate {
                                 if apiError.actionParameter == "login" {
@@ -159,7 +159,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                     self.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-                //self.loadMentions()
+                // self.loadMentions()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -205,7 +205,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                     self.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-                //self.loadMentions()
+                // self.loadMentions()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -234,8 +234,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
          // Pass the selected object to the new view controller.
      }
      */
-	
-	func didSendPost(sentPost: SentPost) {
+
+    func didSendPost(sentPost: SentPost) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = sentPost.id
 
@@ -296,10 +296,10 @@ extension MentionsViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
-	func repost(id: String, username: String) {
-		//
-	}
-	
+    func repost(id _: String, username _: String) {
+        //
+    }
+
     func replyToPost(id: String) {
         let vc = PostCreateViewController()
         vc.type = .reply
@@ -320,7 +320,7 @@ extension MentionsViewController: PostCellViewDelegate {
                 AllesAPI.default.deletePost(id: id) { result in
                     switch result {
                     case .success:
-						self.loadMentions()
+                        self.loadMentions()
                     case let .failure(apiError):
                         DispatchQueue.main.async {
                             EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in

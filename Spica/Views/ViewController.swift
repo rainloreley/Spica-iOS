@@ -25,14 +25,14 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         navigationItem.title = "Home"
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
-		
-		let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
-		
-		let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(self.openPostCreateView))
-		
+
+        let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
+
+        let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
+
         navigationItem.rightBarButtonItems = [createPostBarButtonItem, accountBarButtonItem]
-		
-		navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(self.openSettings))
+
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self
@@ -44,13 +44,13 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
-		
-		tableView.snp.makeConstraints { (make) in
-			make.top.equalTo(view.snp.top)
-			make.leading.equalTo(view.snp.leading)
-			make.trailing.equalTo(view.snp.trailing)
-			make.bottom.equalTo(view.snp.bottom)
-		}
+
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top)
+            make.leading.equalTo(view.snp.leading)
+            make.trailing.equalTo(view.snp.trailing)
+            make.bottom.equalTo(view.snp.bottom)
+        }
 
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
@@ -78,13 +78,13 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
 
         // tableView.rowHeight = UITableView.automaticDimension
     }
-	
-	@objc func openSettings() {
-		let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
-		let vc = storyboard.instantiateInitialViewController() as! UINavigationController
-		(vc.viewControllers.first as! MainSettingsViewController).delegate = self
-		present(vc, animated: true, completion: nil)
-	}
+
+    @objc func openSettings() {
+        let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
+        let vc = storyboard.instantiateInitialViewController() as! UINavigationController
+        (vc.viewControllers.first as! MainSettingsViewController).delegate = self
+        present(vc, animated: true, completion: nil)
+    }
 
     @objc func openOwnProfileView() {
         let vc = UserProfileViewController()
@@ -121,12 +121,12 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         AllesAPI.default.loadFeed { [self] result in
             switch result {
             case let .success(posts):
-				let isEmpty = self.posts.isEmpty
+                let isEmpty = self.posts.isEmpty
                 self.posts = posts
                 DispatchQueue.main.async {
-					//if isEmpty {
-					self.tableView.reloadData()
-					//}
+                    // if isEmpty {
+                    self.tableView.reloadData()
+                    // }
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
@@ -225,7 +225,7 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
                     self.tableView.reloadSections(IndexSet(integer: sender.tag), with: .automatic)
                     self.tableView.endUpdates()
                 }
-                //self.loadFeed()
+                // self.loadFeed()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -271,7 +271,7 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
                     self.tableView.reloadSections(IndexSet(integer: sender.tag), with: .automatic)
                     self.tableView.endUpdates()
                 }
-                //self.loadFeed()
+                // self.loadFeed()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -458,26 +458,23 @@ enum Section {
 }
 
 extension ViewController: MainSettingsDelegate {
-	func clickedMore(username: String) {
-		
+    func clickedMore(username: String) {
         let vc = UserProfileViewController()
-		vc.user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle"), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        vc.user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle"), isFollowing: false, followsMe: false, about: "", isOnline: false)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
-	}
-	
-	
+    }
 }
 
 extension ViewController: PostCellViewDelegate {
-	func repost(id: String, username: String) {
-		let vc = PostCreateViewController()
-		vc.type = .post
-		vc.delegate = self
-		vc.preText = "@\(username)\n\n\n\n%\(id)"
-		present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
-	}
-	
+    func repost(id: String, username: String) {
+        let vc = PostCreateViewController()
+        vc.type = .post
+        vc.delegate = self
+        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+    }
+
     func replyToPost(id: String) {
         let vc = PostCreateViewController()
         vc.type = .reply
