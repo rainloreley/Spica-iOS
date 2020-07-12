@@ -66,6 +66,9 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         createPostBtn.backgroundColor = UIColor(named: "PostButtonColor")
         createPostBtn.layer.cornerRadius = 25
         createPostBtn.addTarget(self, action: #selector(openPostCreateView), for: .touchUpInside)
+		if #available(iOS 13.4, *) {
+			createPostBtn.isPointerInteractionEnabled = true
+		}
 
         view.addSubview(createPostBtn)
 
@@ -323,7 +326,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         cell.post = post
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+		
         cell.pfpImageView.tag = indexPath.section
+		
         cell.pfpImageView.isUserInteractionEnabled = true
         cell.pfpImageView.addGestureRecognizer(tap)
 
