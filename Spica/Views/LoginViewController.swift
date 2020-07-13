@@ -81,7 +81,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         passwordField.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
-            // make.centerY.equalTo(view.snp.centerY).offset(-32)
             make.top.equalTo(passwordLabel.snp.bottom).offset(8)
             make.width.equalTo(view.snp.width).offset(-64)
             make.height.equalTo(40)
@@ -198,14 +197,4 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
-
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
 }

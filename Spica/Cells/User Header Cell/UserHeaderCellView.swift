@@ -28,11 +28,11 @@ class UserHeaderCellView: UITableViewCell {
 
             if user.isPlus {
                 // let font:UIFont? = UIFont(name: "Helvetica", size:20)
-                let font: UIFont? = UIFont.boldSystemFont(ofSize: 18)
+                let font: UIFont = UIFont.boldSystemFont(ofSize: 18)
 
-                let fontSuper: UIFont? = UIFont.boldSystemFont(ofSize: 12)
-                let attrDisplayName = NSMutableAttributedString(string: "\(user.displayName)+", attributes: [.font: font!])
-                attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: user.displayName.count, length: 1))
+                let fontSuper: UIFont = UIFont.boldSystemFont(ofSize: 12)
+                let attrDisplayName = NSMutableAttributedString(string: "\(user.displayName)+", attributes: [.font: font])
+                attrDisplayName.setAttributes([.font: fontSuper, .baselineOffset: 10], range: NSRange(location: user.displayName.count, length: 1))
 
                 displaynameLabel.attributedText = attrDisplayName
             } else {
@@ -142,6 +142,7 @@ class UserHeaderCellView: UITableViewCell {
         textView.font = .systemFont(ofSize: 14)
         textView.textAlignment = .center
         textView.backgroundColor = .clear
+        textView.isEditable = false
         return textView
     }()
 

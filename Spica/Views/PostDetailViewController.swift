@@ -12,9 +12,12 @@ import Combine
 
 class PostDetailViewController: UIViewController, PostCreateDelegate {
     var selectedPostID: String!
+    var selectedPost: Post! {
+        didSet {
+            selectedPostID = selectedPost.id
+        }
+    }
     var mainPost: Post!
-
-    var selectedPost: Post!
 
     var tableView: UITableView!
 
@@ -104,7 +107,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             for (index, post) in self.postAncestors.enumerated() {
                 dispatchGroup.enter()
 
-                self.postAncestors[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+                self.postAncestors[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
 
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
@@ -112,8 +115,8 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.tableView.endUpdates()
                 }
 
-                if post.imageURL?.absoluteString != "", post.imageURL != nil {
-                    self.postAncestors[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                if let url = post.imageURL {
+                    self.postAncestors[index].image = ImageLoader.loadImageFromInternet(url: url)
                 } else {
                     self.postAncestors[index].image = UIImage()
                 }
@@ -130,7 +133,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             for (index, post) in self.postReplies.enumerated() {
                 dispatchGroup.enter()
 
-                self.postReplies[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+                self.postReplies[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
 
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
@@ -138,8 +141,8 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.tableView.endUpdates()
                 }
 
-                if post.imageURL?.absoluteString != "", post.imageURL != nil {
-                    self.postReplies[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                if let url = post.imageURL {
+                    self.postReplies[index].image = ImageLoader.loadImageFromInternet(url: url)
                 } else {
                     self.postReplies[index].image = UIImage()
                 }
@@ -337,11 +340,6 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             vc.parentID = mainPost.id
             present(UINavigationController(rootViewController: vc), animated: true)
         }
-        /* let userByTag = posts[sender.view!.tag].author
-         let vc = UserProfileViewController()
-         vc.user = userByTag
-         vc.hidesBottomBarWhenPushed = true
-         navigationController?.pushViewController(vc, animated: true) */
     }
 }
 
@@ -384,31 +382,11 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
 
         } else if indexPath.section == 1 {
-            if mainPost != nil {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "replyButtonCell", for: indexPath) as! ReplyButtonCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "replyButtonCell", for: indexPath) as! ReplyButtonCell
 
-                cell.replyBtn.addTarget(self, action: #selector(openReplyView(_:)), for: .touchUpInside)
-                cell.backgroundColor = .clear
-                /* var sendButton = UIButton(type: .system)
-                 sendButton.setTitle("Reply", for: .normal)
-                 sendButton.setTitleColor(.white, for: .normal)
-                 sendButton.backgroundColor = UIColor(named: "PostButtonColor")
-                 sendButton.layer.cornerRadius = 12
-
-                 sendButton.addTarget(self, action: #selector(self.openReplyView(_:)), for: .touchUpInside)
-
-                 cell.contentView.addSubview(sendButton)
-                 //cell.backgroundView?.addSubview(sendButton)
-                 sendButton.snp.makeConstraints { make in
-                 	make.bottom.equalTo(cell.contentView.snp.bottom).offset(-50)
-                 	make.centerX.equalTo(cell.contentView.snp.centerX)
-                 	make.height.equalTo(50)
-                 	make.width.equalTo(cell.contentView.snp.width).offset(-32)
-                 } */
-                return cell
-            } else {
-                return UITableViewCell()
-            }
+            cell.replyBtn.addTarget(self, action: #selector(openReplyView(_:)), for: .touchUpInside)
+            cell.backgroundColor = .clear
+            return cell
         } else {
             let post = postReplies[indexPath.row]
 
@@ -430,8 +408,6 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
             cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
 
             return cell
-
-            // let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
         }
     }
 
@@ -518,7 +494,7 @@ extension PostDetailViewController: PostCellViewDelegate {
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
         vc.user = user
         vc.hidesBottomBarWhenPushed = true

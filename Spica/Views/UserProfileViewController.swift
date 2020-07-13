@@ -13,7 +13,11 @@ import UIKit
 class UserProfileViewController: UIViewController {
     var user: User!
     var tableView: UITableView!
-    var userPosts = [Post]()
+    var userPosts = [Post]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
 
     var signedInUsername: String!
 
@@ -37,14 +41,8 @@ class UserProfileViewController: UIViewController {
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView?.delegate = self
         tableView?.dataSource = self
-        // tableView.bounces = false
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-        // tableView.register(UINib(nibName: "UserHeaderCell", bundle: nil), forCellReuseIdentifier: "userHeaderCell")
         tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
-
-        tableView.estimatedRowHeight = 120
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 108.0
 
         view.addSubview(tableView)
 
@@ -55,7 +53,6 @@ class UserProfileViewController: UIViewController {
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading"
         loadingHud.interactionType = .blockNoTouches
-        // Do any additional setup after loading the view.
     }
 
     override func viewWillAppear(_: Bool) {
@@ -77,7 +74,6 @@ class UserProfileViewController: UIViewController {
                     DispatchQueue.main.async {
                         self.user = newUser
                         self.navigationItem.title = "\(self.user.displayName)"
-                        // self.tableView.reloadData()
                         self.loadPfp()
                         self.loadPosts()
                     }
@@ -110,7 +106,6 @@ class UserProfileViewController: UIViewController {
             case let .success(newPosts):
                 DispatchQueue.main.async {
                     self.userPosts = newPosts
-                    self.tableView.reloadData()
                     if self.refreshControl.isRefreshing {
                         self.refreshControl.endRefreshing()
                     }
@@ -145,7 +140,7 @@ class UserProfileViewController: UIViewController {
 
             dispatchGroup.enter()
 
-            self.user.image = ImageLoader.default.loadImageFromInternet(url: self.user.imageURL)
+            self.user.image = ImageLoader.loadImageFromInternet(url: self.user.imageURL)
 
             DispatchQueue.main.async {
                 self.tableView.beginUpdates()
@@ -161,24 +156,14 @@ class UserProfileViewController: UIViewController {
         DispatchQueue.global(qos: .utility).async {
             let dispatchGroup = DispatchGroup()
 
-            /* dispatchGroup.enter()
-
-             self.user.image = ImageLoader.default.loadImageFromInternet(url: self.user.imageURL)
-
-             DispatchQueue.main.async {
-                 self.tableView.beginUpdates()
-                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                 self.tableView.endUpdates()
-             }
-
-             dispatchGroup.leave() */
-
             for (index, post) in self.userPosts.enumerated() {
                 if index > self.userPosts.count - 1 {
                 } else {
                     dispatchGroup.enter()
 
-                    self.userPosts[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+                    DispatchQueue.main.async {
+                        self.userPosts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                    }
 
                     if index > 10 {
                         if index % 5 == 0 {}
@@ -190,14 +175,8 @@ class UserProfileViewController: UIViewController {
                         }
                     }
 
-                    /* DispatchQueue.main.async {
-                     	self.tableView.beginUpdates()
-                     	self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .none)
-                     	self.tableView.endUpdates()
-                     } */
-
-                    if post.imageURL?.absoluteString != "", post.imageURL != nil {
-                        self.userPosts[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                    if let url = post.imageURL {
+                        self.userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
                         self.userPosts[index].image = UIImage()
                     }
@@ -207,12 +186,6 @@ class UserProfileViewController: UIViewController {
                             self.tableView.reloadData()
                         }
                     }
-
-                    /* DispatchQueue.main.async {
-                     	self.tableView.beginUpdates()
-                     	self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .none)
-                     	self.tableView.endUpdates()
-                     } */
 
                     dispatchGroup.leave()
                 }
@@ -353,16 +326,6 @@ class UserProfileViewController: UIViewController {
             }
         }
     }
-
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
 }
 
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -397,26 +360,10 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 
             cell.upvoteButton.tag = indexPath.row
             cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-
             cell.downvoteButton.tag = indexPath.row
             cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
 
             return cell
-            /* let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
-             let post = userPosts[indexPath.row]
-
-             let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
-             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-             builtCell.pfpView.tag = indexPath.row
-             builtCell.pfpView.addGestureRecognizer(tap)
-             cell.upvoteBtn.tag = indexPath.row
-             cell.delegate = self
-             cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-
-             cell.downvoteBtn.tag = indexPath.row
-             cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
-
-             return builtCell */
         }
     }
 
@@ -434,7 +381,6 @@ extension UserProfileViewController: PostCreateDelegate {
     func didSendPost(sentPost: SentPost) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = sentPost.id
-
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -473,9 +419,7 @@ extension UserProfileViewController: PostCellViewDelegate {
                     case let .failure(apiError):
                         DispatchQueue.main.async {
                             EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                                if self.refreshControl.isRefreshing {
-                                    self.refreshControl.endRefreshing()
-                                }
+                                self.refreshControl.endRefreshing()
                                 self.loadingHud.dismiss()
                                 if apiError.action != nil, apiError.actionParameter != nil {
                                     if apiError.action == AllesAPIErrorAction.navigate {
@@ -496,7 +440,6 @@ extension UserProfileViewController: PostCellViewDelegate {
 
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
-
         detailVC.selectedPostID = post
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
@@ -509,7 +452,7 @@ extension UserProfileViewController: PostCellViewDelegate {
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
         vc.user = user
         vc.hidesBottomBarWhenPushed = true

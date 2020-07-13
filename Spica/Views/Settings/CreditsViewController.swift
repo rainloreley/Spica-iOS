@@ -32,7 +32,7 @@ class CreditsViewController: UIViewController {
     override func viewDidAppear(_: Bool) {
         DispatchQueue.global(qos: .utility).async {
             for (index, item) in self.credits.enumerated() {
-                let image = ImageLoader.default.loadImageFromInternet(url: URL(string: item.imageURL)!)
+                let image = ImageLoader.loadImageFromInternet(url: URL(string: item.imageURL)!)
                 self.credits[index].image = image
                 DispatchQueue.main.async {
                     self.tableView.reloadRows(at: [IndexPath(row: 0, section: index)], with: .automatic)
@@ -84,6 +84,7 @@ extension CreditsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let url = URL(string: credits[indexPath.section].url)
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)

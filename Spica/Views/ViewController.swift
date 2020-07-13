@@ -16,9 +16,7 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
     var createPostBtn: UIButton!
     var posts = [Post]() {
-        didSet {
-            applyChanges()
-        }
+        didSet { applyChanges() }
     }
 
     var refreshControl = UIRefreshControl()
@@ -53,8 +51,6 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
             make.trailing.equalTo(view.snp.trailing)
             make.bottom.equalTo(view.snp.bottom)
         }
-
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
         tableView.addSubview(refreshControl)
 
@@ -128,18 +124,17 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         }
     }
     
-
     @objc func openSettings() {
         let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
         let vc = storyboard.instantiateInitialViewController() as! UINavigationController
-        (vc.viewControllers.first as? MainSettingsViewController)?.delegate = self
+        (vc.viewControllers.first as! MainSettingsViewController).delegate = self
         present(vc, animated: true)
     }
 
     @objc func openOwnProfileView() {
         let vc = UserProfileViewController()
         let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-        vc.user = User(id: "", username: username!, displayName: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        vc.user = User(id: "", username: username!, displayName: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -181,7 +176,7 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
                     }
                 default: break
                 }
-            } receiveValue: { [self] in
+            } receiveValue: { [unowned self] in
                 posts = $0
                 refreshControl.endRefreshing()
                 loadingHud.dismiss()
@@ -194,21 +189,15 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
             let dispatchGroup = DispatchGroup()
             for (index, post) in posts.enumerated() {
                 dispatchGroup.enter()
-
-                if index > posts.count - 1 {
-                } else {
-                    posts[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
-
+                if index <= posts.count - 1 {
+                    posts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
                     applyChanges()
-
-                    if post.imageURL?.absoluteString != "", post.imageURL != nil {
-                        posts[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                    if let url = post.imageURL {
+                        posts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
                         posts[index].image = UIImage()
                     }
-
                     applyChanges()
-
                     dispatchGroup.leave()
                 }
             }
@@ -287,11 +276,8 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
                     }
                     self.posts[sender.tag].voteStatus = selectedVoteStatus
 
-                    self.tableView.beginUpdates()
-                    self.tableView.reloadSections(IndexSet(integer: sender.tag), with: .automatic)
-                    self.tableView.endUpdates()
+                    self.applyChanges()
                 }
-                // self.loadFeed()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -314,7 +300,6 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     func didSendPost(sentPost: SentPost) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = sentPost.id
-
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -322,17 +307,12 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
 
 extension ViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let post = dataSource.itemIdentifier(for: indexPath) else { return }
         let detailVC = PostDetailViewController()
-        detailVC.selectedPostID = posts[indexPath.section].id
-        detailVC.selectedPost = posts[indexPath.section]
+        detailVC.selectedPost = post
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
-}
-
-
-enum Section {
-    case main
 }
 
 extension ViewController: MainSettingsDelegate {
@@ -368,26 +348,22 @@ extension ViewController: PostCellViewDelegate {
     }
 
     func deletePost(id: String) {
-        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { _, int in
-            if int == 1 {
-                AllesAPI.default.deletePost(id: id) { result in
-                    switch result {
-                    case .success:
-                        self.loadFeed()
-                    case let .failure(apiError):
-                        DispatchQueue.main.async {
-                            EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                                if self.refreshControl.isRefreshing {
-                                    self.refreshControl.endRefreshing()
-                                }
-                                self.loadingHud.dismiss()
-                                if apiError.action != nil, apiError.actionParameter != nil {
-                                    if apiError.action == AllesAPIErrorAction.navigate {
-                                        if apiError.actionParameter == "login" {
-                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                            mySceneDelegate.window?.makeKeyAndVisible()
-                                        }
+        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { _, index in
+            guard index == 1 else { return }
+            AllesAPI.default.deletePost(id: id) { result in
+                switch result {
+                case .success: self.loadFeed()
+                case let .failure(apiError):
+                    DispatchQueue.main.async {
+                        EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+                            self.refreshControl.endRefreshing()
+                            self.loadingHud.dismiss()
+                            if apiError.action != nil, apiError.actionParameter != nil {
+                                if apiError.action == AllesAPIErrorAction.navigate {
+                                    if apiError.actionParameter == "login" {
+                                        let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+                                        mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                                        mySceneDelegate.window?.makeKeyAndVisible()
                                     }
                                 }
                             }
@@ -400,9 +376,7 @@ extension ViewController: PostCellViewDelegate {
 
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
-
         detailVC.selectedPostID = post
-
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -414,7 +388,7 @@ extension ViewController: PostCellViewDelegate {
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
         vc.user = user
         vc.hidesBottomBarWhenPushed = true

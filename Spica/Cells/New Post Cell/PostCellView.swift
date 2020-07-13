@@ -53,7 +53,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             }
 
             usernameLabel.text = "@\(post!.author.username)"
-            votecountLabel.text = String(post!.score)
+            voteCountLabel.text = String(post!.score)
             contentTextView.delegate = self
 
             let attributedText = NSMutableAttributedString(string: "")
@@ -62,25 +62,8 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
             let postContent = post?.content.replacingOccurrences(of: "\n", with: " \n ")
 
-            let splitContent = postContent!.split(separator: " ") // post?.content.components(separatedBy: CharacterSet(charactersIn: " \n"))
+            let splitContent = postContent!.split(separator: " ")
             for word in splitContent {
-                /* var newWord = ""
-                 if word == "\n" {
-                 newWord = "\n"
-                 }
-                 else {
-                 	//newWord = String(word).replacingOccurrences(of: "\n", with: "")
-                 	newWord = String(word)
-                 } */
-
-                /* if word.contains("%xfa") {
-
-                 } */
-
-                /* var newWord = word
-
-                 let formattedWord = word.replacingOccurrences(of: "^\\s*", with: "", options: .regularExpression)
-                 newWord = formattedWord.split(separator: "") */
 
                 if word.hasPrefix("@"), word.count > 1 {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")
@@ -125,14 +108,14 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             contentTextView.attributedText = attributedText
 
             dateLabel.text = globalDateFormatter.string(from: post!.date)
-            replycountLabel.text = countString(number: post!.repliesCount, singleText: "Reply", multiText: "Replies")
+            replyCountLabel.text = countString(number: post!.repliesCount, singleText: "Reply", multiText: "Replies")
             if post?.image != nil {
                 mediaImageView.image = post?.image!
                 mediaImageView.snp.remakeConstraints { make in
-                    make.bottom.equalTo(replycountLabel.snp.top).offset(-16)
+                    make.bottom.equalTo(replyCountLabel.snp.top).offset(-16)
                     make.height.equalTo((post?.image?.size.height)! / 3)
                     make.trailing.equalTo(self.snp.trailing).offset(-16)
-                    make.leading.equalTo(votecountLabel.snp.trailing).offset(16)
+                    make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
                 }
             }
 
@@ -148,7 +131,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             }
 
             let contextInteraction = UIContextMenuInteraction(delegate: self)
-            // moreImageView.addInteraction(contextInteraction)
             contentView.addInteraction(contextInteraction)
             moreImageView.isUserInteractionEnabled = true
         }
@@ -192,12 +174,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         return imageView
     }()
 
-    private var votecountLabel: UILabel = {
+    private var voteCountLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = .systemFont(ofSize: 17)
         label.textAlignment = .center
         label.textColor = .label
-        label.text = "999"
         return label
     }()
 
@@ -227,7 +208,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         let imgView = UIImageView(frame: .zero)
         imgView.contentMode = .scaleAspectFit
         imgView.clipsToBounds = true
-        // imgView.layer.cornerRadius = 20
         return imgView
     }()
 
@@ -241,7 +221,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         textView.isOpaque = true
         textView.backgroundColor = .clear
         textView.isScrollEnabled = false
-        // textView.isPagingEnabled = false
         return textView
     }()
 
@@ -254,7 +233,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         return label
     }()
 
-    private var replycountLabel: UILabel = {
+    private var replyCountLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.text = "Replies"
         label.textColor = .secondaryLabel
@@ -272,11 +251,10 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         contentView.addSubview(usernameLabel)
         contentView.addSubview(upvoteButton)
         contentView.addSubview(downvoteButton)
-        contentView.addSubview(votecountLabel)
+        contentView.addSubview(voteCountLabel)
         contentView.addSubview(contentTextView)
-        contentView.addSubview(replycountLabel)
+        contentView.addSubview(replyCountLabel)
         contentView.addSubview(dateLabel)
-        // contentView.addSubview(moreImageView)
         contentView.addSubview(mediaImageView)
 
         contentView.isUserInteractionEnabled = true
@@ -285,29 +263,22 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
         contentTextView.translatesAutoresizingMaskIntoConstraints = false
 
-        /* moreImageView.snp.makeConstraints { (make) in
-         	make.width.equalTo(30)
-         	make.height.equalTo(30)
-         	make.top.equalTo(contentView.snp.top).offset(16)
-         	make.trailing.equalTo(contentView.snp.trailing).offset(-16)
-         } */
-
-        votecountLabel.snp.makeConstraints { make in
+        voteCountLabel.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.snp.centerY)
             make.leading.equalTo(contentView.snp.leading).offset(16)
             make.width.equalTo(30)
         }
 
         upvoteButton.snp.makeConstraints { make in
-            make.bottom.equalTo(votecountLabel.snp.top)
-            make.centerX.equalTo(votecountLabel.snp.centerX)
+            make.bottom.equalTo(voteCountLabel.snp.top)
+            make.centerX.equalTo(voteCountLabel.snp.centerX)
             make.leading.equalTo(contentView.snp.leading).offset(16)
             make.width.equalTo(30)
         }
 
         downvoteButton.snp.makeConstraints { make in
-            make.top.equalTo(votecountLabel.snp.bottom).offset(-8)
-            make.centerX.equalTo(votecountLabel.snp.centerX)
+            make.top.equalTo(voteCountLabel.snp.bottom).offset(-8)
+            make.centerX.equalTo(voteCountLabel.snp.centerX)
             make.leading.equalTo(contentView.snp.leading).offset(16)
             make.width.equalTo(30)
         }
@@ -339,7 +310,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             make.width.equalTo(contentView.frame.width / 2)
         }
 
-        replycountLabel.snp.makeConstraints { make in
+        replyCountLabel.snp.makeConstraints { make in
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.bottom.equalTo(contentView.snp.bottom).offset(-16)
             make.width.equalTo(contentView.frame.width / 2)
@@ -348,15 +319,15 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         }
 
         mediaImageView.snp.makeConstraints { make in
-            make.bottom.equalTo(replycountLabel.snp.top).offset(-16)
+            make.bottom.equalTo(replyCountLabel.snp.top).offset(-16)
             make.height.equalTo(32)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
-            make.leading.equalTo(votecountLabel.snp.trailing).offset(16)
+            make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
         }
 
         contentTextView.snp.makeConstraints { make in
             make.top.equalTo(usernameLabel.snp.bottom).offset(16)
-            make.leading.equalTo(votecountLabel.snp.trailing).offset(16)
+            make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.bottom.equalTo(mediaImageView.snp.top).offset(-16)
         }
@@ -372,12 +343,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         contentTextView.isEditable = true
         contentTextView.isSelectable = true
         contentTextView.isMultipleTouchEnabled = true
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 
     func textView(_: UITextView, shouldInteractWith URL: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
