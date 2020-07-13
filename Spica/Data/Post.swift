@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftyJSON
 
-public struct Post {
+public struct Post: Hashable {
     var id: String
     var author: User
     var date: Date

@@ -87,16 +87,16 @@ public class AllesAPI {
     }
 
     public func sendOnlineStatus() {
-        let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") ?? ""
+        guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else { return }
         AF.request("https://online.alles.cx", method: .post, parameters: nil, headers: [
             "Authorization": authKey,
         ]).response(queue: .global(qos: .utility)) { _ in}
     }
 
     public func loadUser(username: String, completion: ((Result<User, AllesAPIErrorMessage>) -> Void)?) {
-        let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token")
+        guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else { return }
         AF.request("https://alles.cx/api/users/\(username)", method: .get, parameters: nil, headers: [
-            "Authorization": authKey!,
+            "Authorization": authKey,
         ]).responseJSON(queue: .global(qos: .utility)) { response in
             switch response.result {
             case .success:
@@ -104,24 +104,18 @@ public class AllesAPI {
                     let responseJSON = JSON(response.data!)
                     if !responseJSON["err"].exists() {
                         AF.request("https://online.alles.cx/\(responseJSON["id"].string!)", method: .get, parameters: nil, headers: [
-                            "Authorization": authKey!,
+                            "Authorization": authKey,
                         ]).response(queue: .global(qos: .utility)) { onlineResponse in
                             switch onlineResponse.result {
                             case .success:
                                 let data = String(data: onlineResponse.data!, encoding: .utf8)
-                                var isOnline: Bool!
-                                if data! == "🟢" {
-                                    isOnline = true
-                                } else {
-                                    isOnline = false
-                                }
+                                let isOnline = data == "🟢"
                                 let newUser = User(id: responseJSON["id"].string!, username: responseJSON["username"].string!, displayName: responseJSON["name"].string!, imageURL: URL(string: "https://avatar.alles.cx/u/\(responseJSON["username"])")!, isPlus: responseJSON["plus"].bool!, rubies: responseJSON["rubies"].int!, followers: responseJSON["followers"].int!, image: UIImage(systemName: "person.circle"), isFollowing: responseJSON["following"].bool!, followsMe: responseJSON["followingUser"].bool!, about: responseJSON["about"].string!, isOnline: isOnline)
                                 completion!(.success(newUser))
                             case let .failure(err):
                                 completion!(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
                             }
                         }
-
                     } else {
                         let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
                         completion!(.failure(apiError))

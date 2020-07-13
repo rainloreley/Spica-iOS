@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-public struct User {
+public struct User: Hashable {
     var id: String
     var username: String
     var displayName: String

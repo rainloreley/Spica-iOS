@@ -15,7 +15,11 @@ import Combine
 class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
     var createPostBtn: UIButton!
-    var posts = [Post]()
+    var posts = [Post]() {
+        didSet {
+            applyChanges()
+        }
+    }
 
     var refreshControl = UIRefreshControl()
 
@@ -39,13 +43,8 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self
-        tableView.dataSource = self
-        // tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        tableView.dataSource = dataSource
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-
-        tableView.estimatedRowHeight = 120
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
 
         tableView.snp.makeConstraints { make in
@@ -82,6 +81,53 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
             make.trailing.equalTo(view.snp.trailing).offset(-16)
         }
     }
+    
+    // MARK: - Datasource
+    typealias DataSource = UITableViewDiffableDataSource<Section, Post>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
+    
+    enum Section: Hashable {
+        case main
+    }
+    
+    private lazy var dataSource = makeDataSource()
+    
+    func makeDataSource() -> DataSource {
+        let source = DataSource(tableView: tableView) { [self] (tableView, indexPath, post) -> UITableViewCell? in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+
+            cell.delegate = self
+            cell.indexPath = indexPath
+            cell.post = post
+
+            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+            
+            cell.pfpImageView.tag = indexPath.section
+            
+            cell.pfpImageView.isUserInteractionEnabled = true
+            cell.pfpImageView.addGestureRecognizer(tap)
+
+            cell.upvoteButton.tag = indexPath.section
+            cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+
+            cell.downvoteButton.tag = indexPath.section
+            cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+            return cell
+        }
+        source.defaultRowAnimation = .fade
+        return source
+    }
+    
+    func applyChanges(_ animated: Bool = true) {
+        var snapshot = Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(posts, toSection: .main)
+        DispatchQueue.main.async {
+            self.dataSource.apply(snapshot, animatingDifferences: animated)
+        }
+    }
+    
 
     @objc func openSettings() {
         let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
@@ -137,7 +183,6 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
                 }
             } receiveValue: { [self] in
                 posts = $0
-                tableView.reloadData()
                 refreshControl.endRefreshing()
                 loadingHud.dismiss()
                 loadImages()
@@ -145,32 +190,24 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     }
 
     func loadImages() {
-        DispatchQueue.global(qos: .utility).async {
+        DispatchQueue.global(qos: .utility).async { [self] in
             let dispatchGroup = DispatchGroup()
-            for (index, post) in self.posts.enumerated() {
+            for (index, post) in posts.enumerated() {
                 dispatchGroup.enter()
 
-                if index > self.posts.count - 1 {
+                if index > posts.count - 1 {
                 } else {
-                    self.posts[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+                    posts[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
 
-                    DispatchQueue.main.async {
-                        self.tableView.beginUpdates()
-                        self.tableView.reloadSections(IndexSet(integer: index), with: .automatic)
-                        self.tableView.endUpdates()
-                    }
+                    applyChanges()
 
                     if post.imageURL?.absoluteString != "", post.imageURL != nil {
-                        self.posts[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                        posts[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
                     } else {
-                        self.posts[index].image = UIImage()
+                        posts[index].image = UIImage()
                     }
 
-                    DispatchQueue.main.async {
-                        self.tableView.beginUpdates()
-                        self.tableView.reloadSections(IndexSet(integer: index), with: .automatic)
-                        self.tableView.endUpdates()
-                    }
+                    applyChanges()
 
                     dispatchGroup.leave()
                 }
@@ -198,21 +235,17 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
             switch result {
             case .success:
-                DispatchQueue.main.async {
-                    if self.posts[sender.tag].voteStatus == -1 {
-                        self.posts[sender.tag].score += 2
+                DispatchQueue.main.async { [self] in
+                    if posts[sender.tag].voteStatus == -1 {
+                        posts[sender.tag].score += 2
                     } else if selectedVoteStatus == 0 {
-                        self.posts[sender.tag].score -= 1
+                        posts[sender.tag].score -= 1
                     } else {
-                        self.posts[sender.tag].score += 1
+                        posts[sender.tag].score += 1
                     }
-                    self.posts[sender.tag].voteStatus = selectedVoteStatus
-
-                    self.tableView.beginUpdates()
-                    self.tableView.reloadSections(IndexSet(integer: sender.tag), with: .automatic)
-                    self.tableView.endUpdates()
+                    posts[sender.tag].voteStatus = selectedVoteStatus
+                    applyChanges()
                 }
-                // self.loadFeed()
 
             case let .failure(apiError):
                 DispatchQueue.main.async {
@@ -287,150 +320,7 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        1
-    }
-
-    func numberOfSections(in _: UITableView) -> Int {
-        posts.count
-    }
-
-    func tableView(_: UITableView, estimatedHeightForRowAt _: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let post = posts[indexPath.section]
-
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
-
-        cell.delegate = self
-        cell.indexPath = indexPath
-        cell.post = post
-
-        let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-		
-        cell.pfpImageView.tag = indexPath.section
-		
-        cell.pfpImageView.isUserInteractionEnabled = true
-        cell.pfpImageView.addGestureRecognizer(tap)
-
-        cell.upvoteButton.tag = indexPath.section
-        cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-
-        cell.downvoteButton.tag = indexPath.section
-        cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
-
-        return cell
-        // let cell = PostCell()
-
-        // cell.buildCell(post: post, indexPath: indexPath)
-        /* cell.selectionStyle = .none
-         cell.pfpView.image = post.author.image
-
-         if post.image != nil {
-         	cell.attachedImageView.image = post.image!
-
-         	cell.attachedImageView.snp.makeConstraints { (make) in
-         	 //	make.width.equalTo(self.contentView.snp.width).offset(-80)
-         		make.height.equalTo((post.image?.size.height)! / 3)
-         	 }
-         }
-
-         /* let imageHeight = cell.attachedImageView.image?.size.height
-          cell.attachedImageView.snp.makeConstraints { make in
-
-         		make.width.equalTo(self.contentView.snp.width).offset(-80)
-         	make.height.equalTo((post.image?.size.height ?? 0) / 3)
-         		 //make.height.equalTo(imageHeight!)
-         	 } */
-
-         if post.author.isPlus {
-         	// let font:UIFont? = UIFont(name: "Helvetica", size:20)
-         	let font: UIFont? = UIFont.boldSystemFont(ofSize: 18)
-
-         	let fontSuper: UIFont? = UIFont.boldSystemFont(ofSize: 12)
-         	let attrDisplayName = NSMutableAttributedString(string: "\(post.author.displayName)+", attributes: [.font: font!])
-         	attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: post.author.displayName.count, length: 1))
-
-         	cell.displayNameLbl.attributedText = attrDisplayName
-         } else {
-         	cell.displayNameLbl.text = post.author.displayName
-         }
-         cell.usernameLbl.text = "@\(post.author.username)"
-         cell.voteLvl.text = "\(post.score)"
-         cell.dateLbl.text = globalDateFormatter.string(from: post.date)
-         cell.repliesLbl.text = countString(number: post.repliesCount, singleText: "Reply", multiText: "Replies")
-         // contentTextView.text = post.content
-         cell.contentTextView.delegate = self
-
-         let attributedText = NSMutableAttributedString(string: "")
-
-         let normalFont: UIFont? = UIFont.systemFont(ofSize: 15)
-
-         let splitContent = post.content.split(separator: " ")
-         for word in splitContent {
-         	if word.hasPrefix("@"), word.count > 1 {
-         		let selectablePart = NSMutableAttributedString(string: String(word) + " ")
-         		// let username = String(word).replacingOccurrences(of: ".", with: "")
-         		let username = removeSpecialCharsFromString(text: String(word))
-         		print("username: \(username)")
-         		selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: username.count))
-         		// selectablePart.addAttribute(.underlineColor, value: UIColor.blue, range: NSRange(location: 0, length: selectablePart.length))
-         		selectablePart.addAttribute(.link, value: "user:\(username)", range: NSRange(location: 0, length: username.count))
-         		attributedText.append(selectablePart)
-         	} else if word.hasPrefix("%"), word.count > 1 {
-         		let selectablePart = NSMutableAttributedString(string: String(word) + " ")
-         		// let username = String(word).replacingOccurrences(of: ".", with: "")
-
-         		print("madePost: \(word)")
-
-         		selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
-         		// selectablePart.addAttribute(.underlineColor, value: UIColor.blue, range: NSRange(location: 0, length: selectablePart.length))
-         		let postID = word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]
-         		selectablePart.addAttribute(.link, value: "post:\(postID)", range: NSRange(location: 0, length: selectablePart.length - 1))
-         		attributedText.append(selectablePart)
-         	} else if String(word).isValidURL, word.count > 1 {
-         		let selectablePart = NSMutableAttributedString(string: String(word) + " ")
-         		selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
-         		// selectablePart.addAttribute(.underlineColor, value: UIColor.blue, range: NSRange(location: 0, length: selectablePart.length))
-         		selectablePart.addAttribute(.link, value: "url:\(word)", range: NSRange(location: 0, length: selectablePart.length - 1))
-         		attributedText.append(selectablePart)
-         	} else {
-         		attributedText.append(NSAttributedString(string: word + " "))
-         	}
-         }
-
-         attributedText.addAttributes([.font: normalFont!], range: NSRange(location: 0, length: attributedText.length))
-         cell.contentTextView.attributedText = attributedText
-         cell.contentView.resignFirstResponder()
-
-         if post.voteStatus == 1 {
-         	cell.upvoteBtn.setTitleColor(.systemGreen, for: .normal)
-         	cell.downvoteBtn.setTitleColor(.gray, for: .normal)
-         } else if post.voteStatus == -1 {
-         	cell.downvoteBtn.setTitleColor(.systemRed, for: .normal)
-         	cell.upvoteBtn.setTitleColor(.gray, for: .normal)
-         } else {
-         	cell.upvoteBtn.setTitleColor(.systemBlue, for: .normal)
-         	cell.downvoteBtn.setTitleColor(.systemBlue, for: .normal)
-         }
-
-         let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-         cell.pfpView.tag = indexPath.section
-         cell.pfpView.addGestureRecognizer(tap)
-         cell.delegate = self
-
-         cell.upvoteBtn.tag = indexPath.section
-         cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-
-         cell.downvoteBtn.tag = indexPath.section
-         cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
-
-         return cell */
-    }
-
+extension ViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = posts[indexPath.section].id
@@ -440,7 +330,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension ViewController: UICollectionViewDelegate {}
 
 enum Section {
     case main
