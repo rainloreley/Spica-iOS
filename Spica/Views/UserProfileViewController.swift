@@ -446,7 +446,7 @@ extension UserProfileViewController: PostCellViewDelegate {
         vc.type = .post
         vc.delegate = self
         vc.preText = "@\(username)\n\n\n\n%\(id)"
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func replyToPost(id: String) {
@@ -454,7 +454,7 @@ extension UserProfileViewController: PostCellViewDelegate {
         vc.type = .reply
         vc.delegate = self
         vc.parentID = id
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func copyPostID(id: String) {

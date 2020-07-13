@@ -18,6 +18,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
     var loadingHud: JGProgressHUD!
 
+    // MARK: - Setup
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -60,7 +61,6 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             switch result {
             case let .success(newPosts):
                 DispatchQueue.main.async {
-                    let isEmpty = self.mentions.isEmpty
                     self.mentions = newPosts
                     // if isEmpty {
                     self.tableView.reloadData()
@@ -305,7 +305,7 @@ extension MentionsViewController: PostCellViewDelegate {
         vc.type = .reply
         vc.delegate = self
         vc.parentID = id
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func copyPostID(id: String) {

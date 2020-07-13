@@ -156,14 +156,14 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             EZAlertController.actionSheet("Image", message: "Select an action", sourceView: view, actions: [
                 UIAlertAction(title: "Select another image", style: .default, handler: { _ in
                     // self.imagePicker.present(from: self.view)
-                    self.present(self.imagePicker, animated: true, completion: nil)
+                    self.present(self.imagePicker, animated: true)
 			}), UIAlertAction(title: "Remove", style: .destructive, handler: { _ in
                     self.selectedImage = nil
                     self.imageButton.image = UIImage(systemName: "photo")
 			}), UIAlertAction(title: "Cancel", style: .cancel, handler: nil),
             ])
         } else {
-            present(imagePicker, animated: true, completion: nil)
+            present(imagePicker, animated: true)
         }
     }
 
@@ -201,7 +201,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
                         self.loadingHud.dismiss()
                         self.sendButton.isEnabled = true
                         self.delegate.didSendPost(sentPost: sentPost)
-                        self.dismiss(animated: true, completion: nil)
+                        self.dismiss(animated: true)
                         SPAlert.present(title: "Post sent!", preset: .done)
                     }
                 case let .failure(apiError):
@@ -244,11 +244,11 @@ extension PostCreateViewController: UIImagePickerControllerDelegate & UINavigati
             imageButton.image = UIImage(systemName: "photo.fill")
         }
 
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
 
     func imagePickerControllerDidCancel(_: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
 }
 

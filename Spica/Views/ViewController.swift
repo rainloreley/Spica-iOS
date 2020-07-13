@@ -10,6 +10,7 @@ import SnapKit
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
+import Combine
 
 class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
@@ -19,6 +20,8 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var refreshControl = UIRefreshControl()
 
     var loadingHud: JGProgressHUD!
+    
+    private var subscriptions = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,15 +81,13 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
             make.bottom.equalTo(view.snp.bottom).offset(-100)
             make.trailing.equalTo(view.snp.trailing).offset(-16)
         }
-
-        // tableView.rowHeight = UITableView.automaticDimension
     }
 
     @objc func openSettings() {
         let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
         let vc = storyboard.instantiateInitialViewController() as! UINavigationController
-        (vc.viewControllers.first as! MainSettingsViewController).delegate = self
-        present(vc, animated: true, completion: nil)
+        (vc.viewControllers.first as? MainSettingsViewController)?.delegate = self
+        present(vc, animated: true)
     }
 
     @objc func openOwnProfileView() {
@@ -101,68 +102,51 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
-    public func downloadUIImage(_ url: URL) -> UIImage {
-        let data = try? Data(contentsOf: url)
-        return UIImage(data: data!)!
-    }
-
-    override func viewWillAppear(_: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
     }
 
-    override func viewDidAppear(_: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         loadFeed()
     }
 
     @objc func loadFeed() {
-        if posts.isEmpty {
-            loadingHud.show(in: view)
-        }
-        AllesAPI.default.loadFeed { [self] result in
-            switch result {
-            case let .success(posts):
-                let isEmpty = self.posts.isEmpty
-                self.posts = posts
-                DispatchQueue.main.async {
-                    // if isEmpty {
-                    self.tableView.reloadData()
-                    // }
-                    if self.refreshControl.isRefreshing {
-                        self.refreshControl.endRefreshing()
-                    }
-                    self.loadingHud.dismiss()
-                    self.loadImages()
-                }
-
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if self.refreshControl.isRefreshing {
-                            self.refreshControl.endRefreshing()
-                        }
-                        self.loadingHud.dismiss()
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
+        if posts.isEmpty { loadingHud.show(in: view) }
+        AllesAPI.loadFeed()
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case .failure(let err):
+                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { [self] _, _ in
+                        refreshControl.endRefreshing()
+                        loadingHud.dismiss()
+                        if err.action != nil, err.actionParameter != nil {
+                            if err.action == AllesAPIErrorAction.navigate, err.actionParameter == "login" {
+                                let mySceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+                                mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                                mySceneDelegate.window?.makeKeyAndVisible()
                             }
                         }
                     }
+                default: break
                 }
-            }
-        }
+            } receiveValue: { [self] in
+                posts = $0
+                tableView.reloadData()
+                refreshControl.endRefreshing()
+                loadingHud.dismiss()
+                loadImages()
+            }.store(in: &subscriptions)
     }
 
     func loadImages() {
         DispatchQueue.global(qos: .utility).async {
             let dispatchGroup = DispatchGroup()
-
             for (index, post) in self.posts.enumerated() {
                 dispatchGroup.enter()
 
@@ -477,7 +461,7 @@ extension ViewController: PostCellViewDelegate {
         vc.type = .post
         vc.delegate = self
         vc.preText = "@\(username)\n\n\n\n%\(id)"
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func replyToPost(id: String) {
@@ -485,7 +469,7 @@ extension ViewController: PostCellViewDelegate {
         vc.type = .reply
         vc.delegate = self
         vc.parentID = id
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func copyPostID(id: String) {
@@ -535,8 +519,8 @@ extension ViewController: PostCellViewDelegate {
     }
 
     func selectedURL(url: String, indexPath _: IndexPath) {
-        if UIApplication.shared.canOpenURL(URL(string: url)!) {
-            UIApplication.shared.open(URL(string: url)!)
+        if let url = URL(string: url), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
         }
     }
 

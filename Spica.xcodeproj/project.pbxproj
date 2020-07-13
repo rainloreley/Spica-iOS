@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0252C224ADE30700A4E4FD /* LoginViewController.swift */; };
-		3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */; };
 		3A25FBA924B753D400324136 /* SPAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 3A25FBA824B753D400324136 /* SPAlert */; };
 		3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3A34226B24B359BE00B8AFA9 /* JGProgressHUD */; };
 		3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */; };
@@ -76,7 +75,6 @@
 		1360C14D6EC95C923EBA37A3 /* Pods-Spica-SpicaUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica-SpicaUITests.debug.xcconfig"; path = "Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A0252C224ADE30700A4E4FD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextViewPlaceholder.swift; sourceTree = "<group>"; };
 		3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedLibrariesViewController.swift; sourceTree = "<group>"; };
 		3A361FEC24B8AA2700513028 /* CreditsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
@@ -294,7 +292,6 @@
 				3AD689B624ADDAD2001F485E /* API */,
 				3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */,
 				3A96F6A624AB410900482C5A /* Extensions.swift */,
-				3A257D8C24ACE1B30092F105 /* UITextViewPlaceholder.swift */,
 				3AA12EF324B0F3CD009C904A /* EZAlertController.swift */,
 			);
 			path = Services;
@@ -684,7 +681,6 @@
 				3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */,
 				3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
-				3A257D8D24ACE1B30092F105 /* UITextViewPlaceholder.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
 				3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */,
 				3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */,

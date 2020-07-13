@@ -63,43 +63,39 @@ import UIKit
         })
         alert.addAction(acceptButton)
 
-        instance.topMostController()?.present(alert, animated: true, completion: nil)
+        instance.topMostController()?.present(alert, animated: true)
         return alert
     }
 
     @discardableResult
     open class func alert(_ title: String, message: String, buttons: [String], tapBlock: ((UIAlertAction, Int) -> Void)?) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert, buttons: buttons, tapBlock: tapBlock)
-        instance.topMostController()?.present(alert, animated: true, completion: nil)
+        instance.topMostController()?.present(alert, animated: true)
         return alert
     }
 
     @discardableResult
     open class func alert(_ title: String, message: String, buttons: [String], buttonsPreferredStyle: [UIAlertAction.Style], tapBlock: ((UIAlertAction, Int) -> Void)?) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert, buttons: buttons, buttonsPreferredStyle: buttonsPreferredStyle, tapBlock: tapBlock)
-        instance.topMostController()?.present(alert, animated: true, completion: nil)
+        instance.topMostController()?.present(alert, animated: true)
         return alert
     }
 
     @discardableResult
     open class func alert(_ title: String, message: String, actions: [UIAlertAction]) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        for action in actions {
-            alert.addAction(action)
-        }
-        instance.topMostController()?.present(alert, animated: true, completion: nil)
+        actions.forEach(alert.addAction)
+        instance.topMostController()?.present(alert, animated: true)
         return alert
     }
 
     @discardableResult
     open class func actionSheet(_ title: String, message: String, sourceView: UIView, actions: [UIAlertAction]) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.actionSheet)
-        for action in actions {
-            alert.addAction(action)
-        }
+        actions.forEach(alert.addAction)
         alert.popoverPresentationController?.sourceView = sourceView
         alert.popoverPresentationController?.sourceRect = sourceView.bounds
-        instance.topMostController()?.present(alert, animated: true, completion: nil)
+        instance.topMostController()?.present(alert, animated: true)
         return alert
     }
 
@@ -108,7 +104,7 @@ import UIKit
         let alert = UIAlertController(title: title, message: message, preferredStyle: .actionSheet, buttons: buttons, tapBlock: tapBlock)
         alert.popoverPresentationController?.sourceView = sourceView
         alert.popoverPresentationController?.sourceRect = sourceView.bounds
-        instance.topMostController()?.present(alert, animated: true, completion: nil)
+        instance.topMostController()?.present(alert, animated: true)
         return alert
     }
 }
@@ -139,9 +135,7 @@ private extension UIAlertAction {
     convenience init(title: String?, preferredStyle: UIAlertAction.Style = .default, buttonIndex: Int, tapBlock: ((UIAlertAction, Int) -> Void)?) {
         self.init(title: title, style: preferredStyle) {
             (action: UIAlertAction) in
-            if let block = tapBlock {
-                block(action, buttonIndex)
-            }
+            tapBlock?(action, buttonIndex)
         }
     }
 }

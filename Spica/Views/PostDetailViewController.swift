@@ -8,6 +8,7 @@
 import JGProgressHUD
 import SPAlert
 import UIKit
+import Combine
 
 class PostDetailViewController: UIViewController, PostCreateDelegate {
     var selectedPostID: String!
@@ -23,6 +24,8 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     var refreshControl = UIRefreshControl()
 
     var loadingHud: JGProgressHUD!
+    
+    private var subscriptions = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,9 +39,6 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         tableView.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(ReplyButtonCell.self, forCellReuseIdentifier: "replyButtonCell")
-        tableView.estimatedRowHeight = 120
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 108.0
         view.addSubview(tableView)
 
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
@@ -66,42 +66,23 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
     @objc func loadPostDetail() {
         if postAncestors.isEmpty || postReplies.isEmpty {
-            DispatchQueue.main.async {
-                self.loadingHud.show(in: self.view)
+            DispatchQueue.main.async { [self] in
+                loadingHud.show(in: view)
             }
         }
-        AllesAPI.default.loadPostDetail(postID: selectedPostID) { result in
-            switch result {
-            case let .success(newPostDetail):
-                DispatchQueue.main.async {
-                    var isEmpty = false
-                    if self.postAncestors.isEmpty || self.postReplies.isEmpty {
-                        isEmpty = true
-                    }
-                    self.mainPost = newPostDetail.post
-                    self.postAncestors = newPostDetail.ancestors
-                    self.postAncestors.append(newPostDetail.post)
-                    self.postReplies = newPostDetail.replies
-                    // if isEmpty {
-                    self.tableView.reloadData()
-                    // }
-                    if self.refreshControl.isRefreshing {
+        
+        AllesAPI.loadPostDetail(id: selectedPostID)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] in
+                guard let self = self else { return }
+                switch $0 {
+                case let .failure(err):
+                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
                         self.refreshControl.endRefreshing()
-                    }
-                    self.loadingHud.dismiss()
-                    self.tableView.scrollToRow(at: IndexPath(row: self.postAncestors.firstIndex(where: { $0.id == self.mainPost.id })!, section: 0), at: .middle, animated: true)
-                    self.loadImages()
-                }
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if self.refreshControl.isRefreshing {
-                            self.refreshControl.endRefreshing()
-                        }
                         self.loadingHud.dismiss()
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
+                        if err.action != nil, err.actionParameter != nil {
+                            if err.action == AllesAPIErrorAction.navigate {
+                                if err.actionParameter == "login" {
                                     let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                     mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                     mySceneDelegate.window?.makeKeyAndVisible()
@@ -109,9 +90,11 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                             }
                         }
                     }
+                default: break
                 }
-            }
-        }
+            } receiveValue: {
+                self.configure(with: $0)
+            }.store(in: &subscriptions)
     }
 
     func loadImages() {
@@ -170,23 +153,38 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                 dispatchGroup.leave()
             }
         }
+        
+        
+    }
+    
+    func configure(with postDetail: PostDetail?) {
+        guard let postDetail = postDetail else { return }
+        mainPost = postDetail.post
+        postAncestors = postDetail.ancestors
+        postAncestors.append(postDetail.post)
+        postReplies = postDetail.replies
+        tableView.reloadData()
+        refreshControl.endRefreshing()
+        loadingHud.dismiss()
+        if let index = postAncestors.firstIndex(where: { $0.id == mainPost.id }) {
+            tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: true)
+        }
+        loadImages()
     }
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
         let newTag = String(sender.view!.tag)
         let sectionID = newTag[newTag.index(newTag.startIndex, offsetBy: 1)]
         let rowID = newTag.components(separatedBy: "9\(sectionID)")[1]
-
         let section = Int("\(sectionID)")!
         let row = Int(rowID)!
-
+        
         let userByTag: User!
         if section == 0 {
             userByTag = postAncestors[row].author
         } else {
             userByTag = postReplies[row].author
         }
-        // let userByTag = userPosts[sender.view!.tag].author
         let vc = UserProfileViewController()
         vc.user = userByTag
         navigationController?.pushViewController(vc, animated: true)
@@ -207,13 +205,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             subSelectedPost = postReplies[row]
         }
 
-        var selectedVoteStatus = 0
-        if subSelectedPost.voteStatus == 1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = 1
-        }
-
+        let selectedVoteStatus = subSelectedPost.voteStatus == 1 ? 0:1
         AllesAPI.default.votePost(post: subSelectedPost, value: selectedVoteStatus) { result in
             switch result {
             case .success:
@@ -242,8 +234,6 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-                // self.loadPostDetail()
-
             case let .failure(apiError):
                 DispatchQueue.main.async {
                     EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
@@ -345,7 +335,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             vc.type = .reply
             vc.delegate = self
             vc.parentID = mainPost.id
-            present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+            present(UINavigationController(rootViewController: vc), animated: true)
         }
         /* let userByTag = posts[sender.view!.tag].author
          let vc = UserProfileViewController()
@@ -466,7 +456,7 @@ extension PostDetailViewController: PostCellViewDelegate {
         vc.type = .post
         vc.delegate = self
         vc.preText = "@\(username)\n\n\n\n%\(id)"
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func replyToPost(id: String) {
@@ -474,7 +464,7 @@ extension PostDetailViewController: PostCellViewDelegate {
         vc.type = .reply
         vc.delegate = self
         vc.parentID = id
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func copyPostID(id: String) {
