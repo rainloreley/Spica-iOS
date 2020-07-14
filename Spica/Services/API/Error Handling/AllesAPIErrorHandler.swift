@@ -96,6 +96,10 @@ public class AllesAPIErrorHandler {
             return .init(message: "The input is too short", error: .validation_tooShort, actionParameter: nil, action: nil)
         case "validation.tooLong":
             return .init(message: "The input is too long", error: .validation_tooLong, actionParameter: nil, action: nil)
+
+        case "spica_authTokenMissing":
+            return .init(message: "The auth token is missing (how?)", error: .spica_authTokenMissing, actionParameter: "login", action: .navigate)
+
         default:
             return .init(message: "An unknown error occurred (you did it)", error: .unknown, actionParameter: nil, action: nil)
         }
