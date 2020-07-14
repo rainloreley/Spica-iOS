@@ -30,6 +30,7 @@
 		3A71461224AA88FC000FA3C3 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461124AA88FC000FA3C3 /* Post.swift */; };
 		3A71461424AA8907000FA3C3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461324AA8907000FA3C3 /* User.swift */; };
 		3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A741A4F24B8BBC70083925A /* CreditsCell.swift */; };
+		3A746A9424BDD975008C9309 /* VotePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A746A9324BDD975008C9309 /* VotePost.swift */; };
 		3A91971624B89DDB00B7066B /* MainSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A91971524B89DDB00B7066B /* MainSettings.storyboard */; };
 		3A91971824B89E1100B7066B /* MainSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A91971724B89E1100B7066B /* MainSettingsViewController.swift */; };
 		3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */; };
@@ -101,6 +102,7 @@
 		3A71461124AA88FC000FA3C3 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		3A71461324AA8907000FA3C3 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3A741A4F24B8BBC70083925A /* CreditsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsCell.swift; sourceTree = "<group>"; };
+		3A746A9324BDD975008C9309 /* VotePost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotePost.swift; sourceTree = "<group>"; };
 		3A91971524B89DDB00B7066B /* MainSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainSettings.storyboard; sourceTree = "<group>"; };
 		3A91971724B89E1100B7066B /* MainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsViewController.swift; sourceTree = "<group>"; };
 		3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -263,6 +265,14 @@
 			path = SpicaUITests;
 			sourceTree = "<group>";
 		};
+		3A746A9224BDD968008C9309 /* Actions */ = {
+			isa = PBXGroup;
+			children = (
+				3A746A9324BDD975008C9309 /* VotePost.swift */,
+			);
+			path = Actions;
+			sourceTree = "<group>";
+		};
 		3A91971424B89DC300B7066B /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -289,6 +299,7 @@
 		3A96F69D24AB3F9C00482C5A /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				3A746A9224BDD968008C9309 /* Actions */,
 				3AD689B624ADDAD2001F485E /* API */,
 				3A96F69A24AAAE7B00482C5A /* ImageLoader.swift */,
 				3A96F6A624AB410900482C5A /* Extensions.swift */,
@@ -678,6 +689,7 @@
 				3A71461424AA8907000FA3C3 /* User.swift in Sources */,
 				3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */,
 				3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */,
+				3A746A9424BDD975008C9309 /* VotePost.swift in Sources */,
 				3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */,
 				3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,

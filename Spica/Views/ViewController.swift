@@ -99,15 +99,15 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
 
             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
 
-            cell.pfpImageView.tag = indexPath.section
+            cell.pfpImageView.tag = indexPath.row
 
             cell.pfpImageView.isUserInteractionEnabled = true
             cell.pfpImageView.addGestureRecognizer(tap)
 
-            cell.upvoteButton.tag = indexPath.section
+            cell.upvoteButton.tag = indexPath.row
             cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
 
-            cell.downvoteButton.tag = indexPath.section
+            cell.downvoteButton.tag = indexPath.row
             cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
 
             return cell
@@ -214,85 +214,39 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     }
 
     @objc func upvotePost(_ sender: UIButton) {
-        let selectedPost = posts[sender.tag]
-        var selectedVoteStatus = 0
-        if selectedPost.voteStatus == 1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = 1
-        }
-
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                default: break
-                }
-            } receiveValue: { [self] _ in
-                if posts[sender.tag].voteStatus == -1 {
-                    posts[sender.tag].score += 2
-                } else if selectedVoteStatus == 0 {
-                    posts[sender.tag].score -= 1
-                } else {
-                    posts[sender.tag].score += 1
-                }
-                posts[sender.tag].voteStatus = selectedVoteStatus
-                applyChanges()
-            }.store(in: &subscriptions)
+		vote(tag: sender.tag, vote: .upvote)
     }
 
     @objc func downvotePost(_ sender: UIButton) {
-        let selectedPost = posts[sender.tag]
-        var selectedVoteStatus = 0
-        if selectedPost.voteStatus == -1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = -1
-        }
-
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                default: break
-                }
-            } receiveValue: { [self] _ in
-                if self.posts[sender.tag].voteStatus == 1 {
-                    self.posts[sender.tag].score -= 2
-                } else if selectedVoteStatus == 0 {
-                    self.posts[sender.tag].score += 1
-                } else {
-                    self.posts[sender.tag].score -= 1
-                }
-                self.posts[sender.tag].voteStatus = selectedVoteStatus
-
-                self.applyChanges()
-            }.store(in: &subscriptions)
+		vote(tag: sender.tag, vote: .downvote)
     }
+	
+	func vote(tag: Int, vote: VoteType) {
+		let selectedPost = posts[tag]
+		VotePost.default.vote(post: selectedPost, vote: vote)
+			.receive(on: RunLoop.main)
+			.sink {
+				switch $0 {
+					case .failure(let err):
+						EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+							if err.action != nil, err.actionParameter != nil {
+								if err.action == AllesAPIErrorAction.navigate {
+									if err.actionParameter == "login" {
+										let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+										mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+										mySceneDelegate.window?.makeKeyAndVisible()
+									}
+								}
+							}
+						}
+					default: break
+				}
+			} receiveValue: { [unowned self] in
+				posts[tag].voteStatus = $0.status
+				posts[tag].score = $0.score
+				applyChanges()
+			}.store(in: &subscriptions)
+	}
 
     func didSendPost(sentPost: SentPost) {
         let detailVC = PostDetailViewController()

@@ -212,93 +212,42 @@ class UserProfileViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    @objc func upvotePost(_ sender: UIButton) {
-        let selectedPost = userPosts[sender.tag]
-        var selectedVoteStatus = 0
-        if selectedPost.voteStatus == 1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = 1
-        }
+	@objc func upvotePost(_ sender: UIButton) {
+		vote(tag: sender.tag, vote: .upvote)
+	}
 
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                default: break
-                }
-            } receiveValue: { [self] _ in
-                if self.userPosts[sender.tag].voteStatus == -1 {
-                    self.userPosts[sender.tag].score += 2
-                } else if selectedVoteStatus == 0 {
-                    self.userPosts[sender.tag].score -= 1
-                } else {
-                    self.userPosts[sender.tag].score += 1
-                }
-                self.userPosts[sender.tag].voteStatus = selectedVoteStatus
-
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 1)], with: .automatic)
-                self.tableView.endUpdates()
-                self.loadPosts()
-            }.store(in: &subscriptions)
-    }
-
-    @objc func downvotePost(_ sender: UIButton) {
-        let selectedPost = userPosts[sender.tag]
-        var selectedVoteStatus = 0
-        if selectedPost.voteStatus == -1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = -1
-        }
-
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                default: break
-                }
-            } receiveValue: { [self] _ in
-                if self.userPosts[sender.tag].voteStatus == 1 {
-                    self.userPosts[sender.tag].score -= 2
-                } else if selectedVoteStatus == 0 {
-                    self.userPosts[sender.tag].score += 1
-                } else {
-                    self.userPosts[sender.tag].score -= 1
-                }
-                self.userPosts[sender.tag].voteStatus = selectedVoteStatus
-
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 1)], with: .automatic)
-                self.tableView.endUpdates()
-                self.loadPosts()
-            }.store(in: &subscriptions)
-    }
+	@objc func downvotePost(_ sender: UIButton) {
+		vote(tag: sender.tag, vote: .downvote)
+	}
+	
+	func vote(tag: Int, vote: VoteType) {
+		let selectedPost = userPosts[tag]
+		VotePost.default.vote(post: selectedPost, vote: vote)
+			.receive(on: RunLoop.main)
+			.sink {
+				switch $0 {
+					case .failure(let err):
+						EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+							if err.action != nil, err.actionParameter != nil {
+								if err.action == AllesAPIErrorAction.navigate {
+									if err.actionParameter == "login" {
+										let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+										mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+										mySceneDelegate.window?.makeKeyAndVisible()
+									}
+								}
+							}
+						}
+					default: break
+				}
+			} receiveValue: { [unowned self] in
+				userPosts[tag].voteStatus = $0.status
+				userPosts[tag].score = $0.score
+				tableView.beginUpdates()
+				tableView.reloadRows(at: [IndexPath(row: tag, section: 1)], with: .automatic)
+				tableView.endUpdates()
+			}.store(in: &subscriptions)
+	}
 
     @objc func followUnfollowUser() {
         AllesAPI.default.performFollowAction(username: user.username, action: user.isFollowing ? .unfollow : .follow)

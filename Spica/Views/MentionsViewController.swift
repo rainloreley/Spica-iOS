@@ -80,7 +80,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         return source
     }
 
-    func applyChanges(_ animated: Bool = false) {
+    func applyChanges(_ animated: Bool = true) {
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
         snapshot.appendItems(mentions, toSection: .main)
@@ -165,87 +165,40 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    @objc func upvotePost(_ sender: UIButton) {
-        let selectedPost = mentions[sender.tag]
-        var selectedVoteStatus = 0
-        if selectedPost.voteStatus == 1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = 1
-        }
+	@objc func upvotePost(_ sender: UIButton) {
+		vote(tag: sender.tag, vote: .upvote)
+	}
 
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                default: break
-                }
-            } receiveValue: { [self] _ in
-                if mentions[sender.tag].voteStatus == -1 {
-                    mentions[sender.tag].score += 2
-                } else if selectedVoteStatus == 0 {
-                    mentions[sender.tag].score -= 1
-                } else {
-                    mentions[sender.tag].score += 1
-                }
-                mentions[sender.tag].voteStatus = selectedVoteStatus
-
-                applyChanges()
-            }.store(in: &subscriptions)
-    }
-
-    @objc func downvotePost(_ sender: UIButton) {
-        let selectedPost = mentions[sender.tag]
-        var selectedVoteStatus = 0
-        if selectedPost.voteStatus == -1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = -1
-        }
-
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                default: break
-                }
-            } receiveValue: { [self] _ in
-                if self.mentions[sender.tag].voteStatus == 1 {
-                    self.mentions[sender.tag].score -= 2
-                } else if selectedVoteStatus == 0 {
-                    self.mentions[sender.tag].score += 1
-                } else {
-                    self.mentions[sender.tag].score -= 1
-                }
-                self.mentions[sender.tag].voteStatus = selectedVoteStatus
-
-                self.applyChanges()
-            }.store(in: &subscriptions)
-    }
+	@objc func downvotePost(_ sender: UIButton) {
+		vote(tag: sender.tag, vote: .downvote)
+	}
+	
+	func vote(tag: Int, vote: VoteType) {
+		let selectedPost = mentions[tag]
+		VotePost.default.vote(post: selectedPost, vote: vote)
+			.receive(on: RunLoop.main)
+			.sink {
+				switch $0 {
+					case .failure(let err):
+						EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+							if err.action != nil, err.actionParameter != nil {
+								if err.action == AllesAPIErrorAction.navigate {
+									if err.actionParameter == "login" {
+										let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+										mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+										mySceneDelegate.window?.makeKeyAndVisible()
+									}
+								}
+							}
+						}
+					default: break
+				}
+			} receiveValue: { [unowned self] in
+				mentions[tag].voteStatus = $0.status
+				mentions[tag].score = $0.score
+				applyChanges()
+			}.store(in: &subscriptions)
+	}
 
     func didSendPost(sentPost: SentPost) {
         let detailVC = PostDetailViewController()

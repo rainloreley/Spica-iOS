@@ -192,135 +192,65 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         vc.user = userByTag
         navigationController?.pushViewController(vc, animated: true)
     }
+	
+	@objc func upvotePost(_ sender: UIButton) {
+		let newTag = String(sender.tag)
+		let sectionID = newTag[newTag.index(newTag.startIndex, offsetBy: 1)]
+		let rowID = newTag.components(separatedBy: "9\(sectionID)")[1]
 
-    @objc func upvotePost(_ sender: UIButton) {
-        var subSelectedPost: Post!
-        let newTag = String(sender.tag)
-        let sectionID = newTag[newTag.index(newTag.startIndex, offsetBy: 1)]
-        let rowID = newTag.components(separatedBy: "9\(sectionID)")[1]
+		let section = Int("\(sectionID)")!
+		let row = Int(rowID)!
+		vote(section: section, tag: row, vote: .upvote)
+	}
 
-        let section = Int("\(sectionID)")!
-        let row = Int(rowID)!
+	@objc func downvotePost(_ sender: UIButton) {
+		let newTag = String(sender.tag)
+		let sectionID = newTag[newTag.index(newTag.startIndex, offsetBy: 1)]
+		let rowID = newTag.components(separatedBy: "9\(sectionID)")[1]
 
-        if section == 0 {
-            subSelectedPost = postAncestors[row]
-        } else {
-            subSelectedPost = postReplies[row]
-        }
+		let section = Int("\(sectionID)")!
+		let row = Int(rowID)!
+		vote(section: section, tag: row, vote: .downvote)
+	}
+	
+	func vote(section: Int, tag: Int, vote: VoteType) {
+		let selectedPost = section == 0 ? postAncestors[tag] : postReplies[tag]
+		VotePost.default.vote(post: selectedPost, vote: vote)
+			.receive(on: RunLoop.main)
+			.sink {
+				switch $0 {
+					case .failure(let err):
+						EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+							if err.action != nil, err.actionParameter != nil {
+								if err.action == AllesAPIErrorAction.navigate {
+									if err.actionParameter == "login" {
+										let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+										mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+										mySceneDelegate.window?.makeKeyAndVisible()
+									}
+								}
+							}
+						}
+					default: break
+				}
+			} receiveValue: { [unowned self] in
+				if section == 0 {
+					postAncestors[tag].voteStatus = $0.status
+					postAncestors[tag].score = $0.score
+					tableView.beginUpdates()
+					tableView.reloadRows(at: [IndexPath(row: tag, section: section)], with: .automatic)
+					tableView.endUpdates()
+				}
+				else {
+					postReplies[tag].voteStatus = $0.status
+					postReplies[tag].score = $0.score
+					tableView.beginUpdates()
+					tableView.reloadRows(at: [IndexPath(row: tag, section: section)], with: .automatic)
+					tableView.endUpdates()
+				}
 
-        let selectedVoteStatus = subSelectedPost.voteStatus == 1 ? 0 : 1
-
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                default: break
-                }
-            } receiveValue: { [self] _ in
-                if section == 0 {
-                    if self.postAncestors[row].voteStatus == -1 {
-                        self.postAncestors[row].score += 2
-                    } else if selectedVoteStatus == 0 {
-                        self.postAncestors[row].score -= 1
-                    } else {
-                        self.postAncestors[row].score += 1
-                    }
-                    self.postAncestors[row].voteStatus = selectedVoteStatus
-                } else {
-                    if self.postReplies[row].voteStatus == -1 {
-                        self.postReplies[row].score += 2
-                    } else if selectedVoteStatus == 0 {
-                        self.postReplies[row].score -= 1
-                    } else {
-                        self.postReplies[row].score += 1
-                    }
-                    self.postReplies[row].voteStatus = selectedVoteStatus
-                }
-
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
-                self.tableView.endUpdates()
-            }.store(in: &subscriptions)
-    }
-
-    @objc func downvotePost(_ sender: UIButton) {
-        var subSelectedPost: Post!
-        let newTag = String(sender.tag)
-        let sectionID = newTag[newTag.index(newTag.startIndex, offsetBy: 1)]
-        let rowID = newTag.components(separatedBy: "9\(sectionID)")[1]
-
-        let section = Int("\(sectionID)")!
-        let row = Int(rowID)!
-
-        if section == 0 {
-            subSelectedPost = postAncestors[row]
-        } else {
-            subSelectedPost = postReplies[row]
-        }
-
-        var selectedVoteStatus = 0
-        if subSelectedPost.voteStatus == -1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = -1
-        }
-
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                default: break
-                }
-            } receiveValue: { [self] _ in
-                if section == 0 {
-                    if self.postAncestors[row].voteStatus == 1 {
-                        self.postAncestors[row].score -= 2
-                    } else if selectedVoteStatus == 0 {
-                        self.postAncestors[row].score += 1
-                    } else {
-                        self.postAncestors[row].score -= 1
-                    }
-                    self.postAncestors[row].voteStatus = selectedVoteStatus
-                } else {
-                    if self.postReplies[row].voteStatus == 1 {
-                        self.postReplies[row].score -= 2
-                    } else if selectedVoteStatus == 0 {
-                        self.postReplies[row].score += 1
-                    } else {
-                        self.postReplies[row].score -= 1
-                    }
-                    self.postReplies[row].voteStatus = selectedVoteStatus
-                }
-
-                self.tableView.beginUpdates()
-                self.tableView.reloadRows(at: [IndexPath(row: row, section: section)], with: .automatic)
-                self.tableView.endUpdates()
-            }.store(in: &subscriptions)
-    }
+			}.store(in: &subscriptions)
+	}
 
     func didSendPost(sentPost: SentPost) {
         let detailVC = PostDetailViewController()
