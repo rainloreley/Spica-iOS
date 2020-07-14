@@ -3,7 +3,9 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105"/>
+
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105.1"/>
+
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -111,7 +113,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Legal (Spica)" id="wrX-bD-gEh">
+                            <tableViewSection headerTitle="Spica" id="wrX-bD-gEh">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="WkM-1e-1dL">
                                         <rect key="frame" x="20" y="331.5" width="374" height="50"/>
@@ -123,7 +125,10 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oy4-xm-Dzg">
                                                     <rect key="frame" x="20" y="11" width="334" height="28"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                    <state key="normal" title="Privacy Policy (soon)"/>
+                                                    <state key="normal" title="Privacy Policy"/>
+                                                    <connections>
+                                                        <action selector="spicaPrivacy:" destination="sv3-Zw-cNs" eventType="touchUpInside" id="W7u-PX-HWr"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -144,7 +149,10 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="84R-QP-t4i">
                                                     <rect key="frame" x="20" y="11" width="334" height="28"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                    <state key="normal" title="Terms of Service (soon)"/>
+                                                    <state key="normal" title="Website"/>
+                                                    <connections>
+                                                        <action selector="spicaWebsite:" destination="sv3-Zw-cNs" eventType="touchUpInside" id="F1m-sb-Q1h"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -157,7 +165,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Legal (Alles)" id="IXo-Yg-P7T">
+                            <tableViewSection headerTitle="Alles" id="IXo-Yg-P7T">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="zYa-d1-FCX">
                                         <rect key="frame" x="20" y="487.5" width="374" height="50"/>
@@ -207,12 +215,36 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="JfR-8s-Nak">
+                                        <rect key="frame" x="20" y="587.5" width="374" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JfR-8s-Nak" id="WRd-ay-M0I">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iez-I5-iLp">
+                                                    <rect key="frame" x="20" y="11" width="334" height="28"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                    <state key="normal" title="Website"/>
+                                                    <connections>
+                                                        <action selector="allesWebsite:" destination="sv3-Zw-cNs" eventType="touchUpInside" id="dKU-qu-moe"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Iez-I5-iLp" firstAttribute="top" secondItem="WRd-ay-M0I" secondAttribute="topMargin" id="3jQ-WJ-ACe"/>
+                                                <constraint firstItem="Iez-I5-iLp" firstAttribute="bottom" secondItem="WRd-ay-M0I" secondAttribute="bottomMargin" id="3wf-Qz-WDI"/>
+                                                <constraint firstItem="Iez-I5-iLp" firstAttribute="trailing" secondItem="WRd-ay-M0I" secondAttribute="trailingMargin" id="e5j-gX-KEC"/>
+                                                <constraint firstItem="Iez-I5-iLp" firstAttribute="leading" secondItem="WRd-ay-M0I" secondAttribute="leadingMargin" id="fUO-2c-gKI"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Other" id="eaa-mh-Rzc">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="tdE-Uf-Wol">
-                                        <rect key="frame" x="20" y="643.5" width="374" height="50"/>
+                                        <rect key="frame" x="20" y="693.5" width="374" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tdE-Uf-Wol" id="iZ7-jF-qkk">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
@@ -236,7 +268,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="vvn-TU-fs8">
-                                        <rect key="frame" x="20" y="693.5" width="374" height="50"/>
+                                        <rect key="frame" x="20" y="743.5" width="374" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vvn-TU-fs8" id="Vid-D2-Afi">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
@@ -264,7 +296,7 @@
                             <tableViewSection id="rHz-vl-ONT">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="Iee-rE-ceg">
-                                        <rect key="frame" x="20" y="779.5" width="374" height="50"/>
+                                        <rect key="frame" x="20" y="829.5" width="374" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Iee-rE-ceg" id="zmq-yy-ZZM">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
@@ -286,7 +318,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="50" id="Vaz-0P-mf1">
-                                        <rect key="frame" x="20" y="829.5" width="374" height="50"/>
+                                        <rect key="frame" x="20" y="879.5" width="374" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Vaz-0P-mf1" id="KXY-wk-dwu">
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="50"/>
