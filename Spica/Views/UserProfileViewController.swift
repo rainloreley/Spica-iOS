@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 30.06.20.
 //
 
+import Combine
 import JGProgressHUD
 import SPAlert
 import SwiftKeychainWrapper
@@ -13,13 +14,21 @@ import UIKit
 class UserProfileViewController: UIViewController {
     var user: User!
     var tableView: UITableView!
-    var userPosts = [Post]()
+    var userPosts = [Post]() {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
 
     var signedInUsername: String!
 
     var refreshControl = UIRefreshControl()
 
     var loadingHud: JGProgressHUD!
+
+    private var subscriptions = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,25 +46,25 @@ class UserProfileViewController: UIViewController {
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView?.delegate = self
         tableView?.dataSource = self
-        // tableView.bounces = false
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-        // tableView.register(UINib(nibName: "UserHeaderCell", bundle: nil), forCellReuseIdentifier: "userHeaderCell")
         tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
-
-        tableView.estimatedRowHeight = 120
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 108.0
 
         view.addSubview(tableView)
 
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top)
+            make.leading.equalTo(view.snp.leading)
+            make.trailing.equalTo(view.snp.trailing)
+            make.bottom.equalTo(view.snp.bottom)
+        }
+
+        // refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadUser), for: .valueChanged)
         tableView.addSubview(refreshControl)
 
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading"
         loadingHud.interactionType = .blockNoTouches
-        // Do any additional setup after loading the view.
     }
 
     override func viewWillAppear(_: Bool) {
@@ -70,27 +79,57 @@ class UserProfileViewController: UIViewController {
         if user == nil || userPosts.isEmpty {
             loadingHud.show(in: view)
         }
-        DispatchQueue.main.async {
-            AllesAPI.default.loadUser(username: self.user.username) { result in
-                switch result {
-                case let .success(newUser):
-                    DispatchQueue.main.async {
-                        self.user = newUser
-                        self.navigationItem.title = "\(self.user.displayName)"
-                        // self.tableView.reloadData()
-                        self.loadPfp()
-                        self.loadPosts()
+        DispatchQueue.main.async { [self] in
+
+            AllesAPI.default.loadUser(username: self.user.username)
+                .receive(on: RunLoop.current)
+                .sink {
+                    switch $0 {
+                    case let .failure(err):
+                        DispatchQueue.main.async {
+                            EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                                if self.refreshControl.isRefreshing {
+                                    self.refreshControl.endRefreshing()
+                                }
+                                self.loadingHud.dismiss()
+                                if err.action != nil, err.actionParameter != nil {
+                                    if err.action == AllesAPIErrorAction.navigate {
+                                        if err.actionParameter == "login" {
+                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                                            mySceneDelegate.window?.makeKeyAndVisible()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    default: break
                     }
-                case let .failure(apiError):
+                } receiveValue: { [unowned self] in
+                    self.user = $0
+                    self.navigationItem.title = "\(self.user.displayName)"
+                    self.loadPfp()
+                    self.loadPosts()
+                }
+                .store(in: &subscriptions)
+        }
+    }
+
+    func loadPosts() {
+        AllesAPI.default.loadUserPosts(user: user)
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
                     DispatchQueue.main.async {
-                        EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+                        EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
                             if self.refreshControl.isRefreshing {
                                 self.refreshControl.endRefreshing()
                             }
                             self.loadingHud.dismiss()
-                            if apiError.action != nil, apiError.actionParameter != nil {
-                                if apiError.action == AllesAPIErrorAction.navigate {
-                                    if apiError.actionParameter == "login" {
+                            if err.action != nil, err.actionParameter != nil {
+                                if err.action == AllesAPIErrorAction.navigate {
+                                    if err.actionParameter == "login" {
                                         let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                         mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                         mySceneDelegate.window?.makeKeyAndVisible()
@@ -99,44 +138,18 @@ class UserProfileViewController: UIViewController {
                             }
                         }
                     }
+                default: break
                 }
-            }
-        }
-    }
+            } receiveValue: { [unowned self] in
 
-    func loadPosts() {
-        AllesAPI.default.loadUserPosts(user: user) { result in
-            switch result {
-            case let .success(newPosts):
-                DispatchQueue.main.async {
-                    self.userPosts = newPosts
-                    self.tableView.reloadData()
-                    if self.refreshControl.isRefreshing {
-                        self.refreshControl.endRefreshing()
-                    }
-                    self.loadingHud.dismiss()
-                    self.loadImages()
+                self.userPosts = $0
+                if self.refreshControl.isRefreshing {
+                    self.refreshControl.endRefreshing()
                 }
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if self.refreshControl.isRefreshing {
-                            self.refreshControl.endRefreshing()
-                        }
-                        self.loadingHud.dismiss()
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                }
+                self.loadingHud.dismiss()
+                self.loadImages()
             }
-        }
+            .store(in: &subscriptions)
     }
 
     func loadPfp() {
@@ -145,7 +158,7 @@ class UserProfileViewController: UIViewController {
 
             dispatchGroup.enter()
 
-            self.user.image = ImageLoader.default.loadImageFromInternet(url: self.user.imageURL)
+            self.user.image = ImageLoader.loadImageFromInternet(url: self.user.imageURL)
 
             DispatchQueue.main.async {
                 self.tableView.beginUpdates()
@@ -161,24 +174,14 @@ class UserProfileViewController: UIViewController {
         DispatchQueue.global(qos: .utility).async {
             let dispatchGroup = DispatchGroup()
 
-            /* dispatchGroup.enter()
-
-             self.user.image = ImageLoader.default.loadImageFromInternet(url: self.user.imageURL)
-
-             DispatchQueue.main.async {
-                 self.tableView.beginUpdates()
-                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                 self.tableView.endUpdates()
-             }
-
-             dispatchGroup.leave() */
-
             for (index, post) in self.userPosts.enumerated() {
                 if index > self.userPosts.count - 1 {
                 } else {
                     dispatchGroup.enter()
 
-                    self.userPosts[index].author.image = ImageLoader.default.loadImageFromInternet(url: post.author.imageURL)
+                    DispatchQueue.main.async {
+                        self.userPosts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                    }
 
                     if index > 10 {
                         if index % 5 == 0 {}
@@ -190,14 +193,8 @@ class UserProfileViewController: UIViewController {
                         }
                     }
 
-                    /* DispatchQueue.main.async {
-                     	self.tableView.beginUpdates()
-                     	self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .none)
-                     	self.tableView.endUpdates()
-                     } */
-
-                    if post.imageURL?.absoluteString != "", post.imageURL != nil {
-                        self.userPosts[index].image = ImageLoader.default.loadImageFromInternet(url: post.imageURL!)
+                    if let url = post.imageURL {
+                        self.userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
                         self.userPosts[index].image = UIImage()
                     }
@@ -207,12 +204,6 @@ class UserProfileViewController: UIViewController {
                             self.tableView.reloadData()
                         }
                     }
-
-                    /* DispatchQueue.main.async {
-                     	self.tableView.beginUpdates()
-                     	self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .none)
-                     	self.tableView.endUpdates()
-                     } */
 
                     dispatchGroup.leave()
                 }
@@ -229,85 +220,24 @@ class UserProfileViewController: UIViewController {
     }
 
     @objc func upvotePost(_ sender: UIButton) {
-        let selectedPost = userPosts[sender.tag]
-        var selectedVoteStatus = 0
-        if selectedPost.voteStatus == 1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = 1
-        }
-
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    if self.userPosts[sender.tag].voteStatus == -1 {
-                        self.userPosts[sender.tag].score += 2
-                    } else if selectedVoteStatus == 0 {
-                        self.userPosts[sender.tag].score -= 1
-                    } else {
-                        self.userPosts[sender.tag].score += 1
-                    }
-                    self.userPosts[sender.tag].voteStatus = selectedVoteStatus
-
-                    self.tableView.beginUpdates()
-                    self.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 1)], with: .automatic)
-                    self.tableView.endUpdates()
-                }
-                self.loadPosts()
-
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        vote(tag: sender.tag, vote: .upvote)
     }
 
     @objc func downvotePost(_ sender: UIButton) {
-        let selectedPost = userPosts[sender.tag]
-        var selectedVoteStatus = 0
-        if selectedPost.voteStatus == -1 {
-            selectedVoteStatus = 0
-        } else {
-            selectedVoteStatus = -1
-        }
+        vote(tag: sender.tag, vote: .downvote)
+    }
 
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    if self.userPosts[sender.tag].voteStatus == 1 {
-                        self.userPosts[sender.tag].score -= 2
-                    } else if selectedVoteStatus == 0 {
-                        self.userPosts[sender.tag].score += 1
-                    } else {
-                        self.userPosts[sender.tag].score -= 1
-                    }
-                    self.userPosts[sender.tag].voteStatus = selectedVoteStatus
-
-                    self.tableView.beginUpdates()
-                    self.tableView.reloadRows(at: [IndexPath(row: sender.tag, section: 1)], with: .automatic)
-                    self.tableView.endUpdates()
-                }
-                self.loadPosts()
-
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
+    func vote(tag: Int, vote: VoteType) {
+        let selectedPost = userPosts[tag]
+        VotePost.default.vote(post: selectedPost, vote: vote)
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
+                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                        if err.action != nil, err.actionParameter != nil {
+                            if err.action == AllesAPIErrorAction.navigate {
+                                if err.actionParameter == "login" {
                                     let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                     mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                     mySceneDelegate.window?.makeKeyAndVisible()
@@ -315,33 +245,27 @@ class UserProfileViewController: UIViewController {
                             }
                         }
                     }
+                default: break
                 }
-            }
-        }
+            } receiveValue: { [unowned self] in
+                userPosts[tag].voteStatus = $0.status
+                userPosts[tag].score = $0.score
+                tableView.beginUpdates()
+                tableView.reloadRows(at: [IndexPath(row: tag, section: 1)], with: .automatic)
+                tableView.endUpdates()
+            }.store(in: &subscriptions)
     }
 
     @objc func followUnfollowUser() {
-        AllesAPI.default.performFollowAction(username: user.username, action: user.isFollowing ? .unfollow : .follow) { result in
-            switch result {
-            case let .success(followStatus):
-                DispatchQueue.main.async {
-                    self.user.isFollowing = followStatus == .follow ? true : false
-                    if followStatus == .follow {
-                        self.user.followers += 1
-                    } else {
-                        self.user.followers -= 1
-                    }
-                    self.tableView.beginUpdates()
-                    self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                    self.tableView.endUpdates()
-                }
-
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
+        AllesAPI.default.performFollowAction(username: user.username, action: user.isFollowing ? .unfollow : .follow)
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
+                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                        if err.action != nil, err.actionParameter != nil {
+                            if err.action == AllesAPIErrorAction.navigate {
+                                if err.actionParameter == "login" {
                                     let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                     mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                     mySceneDelegate.window?.makeKeyAndVisible()
@@ -349,20 +273,20 @@ class UserProfileViewController: UIViewController {
                             }
                         }
                     }
+                default: break
                 }
-            }
-        }
+            } receiveValue: { [unowned self] in
+                self.user.isFollowing = $0 == .follow ? true : false
+                if $0 == .follow {
+                    self.user.followers += 1
+                } else {
+                    self.user.followers -= 1
+                }
+                self.tableView.beginUpdates()
+                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
+            }.store(in: &subscriptions)
     }
-
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
 }
 
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -397,26 +321,10 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 
             cell.upvoteButton.tag = indexPath.row
             cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-
             cell.downvoteButton.tag = indexPath.row
             cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
 
             return cell
-            /* let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
-             let post = userPosts[indexPath.row]
-
-             let builtCell = cell.buildCell(cell: cell, post: post, indexPath: indexPath)
-             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-             builtCell.pfpView.tag = indexPath.row
-             builtCell.pfpView.addGestureRecognizer(tap)
-             cell.upvoteBtn.tag = indexPath.row
-             cell.delegate = self
-             cell.upvoteBtn.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-
-             cell.downvoteBtn.tag = indexPath.row
-             cell.downvoteBtn.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
-
-             return builtCell */
         }
     }
 
@@ -434,7 +342,6 @@ extension UserProfileViewController: PostCreateDelegate {
     func didSendPost(sentPost: SentPost) {
         let detailVC = PostDetailViewController()
         detailVC.selectedPostID = sentPost.id
-
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -446,7 +353,7 @@ extension UserProfileViewController: PostCellViewDelegate {
         vc.type = .post
         vc.delegate = self
         vc.preText = "@\(username)\n\n\n\n%\(id)"
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func replyToPost(id: String) {
@@ -454,7 +361,7 @@ extension UserProfileViewController: PostCellViewDelegate {
         vc.type = .reply
         vc.delegate = self
         vc.parentID = id
-        present(UINavigationController(rootViewController: vc), animated: true, completion: nil)
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func copyPostID(id: String) {
@@ -464,22 +371,21 @@ extension UserProfileViewController: PostCellViewDelegate {
     }
 
     func deletePost(id: String) {
-        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { _, int in
+        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
             if int == 1 {
-                AllesAPI.default.deletePost(id: id) { result in
-                    switch result {
-                    case .success:
-                        self.loadPosts()
-                    case let .failure(apiError):
-                        DispatchQueue.main.async {
-                            EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+                AllesAPI.default.deletePost(id: id)
+                    .receive(on: RunLoop.main)
+                    .sink {
+                        switch $0 {
+                        case let .failure(err):
+                            EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
                                 if self.refreshControl.isRefreshing {
                                     self.refreshControl.endRefreshing()
                                 }
                                 self.loadingHud.dismiss()
-                                if apiError.action != nil, apiError.actionParameter != nil {
-                                    if apiError.action == AllesAPIErrorAction.navigate {
-                                        if apiError.actionParameter == "login" {
+                                if err.action != nil, err.actionParameter != nil {
+                                    if err.action == AllesAPIErrorAction.navigate {
+                                        if err.actionParameter == "login" {
                                             let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                             mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                             mySceneDelegate.window?.makeKeyAndVisible()
@@ -487,16 +393,17 @@ extension UserProfileViewController: PostCellViewDelegate {
                                     }
                                 }
                             }
+                        default: break
                         }
-                    }
-                }
+                    } receiveValue: { _ in
+                        self.loadPosts()
+                    }.store(in: &subscriptions)
             }
         }
     }
 
     func selectedPost(post: String, indexPath _: IndexPath) {
         let detailVC = PostDetailViewController()
-
         detailVC.selectedPostID = post
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
@@ -509,7 +416,7 @@ extension UserProfileViewController: PostCellViewDelegate {
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
         vc.user = user
         vc.hidesBottomBarWhenPushed = true

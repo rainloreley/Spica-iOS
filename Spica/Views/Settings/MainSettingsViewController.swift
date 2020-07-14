@@ -22,7 +22,7 @@ class MainSettingsViewController: UITableViewController {
     var delegate: MainSettingsDelegate!
 
     @IBAction func profileMore(_: Any) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
         delegate.clickedMore(username: username)
     }
 
@@ -102,7 +102,7 @@ class MainSettingsViewController: UITableViewController {
                 self.usernameLabel.text = "@\(self.username)"
             }
 
-            let userImage = ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(self.username)")!)
+            let userImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(self.username)")!)
 
             DispatchQueue.main.async {
                 self.userPfpImageView.image = userImage

@@ -39,6 +39,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
 
+    private var subscriptions = Set<AnyCancellable>()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -156,14 +158,14 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             EZAlertController.actionSheet("Image", message: "Select an action", sourceView: view, actions: [
                 UIAlertAction(title: "Select another image", style: .default, handler: { _ in
                     // self.imagePicker.present(from: self.view)
-                    self.present(self.imagePicker, animated: true, completion: nil)
+                    self.present(self.imagePicker, animated: true)
 			}), UIAlertAction(title: "Remove", style: .destructive, handler: { _ in
                     self.selectedImage = nil
                     self.imageButton.image = UIImage(systemName: "photo")
 			}), UIAlertAction(title: "Cancel", style: .cancel, handler: nil),
             ])
         } else {
-            present(imagePicker, animated: true, completion: nil)
+            present(imagePicker, animated: true)
         }
     }
 
@@ -171,7 +173,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         DispatchQueue.global(qos: .utility).async {
             let userUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-            let pfpImage = ImageLoader.default.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(userUsername!)")!)
+            let pfpImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(userUsername!)")!)
 
             DispatchQueue.main.async {
                 self.userPfp.image = pfpImage
@@ -193,26 +195,18 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             sendButton.isEnabled = true
             return
         } else {
-            AllesAPI.default.sendPost(newPost: NewPost(content: contentTextView.text, image: selectedImage, type: type, parent: parentID)) { result in
-                switch result {
-                case let .success(sentPost):
-
-                    DispatchQueue.main.async {
-                        self.loadingHud.dismiss()
-                        self.sendButton.isEnabled = true
-                        self.delegate.didSendPost(sentPost: sentPost)
-                        self.dismiss(animated: true, completion: nil)
-                        SPAlert.present(title: "Post sent!", preset: .done)
-                    }
-                case let .failure(apiError):
-                    DispatchQueue.main.async {
+            AllesAPI.default.sendPost(newPost: NewPost(content: contentTextView.text, image: selectedImage, type: type, parent: parentID))
+                .receive(on: RunLoop.main)
+                .sink {
+                    switch $0 {
+                    case let .failure(err):
                         self.loadingHud.dismiss()
                         self.sendButton.isEnabled = true
 
-                        EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                            if apiError.action != nil, apiError.actionParameter != nil {
-                                if apiError.action == AllesAPIErrorAction.navigate {
-                                    if apiError.actionParameter == "login" {
+                        EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                            if err.action != nil, err.actionParameter != nil {
+                                if err.action == AllesAPIErrorAction.navigate {
+                                    if err.actionParameter == "login" {
                                         let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                         mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                         mySceneDelegate.window?.makeKeyAndVisible()
@@ -220,9 +214,16 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
                                 }
                             }
                         }
+                    default: break
                     }
+                } receiveValue: { [unowned self] in
+                    self.loadingHud.dismiss()
+                    self.sendButton.isEnabled = true
+                    self.delegate.didSendPost(sentPost: $0)
+                    self.dismiss(animated: true)
+                    SPAlert.present(title: "Post sent!", preset: .done)
                 }
-            }
+                .store(in: &subscriptions)
         }
     }
 
@@ -244,11 +245,11 @@ extension PostCreateViewController: UIImagePickerControllerDelegate & UINavigati
             imageButton.image = UIImage(systemName: "photo.fill")
         }
 
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
 
     func imagePickerControllerDidCancel(_: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
 }
 

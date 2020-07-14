@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 02.07.20.
 //
 
+import Combine
 import JGProgressHUD
 import UIKit
 
@@ -18,6 +19,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var createAccountButton: UIButton!
 
     var loadingHud: JGProgressHUD!
+
+    private var subscriptions = Set<AnyCancellable>()
 
     func textFieldShouldReturn(_: UITextField) -> Bool {
         view.endEditing(true)
@@ -81,7 +84,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         passwordField.snp.makeConstraints { make in
             make.centerX.equalTo(view.snp.centerX)
-            // make.centerY.equalTo(view.snp.centerY).offset(-32)
             make.top.equalTo(passwordLabel.snp.bottom).offset(8)
             make.width.equalTo(view.snp.width).offset(-64)
             make.height.equalTo(40)
@@ -134,9 +136,29 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordField.layer.borderWidth = 0.0
 
         if !usernameField.text!.isEmpty && !passwordField.text!.isEmpty {
-            AllesAPI.default.signInUser(username: usernameField.text!, password: passwordField.text!) { result in
-                switch result {
-                case .success:
+            AllesAPI.default.signInUser(username: usernameField.text!, password: passwordField.text!)
+                .receive(on: RunLoop.main)
+                .sink {
+                    switch $0 {
+                    case let .failure(err):
+                        DispatchQueue.main.async {
+                            self.loadingHud.dismiss()
+                            EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                                if err.action != nil, err.actionParameter != nil {
+                                    /* if apiError.action == AllesAPIErrorAction.navigate  {
+                                     if apiError.actionParameter == "login" {
+                                     	let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+                                     	mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: ViewController())
+                                     		mySceneDelegate.window?.makeKeyAndVisible()
+
+                                     }
+                                     } */
+                                }
+                            }
+                        }
+                    default: break
+                    }
+                } receiveValue: { _ in
                     DispatchQueue.main.async {
                         let tabBar = UITabBarController()
                         let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
@@ -151,24 +173,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         mySceneDelegate.window?.rootViewController = tabBar
                         mySceneDelegate.window?.makeKeyAndVisible()
                     }
-                case let .failure(apiError):
-                    DispatchQueue.main.async {
-                        self.loadingHud.dismiss()
-                        EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                            if apiError.action != nil, apiError.actionParameter != nil {
-                                /* if apiError.action == AllesAPIErrorAction.navigate  {
-                                 	if apiError.actionParameter == "login" {
-                                 		let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                 		mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: ViewController())
-                                 			mySceneDelegate.window?.makeKeyAndVisible()
-
-                                 	}
-                                 } */
-                            }
-                        }
-                    }
-                }
-            }
+                }.store(in: &subscriptions)
         } else {
             if usernameField.text!.isEmpty {
                 usernameField.layer.borderColor = UIColor.systemRed.cgColor
@@ -198,14 +203,4 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
-
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
 }

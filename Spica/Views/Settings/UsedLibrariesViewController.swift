@@ -61,7 +61,8 @@ extension UsedLibrariesViewController: UITableViewDelegate, UITableViewDataSourc
         return cell
     }
 
-    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let url = URL(string: libraries[indexPath.section].url)
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)

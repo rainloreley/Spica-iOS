@@ -17,18 +17,14 @@ struct CircularProgressBar: View {
             Circle()
                 .stroke(lineWidth: lineWidth)
                 .opacity(0.3)
-                .foregroundColor(self.controller.color)
+                .foregroundColor(controller.color)
 
             Circle()
-                .trim(from: 0.0, to: CGFloat(min(self.controller.progress, 1.0)))
+                .trim(from: 0.0, to: CGFloat(min(controller.progress, 1.0)))
                 .stroke(style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
-                .foregroundColor(self.controller.color)
+                .foregroundColor(controller.color)
                 .rotationEffect(Angle(degrees: 270.0))
                 .animation(.linear)
-
-            /* Text(String(format: "%.0f %%", min(self.controller.progress, 1.0)*100.0))
-             .font(.largeTitle)
-             .bold() */
         }
     }
 }
