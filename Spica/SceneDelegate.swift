@@ -29,7 +29,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBar.viewControllers = [homeView, mentionView]
 
         // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
-        // KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+        /* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
 
         if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
             window?.rootViewController = tabBar

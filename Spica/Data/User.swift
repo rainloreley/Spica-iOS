@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftyJSON
 import UIKit
 
 public struct User: Hashable {
@@ -21,4 +22,34 @@ public struct User: Hashable {
     var followsMe: Bool
     var about: String
     var isOnline: Bool
+
+    init(id: String, username: String, displayName: String, imageURL: URL, isPlus: Bool, rubies: Int, followers: Int, image: UIImage, isFollowing: Bool, followsMe: Bool, about: String, isOnline: Bool) {
+        self.id = id
+        self.username = username
+        self.displayName = displayName
+        self.imageURL = imageURL
+        self.isPlus = isPlus
+        self.rubies = rubies
+        self.followers = followers
+        self.image = image
+        self.isFollowing = isFollowing
+        self.followsMe = followsMe
+        self.about = about
+        self.isOnline = isOnline
+    }
+
+    init(_ json: JSON, isOnline: Bool) {
+        id = json["id"].string!
+        username = json["username"].string!
+        displayName = json["name"].string!
+        imageURL = URL(string: "https://avatar.alles.cx/u/\(json["username"])")!
+        isPlus = json["plus"].bool ?? false
+        rubies = json["rubies"].int ?? 0
+        followers = json["followers"].int ?? 0
+        image = UIImage(systemName: "person.circle")
+        isFollowing = json["following"].bool ?? false
+        followsMe = json["followingUser"].bool ?? false
+        about = json["about"].string ?? ""
+        self.isOnline = isOnline
+    }
 }

@@ -39,6 +39,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
 
+    private var subscriptions = Set<AnyCancellable>()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -193,26 +195,18 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             sendButton.isEnabled = true
             return
         } else {
-            AllesAPI.default.sendPost(newPost: NewPost(content: contentTextView.text, image: selectedImage, type: type, parent: parentID)) { result in
-                switch result {
-                case let .success(sentPost):
-
-                    DispatchQueue.main.async {
-                        self.loadingHud.dismiss()
-                        self.sendButton.isEnabled = true
-                        self.delegate.didSendPost(sentPost: sentPost)
-                        self.dismiss(animated: true)
-                        SPAlert.present(title: "Post sent!", preset: .done)
-                    }
-                case let .failure(apiError):
-                    DispatchQueue.main.async {
+            AllesAPI.default.sendPost(newPost: NewPost(content: contentTextView.text, image: selectedImage, type: type, parent: parentID))
+                .receive(on: RunLoop.main)
+                .sink {
+                    switch $0 {
+                    case let .failure(err):
                         self.loadingHud.dismiss()
                         self.sendButton.isEnabled = true
 
-                        EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                            if apiError.action != nil, apiError.actionParameter != nil {
-                                if apiError.action == AllesAPIErrorAction.navigate {
-                                    if apiError.actionParameter == "login" {
+                        EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                            if err.action != nil, err.actionParameter != nil {
+                                if err.action == AllesAPIErrorAction.navigate {
+                                    if err.actionParameter == "login" {
                                         let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                         mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                         mySceneDelegate.window?.makeKeyAndVisible()
@@ -220,9 +214,16 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
                                 }
                             }
                         }
+                    default: break
                     }
+                } receiveValue: { [unowned self] in
+                    self.loadingHud.dismiss()
+                    self.sendButton.isEnabled = true
+                    self.delegate.didSendPost(sentPost: $0)
+                    self.dismiss(animated: true)
+                    SPAlert.present(title: "Post sent!", preset: .done)
                 }
-            }
+                .store(in: &subscriptions)
         }
     }
 

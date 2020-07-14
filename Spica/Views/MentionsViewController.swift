@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 30.06.20.
 //
 
+import Combine
 import JGProgressHUD
 import SPAlert
 import UIKit
@@ -20,7 +21,10 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
     var loadingHud: JGProgressHUD!
 
+    private var subscriptions = Set<AnyCancellable>()
+
     // MARK: - Setup
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -41,18 +45,18 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         loadingHud.textLabel.text = "Loading"
         loadingHud.interactionType = .blockNoTouches
     }
-    
-    
+
     // MARK: - Datasource
+
     typealias DataSource = UITableViewDiffableDataSource<Section, Post>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
-    
+
     private lazy var dataSource = makeDataSource()
-    
+
     enum Section {
         case main
     }
-    
+
     func makeDataSource() -> DataSource {
         let source = DataSource(tableView: tableView) { [self] (tableView, indexPath, post) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
@@ -75,8 +79,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         source.defaultRowAnimation = .top
         return source
     }
-    
-    func applyChanges(_ animated: Bool = true) {
+
+    func applyChanges(_ animated: Bool = false) {
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
         snapshot.appendItems(mentions, toSection: .main)
@@ -99,25 +103,20 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         if mentions.isEmpty {
             loadingHud.show(in: view)
         }
-        AllesAPI.default.loadMentions { result in
-            switch result {
-            case let .success(newPosts):
-                DispatchQueue.main.async {
-                    self.mentions = newPosts
-                    self.refreshControl.endRefreshing()
-                    self.loadingHud.dismiss()
-                    self.loadImages()
-                }
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+
+        AllesAPI.default.loadMentions()
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
+                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
                         if self.refreshControl.isRefreshing {
                             self.refreshControl.endRefreshing()
                         }
                         self.loadingHud.dismiss()
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
+                        if err.action != nil, err.actionParameter != nil {
+                            if err.action == AllesAPIErrorAction.navigate {
+                                if err.actionParameter == "login" {
                                     let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                     mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                     mySceneDelegate.window?.makeKeyAndVisible()
@@ -125,9 +124,14 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                             }
                         }
                     }
+                default: break
                 }
-            }
-        }
+            } receiveValue: { [unowned self] in
+                self.mentions = $0
+                self.refreshControl.endRefreshing()
+                self.loadingHud.dismiss()
+                self.loadImages()
+            }.store(in: &subscriptions)
     }
 
     func loadImages() {
@@ -170,28 +174,15 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             selectedVoteStatus = 1
         }
 
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async { [self] in
-                    if mentions[sender.tag].voteStatus == -1 {
-                        mentions[sender.tag].score += 2
-                    } else if selectedVoteStatus == 0 {
-                        mentions[sender.tag].score -= 1
-                    } else {
-                        mentions[sender.tag].score += 1
-                    }
-                    mentions[sender.tag].voteStatus = selectedVoteStatus
-
-                    applyChanges()
-                }
-
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
+        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
+                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                        if err.action != nil, err.actionParameter != nil {
+                            if err.action == AllesAPIErrorAction.navigate {
+                                if err.actionParameter == "login" {
                                     let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                     mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                     mySceneDelegate.window?.makeKeyAndVisible()
@@ -199,9 +190,20 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                             }
                         }
                     }
+                default: break
                 }
-            }
-        }
+            } receiveValue: { [self] _ in
+                if mentions[sender.tag].voteStatus == -1 {
+                    mentions[sender.tag].score += 2
+                } else if selectedVoteStatus == 0 {
+                    mentions[sender.tag].score -= 1
+                } else {
+                    mentions[sender.tag].score += 1
+                }
+                mentions[sender.tag].voteStatus = selectedVoteStatus
+
+                applyChanges()
+            }.store(in: &subscriptions)
     }
 
     @objc func downvotePost(_ sender: UIButton) {
@@ -213,28 +215,15 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             selectedVoteStatus = -1
         }
 
-        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus) { result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    if self.mentions[sender.tag].voteStatus == 1 {
-                        self.mentions[sender.tag].score -= 2
-                    } else if selectedVoteStatus == 0 {
-                        self.mentions[sender.tag].score += 1
-                    } else {
-                        self.mentions[sender.tag].score -= 1
-                    }
-                    self.mentions[sender.tag].voteStatus = selectedVoteStatus
-
-                    self.applyChanges()
-                }
-
-            case let .failure(apiError):
-                DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
-                        if apiError.action != nil, apiError.actionParameter != nil {
-                            if apiError.action == AllesAPIErrorAction.navigate {
-                                if apiError.actionParameter == "login" {
+        AllesAPI.default.votePost(post: selectedPost, value: selectedVoteStatus)
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
+                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                        if err.action != nil, err.actionParameter != nil {
+                            if err.action == AllesAPIErrorAction.navigate {
+                                if err.actionParameter == "login" {
                                     let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                     mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                     mySceneDelegate.window?.makeKeyAndVisible()
@@ -242,9 +231,20 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                             }
                         }
                     }
+                default: break
                 }
-            }
-        }
+            } receiveValue: { [self] _ in
+                if self.mentions[sender.tag].voteStatus == 1 {
+                    self.mentions[sender.tag].score -= 2
+                } else if selectedVoteStatus == 0 {
+                    self.mentions[sender.tag].score += 1
+                } else {
+                    self.mentions[sender.tag].score -= 1
+                }
+                self.mentions[sender.tag].voteStatus = selectedVoteStatus
+
+                self.applyChanges()
+            }.store(in: &subscriptions)
     }
 
     func didSendPost(sentPost: SentPost) {
@@ -285,22 +285,21 @@ extension MentionsViewController: PostCellViewDelegate {
     }
 
     func deletePost(id: String) {
-        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { _, int in
+        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
             if int == 1 {
-                AllesAPI.default.deletePost(id: id) { result in
-                    switch result {
-                    case .success:
-                        self.loadMentions()
-                    case let .failure(apiError):
-                        DispatchQueue.main.async {
-                            EZAlertController.alert("Error", message: apiError.message, buttons: ["Ok"]) { _, _ in
+                AllesAPI.default.deletePost(id: id)
+                    .receive(on: RunLoop.main)
+                    .sink {
+                        switch $0 {
+                        case let .failure(err):
+                            EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
                                 if self.refreshControl.isRefreshing {
                                     self.refreshControl.endRefreshing()
                                 }
                                 self.loadingHud.dismiss()
-                                if apiError.action != nil, apiError.actionParameter != nil {
-                                    if apiError.action == AllesAPIErrorAction.navigate {
-                                        if apiError.actionParameter == "login" {
+                                if err.action != nil, err.actionParameter != nil {
+                                    if err.action == AllesAPIErrorAction.navigate {
+                                        if err.actionParameter == "login" {
                                             let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
                                             mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
                                             mySceneDelegate.window?.makeKeyAndVisible()
@@ -308,9 +307,11 @@ extension MentionsViewController: PostCellViewDelegate {
                                     }
                                 }
                             }
+                        default: break
                         }
-                    }
-                }
+                    } receiveValue: { _ in
+                        self.loadMentions()
+                    }.store(in: &subscriptions)
             }
         }
     }

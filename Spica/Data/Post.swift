@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import UIKit
 import SwiftyJSON
+import UIKit
 
 public struct Post: Hashable {
     var id: String
@@ -19,7 +19,7 @@ public struct Post: Hashable {
     var image: UIImage?
     var imageURL: URL?
     var voteStatus: Int
-    
+
     init(id: String, author: User, date: Date, repliesCount: Int, score: Int, content: String, image: UIImage? = nil, imageURL: URL? = nil, voteStatus: Int) {
         self.id = id
         self.author = author
@@ -31,21 +31,23 @@ public struct Post: Hashable {
         self.imageURL = imageURL
         self.voteStatus = voteStatus
     }
+
     init(_ json: JSON) {
         id = json["slug"].string!
-        author = User(id: json["author"]["id"].string!,
-                      username: json["author"]["username"].string!,
-                      displayName: json["author"]["name"].string!,
-                      imageURL: URL(string: "https://avatar.alles.cx/u/\(json["author"]["username"])")!,
-                      isPlus: json["author"]["plus"].bool ?? false,
-                      rubies: 0,
-                      followers: 0,
-                      image: UIImage(systemName: "person.circle"),
-                      isFollowing: false,
-                      followsMe: false,
-                      about: "",
-                      isOnline: false)
-        date = Date.dateFromISOString(string: json["json"].string ?? "") ?? Date()
+        author = User(json["author"], isOnline: false)
+        /* author = User(id: json["author"]["id"].string!,
+         username: json["author"]["username"].string!,
+         displayName: json["author"]["name"].string!,
+         imageURL: URL(string: "https://avatar.alles.cx/u/\(json["author"]["username"])")!,
+         isPlus: json["author"]["plus"].bool ?? false,
+         rubies: 0,
+         followers: 0,
+         image: UIImage(systemName: "person.circle"),
+         isFollowing: false,
+         followsMe: false,
+         about: "",
+         isOnline: false) */
+        date = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
         repliesCount = json["replyCount"].intValue
         score = json["score"].int ?? 0
         content = json["content"].string!
@@ -56,10 +58,9 @@ public struct Post: Hashable {
     }
 }
 
-
 extension Post {
     static let deleted = Post(id: "removed",
-                              author: User(id: "---", username: "---", displayName: "---", imageURL: URL(string: "https://avatar.alles.cx/u/000000000000000000000000000000000000000")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle"), isFollowing: false, followsMe: false, about: "", isOnline: false),
+                              author: User(id: "---", username: "---", displayName: "---", imageURL: URL(string: "https://avatar.alles.cx/u/000000000000000000000000000000000000000")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false),
                               date: Date(),
                               repliesCount: 0,
                               score: 0,

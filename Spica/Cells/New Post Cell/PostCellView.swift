@@ -64,7 +64,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
             let splitContent = postContent!.split(separator: " ")
             for word in splitContent {
-
                 if word.hasPrefix("@"), word.count > 1 {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 
@@ -140,11 +139,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         let imgView = UIImageView(frame: .zero)
         imgView.contentMode = .scaleAspectFit
         imgView.clipsToBounds = true
-		if #available(iOS 13.4, *) {
-			imgView.addInteraction(UIPointerInteraction())
-		}
+        if #available(iOS 13.4, *) {
+            imgView.addInteraction(UIPointerInteraction())
+        }
         imgView.layer.cornerRadius = 20
-		
+
         return imgView
     }()
 
@@ -187,9 +186,9 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         button.setTitle("+", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 23)
         button.setTitleColor(.systemBlue, for: .normal)
-		if #available(iOS 13.4, *) {
-			button.isPointerInteractionEnabled = true
-		}
+        if #available(iOS 13.4, *) {
+            button.isPointerInteractionEnabled = true
+        }
         return button
     }()
 
@@ -198,9 +197,9 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         button.setTitle("-", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 29)
         button.setTitleColor(.systemBlue, for: .normal)
-		if #available(iOS 13.4, *) {
-			button.isPointerInteractionEnabled = true
-		}
+        if #available(iOS 13.4, *) {
+            button.isPointerInteractionEnabled = true
+        }
         return button
     }()
 
