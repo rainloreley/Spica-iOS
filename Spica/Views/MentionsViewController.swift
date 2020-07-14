@@ -37,7 +37,14 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         view.addSubview(tableView)
 
-        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top)
+            make.leading.equalTo(view.snp.leading)
+            make.trailing.equalTo(view.snp.trailing)
+            make.bottom.equalTo(view.snp.bottom)
+        }
+
+        // refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadMentions), for: .valueChanged)
         tableView.addSubview(refreshControl)
 
@@ -76,7 +83,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
             return cell
         }
-        source.defaultRowAnimation = .top
+        source.defaultRowAnimation = .fade
         return source
     }
 
@@ -165,40 +172,40 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-	@objc func upvotePost(_ sender: UIButton) {
-		vote(tag: sender.tag, vote: .upvote)
-	}
+    @objc func upvotePost(_ sender: UIButton) {
+        vote(tag: sender.tag, vote: .upvote)
+    }
 
-	@objc func downvotePost(_ sender: UIButton) {
-		vote(tag: sender.tag, vote: .downvote)
-	}
-	
-	func vote(tag: Int, vote: VoteType) {
-		let selectedPost = mentions[tag]
-		VotePost.default.vote(post: selectedPost, vote: vote)
-			.receive(on: RunLoop.main)
-			.sink {
-				switch $0 {
-					case .failure(let err):
-						EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
-							if err.action != nil, err.actionParameter != nil {
-								if err.action == AllesAPIErrorAction.navigate {
-									if err.actionParameter == "login" {
-										let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-										mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-										mySceneDelegate.window?.makeKeyAndVisible()
-									}
-								}
-							}
-						}
-					default: break
-				}
-			} receiveValue: { [unowned self] in
-				mentions[tag].voteStatus = $0.status
-				mentions[tag].score = $0.score
-				applyChanges()
-			}.store(in: &subscriptions)
-	}
+    @objc func downvotePost(_ sender: UIButton) {
+        vote(tag: sender.tag, vote: .downvote)
+    }
+
+    func vote(tag: Int, vote: VoteType) {
+        let selectedPost = mentions[tag]
+        VotePost.default.vote(post: selectedPost, vote: vote)
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
+                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                        if err.action != nil, err.actionParameter != nil {
+                            if err.action == AllesAPIErrorAction.navigate {
+                                if err.actionParameter == "login" {
+                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                                    mySceneDelegate.window?.makeKeyAndVisible()
+                                }
+                            }
+                        }
+                    }
+                default: break
+                }
+            } receiveValue: { [unowned self] in
+                mentions[tag].voteStatus = $0.status
+                mentions[tag].score = $0.score
+                applyChanges()
+            }.store(in: &subscriptions)
+    }
 
     func didSendPost(sentPost: SentPost) {
         let detailVC = PostDetailViewController()
