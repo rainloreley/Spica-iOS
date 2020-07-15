@@ -12,8 +12,8 @@ class AncestorPostDividerCell: UITableViewCell {
 	
 	private var divider: UIView = {
 		let view = UIView(frame: .zero)
-		view.backgroundColor = UIColor(named: "UserBackground")
-		view.layer.cornerRadius = 7.0
+		view.backgroundColor = UIColor(named: "PostDivider")
+		view.layer.cornerRadius = 4.0
 		return view
 	}()
 
@@ -29,7 +29,7 @@ class AncestorPostDividerCell: UITableViewCell {
 		
 		divider.snp.makeConstraints { (make) in
 			make.width.equalTo(10)
-			make.height.equalTo(80)
+			make.height.equalTo(60)
 			make.top.equalTo(contentView.snp.top).offset(16)
 			make.bottom.equalTo(contentView.snp.bottom).offset(-16)
 			make.center.equalTo(contentView.snp.center)

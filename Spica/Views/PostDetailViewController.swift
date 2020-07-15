@@ -304,7 +304,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 
 			let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 				
-				cell.layer.cornerRadius = 12.0
+				cell.layer.cornerRadius = 50.0
 
 			cell.delegate = self
 			cell.indexPath = indexPath
