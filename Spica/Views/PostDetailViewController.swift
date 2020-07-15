@@ -121,7 +121,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    self.tableView.reloadRows(at: [IndexPath(row: 2*index, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
 
@@ -133,7 +133,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    self.tableView.reloadRows(at: [IndexPath(row: 2*index, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
 
@@ -178,7 +178,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         refreshControl.endRefreshing()
         loadingHud.dismiss()
         if let index = postAncestors.firstIndex(where: { $0.id == mainPost.id }) {
-            tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: true)
+			tableView.scrollToRow(at: IndexPath(row: 2*index, section: 0), at: .middle, animated: false)
         }
         loadImages()
     }

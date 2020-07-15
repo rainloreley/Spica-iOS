@@ -18,27 +18,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        let tabBar = UITabBarController()
+		
+		// DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
+		/* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+		 KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+		 KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
+		
+		let tabBar = UITabBarController()
 
-        let homeView = UINavigationController(rootViewController: TimelineViewController())
-        homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+		let homeView = UINavigationController(rootViewController: TimelineViewController())
+		homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
 
-        let mentionView = UINavigationController(rootViewController: MentionsViewController())
-        mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+		let mentionView = UINavigationController(rootViewController: MentionsViewController())
+		mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
 
-        tabBar.viewControllers = [homeView, mentionView]
+		tabBar.viewControllers = [homeView, mentionView]
 
-        // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
-        /* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
-         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
-         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
-
-        if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
-            window?.rootViewController = tabBar
-        } else {
-            window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-        }
-        // window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+		if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
+			window?.rootViewController = tabBar
+		} else {
+			window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+		}
 
         window?.makeKeyAndVisible()
 
