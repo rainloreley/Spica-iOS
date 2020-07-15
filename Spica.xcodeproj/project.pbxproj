@@ -15,13 +15,14 @@
 		3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274324B1E02900425999 /* CircularProgressBar.swift */; };
 		3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274524B1E1AC00425999 /* ProgressBarController.swift */; };
 		3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A474AFA24B24EDA003424F5 /* PostCellView.swift */; };
+		3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A48CD6D24BF1BCD00DD05CA /* AncestorPostDividerCell.swift */; };
 		3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4B92F924AA9176000534FD /* SnapKit */; };
 		3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */; };
 		3A57CF8324AD0AFE00DCA057 /* PostCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */; };
 		3A6AABD424BB5D8C00C71BC0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A6AABD624BB5D8C00C71BC0 /* Localizable.strings */; };
 		3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */; };
 		3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */; };
-		3A7145E324AA8753000FA3C3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E224AA8753000FA3C3 /* ViewController.swift */; };
+		3A7145E324AA8753000FA3C3 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */; };
 		3A7145E924AA8753000FA3C3 /* Alles_App.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E724AA8753000FA3C3 /* Alles_App.xcdatamodeld */; };
 		3A7145EB24AA8755000FA3C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A7145EA24AA8755000FA3C3 /* Assets.xcassets */; };
 		3A7145EE24AA8755000FA3C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */; };
@@ -82,13 +83,14 @@
 		3A41274324B1E02900425999 /* CircularProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBar.swift; sourceTree = "<group>"; };
 		3A41274524B1E1AC00425999 /* ProgressBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
 		3A474AFA24B24EDA003424F5 /* PostCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellView.swift; sourceTree = "<group>"; };
+		3A48CD6D24BF1BCD00DD05CA /* AncestorPostDividerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AncestorPostDividerCell.swift; sourceTree = "<group>"; };
 		3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionsViewController.swift; sourceTree = "<group>"; };
 		3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateViewController.swift; sourceTree = "<group>"; };
 		3A6AABD524BB5D8C00C71BC0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A7145DB24AA8753000FA3C3 /* Spica.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spica.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		3A7145E224AA8753000FA3C3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		3A7145E824AA8753000FA3C3 /* Alles_App.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Alles_App.xcdatamodel; sourceTree = "<group>"; };
 		3A7145EA24AA8755000FA3C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3A7145ED24AA8755000FA3C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -186,9 +188,18 @@
 			path = "New Post Cell";
 			sourceTree = "<group>";
 		};
+		3A48CD6C24BF1BB500DD05CA /* Ancestor Post Divider */ = {
+			isa = PBXGroup;
+			children = (
+				3A48CD6D24BF1BCD00DD05CA /* AncestorPostDividerCell.swift */,
+			);
+			path = "Ancestor Post Divider";
+			sourceTree = "<group>";
+		};
 		3A5CF34B24ACBCC0002A829A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				3A48CD6C24BF1BB500DD05CA /* Ancestor Post Divider */,
 				3AFAF96124BB4DB0003771B4 /* User Header Cell */,
 				3A474AF924B24EC0003424F5 /* New Post Cell */,
 				3AFC695424B8C0F80016FEFA /* Credits Cell */,
@@ -313,7 +324,7 @@
 			children = (
 				3A91971424B89DC300B7066B /* Settings */,
 				3A4038B124B1EB54002B18F1 /* ProgressBar */,
-				3A7145E224AA8753000FA3C3 /* ViewController.swift */,
+				3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */,
 				3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */,
 				3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */,
 				3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */,
@@ -682,7 +693,7 @@
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
 				3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */,
 				3ADDC58324AD182100B58DA9 /* SentPost.swift in Sources */,
-				3A7145E324AA8753000FA3C3 /* ViewController.swift in Sources */,
+				3A7145E324AA8753000FA3C3 /* TimelineViewController.swift in Sources */,
 				3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */,
 				3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */,
 				3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */,
@@ -692,6 +703,7 @@
 				3A746A9424BDD975008C9309 /* VotePost.swift in Sources */,
 				3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */,
 				3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */,
+				3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
 				3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */,

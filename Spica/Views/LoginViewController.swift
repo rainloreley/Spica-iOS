@@ -162,7 +162,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     DispatchQueue.main.async {
                         let tabBar = UITabBarController()
                         let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                        let homeView = UINavigationController(rootViewController: ViewController())
+                        let homeView = UINavigationController(rootViewController: TimelineViewController())
                         homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
 
                         let mentionView = UINavigationController(rootViewController: MentionsViewController())
