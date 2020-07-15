@@ -143,6 +143,7 @@ class UserHeaderCellView: UITableViewCell {
         textView.textAlignment = .center
         textView.backgroundColor = .clear
         textView.isEditable = false
+		textView.isScrollEnabled = false
         return textView
     }()
 
