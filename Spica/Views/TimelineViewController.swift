@@ -12,7 +12,7 @@ import SPAlert
 import SwiftKeychainWrapper
 import UIKit
 
-class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
+class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
     var createPostBtn: UIButton!
     var posts = [Post]() {
@@ -256,7 +256,7 @@ class ViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     }
 }
 
-extension ViewController: UITableViewDelegate {
+extension TimelineViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let post = dataSource.itemIdentifier(for: indexPath) else { return }
         let detailVC = PostDetailViewController()
@@ -266,7 +266,7 @@ extension ViewController: UITableViewDelegate {
     }
 }
 
-extension ViewController: MainSettingsDelegate {
+extension TimelineViewController: MainSettingsDelegate {
     func clickedMore(username: String) {
         let vc = UserProfileViewController()
         vc.user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
@@ -275,7 +275,7 @@ extension ViewController: MainSettingsDelegate {
     }
 }
 
-extension ViewController: PostCellViewDelegate {
+extension TimelineViewController: PostCellViewDelegate {
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post

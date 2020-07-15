@@ -43,6 +43,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         tableView.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(ReplyButtonCell.self, forCellReuseIdentifier: "replyButtonCell")
+		tableView.register(AncestorPostDividerCell.self, forCellReuseIdentifier: "dividerCell")
         view.addSubview(tableView)
 
         tableView.snp.makeConstraints { make in
@@ -191,7 +192,9 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
         let userByTag: User!
         if section == 0 {
-            userByTag = postAncestors[row].author
+			let count = Array(0...row).filter { !$0.isMultiple(of: 2) }.count
+			
+            userByTag = postAncestors[row - count].author
         } else {
             userByTag = postReplies[row].author
         }
@@ -206,8 +209,9 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         let rowID = newTag.components(separatedBy: "9\(sectionID)")[1]
 
         let section = Int("\(sectionID)")!
-        let row = Int(rowID)!
-        vote(section: section, tag: row, vote: .upvote)
+		let count = Array(0...Int(rowID)!).filter { !$0.isMultiple(of: 2) }.count
+		let row = Int(rowID)! - count
+		vote(section: section, tag: row, updateRow: Int(rowID)!, vote: .upvote)
     }
 
     @objc func downvotePost(_ sender: UIButton) {
@@ -216,11 +220,12 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         let rowID = newTag.components(separatedBy: "9\(sectionID)")[1]
 
         let section = Int("\(sectionID)")!
-        let row = Int(rowID)!
-        vote(section: section, tag: row, vote: .downvote)
+		let count = Array(0...Int(rowID)!).filter { !$0.isMultiple(of: 2) }.count
+        let row = Int(rowID)! - count
+        vote(section: section, tag: row, updateRow: Int(rowID)!, vote: .downvote)
     }
 
-    func vote(section: Int, tag: Int, vote: VoteType) {
+	func vote(section: Int, tag: Int, updateRow: Int, vote: VoteType) {
         let selectedPost = section == 0 ? postAncestors[tag] : postReplies[tag]
         VotePost.default.vote(post: selectedPost, vote: vote)
             .receive(on: RunLoop.main)
@@ -245,13 +250,13 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     postAncestors[tag].voteStatus = $0.status
                     postAncestors[tag].score = $0.score
                     tableView.beginUpdates()
-                    tableView.reloadRows(at: [IndexPath(row: tag, section: section)], with: .automatic)
+                    tableView.reloadRows(at: [IndexPath(row: updateRow, section: section)], with: .automatic)
                     tableView.endUpdates()
                 } else {
                     postReplies[tag].voteStatus = $0.status
                     postReplies[tag].score = $0.score
                     tableView.beginUpdates()
-                    tableView.reloadRows(at: [IndexPath(row: tag, section: section)], with: .automatic)
+                    tableView.reloadRows(at: [IndexPath(row: updateRow, section: section)], with: .automatic)
                     tableView.endUpdates()
                 }
 
@@ -283,7 +288,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return postAncestors.count
+			return postAncestors.count + postAncestors.count - 1
         } else if section == 1 {
             return 1
         } else {
@@ -293,26 +298,39 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let post = postAncestors[indexPath.row]
+			if indexPath.row % 2 == 0 {
+				let count = Array(0...indexPath.row).filter { !$0.isMultiple(of: 2) }.count
+				let post = postAncestors[indexPath.row - count]
 
-            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+			let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+				
+				cell.layer.cornerRadius = 50.0
 
-            cell.delegate = self
-            cell.indexPath = indexPath
-            cell.post = post
+			cell.delegate = self
+			cell.indexPath = indexPath
+			cell.post = post
 
-            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-            cell.pfpImageView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            cell.pfpImageView.isUserInteractionEnabled = true
-            cell.pfpImageView.addGestureRecognizer(tap)
+			let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+			cell.pfpImageView.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+			cell.pfpImageView.isUserInteractionEnabled = true
+			cell.pfpImageView.addGestureRecognizer(tap)
 
-            cell.upvoteButton.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+			cell.upvoteButton.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+			cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
 
-            cell.downvoteButton.tag = Int("9\(indexPath.section)\(indexPath.row)")!
-            cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+			cell.downvoteButton.tag = Int("9\(indexPath.section)\(indexPath.row)")!
+			cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
 
-            return cell
+			return cell
+			}
+			else {
+				
+				let cell = tableView.dequeueReusableCell(withIdentifier: "dividerCell", for: indexPath) as! AncestorPostDividerCell
+				cell.backgroundColor = .clear
+				return cell
+				
+			
+			}
 
         } else if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "replyButtonCell", for: indexPath) as! ReplyButtonCell
@@ -348,7 +366,8 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
         if indexPath.section != 1 {
             let detailVC = PostDetailViewController()
             if indexPath.section == 0 {
-                detailVC.selectedPostID = postAncestors[indexPath.row].id
+				let count = Array(0...indexPath.row).filter { !$0.isMultiple(of: 2) }.count
+                detailVC.selectedPostID = postAncestors[indexPath.row - count].id
             } else if indexPath.section == 2 {
                 detailVC.selectedPostID = postReplies[indexPath.row].id
             }
