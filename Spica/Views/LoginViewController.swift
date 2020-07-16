@@ -122,6 +122,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         // Do any additional setup after loading the view.
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		#if targetEnvironment(macCatalyst)
+		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+			titleBar.toolbar = nil
+		}
+		#endif
+	}
 
     @objc func openCreateAccount() {
         UIApplication.shared.open(URL(string: "https://alles.cx/register")!)

@@ -38,11 +38,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if #available(iOS 14.0, *) {
                 splitViewController = GlobalSplitViewController(style: .doubleColumn)
                 // splitViewController.presentsWithGesture = false
-
                 splitViewController.setViewController(SidebarViewController(), for: .primary)
                 splitViewController.setViewController(TimelineViewController(), for: .secondary)
                 splitViewController.setViewController(tabBar, for: .compact)
                 splitViewController.primaryBackgroundStyle = .sidebar
+				
+				splitViewController.navigationItem.largeTitleDisplayMode = .always
 
                 #if targetEnvironment(macCatalyst)
                     if let titlebar = windowScene.titlebar {
