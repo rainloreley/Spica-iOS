@@ -31,13 +31,21 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
 
+        /* if traitCollection.userInterfaceIdiom == .mac {
+         	navigationController?.setNavigationBarHidden(true, animated: false)
+         } */
+
         let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
 
         let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
 
         navigationItem.rightBarButtonItems = [createPostBarButtonItem, accountBarButtonItem]
 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+        if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+            //
+        } else {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+        }
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self
@@ -68,14 +76,14 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             createPostBtn.isPointerInteractionEnabled = true
         }
 
-        view.addSubview(createPostBtn)
+        /* view.addSubview(createPostBtn)
 
-        createPostBtn.snp.makeConstraints { make in
-            make.width.equalTo(50)
-            make.height.equalTo(50)
-            make.bottom.equalTo(view.snp.bottom).offset(-100)
-            make.trailing.equalTo(view.snp.trailing).offset(-16)
-        }
+         createPostBtn.snp.makeConstraints { make in
+             make.width.equalTo(50)
+             make.height.equalTo(50)
+             make.bottom.equalTo(view.snp.bottom).offset(-100)
+             make.trailing.equalTo(view.snp.trailing).offset(-16)
+         } */
     }
 
     // MARK: - Datasource

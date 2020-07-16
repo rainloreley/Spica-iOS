@@ -226,8 +226,12 @@ extension MentionsViewController: UITableViewDelegate {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
-    func repost(id _: String, username _: String) {
-        //
+    func repost(id: String, username: String) {
+        let vc = PostCreateViewController()
+        vc.type = .post
+        vc.delegate = self
+        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func replyToPost(id: String) {

@@ -17,6 +17,7 @@
 		3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A474AFA24B24EDA003424F5 /* PostCellView.swift */; };
 		3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A48CD6D24BF1BCD00DD05CA /* AncestorPostDividerCell.swift */; };
 		3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4B92F924AA9176000534FD /* SnapKit */; };
+		3A4DF24B24BF7D1C003C6BF3 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */; };
 		3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */; };
 		3A57CF8324AD0AFE00DCA057 /* PostCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */; };
 		3A6AABD424BB5D8C00C71BC0 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A6AABD624BB5D8C00C71BC0 /* Localizable.strings */; };
@@ -50,6 +51,7 @@
 		3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */; };
 		3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */; };
 		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
+		3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */; };
 		3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */; };
 		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
 		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
@@ -84,6 +86,7 @@
 		3A41274524B1E1AC00425999 /* ProgressBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
 		3A474AFA24B24EDA003424F5 /* PostCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellView.swift; sourceTree = "<group>"; };
 		3A48CD6D24BF1BCD00DD05CA /* AncestorPostDividerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AncestorPostDividerCell.swift; sourceTree = "<group>"; };
+		3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionsViewController.swift; sourceTree = "<group>"; };
 		3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCreateViewController.swift; sourceTree = "<group>"; };
 		3A6AABD524BB5D8C00C71BC0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -122,6 +125,7 @@
 		3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
+		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
 		3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.release.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
@@ -171,6 +175,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A08677824BF902800C516A9 /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */,
+			);
+			path = Sidebar;
+			sourceTree = "<group>";
+		};
 		3A4038B124B1EB54002B18F1 /* ProgressBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -322,6 +334,7 @@
 		3A96F6A924AB445100482C5A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3A08677824BF902800C516A9 /* Sidebar */,
 				3A91971424B89DC300B7066B /* Settings */,
 				3A4038B124B1EB54002B18F1 /* ProgressBar */,
 				3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */,
@@ -330,6 +343,7 @@
 				3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */,
 				3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */,
 				3A0252C224ADE30700A4E4FD /* LoginViewController.swift */,
+				3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -696,6 +710,7 @@
 				3A7145E324AA8753000FA3C3 /* TimelineViewController.swift in Sources */,
 				3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */,
 				3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */,
+				3A4DF24B24BF7D1C003C6BF3 /* SidebarViewController.swift in Sources */,
 				3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */,
 				3A71461424AA8907000FA3C3 /* User.swift in Sources */,
 				3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */,
@@ -707,6 +722,7 @@
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
 				3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */,
+				3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */,
 				3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */,
 				3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */,
 				3A91971824B89E1100B7066B /* MainSettingsViewController.swift in Sources */,
@@ -904,7 +920,6 @@
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -914,7 +929,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -930,7 +945,6 @@
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -940,7 +954,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

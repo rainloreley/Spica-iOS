@@ -8,37 +8,57 @@
 import SwiftKeychainWrapper
 import UIKit
 
+@available(iOS 14.0, *)
+var splitViewController: GlobalSplitViewController!
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-		
-		// DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
-		/* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
-		 KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
-		 KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
-		
-		let tabBar = UITabBarController()
 
-		let homeView = UINavigationController(rootViewController: TimelineViewController())
-		homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
+        /* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
 
-		let mentionView = UINavigationController(rootViewController: MentionsViewController())
-		mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+        if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
+            let tabBar = UITabBarController()
 
-		tabBar.viewControllers = [homeView, mentionView]
+            let homeView = UINavigationController(rootViewController: TimelineViewController())
+            homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
 
-		if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
-			window?.rootViewController = tabBar
-		} else {
-			window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-		}
+            let mentionView = UINavigationController(rootViewController: MentionsViewController())
+            mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+
+            tabBar.viewControllers = [homeView, mentionView]
+
+            if #available(iOS 14.0, *) {
+                splitViewController = GlobalSplitViewController(style: .doubleColumn)
+                // splitViewController.presentsWithGesture = false
+
+                splitViewController.setViewController(SidebarViewController(), for: .primary)
+                splitViewController.setViewController(TimelineViewController(), for: .secondary)
+                splitViewController.setViewController(tabBar, for: .compact)
+                splitViewController.primaryBackgroundStyle = .sidebar
+
+                #if targetEnvironment(macCatalyst)
+                    if let titlebar = windowScene.titlebar {
+                        titlebar.titleVisibility = .hidden
+                        titlebar.toolbar = nil
+                    }
+                #endif
+
+                window?.rootViewController = splitViewController
+
+            } else {
+                window?.rootViewController = tabBar
+            }
+        } else {
+            window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+        }
 
         window?.makeKeyAndVisible()
 

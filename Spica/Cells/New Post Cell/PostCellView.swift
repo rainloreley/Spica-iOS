@@ -79,6 +79,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
                     let postID = word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]
                     selectablePart.addAttribute(.link, value: "post:\(postID)", range: NSRange(location: 0, length: selectablePart.length - 1))
+
                     attributedText.append(selectablePart)
                 } else if String(word).isValidURL, word.count > 1 {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")

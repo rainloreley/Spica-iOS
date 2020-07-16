@@ -39,9 +39,15 @@ class UserProfileViewController: UIViewController {
         signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
         navigationController?.navigationBar.prefersLargeTitles = false
 
+        var rightItems = [UIBarButtonItem]()
+
+        rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
+
         if signedInUsername == user.username {
-            navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: nil)
+            rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: nil))
         }
+
+        navigationItem.rightBarButtonItems = rightItems
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView?.delegate = self
@@ -73,6 +79,14 @@ class UserProfileViewController: UIViewController {
 
     override func viewDidAppear(_: Bool) {
         loadUser()
+    }
+
+    @objc func openPostCreateView() {
+        let vc = PostCreateViewController()
+        vc.type = .post
+        vc.preText = "@\(user.username) "
+        vc.delegate = self
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     @objc func loadUser() {
@@ -304,6 +318,9 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             cell.selectionStyle = .none
             cell.user = user
             cell.followButton.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
+            if #available(iOS 13.4, *) {
+                cell.followButton.isPointerInteractionEnabled = true
+            }
             return cell
         } else {
             let post = userPosts[indexPath.row]
