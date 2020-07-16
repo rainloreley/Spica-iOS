@@ -122,6 +122,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         // Do any additional setup after loading the view.
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		#if targetEnvironment(macCatalyst)
+		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+			titleBar.toolbar = nil
+		}
+		#endif
+	}
 
     @objc func openCreateAccount() {
         UIApplication.shared.open(URL(string: "https://alles.cx/register")!)
@@ -160,17 +169,43 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     }
                 } receiveValue: { _ in
                     DispatchQueue.main.async {
-                        let tabBar = UITabBarController()
+                        
                         let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                        let homeView = UINavigationController(rootViewController: TimelineViewController())
-                        homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+						
+							let tabBar = UITabBarController()
 
-                        let mentionView = UINavigationController(rootViewController: MentionsViewController())
-                        mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+							let homeView = UINavigationController(rootViewController: TimelineViewController())
+							homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
 
-                        tabBar.viewControllers = [homeView, mentionView]
+							let mentionView = UINavigationController(rootViewController: MentionsViewController())
+							mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+
+							tabBar.viewControllers = [homeView, mentionView]
+
+							if #available(iOS 14.0, *) {
+								globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
+								// splitViewController.presentsWithGesture = false
+								globalSplitViewController.setViewController(SidebarViewController(), for: .primary)
+								globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
+								globalSplitViewController.setViewController(tabBar, for: .compact)
+								globalSplitViewController.primaryBackgroundStyle = .sidebar
+								
+								globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
+
+								#if targetEnvironment(macCatalyst)
+								if let titlebar = mySceneDelegate.window?.windowScene?.titlebar {
+										titlebar.titleVisibility = .hidden
+										titlebar.toolbar = nil
+									}
+								#endif
+
+								mySceneDelegate.window?.rootViewController = globalSplitViewController
+
+							} else {
+								mySceneDelegate.window?.rootViewController = tabBar
+							}
+						
                         self.loadingHud.dismiss()
-                        mySceneDelegate.window?.rootViewController = tabBar
                         mySceneDelegate.window?.makeKeyAndVisible()
                     }
                 }.store(in: &subscriptions)

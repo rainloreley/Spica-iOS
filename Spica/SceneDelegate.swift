@@ -8,39 +8,65 @@
 import SwiftKeychainWrapper
 import UIKit
 
+@available(iOS 14.0, *)
+var globalSplitViewController: GlobalSplitViewController!
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-		
-		// DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
-		/* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
-		 KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
-		 KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
-		
-		let tabBar = UITabBarController()
 
-		let homeView = UINavigationController(rootViewController: TimelineViewController())
-		homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
+		/*KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")*/
 
-		let mentionView = UINavigationController(rootViewController: MentionsViewController())
-		mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+        
+            let tabBar = UITabBarController()
 
-		tabBar.viewControllers = [homeView, mentionView]
+            let homeView = UINavigationController(rootViewController: TimelineViewController())
+            homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
 
+            let mentionView = UINavigationController(rootViewController: MentionsViewController())
+            mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+
+            tabBar.viewControllers = [homeView, mentionView]
+
+            if #available(iOS 14.0, *) {
+				globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
+                // splitViewController.presentsWithGesture = false
+				globalSplitViewController.setViewController(SidebarViewController(), for: .primary)
+				globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
+				globalSplitViewController.setViewController(tabBar, for: .compact)
+				globalSplitViewController.primaryBackgroundStyle = .sidebar
+				
+				globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
+
+                #if targetEnvironment(macCatalyst)
+                    if let titlebar = windowScene.titlebar {
+                        titlebar.titleVisibility = .hidden
+                        titlebar.toolbar = nil
+                    }
+                #endif
+
+                window?.rootViewController = globalSplitViewController
+
+            } else {
+                window?.rootViewController = tabBar
+            }
+			
+			
 		if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
-			window?.rootViewController = tabBar
-		} else {
-			window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-		}
+			window?.makeKeyAndVisible()
+        } else {
+            window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+			window?.makeKeyAndVisible()
+        }
 
-        window?.makeKeyAndVisible()
+        
 
         _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(sendOnline), userInfo: nil, repeats: true)
     }

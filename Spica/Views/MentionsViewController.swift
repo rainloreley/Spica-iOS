@@ -103,6 +103,14 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+		#if targetEnvironment(macCatalyst)
+		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+			let toolBar = NSToolbar(identifier: "mentionsToolbar")
+			toolBar.delegate = self
+			titleBar.toolbar = toolBar
+		}
+		#endif
         loadMentions()
     }
 
@@ -226,8 +234,12 @@ extension MentionsViewController: UITableViewDelegate {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
-    func repost(id _: String, username _: String) {
-        //
+    func repost(id: String, username: String) {
+        let vc = PostCreateViewController()
+        vc.type = .post
+        vc.delegate = self
+        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        present(UINavigationController(rootViewController: vc), animated: true)
     }
 
     func replyToPost(id: String) {
@@ -297,3 +309,26 @@ extension MentionsViewController: PostCellViewDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 }
+
+#if targetEnvironment(macCatalyst)
+extension MentionsViewController: NSToolbarDelegate {
+	
+	func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+		if itemIdentifier == NSToolbarItem.Identifier("reloadData") {
+			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("reloadData"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(loadMentions)))
+			
+			return item
+			
+		}
+		return nil
+	}
+	
+	func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+		return [NSToolbarItem.Identifier("reloadData"), NSToolbarItem.Identifier.flexibleSpace]
+	}
+		
+	func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+		return self.toolbarDefaultItemIdentifiers(toolbar)
+	}
+}
+#endif

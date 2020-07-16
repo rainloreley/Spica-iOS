@@ -22,8 +22,18 @@ class MainSettingsViewController: UITableViewController {
     var delegate: MainSettingsDelegate!
 
     @IBAction func profileMore(_: Any) {
-        dismiss(animated: true)
-        delegate.clickedMore(username: username)
+        if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+            let vc = UserProfileViewController()
+            vc.user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
+            vc.hidesBottomBarWhenPushed = true
+
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            dismiss(animated: true)
+            if delegate != nil {
+                delegate.clickedMore(username: username)
+            }
+        }
     }
 
     @IBAction func signOut(_: Any) {
@@ -35,21 +45,21 @@ class MainSettingsViewController: UITableViewController {
         mySceneDelegate.window?.makeKeyAndVisible()
     }
 
-	@IBAction func spicaPrivacy(_ sender: Any) {
-		let url = URL(string: "https://spica.fliney.eu/privacy")
-		if UIApplication.shared.canOpenURL(url!) {
-			UIApplication.shared.open(url!)
-		}
-	}
-	
-	@IBAction func spicaWebsite(_ sender: Any) {
-		let url = URL(string: "https://spica.fliney.eu/")
-		if UIApplication.shared.canOpenURL(url!) {
-			UIApplication.shared.open(url!)
-		}
-	}
-	
-	@IBAction func allesPrivacy(_: Any) {
+    @IBAction func spicaPrivacy(_: Any) {
+        let url = URL(string: "https://spica.fliney.eu/privacy")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+    }
+
+    @IBAction func spicaWebsite(_: Any) {
+        let url = URL(string: "https://spica.fliney.eu/")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+    }
+
+    @IBAction func allesPrivacy(_: Any) {
         let url = URL(string: "https://alles.cx/docs/privacy")
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
@@ -62,14 +72,14 @@ class MainSettingsViewController: UITableViewController {
             UIApplication.shared.open(url!)
         }
     }
-	
-	@IBAction func allesWebsite(_ sender: Any) {
-		let url = URL(string: "https://alles.cx/")
-		if UIApplication.shared.canOpenURL(url!) {
-			UIApplication.shared.open(url!)
-		}
-	}
-	
+
+    @IBAction func allesWebsite(_: Any) {
+        let url = URL(string: "https://alles.cx/")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+    }
+
     @IBAction func usedLibraries(_: Any) {
         navigationController?.pushViewController(UsedLibrariesViewController(), animated: true)
     }
@@ -109,6 +119,17 @@ class MainSettingsViewController: UITableViewController {
             }
         }
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		#if targetEnvironment(macCatalyst)
+		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+			let toolBar = NSToolbar(identifier: "settingsToolbar")
+			
+			titleBar.toolbar = toolBar
+		}
+		#endif
+	}
 
     // MARK: - Table view data source
 
@@ -125,7 +146,7 @@ class MainSettingsViewController: UITableViewController {
         case 1:
             return 2
         case 2:
-			return 3
+            return 3
         case 3:
             return 2
         case 4:

@@ -31,13 +31,28 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
 
+        /* if traitCollection.userInterfaceIdiom == .mac {
+         	navigationController?.setNavigationBarHidden(true, animated: false)
+         } */
+
         let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
 
         let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
+		
+		#if targetEnvironment(macCatalyst)
+		self.navigationController?.navigationBar.prefersLargeTitles = true
+		self.navigationController?.navigationItem.largeTitleDisplayMode = .always
+		#else
+		navigationItem.rightBarButtonItems = [createPostBarButtonItem, accountBarButtonItem]
+		#endif
 
-        navigationItem.rightBarButtonItems = [createPostBarButtonItem, accountBarButtonItem]
-
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+        
+		
+        if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+            //
+        } else {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+        }
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.delegate = self
@@ -67,16 +82,23 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         if #available(iOS 13.4, *) {
             createPostBtn.isPointerInteractionEnabled = true
         }
+		
+		
+		
+		
+		
 
-        view.addSubview(createPostBtn)
+        /* view.addSubview(createPostBtn)
 
-        createPostBtn.snp.makeConstraints { make in
-            make.width.equalTo(50)
-            make.height.equalTo(50)
-            make.bottom.equalTo(view.snp.bottom).offset(-100)
-            make.trailing.equalTo(view.snp.trailing).offset(-16)
-        }
+         createPostBtn.snp.makeConstraints { make in
+             make.width.equalTo(50)
+             make.height.equalTo(50)
+             make.bottom.equalTo(view.snp.bottom).offset(-100)
+             make.trailing.equalTo(view.snp.trailing).offset(-16)
+         } */
     }
+	
+	
 
     // MARK: - Datasource
 
@@ -149,11 +171,21 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+		
         navigationController?.navigationBar.prefersLargeTitles = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+		#if targetEnvironment(macCatalyst)
+		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+			let toolBar = NSToolbar(identifier: "timelineToolbar")
+			toolBar.delegate = self
+			titleBar.toolbar = toolBar
+		}
+		#endif
+		
         loadFeed()
     }
 
@@ -351,3 +383,33 @@ extension TimelineViewController: PostCellViewDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 }
+#if targetEnvironment(macCatalyst)
+extension TimelineViewController: NSToolbarDelegate {
+	
+	func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
+		if itemIdentifier == NSToolbarItem.Identifier("newPost") {
+			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("newPost"), barButtonItem:  UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
+			return item
+		}
+		else if itemIdentifier == NSToolbarItem.Identifier("userProfile") {
+			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("userProfile"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView)))
+			return item
+		}
+		else if itemIdentifier == NSToolbarItem.Identifier("reloadData") {
+			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("reloadData"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(loadFeed)))
+			
+			return item
+			
+		}
+		return nil
+	}
+	
+	func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+		return [NSToolbarItem.Identifier("reloadData"), NSToolbarItem.Identifier.flexibleSpace, NSToolbarItem.Identifier("userProfile"), NSToolbarItem.Identifier(rawValue: "newPost")]
+	}
+		
+	func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+		return self.toolbarDefaultItemIdentifiers(toolbar)
+	}
+}
+#endif

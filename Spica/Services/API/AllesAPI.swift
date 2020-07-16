@@ -85,12 +85,11 @@ public class AllesAPI {
                             promise(.failure(apiError))
                         }
                     } else {
-						if response.response!.statusCode == 401 {
-							promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-						}
-						else {
-							promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-						}
+                        if response.response!.statusCode == 401 {
+                            promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                        } else {
+                            promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                        }
                     }
 
                 case let .failure(err):
@@ -140,13 +139,11 @@ public class AllesAPI {
                             promise(.failure(apiError))
                         }
                     } else {
-						if response.response!.statusCode == 401 {
-							promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-						}
-						else {
-							promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-						}
-                        
+                        if response.response!.statusCode == 401 {
+                            promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                        } else {
+                            promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                        }
                     }
 
                 case let .failure(err):
@@ -184,12 +181,11 @@ public class AllesAPI {
                             promise(.failure(apiError))
                         }
                     } else {
-						if response.response!.statusCode == 401 {
-							promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-						}
-						else {
-							promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-						}
+                        if response.response!.statusCode == 401 {
+                            promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                        } else {
+                            promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                        }
                     }
 
                 case let .failure(err):
@@ -224,12 +220,11 @@ public class AllesAPI {
                             promise(.failure(apiError))
                         }
                     } else {
-						if response.response!.statusCode == 401 {
-							promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-						}
-						else {
-							promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-						}
+                        if response.response!.statusCode == 401 {
+                            promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                        } else {
+                            promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                        }
                     }
 
                 case let .failure(err):
@@ -273,12 +268,11 @@ public class AllesAPI {
                         promise(.success(tempPostDetail))
 
                     } else {
-						if response.response!.statusCode == 401 {
-							promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-						}
-						else {
-							promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-						}
+                        if response.response!.statusCode == 401 {
+                            promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                        } else {
+                            promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                        }
                     }
 
                 case let .failure(err):
@@ -326,12 +320,11 @@ public class AllesAPI {
                             promise(.failure(apiError))
                         }
                     } else {
-						if response.response!.statusCode == 401 {
-							promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-						}
-						else {
-							promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-						}
+                        if response.response!.statusCode == 401 {
+                            promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                        } else {
+                            promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                        }
                     }
 
                 case let .failure(err):
@@ -363,12 +356,11 @@ public class AllesAPI {
                             promise(.failure(apiError))
                         }
                     } else {
-						if response.response!.statusCode == 401 {
-							promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-						}
-						else {
-							promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-						}
+                        if response.response!.statusCode == 401 {
+                            promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                        } else {
+                            promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                        }
                     }
 
                 case let .failure(err):
@@ -400,12 +392,11 @@ public class AllesAPI {
                                 promise(.failure(apiError))
                             }
                         } else {
-							if response.response!.statusCode == 401 {
-								promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-							}
-							else {
-								promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-							}
+                            if response.response!.statusCode == 401 {
+                                promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                            } else {
+                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                            }
                         }
 
                     case let .failure(err):
@@ -438,12 +429,11 @@ public class AllesAPI {
                             promise(.failure(apiError))
                         }
                     } else {
-						if response.response!.statusCode == 401 {
-							promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-						}
-						else {
-							promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
-						}
+                        if response.response!.statusCode == 401 {
+                            promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                        } else {
+                            promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                        }
                     }
 
                 case .failure:
