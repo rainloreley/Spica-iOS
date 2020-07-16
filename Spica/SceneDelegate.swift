@@ -9,7 +9,7 @@ import SwiftKeychainWrapper
 import UIKit
 
 @available(iOS 14.0, *)
-var splitViewController: GlobalSplitViewController!
+var globalSplitViewController: GlobalSplitViewController!
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -20,11 +20,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
 
         // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
-        /* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+		/*KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
          KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
-         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
+         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")*/
 
-        if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
+        
             let tabBar = UITabBarController()
 
             let homeView = UINavigationController(rootViewController: TimelineViewController())
@@ -36,14 +36,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             tabBar.viewControllers = [homeView, mentionView]
 
             if #available(iOS 14.0, *) {
-                splitViewController = GlobalSplitViewController(style: .doubleColumn)
+				globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
                 // splitViewController.presentsWithGesture = false
-                splitViewController.setViewController(SidebarViewController(), for: .primary)
-                splitViewController.setViewController(TimelineViewController(), for: .secondary)
-                splitViewController.setViewController(tabBar, for: .compact)
-                splitViewController.primaryBackgroundStyle = .sidebar
+				globalSplitViewController.setViewController(SidebarViewController(), for: .primary)
+				globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
+				globalSplitViewController.setViewController(tabBar, for: .compact)
+				globalSplitViewController.primaryBackgroundStyle = .sidebar
 				
-				splitViewController.navigationItem.largeTitleDisplayMode = .always
+				globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
 
                 #if targetEnvironment(macCatalyst)
                     if let titlebar = windowScene.titlebar {
@@ -52,16 +52,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     }
                 #endif
 
-                window?.rootViewController = splitViewController
+                window?.rootViewController = globalSplitViewController
 
             } else {
                 window?.rootViewController = tabBar
             }
+			
+			
+		if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
+			window?.makeKeyAndVisible()
         } else {
             window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+			window?.makeKeyAndVisible()
         }
 
-        window?.makeKeyAndVisible()
+        
 
         _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(sendOnline), userInfo: nil, repeats: true)
     }
