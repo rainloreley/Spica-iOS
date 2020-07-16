@@ -60,16 +60,14 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         imageButton = UIBarButtonItem(image: UIImage(systemName: "photo"), style: .plain, target: self, action: #selector(openImagePicker))
 
         sendButton = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"), style: .plain, target: self, action: #selector(sendPost))
-		
-		#if targetEnvironment(macCatalyst)
-		navigationItem.rightBarButtonItems = [sendButton, imageButton]
-		navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissView))
-		#else
-		navigationItem.leftBarButtonItem = imageButton
-		navigationItem.rightBarButtonItem = sendButton
-		#endif
 
-        
+        #if targetEnvironment(macCatalyst)
+            navigationItem.rightBarButtonItems = [sendButton, imageButton]
+            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissView))
+        #else
+            navigationItem.leftBarButtonItem = imageButton
+            navigationItem.rightBarButtonItem = sendButton
+        #endif
 
         /* sendButton = UIButton(type: .system)
          sendButton.setTitle(type == PostType.post ? "Post" : "Reply", for: .normal)
@@ -97,8 +95,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         contentTextView.placeholder = "What's on your mind?"
         contentTextView.placeholderColor = UIColor.tertiaryLabel
         contentTextView.delegate = self
-		let dropInteraction = UIDropInteraction(delegate: self)
-		contentTextView.addInteraction(dropInteraction)
+        let dropInteraction = UIDropInteraction(delegate: self)
+        contentTextView.addInteraction(dropInteraction)
         if preText != nil {
             contentTextView.text = preText
         }
@@ -150,10 +148,10 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
         // Do any additional setup after loading the view.
     }
-	
-	@objc func dismissView() {
-		dismiss(animated: true, completion: nil)
-	}
+
+    @objc func dismissView() {
+        dismiss(animated: true, completion: nil)
+    }
 
     func textViewDidChange(_ textView: UITextView) { // Handle the text changes here
         let calculation = Double(textView.text.count) / Double(500)
@@ -272,20 +270,19 @@ enum PostType {
 }
 
 extension PostCreateViewController: UIDropInteractionDelegate {
-	func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
-		return session.canLoadObjects(ofClass: UIImage.self)
-	}
-	
-	func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
-		return UIDropProposal(operation: .copy)
-	}
-	
-	func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
-		session.loadObjects(ofClass: UIImage.self) { (imageItems) in
-			let images = imageItems as! [UIImage]
-			self.selectedImage = images.first
-			self.imageButton.image = UIImage(systemName: "photo.fill")
-			
-		}
-	}
+    func dropInteraction(_: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+        return session.canLoadObjects(ofClass: UIImage.self)
+    }
+
+    func dropInteraction(_: UIDropInteraction, sessionDidUpdate _: UIDropSession) -> UIDropProposal {
+        return UIDropProposal(operation: .copy)
+    }
+
+    func dropInteraction(_: UIDropInteraction, performDrop session: UIDropSession) {
+        session.loadObjects(ofClass: UIImage.self) { imageItems in
+            let images = imageItems as! [UIImage]
+            self.selectedImage = images.first
+            self.imageButton.image = UIImage(systemName: "photo.fill")
+        }
+    }
 }

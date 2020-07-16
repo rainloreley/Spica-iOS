@@ -73,12 +73,12 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-		#if targetEnvironment(macCatalyst)
-		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-			titleBar.toolbar = nil
-		}
-		#endif
+        #if targetEnvironment(macCatalyst)
+            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                titleBar.toolbar = nil
+            }
+        #endif
         loadPostDetail()
     }
 

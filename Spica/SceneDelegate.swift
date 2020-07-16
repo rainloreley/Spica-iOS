@@ -20,53 +20,49 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
 
         // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
-		/*KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+        /* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
          KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
-         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")*/
+         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
 
-        
-            let tabBar = UITabBarController()
+        let tabBar = UITabBarController()
 
-            let homeView = UINavigationController(rootViewController: TimelineViewController())
-            homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+        let homeView = UINavigationController(rootViewController: TimelineViewController())
+        homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
 
-            let mentionView = UINavigationController(rootViewController: MentionsViewController())
-            mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+        let mentionView = UINavigationController(rootViewController: MentionsViewController())
+        mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
 
-            tabBar.viewControllers = [homeView, mentionView]
+        tabBar.viewControllers = [homeView, mentionView]
 
-            if #available(iOS 14.0, *) {
-				globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
-                // splitViewController.presentsWithGesture = false
-				globalSplitViewController.setViewController(SidebarViewController(), for: .primary)
-				globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
-				globalSplitViewController.setViewController(tabBar, for: .compact)
-				globalSplitViewController.primaryBackgroundStyle = .sidebar
-				
-				globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
+        if #available(iOS 14.0, *) {
+            globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
+            // splitViewController.presentsWithGesture = false
+            globalSplitViewController.setViewController(SidebarViewController(), for: .primary)
+            globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
+            globalSplitViewController.setViewController(tabBar, for: .compact)
+            globalSplitViewController.primaryBackgroundStyle = .sidebar
 
-                #if targetEnvironment(macCatalyst)
-                    if let titlebar = windowScene.titlebar {
-                        titlebar.titleVisibility = .hidden
-                        titlebar.toolbar = nil
-                    }
-                #endif
+            globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
 
-                window?.rootViewController = globalSplitViewController
+            #if targetEnvironment(macCatalyst)
+                if let titlebar = windowScene.titlebar {
+                    titlebar.titleVisibility = .hidden
+                    titlebar.toolbar = nil
+                }
+            #endif
 
-            } else {
-                window?.rootViewController = tabBar
-            }
-			
-			
-		if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
-			window?.makeKeyAndVisible()
+            window?.rootViewController = globalSplitViewController
+
         } else {
-            window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-			window?.makeKeyAndVisible()
+            window?.rootViewController = tabBar
         }
 
-        
+        if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
+            window?.makeKeyAndVisible()
+        } else {
+            window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+            window?.makeKeyAndVisible()
+        }
 
         _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(sendOnline), userInfo: nil, repeats: true)
     }

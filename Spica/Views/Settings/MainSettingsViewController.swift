@@ -119,17 +119,17 @@ class MainSettingsViewController: UITableViewController {
             }
         }
     }
-	
-	override func viewDidAppear(_ animated: Bool) {
-		#if targetEnvironment(macCatalyst)
-		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-			let toolBar = NSToolbar(identifier: "settingsToolbar")
-			
-			titleBar.toolbar = toolBar
-		}
-		#endif
-	}
+
+    override func viewDidAppear(_: Bool) {
+        #if targetEnvironment(macCatalyst)
+            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                let toolBar = NSToolbar(identifier: "settingsToolbar")
+
+                titleBar.toolbar = toolBar
+            }
+        #endif
+    }
 
     // MARK: - Table view data source
 

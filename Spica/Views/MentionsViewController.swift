@@ -103,14 +103,14 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-		#if targetEnvironment(macCatalyst)
-		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-			let toolBar = NSToolbar(identifier: "mentionsToolbar")
-			toolBar.delegate = self
-			titleBar.toolbar = toolBar
-		}
-		#endif
+        #if targetEnvironment(macCatalyst)
+            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                let toolBar = NSToolbar(identifier: "mentionsToolbar")
+                toolBar.delegate = self
+                titleBar.toolbar = toolBar
+            }
+        #endif
         loadMentions()
     }
 
@@ -311,24 +311,22 @@ extension MentionsViewController: PostCellViewDelegate {
 }
 
 #if targetEnvironment(macCatalyst)
-extension MentionsViewController: NSToolbarDelegate {
-	
-	func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-		if itemIdentifier == NSToolbarItem.Identifier("reloadData") {
-			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("reloadData"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(loadMentions)))
-			
-			return item
-			
-		}
-		return nil
-	}
-	
-	func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-		return [NSToolbarItem.Identifier("reloadData"), NSToolbarItem.Identifier.flexibleSpace]
-	}
-		
-	func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-		return self.toolbarDefaultItemIdentifiers(toolbar)
-	}
-}
+    extension MentionsViewController: NSToolbarDelegate {
+        func toolbar(_: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar _: Bool) -> NSToolbarItem? {
+            if itemIdentifier == NSToolbarItem.Identifier("reloadData") {
+                let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier("reloadData"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(loadMentions)))
+
+                return item
+            }
+            return nil
+        }
+
+        func toolbarDefaultItemIdentifiers(_: NSToolbar) -> [NSToolbarItem.Identifier] {
+            return [NSToolbarItem.Identifier("reloadData"), NSToolbarItem.Identifier.flexibleSpace]
+        }
+
+        func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+            return toolbarDefaultItemIdentifiers(toolbar)
+        }
+    }
 #endif

@@ -35,32 +35,26 @@ class UserProfileViewController: UIViewController {
 
         view.backgroundColor = .systemBackground
 
-        
         signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-        
-		
-		#if targetEnvironment(macCatalyst)
-		if traitCollection.userInterfaceIdiom == .mac {
-			navigationController?.isToolbarHidden = true
-			navigationController?.setNavigationBarHidden(true, animated: false)
-		}
-		#else
-		navigationItem.title = "\(user.displayName)"
-		navigationController?.navigationBar.prefersLargeTitles = false
-		var rightItems = [UIBarButtonItem]()
 
-		rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
+        #if targetEnvironment(macCatalyst)
+            if traitCollection.userInterfaceIdiom == .mac {
+                navigationController?.isToolbarHidden = true
+                navigationController?.setNavigationBarHidden(true, animated: false)
+            }
+        #else
+            navigationItem.title = "\(user.displayName)"
+            navigationController?.navigationBar.prefersLargeTitles = false
+            var rightItems = [UIBarButtonItem]()
 
-		if signedInUsername == user.username {
-			rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: nil))
-		}
+            rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
 
-		navigationItem.rightBarButtonItems = rightItems
-		#endif
-		
-			
+            if signedInUsername == user.username {
+                rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: nil))
+            }
 
-        
+            navigationItem.rightBarButtonItems = rightItems
+        #endif
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView?.delegate = self
@@ -87,29 +81,28 @@ class UserProfileViewController: UIViewController {
     }
 
     override func viewWillAppear(_: Bool) {
-        
-		#if targetEnvironment(macCatalyst)
-		navigationController?.setNavigationBarHidden(true, animated: false)
-		#else
-		navigationController?.navigationBar.prefersLargeTitles = false
-		#endif
+        #if targetEnvironment(macCatalyst)
+            navigationController?.setNavigationBarHidden(true, animated: false)
+        #else
+            navigationController?.navigationBar.prefersLargeTitles = false
+        #endif
     }
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		#if targetEnvironment(macCatalyst)
-		navigationController?.setNavigationBarHidden(false, animated: false)
-		#endif
-	}
+
+    override func viewWillDisappear(_: Bool) {
+        #if targetEnvironment(macCatalyst)
+            navigationController?.setNavigationBarHidden(false, animated: false)
+        #endif
+    }
 
     override func viewDidAppear(_: Bool) {
-		#if targetEnvironment(macCatalyst)
-		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-		if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-			let toolBar = NSToolbar(identifier: "userProfileToolbar")
-			toolBar.delegate = self
-			titleBar.toolbar = toolBar
-		}
-		#endif
+        #if targetEnvironment(macCatalyst)
+            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                let toolBar = NSToolbar(identifier: "userProfileToolbar")
+                toolBar.delegate = self
+                titleBar.toolbar = toolBar
+            }
+        #endif
         loadUser()
     }
 
@@ -154,14 +147,14 @@ class UserProfileViewController: UIViewController {
                 } receiveValue: { [unowned self] in
                     self.user = $0
                     self.navigationItem.title = "\(self.user.displayName)"
-					#if targetEnvironment(macCatalyst)
-					let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-					if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-						let toolBar = NSToolbar(identifier: "userProfileToolbar")
-						toolBar.delegate = self
-						titleBar.toolbar = toolBar
-					}
-					#endif
+                    #if targetEnvironment(macCatalyst)
+                        let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+                        if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                            let toolBar = NSToolbar(identifier: "userProfileToolbar")
+                            toolBar.delegate = self
+                            titleBar.toolbar = toolBar
+                        }
+                    #endif
                     self.loadPfp()
                     self.loadPosts()
                 }
@@ -480,42 +473,39 @@ extension UserProfileViewController: PostCellViewDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 }
+
 #if targetEnvironment(macCatalyst)
-extension UserProfileViewController: NSToolbarDelegate {
-	
-	@objc func goBack() {
-		navigationController?.popViewController(animated: true)
-	}
-	
-	func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-		if itemIdentifier == NSToolbarItem.Identifier("back") {
-			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("back"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(goBack)))
-			return item
-		}
-		if itemIdentifier == NSToolbarItem.Identifier("newPost") {
-			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("newPost"), barButtonItem:  UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
-			return item
-		}
-		else if itemIdentifier == NSToolbarItem.Identifier("userDisplayname") {
-			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("userDisplayname"))
-			item.title = user.displayName
-			return item
-		}
-		else if itemIdentifier == NSToolbarItem.Identifier("reloadData") {
-			let item = NSToolbarItem.init(itemIdentifier: NSToolbarItem.Identifier("reloadData"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(loadUser)))
-			
-			return item
-			
-		}
-		return nil
-	}
-	
-	func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-		return [NSToolbarItem.Identifier("back"), NSToolbarItem.Identifier("reloadData"), NSToolbarItem.Identifier("userDisplayname"), NSToolbarItem.Identifier.flexibleSpace, NSToolbarItem.Identifier(rawValue: "newPost")]
-	}
-		
-	func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-		return self.toolbarDefaultItemIdentifiers(toolbar)
-	}
-}
+    extension UserProfileViewController: NSToolbarDelegate {
+        @objc func goBack() {
+            navigationController?.popViewController(animated: true)
+        }
+
+        func toolbar(_: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar _: Bool) -> NSToolbarItem? {
+            if itemIdentifier == NSToolbarItem.Identifier("back") {
+                let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier("back"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(goBack)))
+                return item
+            }
+            if itemIdentifier == NSToolbarItem.Identifier("newPost") {
+                let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier("newPost"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
+                return item
+            } else if itemIdentifier == NSToolbarItem.Identifier("userDisplayname") {
+                let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier("userDisplayname"))
+                item.title = user.displayName
+                return item
+            } else if itemIdentifier == NSToolbarItem.Identifier("reloadData") {
+                let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier("reloadData"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(loadUser)))
+
+                return item
+            }
+            return nil
+        }
+
+        func toolbarDefaultItemIdentifiers(_: NSToolbar) -> [NSToolbarItem.Identifier] {
+            return [NSToolbarItem.Identifier("back"), NSToolbarItem.Identifier("reloadData"), NSToolbarItem.Identifier("userDisplayname"), NSToolbarItem.Identifier.flexibleSpace, NSToolbarItem.Identifier(rawValue: "newPost")]
+        }
+
+        func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+            return toolbarDefaultItemIdentifiers(toolbar)
+        }
+    }
 #endif
