@@ -13,6 +13,7 @@ public struct User: Hashable {
     var id: String
     var username: String
     var displayName: String
+    var nickname: String
     var imageURL: URL
     var isPlus: Bool
     var rubies: Int
@@ -23,10 +24,11 @@ public struct User: Hashable {
     var about: String
     var isOnline: Bool
 
-    init(id: String, username: String, displayName: String, imageURL: URL, isPlus: Bool, rubies: Int, followers: Int, image: UIImage, isFollowing: Bool, followsMe: Bool, about: String, isOnline: Bool) {
+    init(id: String, username: String, displayName: String, nickname: String, imageURL: URL, isPlus: Bool, rubies: Int, followers: Int, image: UIImage, isFollowing: Bool, followsMe: Bool, about: String, isOnline: Bool) {
         self.id = id
         self.username = username
         self.displayName = displayName
+        self.nickname = nickname
         self.imageURL = imageURL
         self.isPlus = isPlus
         self.rubies = rubies
@@ -42,6 +44,7 @@ public struct User: Hashable {
         id = json["id"].string!
         username = json["username"].string!
         displayName = json["name"].string!
+        nickname = json["nickname"].string ?? json["name"].string!
         imageURL = URL(string: "https://avatar.alles.cx/u/\(json["username"])")!
         isPlus = json["plus"].bool ?? false
         rubies = json["rubies"].int ?? 0

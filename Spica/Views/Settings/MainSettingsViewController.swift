@@ -24,7 +24,7 @@ class MainSettingsViewController: UITableViewController {
     @IBAction func profileMore(_: Any) {
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
             let vc = UserProfileViewController()
-            vc.user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
+            vc.user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
             vc.hidesBottomBarWhenPushed = true
 
             navigationController?.pushViewController(vc, animated: true)
@@ -99,6 +99,14 @@ class MainSettingsViewController: UITableViewController {
     }
 
     override func viewWillAppear(_: Bool) {
+        if #available(iOS 14.0, *) {
+            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+                if let sidebar = globalSideBarController {
+                    sidebar.collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.settings.rawValue), animated: true, scrollPosition: .top)
+                }
+            }
+        }
+
         let dictionary = Bundle.main.infoDictionary!
         let version = dictionary["CFBundleShortVersionString"] as! String
         let build = dictionary["CFBundleVersion"] as! String

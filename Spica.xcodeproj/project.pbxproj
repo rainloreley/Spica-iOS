@@ -12,6 +12,7 @@
 		3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3A34226B24B359BE00B8AFA9 /* JGProgressHUD */; };
 		3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */; };
 		3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEC24B8AA2700513028 /* CreditsViewController.swift */; };
+		3A3CBE2F24C0BBE700B00D8D /* UserEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3CBE2E24C0BBE700B00D8D /* UserEditViewController.swift */; };
 		3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274324B1E02900425999 /* CircularProgressBar.swift */; };
 		3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274524B1E1AC00425999 /* ProgressBarController.swift */; };
 		3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A474AFA24B24EDA003424F5 /* PostCellView.swift */; };
@@ -41,8 +42,11 @@
 		3A96F6A524AB404100482C5A /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 3A96F6A424AB404100482C5A /* SwiftyJSON */; };
 		3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F6A624AB410900482C5A /* Extensions.swift */; };
 		3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */; };
+		3AA108A724C0C622006FCA1A /* EditTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */; };
+		3AA108AA24C0CBDF006FCA1A /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 3AA108A924C0CBDF006FCA1A /* Hero */; };
 		3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA12EF324B0F3CD009C904A /* EZAlertController.swift */; };
 		3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */; };
+		3AD04A3624C0C50E007F7306 /* UserEditHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */; };
 		3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */; };
 		3AD689BA24ADDB5E001F485E /* AllesAPIErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD689B924ADDB5E001F485E /* AllesAPIErrorAction.swift */; };
 		3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADBFC7C24ADE7FB0064A7A4 /* SignedInUser.swift */; };
@@ -83,6 +87,7 @@
 		3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedLibrariesViewController.swift; sourceTree = "<group>"; };
 		3A361FEC24B8AA2700513028 /* CreditsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
+		3A3CBE2E24C0BBE700B00D8D /* UserEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEditViewController.swift; sourceTree = "<group>"; };
 		3A41274324B1E02900425999 /* CircularProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBar.swift; sourceTree = "<group>"; };
 		3A41274524B1E1AC00425999 /* ProgressBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
 		3A474AFA24B24EDA003424F5 /* PostCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellView.swift; sourceTree = "<group>"; };
@@ -116,8 +121,10 @@
 		3A96F6A624AB410900482C5A /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		3A9D965D24BA59AA00703466 /* Spica.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Spica.entitlements; sourceTree = "<group>"; };
+		3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextFieldCell.swift; sourceTree = "<group>"; };
 		3AA12EF324B0F3CD009C904A /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
 		3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
+		3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEditHeaderCell.swift; sourceTree = "<group>"; };
 		3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorMessage.swift; sourceTree = "<group>"; };
 		3AD689B924ADDB5E001F485E /* AllesAPIErrorAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorAction.swift; sourceTree = "<group>"; };
 		3ADBFC7C24ADE7FB0064A7A4 /* SignedInUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignedInUser.swift; sourceTree = "<group>"; };
@@ -153,6 +160,7 @@
 				3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */,
 				3A96F6A224AB403100482C5A /* Alamofire in Frameworks */,
 				3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */,
+				3AA108AA24C0CBDF006FCA1A /* Hero in Frameworks */,
 				A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -182,6 +190,15 @@
 				3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */,
 			);
 			path = Sidebar;
+			sourceTree = "<group>";
+		};
+		3A3CBE3024C0C0CF00B00D8D /* User Edit */ = {
+			isa = PBXGroup;
+			children = (
+				3AD04A3424C0C4EC007F7306 /* Cells */,
+				3A3CBE2E24C0BBE700B00D8D /* UserEditViewController.swift */,
+			);
+			path = "User Edit";
 			sourceTree = "<group>";
 		};
 		3A4038B124B1EB54002B18F1 /* ProgressBar */ = {
@@ -336,6 +353,7 @@
 		3A96F6A924AB445100482C5A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				3A3CBE3024C0C0CF00B00D8D /* User Edit */,
 				3A08677824BF902800C516A9 /* Sidebar */,
 				3A91971424B89DC300B7066B /* Settings */,
 				3A4038B124B1EB54002B18F1 /* ProgressBar */,
@@ -348,6 +366,15 @@
 				3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		3AD04A3424C0C4EC007F7306 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */,
+				3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		3AD689B524ADDACC001F485E /* Error Handling */ = {
@@ -456,6 +483,7 @@
 				3A96F6A424AB404100482C5A /* SwiftyJSON */,
 				3A34226B24B359BE00B8AFA9 /* JGProgressHUD */,
 				3A25FBA824B753D400324136 /* SPAlert */,
+				3AA108A924C0CBDF006FCA1A /* Hero */,
 			);
 			productName = "Alles App";
 			productReference = 3A7145DB24AA8753000FA3C3 /* Spica.app */;
@@ -537,6 +565,7 @@
 				3A96F6A324AB404100482C5A /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				3A34226A24B359BE00B8AFA9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				3A25FBA724B753D400324136 /* XCRemoteSwiftPackageReference "SPAlert" */,
+				3AA108A824C0CBDF006FCA1A /* XCRemoteSwiftPackageReference "Hero" */,
 			);
 			productRefGroup = 3A7145DC24AA8753000FA3C3 /* Products */;
 			projectDirPath = "";
@@ -712,7 +741,9 @@
 				3A7145E324AA8753000FA3C3 /* TimelineViewController.swift in Sources */,
 				3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */,
 				3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */,
+				3AD04A3624C0C50E007F7306 /* UserEditHeaderCell.swift in Sources */,
 				3A4DF24B24BF7D1C003C6BF3 /* SidebarViewController.swift in Sources */,
+				3AA108A724C0C622006FCA1A /* EditTextFieldCell.swift in Sources */,
 				3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */,
 				3A71461424AA8907000FA3C3 /* User.swift in Sources */,
 				3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */,
@@ -730,6 +761,7 @@
 				3A91971824B89E1100B7066B /* MainSettingsViewController.swift in Sources */,
 				3A57CF8324AD0AFE00DCA057 /* PostCreateViewController.swift in Sources */,
 				3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */,
+				3A3CBE2F24C0BBE700B00D8D /* UserEditViewController.swift in Sources */,
 				3A7145E924AA8753000FA3C3 /* Alles_App.xcdatamodeld in Sources */,
 				3A71461224AA88FC000FA3C3 /* Post.swift in Sources */,
 				3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */,
@@ -1134,6 +1166,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		3AA108A824C0CBDF006FCA1A /* XCRemoteSwiftPackageReference "Hero" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HeroTransitions/Hero";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1161,6 +1201,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3A96F6A324AB404100482C5A /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		3AA108A924C0CBDF006FCA1A /* Hero */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AA108A824C0CBDF006FCA1A /* XCRemoteSwiftPackageReference "Hero" */;
+			productName = Hero;
 		};
 /* End XCSwiftPackageProductDependency section */
 

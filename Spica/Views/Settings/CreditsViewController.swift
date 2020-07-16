@@ -25,6 +25,12 @@ class CreditsViewController: UIViewController {
         tableView.rowHeight = CGFloat(70)
         tableView.register(CreditsCell.self, forCellReuseIdentifier: "creditsCell")
         view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top)
+            make.leading.equalTo(view.snp.leading)
+            make.bottom.equalTo(view.snp.bottom)
+            make.trailing.equalTo(view.snp.trailing)
+        }
         // credits.sort(by: {$0.name < $1.name})
         // Do any additional setup after loading the view.
     }

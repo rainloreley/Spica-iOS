@@ -11,7 +11,7 @@ import SPAlert
 import SwiftKeychainWrapper
 import UIKit
 
-class UserProfileViewController: UIViewController {
+class UserProfileViewController: UIViewController, UserEditDelegate {
     var user: User!
     var tableView: UITableView!
     var userPosts = [Post]() {
@@ -30,8 +30,18 @@ class UserProfileViewController: UIViewController {
 
     private var subscriptions = Set<AnyCancellable>()
 
+    func didSaveUser(user: UpdateUser) {
+        self.user.about = user.about
+        self.user.nickname = user.nickname
+        self.user.displayName = user.name
+        tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+        loadUser()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        hero.isEnabled = true
 
         view.backgroundColor = .systemBackground
 
@@ -50,7 +60,7 @@ class UserProfileViewController: UIViewController {
             rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
 
             if signedInUsername == user.username {
-                rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: nil))
+                rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
             }
 
             navigationItem.rightBarButtonItems = rightItems
@@ -81,11 +91,29 @@ class UserProfileViewController: UIViewController {
     }
 
     override func viewWillAppear(_: Bool) {
+        if #available(iOS 14.0, *) {
+            if signedInUsername == user.username {
+                if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+                    if let sidebar = globalSideBarController {
+                        sidebar.collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
+                    }
+                }
+            }
+        }
         #if targetEnvironment(macCatalyst)
             navigationController?.setNavigationBarHidden(true, animated: false)
         #else
             navigationController?.navigationBar.prefersLargeTitles = false
         #endif
+    }
+
+    @objc func openUserSettings() {
+        let vc = UserEditViewController()
+        vc.user = user
+        vc.delegate = self
+        // vc.heroModalAnimationType = .push(direction: .left)
+        navigationController?.pushViewController(vc, animated: true)
+        // present(vc, animated: true, completion: nil)
     }
 
     override func viewWillDisappear(_: Bool) {
@@ -466,7 +494,7 @@ extension UserProfileViewController: PostCellViewDelegate {
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
         vc.user = user
         vc.hidesBottomBarWhenPushed = true

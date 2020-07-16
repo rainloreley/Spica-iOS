@@ -11,14 +11,14 @@ import UIKit
 @available(iOS 14.0, *)
 class SidebarViewController: UIViewController, UICollectionViewDelegate, UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        splitViewController?.showDetailViewController(Section(rawValue: indexPath.section)!.viewController, sender: nil)
+        splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
     }
 
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        splitViewController?.showDetailViewController(Section(rawValue: indexPath.section)!.viewController, sender: nil)
+        splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
     }
 
-    var dataSource: UICollectionViewDiffableDataSource<Section, SidebarItem>!
+    var dataSource: UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>!
     var collectionView: UICollectionView!
 
     /* var tableView: UITableView!
@@ -73,16 +73,17 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
              self.latestDropID = item.id ?? "" */
         }
 
-        dataSource = UICollectionViewDiffableDataSource<Section, SidebarItem>(collectionView: collectionView) { (collectionView, indexPath, item) -> UICollectionViewCell? in
+        dataSource = UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>(collectionView: collectionView) { (collectionView, indexPath, item) -> UICollectionViewCell? in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
 
-        var snapshot = NSDiffableDataSourceSnapshot<Section, SidebarItem>()
+        var snapshot = NSDiffableDataSourceSnapshot<SidebarSection, SidebarItem>()
 
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems([Section.home.sidebar], toSection: .home)
-        snapshot.appendItems([Section.mentions.sidebar], toSection: .mentions)
-        snapshot.appendItems([Section.settings.sidebar], toSection: .settings)
+        snapshot.appendSections(SidebarSection.allCases)
+        snapshot.appendItems([SidebarSection.home.sidebar], toSection: .home)
+        snapshot.appendItems([SidebarSection.mentions.sidebar], toSection: .mentions)
+        snapshot.appendItems([SidebarSection.account.sidebar], toSection: .account)
+        snapshot.appendItems([SidebarSection.settings.sidebar], toSection: .settings)
 
         dataSource.apply(snapshot)
 
@@ -149,47 +150,6 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
          }
      } */
 
-    enum Section: Int, Hashable, CaseIterable {
-        case home = 0
-        case mentions = 1
-        case settings = 2
-
-        var sidebar: SidebarItem {
-            switch self {
-            case .home:
-                return SidebarItem(name: "Home", image: UIImage(systemName: "house")!)
-            case .mentions:
-                return SidebarItem(name: "Notifications", image: UIImage(systemName: "bell")!)
-            case .settings:
-                return SidebarItem(name: "Settings", image: UIImage(systemName: "gear")!)
-            }
-        }
-
-        var viewController: UIViewController {
-            switch self {
-            case .home:
-                let vc = TimelineViewController()
-                vc.navigationItem.hidesBackButton = true
-                return vc
-
-            case .mentions:
-                let vc = MentionsViewController()
-                vc.navigationItem.hidesBackButton = true
-                return vc
-            case .settings:
-                let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
-                let vc = storyboard.instantiateInitialViewController() as! UINavigationController
-                // (vc.viewControllers.first as! MainSettingsViewController).delegate = self
-                return vc
-            }
-        }
-    }
-
-    struct SidebarItem: Hashable {
-        let name: String
-        let image: UIImage
-    }
-
     /*
      // MARK: - Navigation
 
@@ -199,4 +159,54 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
          // Pass the selected object to the new view controller.
      }
      */
+}
+
+struct SidebarItem: Hashable {
+    let name: String
+    let image: UIImage
+}
+
+enum SidebarSection: Int, Hashable, CaseIterable {
+    case home = 0
+    case mentions = 1
+    case account = 2
+    case settings = 3
+
+    var sidebar: SidebarItem {
+        switch self {
+        case .home:
+            return SidebarItem(name: "Home", image: UIImage(systemName: "house")!)
+        case .mentions:
+            return SidebarItem(name: "Notifications", image: UIImage(systemName: "bell")!)
+        case .account:
+            return SidebarItem(name: "Account", image: UIImage(systemName: "person.circle")!)
+        case .settings:
+            return SidebarItem(name: "Settings", image: UIImage(systemName: "gear")!)
+        }
+    }
+
+    var viewController: UIViewController {
+        switch self {
+        case .home:
+            let vc = TimelineViewController()
+            vc.navigationItem.hidesBackButton = true
+            return vc
+
+        case .mentions:
+            let vc = MentionsViewController()
+            vc.navigationItem.hidesBackButton = true
+            return vc
+        case .account:
+            let vc = UserProfileViewController()
+            let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+            vc.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+            vc.hidesBottomBarWhenPushed = true
+            return vc
+        case .settings:
+            let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
+            let vc = storyboard.instantiateInitialViewController() as! UINavigationController
+            // (vc.viewControllers.first as! MainSettingsViewController).delegate = self
+            return vc
+        }
+    }
 }

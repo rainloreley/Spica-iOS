@@ -10,6 +10,8 @@ import UIKit
 
 @available(iOS 14.0, *)
 var globalSplitViewController: GlobalSplitViewController!
+@available(iOS 14.0, *)
+var globalSideBarController: SidebarViewController!
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
@@ -36,8 +38,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if #available(iOS 14.0, *) {
             globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
+            globalSideBarController = SidebarViewController()
             // splitViewController.presentsWithGesture = false
-            globalSplitViewController.setViewController(SidebarViewController(), for: .primary)
+            globalSplitViewController.setViewController(globalSideBarController, for: .primary)
             globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
             globalSplitViewController.setViewController(tabBar, for: .compact)
             globalSplitViewController.primaryBackgroundStyle = .sidebar

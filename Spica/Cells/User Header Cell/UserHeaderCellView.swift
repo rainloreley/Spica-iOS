@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 12.07.20.
 //
 
+import Hero
 import SwiftKeychainWrapper
 import UIKit
 
@@ -87,6 +88,7 @@ class UserHeaderCellView: UITableViewCell {
     var pfpImageView: UIImageView = {
         let imgView = UIImageView(frame: .zero)
         imgView.contentMode = .scaleAspectFit
+        imgView.hero.id = "userPfpImageView"
         imgView.clipsToBounds = true
         imgView.layer.cornerRadius = 50
         return imgView
@@ -96,6 +98,7 @@ class UserHeaderCellView: UITableViewCell {
         let label = UILabel(frame: .zero)
         label.text = "Display Name"
         label.textAlignment = .center
+        label.hero.id = "userDisplaynameLabel"
         label.font = .boldSystemFont(ofSize: 18)
         return label
     }()
@@ -103,6 +106,7 @@ class UserHeaderCellView: UITableViewCell {
     private var usernameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.text = "username"
+        label.hero.id = "userUsernameLabel"
         label.textAlignment = .center
         label.textColor = .secondaryLabel
         return label
@@ -155,6 +159,8 @@ class UserHeaderCellView: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        hero.isEnabled = true
 
         contentView.addSubview(pfpImageView)
         contentView.addSubview(displaynameLabel)

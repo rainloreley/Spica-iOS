@@ -27,6 +27,12 @@ class UsedLibrariesViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top)
+            make.leading.equalTo(view.snp.leading)
+            make.bottom.equalTo(view.snp.bottom)
+            make.trailing.equalTo(view.snp.trailing)
+        }
         libraries.sort(by: { $0.name < $1.name })
 
         // Do any additional setup after loading the view.

@@ -35,21 +35,23 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
          	navigationController?.setNavigationBarHidden(true, animated: false)
          } */
 
-        let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
-
         let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
 
         #if targetEnvironment(macCatalyst)
             navigationController?.navigationBar.prefersLargeTitles = true
             navigationController?.navigationItem.largeTitleDisplayMode = .always
         #else
-            navigationItem.rightBarButtonItems = [createPostBarButtonItem, accountBarButtonItem]
+            navigationItem.rightBarButtonItems = [createPostBarButtonItem]
         #endif
 
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
             //
         } else {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+
+            let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
+
+            navigationItem.rightBarButtonItems?.append(accountBarButtonItem)
         }
 
         tableView = UITableView(frame: view.bounds, style: .plain)
@@ -148,7 +150,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     @objc func openOwnProfileView() {
         let vc = UserProfileViewController()
         let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-        vc.user = User(id: "", username: username!, displayName: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        vc.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -162,6 +164,14 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        if #available(iOS 14.0, *) {
+            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+                if let sidebar = globalSideBarController {
+                    sidebar.collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
+                }
+            }
+        }
 
         navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -182,11 +192,15 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     @objc func loadFeed() {
         if posts.isEmpty { loadingHud.show(in: view) }
+
+        // DispatchQueue.global(qos: .utility).async {
+
         AllesAPI.loadFeed()
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
                 case let .failure(err):
+                    // DispatchQueue.main.async {
                     EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { [self] _, _ in
                         refreshControl.endRefreshing()
                         loadingHud.dismiss()
@@ -198,14 +212,18 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                             }
                         }
                     }
+                // }
                 default: break
                 }
-            } receiveValue: { [unowned self] in
-                posts = $0
-                refreshControl.endRefreshing()
-                loadingHud.dismiss()
-                loadImages()
+            } receiveValue: { posts in
+                // DispatchQueue.main.async {
+                self.posts = posts
+                self.refreshControl.endRefreshing()
+                self.loadingHud.dismiss()
+                self.loadImages()
+                // }
             }.store(in: &subscriptions)
+        // }
     }
 
     func loadImages() {
@@ -292,7 +310,7 @@ extension TimelineViewController: UITableViewDelegate {
 extension TimelineViewController: MainSettingsDelegate {
     func clickedMore(username: String) {
         let vc = UserProfileViewController()
-        vc.user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
+        vc.user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -367,7 +385,7 @@ extension TimelineViewController: PostCellViewDelegate {
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
         vc.user = user
         vc.hidesBottomBarWhenPushed = true

@@ -60,7 +60,7 @@ public struct Post: Hashable {
 
 extension Post {
     static let deleted = Post(id: "removed",
-                              author: User(id: "---", username: "---", displayName: "---", imageURL: URL(string: "https://avatar.alles.cx/u/000000000000000000000000000000000000000")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false),
+                              author: User(id: "---", username: "---", displayName: "---", nickname: "---", imageURL: URL(string: "https://avatar.alles.cx/u/000000000000000000000000000000000000000")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false),
                               date: Date(),
                               repliesCount: 0,
                               score: 0,
