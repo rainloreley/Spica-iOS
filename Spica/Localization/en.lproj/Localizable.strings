@@ -6,44 +6,47 @@
   
 */
 
-
 "HOME" = "Home";
 "NOTIFICATIONS" = "Notifications";
-"SETTINGS" = "Settings";
 "ACCOUNT" = "Account";
+"SETTINGS" = "Settings";
+
 "REPLY_SINGULAR" = "Reply";
 "REPLY_PLURAL" = "Replies";
 
+"LOADING_ACTION" = "Loading";
+
 "POST_NOUN" = "Post";
-"POST_ACTION" = "Post";
+"NEWPOST_PLACEHOLDER" = "What's on your mind?";
 
-"REPLY_NOUN" = "Reply";
-"REPLY_ACTION" = "Reply";
-
-"NEW_POST_PLACEHOLDER" = "What's on your mind?";
+"IMAGE" = "Image";
 "SELECT_ANOTHER_IMAGE" = "Select another image";
 "REMOVE" = "Remove";
-"CANCEL" = "Cancel";
-"IMAGE" = "Image";
-"SELECT_ACTION" = "Select an action";
+"CANCEL" = "CANCEL";
+
 "POST_SENT" = "Post sent!";
-"COPIED" = "Copied";
-"LOADING" = "Loading";
-"GO_TO_PROFILE" = "Go to profile";
-"SIGN_OUT" = "Sign out";
-"LEGAL_SPICA" = "Legal (Spica)";
-"LEGAL_ALLES" = "Legal (Alles)";
-"SOON" = "soon";
-"PRIVACY_POLICY" = "Privacy Policy";
-"TERMS_OF_SERVICE" = "Terms of Service";
-"USED_LIBRARIES" = "Used Libraries";
-"CREDITS" = "Credits";
-"VERSION" = "Version";
-"BUILD" = "Build";
-"LEGAL_FOOTER" = "© 2020, Adrian Baumgart, All rights reserved.";
+
 "FOLLOWER_SINGULAR" = "Follower";
 "FOLLOWER_PLURAL" = "Followers";
-"RUBIES_SINGULAR" = "Ruby";
-"RUBIES_PLURAL" = "Rubies";
 
-"PULL_TO_REFRESH" = "Pull to refresh";
+"RUBY_SINGULAR" = "Ruby";
+"RUBY_PLURAL" = "Rubies";
+
+"FOLLOW_ACTION" = "Follow";
+"FOLLOWING_ACTION" = "Following";
+
+"FOLLOWS_YOU" = "Follows you";
+
+"EDIT_PROFILE" = "Edit Profile"
+"NAME" = "Name";
+"NICKNAME" = "Nickname";
+"ABOUT" = "About";
+
+"SAVED_ACTION" = "Saved";
+
+"COPIED_ACTION" = "Copied";
+"DELETED_ACTION" = "Deleted";
+
+"DELETE_POST" = "Delete post";
+"DELETE_CONFIRMATION" = "Are you sure you want to delete this post?";
+"DELETE_ACTION" = "Delete";

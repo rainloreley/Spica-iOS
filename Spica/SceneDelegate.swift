@@ -28,11 +28,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let tabBar = UITabBarController()
 
-        let homeView = UINavigationController(rootViewController: TimelineViewController())
-        homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+		let homeView = UINavigationController(rootViewController: TimelineViewController())
+		homeView.tabBarItem = UITabBarItem(title: SLocale(.HOME), image: UIImage(systemName: "house"), tag: 0)
 
-        let mentionView = UINavigationController(rootViewController: MentionsViewController())
-        mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+		let mentionView = UINavigationController(rootViewController: MentionsViewController())
+		mentionView.tabBarItem = UITabBarItem(title: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell"), tag: 1)
 
         tabBar.viewControllers = [homeView, mentionView]
 

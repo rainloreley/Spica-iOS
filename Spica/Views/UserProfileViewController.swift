@@ -86,7 +86,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         tableView.addSubview(refreshControl)
 
         loadingHud = JGProgressHUD(style: .dark)
-        loadingHud.textLabel.text = "Loading"
+        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
     }
 
@@ -445,11 +445,11 @@ extension UserProfileViewController: PostCellViewDelegate {
     func copyPostID(id: String) {
         let pasteboard = UIPasteboard.general
         pasteboard.string = id
-        SPAlert.present(title: "Copied", preset: .done)
+        SPAlert.present(title: SLocale(.COPIED_ACTION), preset: .done)
     }
 
     func deletePost(id: String) {
-        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
+		EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
             if int == 1 {
                 AllesAPI.default.deletePost(id: id)
                     .receive(on: RunLoop.main)
@@ -474,6 +474,7 @@ extension UserProfileViewController: PostCellViewDelegate {
                         default: break
                         }
                     } receiveValue: { _ in
+						SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
                         self.loadPosts()
                     }.store(in: &subscriptions)
             }

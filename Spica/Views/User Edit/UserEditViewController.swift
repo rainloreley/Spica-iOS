@@ -36,7 +36,7 @@ class UserEditViewController: UIViewController {
         hero.isEnabled = true
 
         loadingHud = JGProgressHUD(style: .dark)
-        loadingHud.textLabel.text = "Loading"
+		loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up.on.square"), style: .plain, target: self, action: #selector(saveData))
@@ -64,7 +64,7 @@ class UserEditViewController: UIViewController {
     }
 
     override func viewWillAppear(_: Bool) {
-        navigationItem.title = "Edit Profile"
+		navigationItem.title = SLocale(.EDIT_PROFILE)
         navigationController?.navigationBar.prefersLargeTitles = false
     }
 
@@ -93,7 +93,7 @@ class UserEditViewController: UIViewController {
                 }
             } receiveValue: { [unowned self] in
                 navigationController?.popViewController(animated: true)
-                SPAlert.present(title: "Saved", preset: .done)
+				SPAlert.present(title: SLocale(.SAVED_ACTION), preset: .done)
                 delegate.didSaveUser(user: $0)
             }
             .store(in: &subscriptions)
@@ -195,9 +195,9 @@ extension UserEditViewController: UITableViewDelegate, UITableViewDataSource {
         var title: String {
             switch self {
             case .user: return ""
-            case .name: return "Name"
-            case .nickname: return "Nickname"
-            case .about: return "About"
+				case .name: return SLocale(.NAME)
+				case .nickname: return SLocale(.NICKNAME)
+				case .about: return SLocale(.ABOUT)
             default: return ""
             }
         }

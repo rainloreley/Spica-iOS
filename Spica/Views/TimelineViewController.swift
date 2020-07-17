@@ -27,7 +27,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Home"
+		navigationItem.title = SLocale(.HOME)
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
 
@@ -70,7 +70,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         tableView.addSubview(refreshControl)
 
         loadingHud = JGProgressHUD(style: .dark)
-        loadingHud.textLabel.text = "Loading"
+		loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
 
         createPostBtn = UIButton(type: .system)
@@ -336,11 +336,11 @@ extension TimelineViewController: PostCellViewDelegate {
     func copyPostID(id: String) {
         let pasteboard = UIPasteboard.general
         pasteboard.string = id
-        SPAlert.present(title: "Copied", preset: .done)
+		SPAlert.present(title: SLocale(.COPIED_ACTION), preset: .done)
     }
 
     func deletePost(id: String) {
-        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, index in
+		EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, index in
             guard index == 1 else { return }
 
             AllesAPI.default.deletePost(id: id)
@@ -366,6 +366,7 @@ extension TimelineViewController: PostCellViewDelegate {
                     default: break
                     }
                 } receiveValue: { _ in
+					SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
                     self.loadFeed()
                 }.store(in: &subscriptions)
         }

@@ -175,13 +175,13 @@ enum SidebarSection: Int, Hashable, CaseIterable {
     var sidebar: SidebarItem {
         switch self {
         case .home:
-            return SidebarItem(name: "Home", image: UIImage(systemName: "house")!)
+			return SidebarItem(name: SLocale(.HOME), image: UIImage(systemName: "house")!)
         case .mentions:
-            return SidebarItem(name: "Notifications", image: UIImage(systemName: "bell")!)
+			return SidebarItem(name: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell")!)
         case .account:
-            return SidebarItem(name: "Account", image: UIImage(systemName: "person.circle")!)
+			return SidebarItem(name: SLocale(.ACCOUNT), image: UIImage(systemName: "person.circle")!)
         case .settings:
-            return SidebarItem(name: "Settings", image: UIImage(systemName: "gear")!)
+			return SidebarItem(name: SLocale(.SETTINGS), image: UIImage(systemName: "gear")!)
         }
     }
 
@@ -198,6 +198,7 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             return vc
         case .account:
             let vc = UserProfileViewController()
+			vc.navigationItem.hidesBackButton = true
             let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
             vc.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
             vc.hidesBottomBarWhenPushed = true
@@ -205,6 +206,7 @@ enum SidebarSection: Int, Hashable, CaseIterable {
         case .settings:
             let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
             let vc = storyboard.instantiateInitialViewController() as! UINavigationController
+			vc.navigationItem.hidesBackButton = true
             // (vc.viewControllers.first as! MainSettingsViewController).delegate = self
             return vc
         }

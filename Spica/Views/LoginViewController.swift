@@ -46,7 +46,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(usernameField)
 
         loadingHud = JGProgressHUD(style: .dark)
-        loadingHud.textLabel.text = "Loading"
+        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)	
         loadingHud.interactionType = .blockAllTouches
 
         usernameField.snp.makeConstraints { make in
@@ -174,10 +174,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         let tabBar = UITabBarController()
 
                         let homeView = UINavigationController(rootViewController: TimelineViewController())
-                        homeView.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 0)
+						homeView.tabBarItem = UITabBarItem(title: SLocale(.HOME), image: UIImage(systemName: "house"), tag: 0)
 
                         let mentionView = UINavigationController(rootViewController: MentionsViewController())
-                        mentionView.tabBarItem = UITabBarItem(title: "Notifications", image: UIImage(systemName: "bell"), tag: 1)
+						mentionView.tabBarItem = UITabBarItem(title: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell"), tag: 1)
 
                         tabBar.viewControllers = [homeView, mentionView]
 

@@ -35,7 +35,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-        navigationItem.title = "Post"
+		navigationItem.title = SLocale(.POST_NOUN)
         navigationController?.navigationBar.prefersLargeTitles = false
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
@@ -58,7 +58,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         tableView.addSubview(refreshControl)
 
         loadingHud = JGProgressHUD(style: .dark)
-        loadingHud.textLabel.text = "Loading"
+		loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
 
         // Do any additional setup after loading the view.
@@ -400,11 +400,11 @@ extension PostDetailViewController: PostCellViewDelegate {
     func copyPostID(id: String) {
         let pasteboard = UIPasteboard.general
         pasteboard.string = id
-        SPAlert.present(title: "Copied", preset: .done)
+		SPAlert.present(title: SLocale(.COPIED_ACTION), preset: .done)
     }
 
     func deletePost(id: String) {
-        EZAlertController.alert("Delete post", message: "Are you sure you want to delete this post?", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
+		EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
             if int == 1 {
                 AllesAPI.default.deletePost(id: id)
                     .receive(on: RunLoop.main)
@@ -430,7 +430,7 @@ extension PostDetailViewController: PostCellViewDelegate {
                         }
                     } receiveValue: { _ in
                         self.navigationController?.popViewController(animated: true)
-                        SPAlert.present(title: "Deleted", preset: .done)
+						SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
                         // self.loadPostDetail()
                     }.store(in: &subscriptions)
             }

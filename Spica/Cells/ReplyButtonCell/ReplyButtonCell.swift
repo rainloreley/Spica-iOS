@@ -16,7 +16,7 @@ class ReplyButtonCell: UITableViewCell {
     var replyBtn: UIButton! = {
         var button = UIButton(type: .system)
         button.backgroundColor = UIColor(named: "PostButtonColor")
-        button.setTitle("Reply", for: .normal)
+		button.setTitle(SLocale(.REPLY_ACTION), for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 12
         button.titleLabel?.font = .boldSystemFont(ofSize: 17)
