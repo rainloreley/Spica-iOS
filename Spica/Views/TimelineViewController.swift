@@ -17,7 +17,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     var createPostBtn: UIButton!
     var posts = [Post]() {
         didSet { applyChanges() }
-    }
+ }
 
     var refreshControl = UIRefreshControl()
 
@@ -28,6 +28,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
 		navigationItem.title = SLocale(.HOME)
+		
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
 

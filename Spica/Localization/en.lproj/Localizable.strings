@@ -37,7 +37,7 @@
 
 "FOLLOWS_YOU" = "Follows you";
 
-"EDIT_PROFILE" = "Edit Profile"
+"EDIT_PROFILE" = "Edit Profile";
 "NAME" = "Name";
 "NICKNAME" = "Nickname";
 "ABOUT" = "About";
@@ -50,3 +50,22 @@
 "DELETE_POST" = "Delete post";
 "DELETE_CONFIRMATION" = "Are you sure you want to delete this post?";
 "DELETE_ACTION" = "Delete";
+
+
+"VERSION" = "Version";
+"BUILD" = "Build";
+
+"GO_TO_PROFILE" = "Go to Profile";
+"SIGN_OUT" = "Sign out";
+
+"PRIVACY_POLICY" = "Privacy Policy";
+"TERMS_OF_SERVICE" = "Terms of Service";
+"WEBSITE" = "Website";
+
+"USED_LIBRARIES" = "Used Libraries";
+"CREDITS" = "Credits";
+
+"OTHER" = "Other";
+
+"SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. All rights reserved.";
+

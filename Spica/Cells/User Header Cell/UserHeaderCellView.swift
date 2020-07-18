@@ -135,7 +135,7 @@ class UserHeaderCellView: UITableViewCell {
 
     private var rubiesLabel: UILabel = {
         let label = UILabel(frame: .zero)
-		label.text = SLocale(.RUBIES_PLURAL)
+		label.text = SLocale(.RUBY_PLURAL)
         label.textAlignment = .left
         return label
     }()

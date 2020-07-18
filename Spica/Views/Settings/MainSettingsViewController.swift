@@ -17,9 +17,42 @@ class MainSettingsViewController: UITableViewController {
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var versionBuildLabel: UILabel!
 
+	// Outlets for Localization
+	@IBOutlet weak var goToProfileButton: UIButton!
+	@IBOutlet weak var SignOutButton: UIButton!
+	
+	@IBOutlet weak var spicaPrivacyButton: UIButton!
+	@IBOutlet weak var spicaWebsiteButton: UIButton!
+	
+	@IBOutlet weak var allesPrivacyButton: UIButton!
+	@IBOutlet weak var allesTOSButton: UIButton!
+	@IBOutlet weak var allesWebsiteButton: UIButton!
+	
+	@IBOutlet weak var usedLibrariesButton: UIButton!
+	@IBOutlet weak var creditsButton: UIButton!
+	
+	@IBOutlet weak var copyrightLabel: UILabel!
+	
     var username = ""
 
     var delegate: MainSettingsDelegate!
+	
+	func localizeView() {
+		goToProfileButton.setTitle(SLocale(.GO_TO_PROFILE), for: .normal)
+		SignOutButton.setTitle(SLocale(.SIGN_OUT), for: .normal)
+		
+		spicaPrivacyButton.setTitle(SLocale(.PRIVACY_POLICY), for: .normal)
+		spicaWebsiteButton.setTitle(SLocale(.WEBSITE), for: .normal)
+		
+		allesPrivacyButton.setTitle(SLocale(.PRIVACY_POLICY), for: .normal)
+		allesTOSButton.setTitle(SLocale(.TERMS_OF_SERVICE), for: .normal)
+		allesWebsiteButton.setTitle(SLocale(.WEBSITE), for: .normal)
+		
+		usedLibrariesButton.setTitle(SLocale(.USED_LIBRARIES), for: .normal)
+		creditsButton.setTitle(SLocale(.CREDITS), for: .normal)
+		
+		copyrightLabel.text = SLocale(.SPICA_COPYRIGHT)
+	}
 
     @IBAction func profileMore(_: Any) {
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
@@ -90,6 +123,9 @@ class MainSettingsViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		self.navigationItem.title = SLocale(.SETTINGS)
+		//self.tableView.delegate = self
+		localizeView()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -128,6 +164,23 @@ class MainSettingsViewController: UITableViewController {
         }
     }
 
+	
+	override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+		switch section {
+		case 0:
+			return SLocale(.ACCOUNT)
+		case 1:
+			return "Spica"
+		case 2:
+			return "Alles"
+		case 3:
+			return SLocale(.OTHER)
+		case 4:
+			return ""
+		default:
+			return ""
+		}
+	}
     override func viewDidAppear(_: Bool) {
         #if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
@@ -145,6 +198,7 @@ class MainSettingsViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         return 5
     }
+	
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows

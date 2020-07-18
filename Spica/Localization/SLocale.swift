@@ -7,9 +7,7 @@
 
 import UIKit
 
-public func SLocale(_ key: LocalizableKeys) -> NSLocalizedString {
+
+func SLocale(_ key: LocalizableKeys) -> String {
 	return NSLocalizedString(key.rawValue, comment: key.rawValue)
 }
-
-
-

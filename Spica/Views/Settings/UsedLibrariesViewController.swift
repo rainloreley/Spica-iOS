@@ -22,7 +22,7 @@ class UsedLibrariesViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Libraries"
+		navigationItem.title = SLocale(.USED_LIBRARIES)
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
         tableView.dataSource = self

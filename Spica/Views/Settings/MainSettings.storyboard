@@ -149,7 +149,7 @@
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <state key="normal" title="Website"/>
                                                     <connections>
-                                                        <action selector="spicaWebsite:" destination="sv3-Zw-cNs" eventType="touchUpInside" id="F1m-sb-Q1h"/>
+                                                        <action selector="spicaWebsite:" destination="sv3-Zw-cNs" eventType="touchUpInside" id="Rrj-Qj-Rls"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -347,6 +347,16 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Settings" id="PSY-UN-Mrl"/>
                     <connections>
+                        <outlet property="SignOutButton" destination="vJM-ry-Grd" id="1fh-VD-7Ib"/>
+                        <outlet property="allesPrivacyButton" destination="5Yn-4i-ED1" id="H0A-IQ-xD5"/>
+                        <outlet property="allesTOSButton" destination="Ppo-hm-iII" id="Jz0-p8-ouz"/>
+                        <outlet property="allesWebsiteButton" destination="Iez-I5-iLp" id="QIL-ZO-q2A"/>
+                        <outlet property="copyrightLabel" destination="OvF-Bn-Tew" id="pff-CS-AJ3"/>
+                        <outlet property="creditsButton" destination="j8k-jg-OJ8" id="Ndi-95-yuP"/>
+                        <outlet property="goToProfileButton" destination="tnh-bo-inm" id="MBh-fO-RkZ"/>
+                        <outlet property="spicaPrivacyButton" destination="Oy4-xm-Dzg" id="nOI-MJ-CRR"/>
+                        <outlet property="spicaWebsiteButton" destination="84R-QP-t4i" id="4SY-hK-Non"/>
+                        <outlet property="usedLibrariesButton" destination="6Se-L2-3YP" id="kxn-95-YaB"/>
                         <outlet property="userPfpImageView" destination="gIJ-HF-6XP" id="XdG-WZ-tLb"/>
                         <outlet property="usernameLabel" destination="im2-ye-Kme" id="9mP-oT-gHD"/>
                         <outlet property="versionBuildLabel" destination="a0f-Lx-DBN" id="Zg2-hN-O3o"/>

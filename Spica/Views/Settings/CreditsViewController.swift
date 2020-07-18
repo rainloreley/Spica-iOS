@@ -18,7 +18,7 @@ class CreditsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Credits"
+		navigationItem.title = SLocale(.CREDITS)
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
         tableView.dataSource = self
