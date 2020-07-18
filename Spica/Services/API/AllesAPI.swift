@@ -46,13 +46,15 @@ public class AllesAPI {
                                     }.store(in: &subscriptions)
 
                             } else {
-                                promise(.failure(.init(message: "The API didn't return a token, please try again", error: .unknown, actionParameter: nil, action: nil)))
+                                promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_noLoginTokenReturned")))
                             }
                         } else {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -62,7 +64,9 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -90,7 +94,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -100,7 +106,9 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -139,7 +147,9 @@ public class AllesAPI {
                                     let newUser = User(responseJSON, isOnline: isOnline)
                                     promise(.success(newUser))
                                 case let .failure(err):
-                                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                                    apiError.message.append("\nError: \(err.errorDescription!)")
+                                    promise(.failure(apiError))
                                 }
                             }
                             // }
@@ -147,7 +157,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -157,7 +169,9 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -190,7 +204,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -200,7 +216,9 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -230,7 +248,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -240,7 +260,9 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -279,7 +301,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -289,7 +313,9 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -332,7 +358,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -342,7 +370,9 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -368,7 +398,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -378,7 +410,9 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -404,7 +438,9 @@ public class AllesAPI {
                                 if response.response!.statusCode == 401 {
                                     promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                                 } else {
-                                    promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                    apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                    promise(.failure(apiError))
                                 }
                             }
 
@@ -414,11 +450,13 @@ public class AllesAPI {
                         }
 
                     case let .failure(err):
-                        promise(.failure(.init(message: "An unknown error occurred: \(err.errorDescription!)", error: .unknown, actionParameter: nil, action: nil)))
+                        var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                        apiError.message.append("\nError: \(err.errorDescription!)")
+                        promise(.failure(apiError))
                     }
                 }
             } else {
-                promise(.failure(AllesAPIErrorMessage(message: "The specified value is not allowed", error: .unknown, actionParameter: nil, action: nil)))
+                promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_valueNotAllowed")))
             }
         }
     }
@@ -442,7 +480,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -452,8 +492,8 @@ public class AllesAPI {
                     }
 
                 case .failure:
-
-                    promise(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    promise(.failure(apiError))
                 }
             }
         }
@@ -482,7 +522,9 @@ public class AllesAPI {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
                             } else {
-                                promise(.failure(.init(message: "The API returned an invalid status code (Code: \(response.response!.statusCode)). Please try again.", error: .unknown, actionParameter: nil, action: nil)))
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
                             }
                         }
 
@@ -492,8 +534,8 @@ public class AllesAPI {
                     }
 
                 case .failure:
-
-                    promise(.failure(.init(message: "An unknown error occurred", error: .unknown, actionParameter: nil, action: nil)))
+                    let apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    promise(.failure(apiError))
                 }
             }
         }

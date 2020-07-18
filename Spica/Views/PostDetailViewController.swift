@@ -35,7 +35,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-		navigationItem.title = SLocale(.POST_NOUN)
+        navigationItem.title = SLocale(.POST_NOUN)
         navigationController?.navigationBar.prefersLargeTitles = false
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
@@ -58,7 +58,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         tableView.addSubview(refreshControl)
 
         loadingHud = JGProgressHUD(style: .dark)
-		loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
+        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
 
         // Do any additional setup after loading the view.
@@ -96,7 +96,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                 switch $0 {
                 case let .failure(err):
 
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                         self.refreshControl.endRefreshing()
                         self.loadingHud.dismiss()
                         if err.action != nil, err.actionParameter != nil {
@@ -238,7 +238,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                         if err.action != nil, err.actionParameter != nil {
                             if err.action == AllesAPIErrorAction.navigate {
                                 if err.actionParameter == "login" {
@@ -400,18 +400,18 @@ extension PostDetailViewController: PostCellViewDelegate {
     func copyPostID(id: String) {
         let pasteboard = UIPasteboard.general
         pasteboard.string = id
-		SPAlert.present(title: SLocale(.COPIED_ACTION), preset: .done)
+        SPAlert.present(title: SLocale(.COPIED_ACTION), preset: .done)
     }
 
     func deletePost(id: String) {
-		EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
+        EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
             if int == 1 {
                 AllesAPI.default.deletePost(id: id)
                     .receive(on: RunLoop.main)
                     .sink {
                         switch $0 {
                         case let .failure(err):
-                            EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                                 if self.refreshControl.isRefreshing {
                                     self.refreshControl.endRefreshing()
                                 }
@@ -430,7 +430,7 @@ extension PostDetailViewController: PostCellViewDelegate {
                         }
                     } receiveValue: { _ in
                         self.navigationController?.popViewController(animated: true)
-						SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
+                        SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
                         // self.loadPostDetail()
                     }.store(in: &subscriptions)
             }

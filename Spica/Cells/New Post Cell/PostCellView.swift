@@ -108,7 +108,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             contentTextView.attributedText = attributedText
 
             dateLabel.text = globalDateFormatter.string(from: post!.date)
-			replyCountLabel.text = countString(number: post!.repliesCount, singleText: SLocale(.REPLY_SINGULAR), multiText: SLocale(.REPLY_PLURAL))
+            replyCountLabel.text = countString(number: post!.repliesCount, singleText: SLocale(.REPLY_SINGULAR), multiText: SLocale(.REPLY_PLURAL))
             if post?.image != nil {
                 mediaImageView.image = post?.image!
                 mediaImageView.snp.remakeConstraints { make in

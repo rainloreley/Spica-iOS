@@ -52,6 +52,10 @@ public enum AllesAPIError: Error {
     case validation_tooLong
 
     case spica_authTokenMissing
+    case spica_noLoginTokenReturned
+    case spica_invalidStatusCode
+    case spica_unknownError
+    case spica_valueNotAllowed
 
     case unknown
 }

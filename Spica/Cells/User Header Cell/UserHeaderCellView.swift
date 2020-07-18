@@ -41,15 +41,15 @@ class UserHeaderCellView: UITableViewCell {
             }
 
             usernameLabel.text = "@\(user.username)"
-			followsYouLabel.text = user.followsMe ? SLocale(.FOLLOWS_YOU) : ""
+            followsYouLabel.text = user.followsMe ? SLocale(.FOLLOWS_YOU) : ""
 
             let boldFont: UIFont = UIFont.boldSystemFont(ofSize: 16)
             let notBoldFont: UIFont = UIFont.systemFont(ofSize: 16)
-			let attrRubies = NSMutableAttributedString(string: countString(number: user.rubies, singleText: SLocale(.RUBY_SINGULAR), multiText: SLocale(.RUBY_PLURAL)), attributes: [.font: notBoldFont])
+            let attrRubies = NSMutableAttributedString(string: countString(number: user.rubies, singleText: SLocale(.RUBY_SINGULAR), multiText: SLocale(.RUBY_PLURAL)), attributes: [.font: notBoldFont])
             attrRubies.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.rubies).count))
             rubiesLabel.attributedText = attrRubies
 
-			let attrFollowers = NSMutableAttributedString(string: countString(number: user.followers, singleText: SLocale(.FOLLOWER_SINGULAR), multiText: SLocale(.FOLLOWER_PLURAL)), attributes: [.font: notBoldFont])
+            let attrFollowers = NSMutableAttributedString(string: countString(number: user.followers, singleText: SLocale(.FOLLOWER_SINGULAR), multiText: SLocale(.FOLLOWER_PLURAL)), attributes: [.font: notBoldFont])
             attrFollowers.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.followers).count))
             followerCountLabel.attributedText = attrFollowers
             aboutTextView.text = user.about
@@ -59,12 +59,12 @@ class UserHeaderCellView: UITableViewCell {
             if signedInUsername != user.username {
                 followButton.isEnabled = true
                 if user.isFollowing {
-					followButton.setTitle(SLocale(.FOLLOWING_ACTION), for: .normal)
+                    followButton.setTitle(SLocale(.FOLLOWING_ACTION), for: .normal)
                     followButton.backgroundColor = .systemBlue
                     followButton.setTitleColor(.white, for: .normal)
                     followButton.layer.cornerRadius = 12
                 } else {
-					followButton.setTitle(SLocale(.FOLLOW_ACTION), for: .normal)
+                    followButton.setTitle(SLocale(.FOLLOW_ACTION), for: .normal)
                     followButton.backgroundColor = .white
                     followButton.setTitleColor(.systemBlue, for: .normal)
                     followButton.layer.cornerRadius = 12
@@ -128,14 +128,14 @@ class UserHeaderCellView: UITableViewCell {
 
     private var followerCountLabel: UILabel = {
         let label = UILabel(frame: .zero)
-		label.text = SLocale(.FOLLOWER_SINGULAR)
+        label.text = SLocale(.FOLLOWER_SINGULAR)
         label.textAlignment = .right
         return label
     }()
 
     private var rubiesLabel: UILabel = {
         let label = UILabel(frame: .zero)
-		label.text = SLocale(.RUBY_PLURAL)
+        label.text = SLocale(.RUBY_PLURAL)
         label.textAlignment = .left
         return label
     }()

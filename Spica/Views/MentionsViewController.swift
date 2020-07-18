@@ -28,7 +28,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-		navigationItem.title = SLocale(.NOTIFICATIONS)
+        navigationItem.title = SLocale(.NOTIFICATIONS)
         navigationController?.navigationBar.prefersLargeTitles = true
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
@@ -49,7 +49,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         tableView.addSubview(refreshControl)
 
         loadingHud = JGProgressHUD(style: .dark)
-		loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
+        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
     }
 
@@ -133,7 +133,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                         if self.refreshControl.isRefreshing {
                             self.refreshControl.endRefreshing()
                         }
@@ -204,7 +204,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                         if err.action != nil, err.actionParameter != nil {
                             if err.action == AllesAPIErrorAction.navigate {
                                 if err.actionParameter == "login" {
@@ -266,14 +266,14 @@ extension MentionsViewController: PostCellViewDelegate {
     }
 
     func deletePost(id: String) {
-		EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
+        EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, int in
             if int == 1 {
                 AllesAPI.default.deletePost(id: id)
                     .receive(on: RunLoop.main)
                     .sink {
                         switch $0 {
                         case let .failure(err):
-                            EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                                 if self.refreshControl.isRefreshing {
                                     self.refreshControl.endRefreshing()
                                 }
@@ -291,7 +291,7 @@ extension MentionsViewController: PostCellViewDelegate {
                         default: break
                         }
                     } receiveValue: { _ in
-						SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
+                        SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
                         self.loadMentions()
                     }.store(in: &subscriptions)
             }

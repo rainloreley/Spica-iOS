@@ -35,7 +35,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         /* NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
          NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil) */
-        navigationItem.title = "Alles Login"
+        navigationItem.title = SLocale(.ALLES_LOGIN)
         navigationController?.navigationBar.prefersLargeTitles = true
 
         usernameField = UITextField(frame: .zero)
@@ -46,7 +46,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(usernameField)
 
         loadingHud = JGProgressHUD(style: .dark)
-        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)	
+        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockAllTouches
 
         usernameField.snp.makeConstraints { make in
@@ -57,7 +57,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
 
         usernameLabel = UILabel(frame: .zero)
-        usernameLabel.text = "Username:"
+        usernameLabel.text = "\(SLocale(.USERNAME)):"
         view.addSubview(usernameLabel)
 
         usernameLabel.snp.makeConstraints { make in
@@ -66,7 +66,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
 
         passwordLabel = UILabel(frame: .zero)
-        passwordLabel.text = "Password:"
+        passwordLabel.text = "\(SLocale(.PASSWORD)):"
         view.addSubview(passwordLabel)
 
         passwordLabel.snp.makeConstraints { make in
@@ -94,7 +94,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         signInButton = UIButton(type: .system)
         signInButton.backgroundColor = UIColor(named: "PostButtonColor")
-        signInButton.setTitle("Sign in", for: .normal)
+        signInButton.setTitle(SLocale(.SIGN_IN), for: .normal)
         signInButton.setTitleColor(.white, for: .normal)
         signInButton.layer.cornerRadius = 12
         signInButton.addTarget(self, action: #selector(signIn), for: .touchUpInside)
@@ -109,7 +109,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
 
         createAccountButton = UIButton(type: .system)
-        createAccountButton.setTitle("No account? Create one!", for: .normal)
+        createAccountButton.setTitle(SLocale(.NO_ACCOUNT), for: .normal)
         createAccountButton.addTarget(self, action: #selector(openCreateAccount), for: .touchUpInside)
         view.addSubview(createAccountButton)
 
@@ -152,7 +152,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     case let .failure(err):
                         DispatchQueue.main.async {
                             self.loadingHud.dismiss()
-                            EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                                 if err.action != nil, err.actionParameter != nil {
                                     /* if apiError.action == AllesAPIErrorAction.navigate  {
                                      if apiError.actionParameter == "login" {
@@ -174,10 +174,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                         let tabBar = UITabBarController()
 
                         let homeView = UINavigationController(rootViewController: TimelineViewController())
-						homeView.tabBarItem = UITabBarItem(title: SLocale(.HOME), image: UIImage(systemName: "house"), tag: 0)
+                        homeView.tabBarItem = UITabBarItem(title: SLocale(.HOME), image: UIImage(systemName: "house"), tag: 0)
 
                         let mentionView = UINavigationController(rootViewController: MentionsViewController())
-						mentionView.tabBarItem = UITabBarItem(title: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell"), tag: 1)
+                        mentionView.tabBarItem = UITabBarItem(title: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell"), tag: 1)
 
                         tabBar.viewControllers = [homeView, mentionView]
 
@@ -209,6 +209,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     }
                 }.store(in: &subscriptions)
         } else {
+            loadingHud.dismiss()
             if usernameField.text!.isEmpty {
                 usernameField.layer.borderColor = UIColor.systemRed.cgColor
                 usernameField.layer.borderWidth = 1.0

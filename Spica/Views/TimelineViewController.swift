@@ -17,7 +17,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     var createPostBtn: UIButton!
     var posts = [Post]() {
         didSet { applyChanges() }
- }
+    }
 
     var refreshControl = UIRefreshControl()
 
@@ -27,8 +27,8 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		navigationItem.title = SLocale(.HOME)
-		
+        navigationItem.title = SLocale(.HOME)
+
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
 
@@ -71,7 +71,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         tableView.addSubview(refreshControl)
 
         loadingHud = JGProgressHUD(style: .dark)
-		loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
+        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
 
         createPostBtn = UIButton(type: .system)
@@ -169,7 +169,9 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         if #available(iOS 14.0, *) {
             if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                 if let sidebar = globalSideBarController {
-                    sidebar.collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
+                    if let collectionView = sidebar.collectionView {
+                        collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
+                    }
                 }
             }
         }
@@ -179,6 +181,17 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+
+        if #available(iOS 14.0, *) {
+            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+                if let sidebar = globalSideBarController {
+                    if let collectionView = sidebar.collectionView {
+                        collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
+                    }
+                }
+            }
+        }
+
         #if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
@@ -202,7 +215,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 switch $0 {
                 case let .failure(err):
                     // DispatchQueue.main.async {
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { [self] _, _ in
+                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { [self] _, _ in
                         refreshControl.endRefreshing()
                         loadingHud.dismiss()
                         if err.action != nil, err.actionParameter != nil {
@@ -270,7 +283,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                         if err.action != nil, err.actionParameter != nil {
                             if err.action == AllesAPIErrorAction.navigate {
                                 if err.actionParameter == "login" {
@@ -337,11 +350,11 @@ extension TimelineViewController: PostCellViewDelegate {
     func copyPostID(id: String) {
         let pasteboard = UIPasteboard.general
         pasteboard.string = id
-		SPAlert.present(title: SLocale(.COPIED_ACTION), preset: .done)
+        SPAlert.present(title: SLocale(.COPIED_ACTION), preset: .done)
     }
 
     func deletePost(id: String) {
-		EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, index in
+        EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, index in
             guard index == 1 else { return }
 
             AllesAPI.default.deletePost(id: id)
@@ -349,7 +362,7 @@ extension TimelineViewController: PostCellViewDelegate {
                 .sink {
                     switch $0 {
                     case let .failure(err):
-                        EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                        EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                             if self.refreshControl.isRefreshing {
                                 self.refreshControl.endRefreshing()
                             }
@@ -367,7 +380,7 @@ extension TimelineViewController: PostCellViewDelegate {
                     default: break
                     }
                 } receiveValue: { _ in
-					SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
+                    SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
                     self.loadFeed()
                 }.store(in: &subscriptions)
         }

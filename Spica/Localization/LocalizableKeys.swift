@@ -8,73 +8,103 @@
 import Foundation
 
 enum LocalizableKeys: String {
+
 	case HOME = "HOME"
 	case NOTIFICATIONS = "NOTIFICATIONS"
 	case ACCOUNT = "ACCOUNT"
 	case SETTINGS = "SETTINGS"
-	
 	case REPLY_SINGULAR = "REPLY_SINGULAR"
 	case REPLY_PLURAL = "REPLY_PLURAL"
-	
 	case LOADING_ACTION = "LOADING_ACTION"
-	
 	case POST_NOUN = "POST_NOUN"
 	case NEWPOST_PLACEHOLDER = "NEWPOST_PLACEHOLDER"
-	
-	case IMAGE = "Image"
-	
+	case IMAGE = "IMAGE"
 	case SELECT_ANOTHER_IMAGE = "SELECT_ANOTHER_IMAGE"
-	
 	case REMOVE = "REMOVE"
-	
-	case CANCEL = "Cancel"
-	
+	case CANCEL = "CANCEL"
 	case POST_SENT = "POST_SENT"
-	
 	case REPLY_ACTION = "REPLY_ACTION"
-	
 	case FOLLOWER_SINGULAR = "FOLLOWER_SINGULAR"
 	case FOLLOWER_PLURAL = "FOLLOWER_PLURAL"
-	
 	case RUBY_SINGULAR = "RUBY_SINGULAR"
-	
 	case RUBY_PLURAL = "RUBY_PLURAL"
-	
 	case FOLLOW_ACTION = "FOLLOW_ACTION"
-	
 	case FOLLOWING_ACTION = "FOLLOWING_ACTION"
-	
 	case FOLLOWS_YOU = "FOLLOWS_YOU"
-	
 	case EDIT_PROFILE = "EDIT_PROFILE"
 	case NAME = "NAME"
 	case NICKNAME = "NICKNAME"
 	case ABOUT = "ABOUT"
-	
 	case SAVED_ACTION = "SAVED_ACTION"
-	
 	case COPIED_ACTION = "COPIED_ACTION"
 	case DELETED_ACTION = "DELETED_ACTION"
-	
 	case DELETE_POST = "DELETE_POST"
 	case DELETE_CONFIRMATION = "DELETE_CONFIRMATION"
 	case DELETE_ACTION = "DELETE_ACTION"
-	
 	case VERSION = "VERSION"
 	case BUILD = "BUILD"
-	
 	case GO_TO_PROFILE = "GO_TO_PROFILE"
 	case SIGN_OUT = "SIGN_OUT"
-	
 	case PRIVACY_POLICY = "PRIVACY_POLICY"
 	case TERMS_OF_SERVICE = "TERMS_OF_SERVICE"
 	case WEBSITE = "WEBSITE"
-	
 	case USED_LIBRARIES = "USED_LIBRARIES"
 	case CREDITS = "CREDITS"
-	
 	case OTHER = "OTHER"
-	
 	case SPICA_COPYRIGHT = "SPICA_COPYRIGHT"
-	
+	case ALLES_LOGIN = "ALLES_LOGIN"
+	case USERNAME = "USERNAME"
+	case PASSWORD = "PASSWORD"
+	case SIGN_IN = "SIGN_IN"
+	case NO_ACCOUNT = "NO_ACCOUNT"
+	case ERROR = "ERROR"
+	case error_alreadySet = "error.alreadySet"
+	case error_applications_badRedirect = "error.applications.badRedirect"
+	case error_applications_firstPartyOnly = "error.applications.firstPartyOnly"
+	case error_applications_scopes_invalid = "error.applications.scopes.invalid"
+	case error_applications_scopes_tooMany = "error.applications.scopes.tooMany"
+	case error_badAuthorization = "error.badAuthorization"
+	case error_badRequest = "error.badRequest"
+	case error_billing_invalidPlan = "error.billing.invalidPlan"
+	case error_billing_unregistered = "error.billing.unregistered"
+	case error_bot = "error.bot"
+	case error_email_inUse = "error.email.inUse"
+	case error_email_invalid = "error.email.invalid"
+	case error_internalError = "error.internalError"
+	case error_missingResource = "error.missingResource"
+	case error_notFound = "error.notFound"
+	case error_plusOnly = "error.plusOnly"
+	case error_post_content_length = "error.post.content.length"
+	case error_post_invalidParent = "error.post.invalidParent"
+	case error_primaryOnly = "error.primaryOnly"
+	case error_profile_username_chars = "error.profile.username.chars"
+	case error_profile_username_unavailable = "error.profile.username.unavailable"
+	case error_profile_username_tooShort = "error.profile.username.tooShort"
+	case error_profile_username_tooLong = "error.profile.username.tooLong"
+	case error_profile_name_tooShort = "error.profile.name.tooShort"
+	case error_profile_name_tooLong = "error.profile.name.tooLong"
+	case error_profile_nickname_tooShort = "error.profile.nickname.tooShort"
+	case error_profile_nickname_tooLong = "error.profile.nickname.tooLong"
+	case error_profile_about_tooShort = "error.profile.about.tooShort"
+	case error_profile_about_tooLong = "error.profile.about.tooLong"
+	case error_pulsar_badToken = "error.pulsar.badToken"
+	case error_rateLimited = "error.rateLimited"
+	case error_restrictedAccess = "error.restrictedAccess"
+	case error_stableOnly = "error.stableOnly"
+	case error_user_follow_limit = "error.user.follow.limit"
+	case error_user_follow_self = "error.user.follow.self"
+	case error_user_password_incorrect = "error.user.password.incorrect"
+	case error_user_password_requirements = "error.user.password.requirements"
+	case error_user_password_same = "error.user.password.same"
+	case error_user_signIn_credentials = "error.user.signIn.credentials"
+	case error_validation_chars = "error.validation.chars"
+	case error_validation_tooShort = "error.validation.tooShort"
+	case error_validation_tooLong = "error.validation.tooLong"
+	case error_spica_authTokenMissing = "error.spica_authTokenMissing"
+	case error_spica_noLoginTokenReturned = "error.spica_noLoginTokenReturned"
+	case error_spica_invalidStatusCode = "error.spica_invalidStatusCode"
+	case error_spica_unknownError = "error.spica_unknownError"
+	case error_spica_valueNotAllowed = "error.spica_valueNotAllowed"
+	case error_default = "error.default"
+
 }

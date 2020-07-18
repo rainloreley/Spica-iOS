@@ -45,7 +45,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         hideKeyboardWhenTappedAround()
-		navigationItem.title = type == PostType.post ? SLocale(.POST_NOUN) : SLocale(.REPLY_SINGULAR)
+        navigationItem.title = type == PostType.post ? SLocale(.POST_NOUN) : SLocale(.REPLY_SINGULAR)
         navigationController?.navigationBar.prefersLargeTitles = false
 
         imagePicker = UIImagePickerController()
@@ -54,7 +54,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         imagePicker.delegate = self
 
         loadingHud = JGProgressHUD(style: .dark)
-		loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
+        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockAllTouches
 
         imageButton = UIBarButtonItem(image: UIImage(systemName: "photo"), style: .plain, target: self, action: #selector(openImagePicker))
@@ -92,7 +92,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
         contentTextView = KMPlaceholderTextView(frame: .zero)
         contentTextView.font = .systemFont(ofSize: 18)
-		contentTextView.placeholder = SLocale(.NEWPOST_PLACEHOLDER)
+        contentTextView.placeholder = SLocale(.NEWPOST_PLACEHOLDER)
         contentTextView.placeholderColor = UIColor.tertiaryLabel
         contentTextView.delegate = self
         let dropInteraction = UIDropInteraction(delegate: self)
@@ -166,8 +166,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
     @objc func openImagePicker(sender _: UIBarButtonItem) {
         if selectedImage != nil {
-			EZAlertController.actionSheet(SLocale(.IMAGE), message: "", sourceView: view, actions: [
-				UIAlertAction(title: SLocale(.SELECT_ANOTHER_IMAGE), style: .default, handler: { _ in
+            EZAlertController.actionSheet(SLocale(.IMAGE), message: "", sourceView: view, actions: [
+                UIAlertAction(title: SLocale(.SELECT_ANOTHER_IMAGE), style: .default, handler: { _ in
                     // self.imagePicker.present(from: self.view)
                     self.present(self.imagePicker, animated: true)
 				}), UIAlertAction(title: SLocale(.REMOVE), style: .destructive, handler: { _ in
@@ -214,7 +214,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
                         self.loadingHud.dismiss()
                         self.sendButton.isEnabled = true
 
-                        EZAlertController.alert("Error", message: err.message, buttons: ["Ok"]) { _, _ in
+                        EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
                             if err.action != nil, err.actionParameter != nil {
                                 if err.action == AllesAPIErrorAction.navigate {
                                     if err.actionParameter == "login" {
@@ -232,7 +232,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
                     self.sendButton.isEnabled = true
                     self.delegate.didSendPost(sentPost: $0)
                     self.dismiss(animated: true)
-					SPAlert.present(title: SLocale(.POST_SENT), preset: .done)
+                    SPAlert.present(title: SLocale(.POST_SENT), preset: .done)
                 }
                 .store(in: &subscriptions)
         }
