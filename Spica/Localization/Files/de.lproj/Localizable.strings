@@ -41,7 +41,7 @@
 
 "EDIT_PROFILE" = "Profil bearbeiten";
 "NAME" = "Name";
-"NICKNAME" = "Nickname";
+"NICKNAME" = "Spitzname";
 "ABOUT" = "Über";
 
 "SAVED_ACTION" = "Gespeichert";
@@ -71,7 +71,7 @@
 
 "SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. Alle Rechte vorbehalten.";
 
-"ALLES_LOGIN" = "Alles Login";
+"ALLES_LOGIN" = "Alles Anmeldung";
 "USERNAME" = "Benutzername";
 "PASSWORD" = "Passwort";
 "SIGN_IN" = "Anmelden";
@@ -83,53 +83,53 @@
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */
 
-"error.alreadySet" = "This action has been performed before";
-"error.applications.badRedirect" = "The redirect URL is not allowed or malformed";
-"error.applications.firstPartyOnly" = "This action can only be performed by first party services";
-"error.applications.scopes.invalid" = "A requested OAuth scope does not exist";
-"error.applications.scopes.tooMany" = "Too many OAuth scopes were specified";
-"error.badAuthorization" = "You're not authorized to perform this action. We'll redirect you to the login screen";
-"error.badRequest" = "Some data is missing";
-"error.billing.invalidPlan" = "This plan does not exist";
-"error.billing.unregistered" = "You need to setup billing first";
-"error.bot" = "We can't verify that you're a human";
-"error.email.inUse" = "This email address is already in use";
-"error.email.invalid" = "Your email address is invalid";
-"error.internalError" = "An internal error occurred";
-"error.missingResource" = "The resource you requested does not exist";
-"error.notFound" = "This endpoint does not exist";
-"error.plusOnly" = "This action can only be performed by Alles+ members";
-"error.post.content.length" = "The content length is invalid (too short or too long)";
-"error.post.invalidParent" = "The parent post is invalid";
-"error.primaryOnly" = "This action is only available for primary accounts";
-"error.profile.username.chars" = "A character in your username is invalid";
-"error.profile.username.unavailable" = "This username is not available";
-"error.profile.username.tooShort" = "Your username is too short";
-"error.profile.username.tooLong" = "Your username is too long";
-"error.profile.name.tooShort" = "Your name is too short";
-"error.profile.name.tooLong" = "Your name is too long";
-"error.profile.nickname.tooShort" = "Your nickname is too short";
-"error.profile.nickname.tooLong" = "Your nickname is too long";
-"error.profile.about.tooShort" = "The 'about' text is too short";
-"error.profile.about.tooLong" = "The 'about' text is too long";
-"error.pulsar.badToken" = "The pulsar token is invalid";
-"error.rateLimited" = "This action has been performed too often in a certain period of time";
-"error.restrictedAccess" = "This AllesID is not permitted to perform the request";
-"error.stableOnly" = "You cannot perform this action on the beta version";
-"error.user.follow.limit" = "The amount of people you can follow is limited";
-"error.user.follow.self" = "You cannot follow yourself (nice try)";
-"error.user.password.incorrect" = "The password is incorrect";
-"error.user.password.requirements" = "The password does not meet the requirements. Try making it more complex";
-"error.user.password.same" = "The old and new passwords are the same";
-"error.user.signIn.credentials" = "This username / password is invalid";
-"error.validation.chars" = "The input contains characters that are not allowed";
-"error.validation.tooShort" = "The input is too short";
-"error.validation.tooLong" = "The input is too long";
+"error.alreadySet" = "Diese Aktion wurde bereits ausgeführt";
+"error.applications.badRedirect" = "Die Weiterleitungs-URL ist nicht erlaubt oder im falschen Format";
+"error.applications.firstPartyOnly" = "Diese Aktion kann nur von Alles-Diensten ausgeführt werden";
+"error.applications.scopes.invalid" = "Ein angefragter OAuth scope existiert nicht";
+"error.applications.scopes.tooMany" = "Es wurden zu viele OAuth scopes angegeben";
+"error.badAuthorization" = "Du darfst diese Aktion nicht ausführen. Wir leiten dich zur Anmeldung weiter";
+"error.badRequest" = "Einige Daten fehlen";
+"error.billing.invalidPlan" = "Dieser Plan existiert nicht";
+"error.billing.unregistered" = "Du musst erst die Abrechnungseinstellungen festlegen";
+"error.bot" = "Wir können nicht verifizieren, dass du ein Mensch bist";
+"error.email.inUse" = "Diese Email Adresse wird bereits verwendet";
+"error.email.invalid" = "Deine Email Adresse ist ungültig";
+"error.internalError" = "Ein interner Fehler ist aufgetreten";
+"error.missingResource" = "Die Resource die du angefragt hast existiert nicht";
+"error.notFound" = "Dieser Endpunkt existiert nicht";
+"error.plusOnly" = "Diese Aktion kann nur von Alles+ Mitgliedern ausgeführt werden";
+"error.post.content.length" = "Die Inhaltslänge ist ungültig (zu kurz oder zu lang)";
+"error.post.invalidParent" = "Der Elternbeitrag ist ungültig";
+"error.primaryOnly" = "Diese Aktion ist für für Hauptkonten verfügbar";
+"error.profile.username.chars" = "Ein Zeichen in deinem Benutzernamen ist ungültig";
+"error.profile.username.unavailable" = "Dieser Benutzername ist nicht verfügbar";
+"error.profile.username.tooShort" = "Dein Benutzername ist zu kurz";
+"error.profile.username.tooLong" = "Dein Benutzername ist zu lang";
+"error.profile.name.tooShort" = "Dein Name ist zu kurz";
+"error.profile.name.tooLong" = "Dein Name ist zu lang";
+"error.profile.nickname.tooShort" = "Dein Spitzname ist zu kurz";
+"error.profile.nickname.tooLong" = "Dein Spitzname ist zu lang";
+"error.profile.about.tooShort" = "Der 'Über' text ist zu kurz";
+"error.profile.about.tooLong" = "Der 'Über' text ist zu lang";
+"error.pulsar.badToken" = "Der Pulsar-Schlüssel ist ungültig";
+"error.rateLimited" = "Diese Aktion wurde zu oft in einer bestimmten Zeit ausgeführt";
+"error.restrictedAccess" = "Diese AllesID darf diese Aktion nicht ausführen";
+"error.stableOnly" = "Du kannst diese Aktion nicht in der Betaversion ausführen";
+"error.user.follow.limit" = "Die Anzahl an Personen, denen zu folgen kannst, ist limitiert";
+"error.user.follow.self" = "Du kannst dir nicht selbst folgen (netter Versuch)";
+"error.user.password.incorrect" = "Das Passwort ist falsch";
+"error.user.password.requirements" = "Das Passwort entspricht nicht den Anforderungen. Versuche es etwas komplexer zu machen";
+"error.user.password.same" = "Das alte und das neue Passwort sind identisch";
+"error.user.signIn.credentials" = "Dieser Benutzername/dieses Passwort ist ungültig";
+"error.validation.chars" = "Die Eingabe enthält nicht erlaubte Zeichen";
+"error.validation.tooShort" = "Die Eingabe ist zu kurz";
+"error.validation.tooLong" = "Die Eingabe ist zu lang";
 
-"error.spica_authTokenMissing" = "The auth token is missing";
-"error.spica_noLoginTokenReturned" = "The API didn't return a token, please try again";
-"error.spica_invalidStatusCode" = "The API returned an invalid status code";
-"error.spica_unknownError" = "An unknown error occurred";
-"error.spica_valueNotAllowed" = "The specified value is not allowed";
+"error.spica_authTokenMissing" = "Der Authentifizierungsschlüssel fehlt";
+"error.spica_noLoginTokenReturned" = "Die API hat keinen Schlüssel zurückgegeben, bitte versuche es erneut";
+"error.spica_invalidStatusCode" = "Die API hat einen ungültigen Statuscode zurückgegeben";
+"error.spica_unknownError" = "Ein unbekannter Fehler ist aufgetreten";
+"error.spica_valueNotAllowed" = "Der angegebene Wert ist nicht erlaubt";
 
-"error.default" = "An unknown error occurred (you did it)";
+"error.default" = "Ein unbekannter Fehler ist aufgetreten (du hast es geschafft)";
