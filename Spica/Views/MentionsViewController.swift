@@ -95,23 +95,29 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
         }
     }
+	
+	func setSidebar() {
+		if #available(iOS 14.0, *) {
+			if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+				if let sidebar = globalSideBarController {
+					if let collectionView = sidebar.collectionView {
+						collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.mentions.rawValue), animated: true, scrollPosition: .top)
+					}
+				}
+			}
+		}
+	}
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        if #available(iOS 14.0, *) {
-            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-                if let sidebar = globalSideBarController {
-                    sidebar.collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.mentions.rawValue), animated: true, scrollPosition: .top)
-                }
-            }
-        }
+		setSidebar()
 
         navigationController?.navigationBar.prefersLargeTitles = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+		setSidebar()
         #if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {

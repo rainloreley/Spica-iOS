@@ -89,18 +89,25 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
     }
+	
+	func setSidebar() {
+		if #available(iOS 14.0, *) {
+			signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+			if signedInUsername == user.username {
+				if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+					if let sidebar = globalSideBarController {
+						if let collectionView = sidebar.collectionView {
+							collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
+						}
+						
+					}
+				}
+			}
+		}
+	}
 
     override func viewWillAppear(_: Bool) {
-        if #available(iOS 14.0, *) {
-            signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-            if signedInUsername == user.username {
-                if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-                    if let sidebar = globalSideBarController {
-                        sidebar.collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
-                    }
-                }
-            }
-        }
+        setSidebar()
         #if targetEnvironment(macCatalyst)
             navigationController?.setNavigationBarHidden(true, animated: false)
         #else
@@ -124,6 +131,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
+		setSidebar()
         #if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {

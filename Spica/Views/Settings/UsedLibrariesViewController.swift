@@ -19,6 +19,10 @@ class UsedLibrariesViewController: UIViewController {
     ]
 
     var tableView: UITableView!
+	
+	override func viewWillAppear(_ animated: Bool) {
+		navigationController?.navigationBar.prefersLargeTitles = true
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()

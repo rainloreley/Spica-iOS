@@ -162,19 +162,23 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         vc.delegate = self
         present(UINavigationController(rootViewController: vc), animated: true)
     }
+	
+	func setSidebar() {
+		if #available(iOS 14.0, *) {
+			if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+				if let sidebar = globalSideBarController {
+					if let collectionView = sidebar.collectionView {
+						collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
+					}
+				}
+			}
+		}
+	}
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if #available(iOS 14.0, *) {
-            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-                if let sidebar = globalSideBarController {
-                    if let collectionView = sidebar.collectionView {
-                        collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
-                    }
-                }
-            }
-        }
+        setSidebar()
 
         navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -182,15 +186,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if #available(iOS 14.0, *) {
-            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-                if let sidebar = globalSideBarController {
-                    if let collectionView = sidebar.collectionView {
-                        collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
-                    }
-                }
-            }
-        }
+        setSidebar()
 
         #if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate

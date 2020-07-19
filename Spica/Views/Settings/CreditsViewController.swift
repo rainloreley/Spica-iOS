@@ -11,9 +11,10 @@ class CreditsViewController: UIViewController {
     var tableView: UITableView!
 
     var credits = [
-        Credit(name: "Adrian", role: "iOS Developer", url: "https://twitter.com/adrianbaumgart", imageURL: "https://avatar.alles.cx/u/adrian", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "Patrik", role: "iOS Developer", url: "https://twitter.com/PatrikTheDev", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "Archie", role: "Alles Founder", url: "https://twitter.com/onlytruearchie", imageURL: "https://avatar.alles.cx/u/archie", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Adrian Baumgart", role: "iOS Developer", url: "https://twitter.com/adrianbaumgart", imageURL: "https://avatar.alles.cx/u/adrian", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Patrik Svoboda", role: "iOS Developer", url: "https://twitter.com/PatrikTheDev", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Archie Baer", role: "Alles Founder", url: "https://twitter.com/onlytruearchie", imageURL: "https://avatar.alles.cx/u/archie", image: UIImage(systemName: "person.circle")!),
+		Credit(name: "David Muñoz", role: "Translator (Spanish)", url: "https://twitter.com/Dmunozv04", imageURL: "https://crowdin-static.downloads.crowdin.com/avatar/13940729/small/bf4ab120766769e9c9deed4b51c2661c.jpg", image: UIImage(systemName: "person.circle")!)
     ]
 
     override func viewDidLoad() {
@@ -68,7 +69,7 @@ extension CreditsViewController: UITableViewDelegate, UITableViewDataSource {
             return """
             Thank you to everyone that is helping developing this app!
 
-            This also includes everyone who reports bugs, submits crash reports and makes suggestions!
+            This also includes everyone who reports bugs, submits crash reports, makes suggestions!
 
             Thank you! <3
             """

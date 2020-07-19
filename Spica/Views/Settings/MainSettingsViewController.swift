@@ -133,15 +133,22 @@ class MainSettingsViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+	
+	func setSidebar() {
+		if #available(iOS 14.0, *) {
+			if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+				if let sidebar = globalSideBarController {
+					if let collectionView = sidebar.collectionView {
+						collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.settings.rawValue), animated: true, scrollPosition: .top)
+					}
+				}
+			}
+		}
+	}
 
     override func viewWillAppear(_: Bool) {
-        if #available(iOS 14.0, *) {
-            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-                if let sidebar = globalSideBarController {
-                    sidebar.collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.settings.rawValue), animated: true, scrollPosition: .top)
-                }
-            }
-        }
+        setSidebar()
+		navigationController?.navigationBar.prefersLargeTitles = true
 
         let dictionary = Bundle.main.infoDictionary!
         let version = dictionary["CFBundleShortVersionString"] as! String
@@ -182,6 +189,7 @@ class MainSettingsViewController: UITableViewController {
     }
 
     override func viewDidAppear(_: Bool) {
+		setSidebar()
         #if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {

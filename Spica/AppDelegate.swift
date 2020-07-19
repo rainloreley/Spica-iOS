@@ -10,7 +10,7 @@ import UIKit
 
 let globalDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "MMMM dd, yyyy HH:mm", options: 0, locale: Locale.current) // "MMM dd, yyyy HH:mm"
+    formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "MM dd, yyyy HH:mm", options: 0, locale: Locale.current) // "MMM dd, yyyy HH:mm"
     formatter.timeZone = TimeZone.current
     return formatter
 }()

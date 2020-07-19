@@ -139,8 +139,6 @@
 		3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
 		3AE55BE124C44ED1002D539E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AE55BE224C44ED1002D539E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		3AE55BE324C44F06002D539E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		3AE55BE424C44F0F002D539E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
@@ -579,7 +577,6 @@
 				Base,
 				de,
 				es,
-				fr,
 			);
 			mainGroup = 3A7145D224AA8753000FA3C3;
 			packageReferences = (
@@ -836,7 +833,6 @@
 				3A332F3224C3BC8300A91C4E /* de */,
 				3A332F3324C3BC8300A91C4E /* en */,
 				3AE55BE124C44ED1002D539E /* es */,
-				3AE55BE424C44F0F002D539E /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -847,7 +843,6 @@
 				3A7145ED24AA8755000FA3C3 /* Base */,
 				3A2A968E24C336E80082C781 /* de */,
 				3AE55BE224C44ED1002D539E /* es */,
-				3AE55BE324C44F06002D539E /* fr */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -981,7 +976,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1594907780;
+				CURRENT_PROJECT_VERSION = 1595154130;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1007,7 +1002,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/SpicaRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1594907780;
+				CURRENT_PROJECT_VERSION = 1595154130;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

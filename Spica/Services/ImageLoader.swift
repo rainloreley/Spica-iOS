@@ -21,7 +21,7 @@ public class ImageLoader {
                 tempImg = UIImage(data: data)
                 imageCache.setObject(tempImg!, forKey: url.absoluteString as NSString)
             } else {
-                tempImg = UIImage(systemName: "person")
+                tempImg = UIImage(systemName: "person.circle")
             }
 
             return tempImg!
