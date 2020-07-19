@@ -1,0 +1,135 @@
+/* 
+  Localizable.strings
+  Spica
+
+  Created by Adrian Baumgart on 12.07.20.
+  
+*/
+
+"HOME" = "Startseite";
+"NOTIFICATIONS" = "Benachrichtigungen";
+"ACCOUNT" = "Konto";
+"SETTINGS" = "Einstellungen";
+
+"REPLY_SINGULAR" = "Antwort";
+"REPLY_PLURAL" = "Antworten";
+
+"LOADING_ACTION" = "Lädt";
+
+"POST_NOUN" = "Beitrag";
+"NEWPOST_PLACEHOLDER" = "An was denkst du?";
+
+"IMAGE" = "Bild";
+"SELECT_ANOTHER_IMAGE" = "Ein anderes Bild auswählen";
+"REMOVE" = "Entfernen";
+"CANCEL" = "Abbrechen";
+
+"POST_SENT" = "Beitrag gesendet!";
+
+"REPLY_ACTION" = "Antworten";
+
+"FOLLOWER_SINGULAR" = "Follower";
+"FOLLOWER_PLURAL" = "Followers";
+
+"RUBY_SINGULAR" = "Ruby";
+"RUBY_PLURAL" = "Rubies";
+
+"FOLLOW_ACTION" = "Folgen";
+"FOLLOWING_ACTION" = "Folge ich";
+
+"FOLLOWS_YOU" = "Folgt mir";
+
+"EDIT_PROFILE" = "Profil bearbeiten";
+"NAME" = "Name";
+"NICKNAME" = "Spitzname";
+"ABOUT" = "Über";
+
+"SAVED_ACTION" = "Gespeichert";
+
+"COPIED_ACTION" = "Kopiert";
+"DELETED_ACTION" = "Entfernt";
+
+"DELETE_POST" = "Beitrag löschen";
+"DELETE_CONFIRMATION" = "Bist du dir sicher, dass du diesen Beitrag entfernen möchtest?";
+"DELETE_ACTION" = "Entfernen";
+
+
+"VERSION" = "Version";
+"BUILD" = "Build";
+
+"GO_TO_PROFILE" = "Zum Profil gehen";
+"SIGN_OUT" = "Abmelden";
+
+"PRIVACY_POLICY" = "Datenschutzbestimmungen";
+"TERMS_OF_SERVICE" = "Nutzungsbedingungen";
+"WEBSITE" = "Website";
+
+"USED_LIBRARIES" = "Verwendete Bibliotheken";
+"CREDITS" = "Credits";
+
+"OTHER" = "Anderes";
+
+"SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. Alle Rechte vorbehalten.";
+
+"ALLES_LOGIN" = "Alles Anmeldung";
+"USERNAME" = "Benutzername";
+"PASSWORD" = "Passwort";
+"SIGN_IN" = "Anmelden";
+"NO_ACCOUNT" = "Kein Konto? Erstelle eins!";
+
+"ERROR" = "Fehler";
+
+/* Error messages
+If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
+*/
+
+"error.alreadySet" = "Diese Aktion wurde bereits ausgeführt";
+"error.applications.badRedirect" = "Die Weiterleitungs-URL ist nicht erlaubt oder im falschen Format";
+"error.applications.firstPartyOnly" = "Diese Aktion kann nur von Alles-Diensten ausgeführt werden";
+"error.applications.scopes.invalid" = "Ein angefragter OAuth scope existiert nicht";
+"error.applications.scopes.tooMany" = "Es wurden zu viele OAuth scopes angegeben";
+"error.badAuthorization" = "Du darfst diese Aktion nicht ausführen. Wir leiten dich zur Anmeldung weiter";
+"error.badRequest" = "Einige Daten fehlen";
+"error.billing.invalidPlan" = "Dieser Plan existiert nicht";
+"error.billing.unregistered" = "Du musst erst die Abrechnungseinstellungen festlegen";
+"error.bot" = "Wir können nicht verifizieren, dass du ein Mensch bist";
+"error.email.inUse" = "Diese Email Adresse wird bereits verwendet";
+"error.email.invalid" = "Deine Email Adresse ist ungültig";
+"error.internalError" = "Ein interner Fehler ist aufgetreten";
+"error.missingResource" = "Die Resource die du angefragt hast existiert nicht";
+"error.notFound" = "Dieser Endpunkt existiert nicht";
+"error.plusOnly" = "Diese Aktion kann nur von Alles+ Mitgliedern ausgeführt werden";
+"error.post.content.length" = "Die Inhaltslänge ist ungültig (zu kurz oder zu lang)";
+"error.post.invalidParent" = "Der Elternbeitrag ist ungültig";
+"error.primaryOnly" = "Diese Aktion ist für für Hauptkonten verfügbar";
+"error.profile.username.chars" = "Ein Zeichen in deinem Benutzernamen ist ungültig";
+"error.profile.username.unavailable" = "Dieser Benutzername ist nicht verfügbar";
+"error.profile.username.tooShort" = "Dein Benutzername ist zu kurz";
+"error.profile.username.tooLong" = "Dein Benutzername ist zu lang";
+"error.profile.name.tooShort" = "Dein Name ist zu kurz";
+"error.profile.name.tooLong" = "Dein Name ist zu lang";
+"error.profile.nickname.tooShort" = "Dein Spitzname ist zu kurz";
+"error.profile.nickname.tooLong" = "Dein Spitzname ist zu lang";
+"error.profile.about.tooShort" = "Der 'Über' text ist zu kurz";
+"error.profile.about.tooLong" = "Der 'Über' text ist zu lang";
+"error.pulsar.badToken" = "Der Pulsar-Schlüssel ist ungültig";
+"error.rateLimited" = "Diese Aktion wurde zu oft in einer bestimmten Zeit ausgeführt";
+"error.restrictedAccess" = "Diese AllesID darf diese Aktion nicht ausführen";
+"error.stableOnly" = "Du kannst diese Aktion nicht in der Betaversion ausführen";
+"error.user.follow.limit" = "Die Anzahl an Personen, denen zu folgen kannst, ist limitiert";
+"error.user.follow.self" = "Du kannst dir nicht selbst folgen (netter Versuch)";
+"error.user.password.incorrect" = "Das Passwort ist falsch";
+"error.user.password.requirements" = "Das Passwort entspricht nicht den Anforderungen. Versuche es etwas komplexer zu machen";
+"error.user.password.same" = "Das alte und das neue Passwort sind identisch";
+"error.user.signIn.credentials" = "Dieser Benutzername/dieses Passwort ist ungültig";
+"error.validation.chars" = "Die Eingabe enthält nicht erlaubte Zeichen";
+"error.validation.tooShort" = "Die Eingabe ist zu kurz";
+"error.validation.tooLong" = "Die Eingabe ist zu lang";
+
+"error.spica_authTokenMissing" = "Der Authentifizierungsschlüssel fehlt";
+"error.spica_noLoginTokenReturned" = "Die API hat keinen Schlüssel zurückgegeben, bitte versuche es erneut";
+"error.spica_invalidStatusCode" = "Die API hat einen ungültigen Statuscode zurückgegeben";
+"error.spica_unknownError" = "Ein unbekannter Fehler ist aufgetreten";
+"error.spica_valueNotAllowed" = "Der angegebene Wert ist nicht erlaubt";
+
+"error.default" = "Ein unbekannter Fehler ist aufgetreten (du hast es geschafft)";
