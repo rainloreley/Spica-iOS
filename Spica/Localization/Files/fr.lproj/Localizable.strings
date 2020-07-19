@@ -123,8 +123,8 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 "error.user.password.same" = "Les anciens et les nouveaux passe de mots sont le même";
 "error.user.signIn.credentials" = "Cette nom d'utilisateur ou passe de mots est invalide";
 "error.validation.chars" = "L'entrée contient des caractères non autorisés";
-"error.validation.tooShort" = "The input is too short";
-"error.validation.tooLong" = "The input is too long";
+"error.validation.tooShort" = "L'entrée est trop court";
+"error.validation.tooLong" = "L'entrée est trop long";
 
 "error.spica_authTokenMissing" = "The auth token is missing";
 "error.spica_noLoginTokenReturned" = "The API didn't return a token, please try again";
