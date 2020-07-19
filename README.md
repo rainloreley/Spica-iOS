@@ -14,7 +14,7 @@ Spica is an iOS Client for [Alles Micro](https://alles.cx). It's privacy focused
 
 ## Contributing
 
-If you want to contribute please read ["Code of Conduct"](CODE OF CONDUCT.md) and ["Contributing"](CONTRIBUTING.md).
+If you want to contribute please read the [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing](CONTRIBUTING.md).
 
 ## License
 
