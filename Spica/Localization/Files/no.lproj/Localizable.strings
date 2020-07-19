@@ -14,7 +14,7 @@
 "REPLY_SINGULAR" = "Svar";
 "REPLY_PLURAL" = "Svar";
 
-"LOADING_ACTION" = "Lasting";
+"LOADING_ACTION" = "Laster";
 
 "POST_NOUN" = "Innlegg";
 "NEWPOST_PLACEHOLDER" = "Hva skjer?";
@@ -64,7 +64,7 @@
 "TERMS_OF_SERVICE" = "Vilkår";
 "WEBSITE" = "Nettsted";
 
-"USED_LIBRARIES" = "Used Libraries";
+"USED_LIBRARIES" = "Brukte biblioteker";
 "CREDITS" = "Studiepoeng";
 
 "OTHER" = "Annen";
@@ -120,16 +120,16 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 "error.user.follow.self" = "Du kan ikke følger deg (godt forsøk)";
 "error.user.password.incorrect" = "Passordet er feil";
 "error.user.password.requirements" = "Passordet oppfyller ikke kravene. Prøv å gjøre det mer komplekst";
-"error.user.password.same" = "The old and new passwords are the same";
-"error.user.signIn.credentials" = "This username / password is invalid";
-"error.validation.chars" = "The input contains characters that are not allowed";
-"error.validation.tooShort" = "The input is too short";
-"error.validation.tooLong" = "The input is too long";
+"error.user.password.same" = "Det gamle og det nye passord er det samme";
+"error.user.signIn.credentials" = "Dette brukernavn eller passord er ugyldig";
+"error.validation.chars" = "Innspillet inneholder tegn som ikke er tillatt";
+"error.validation.tooShort" = "Innspillet er for kort";
+"error.validation.tooLong" = "Innspillet er for lenge";
 
-"error.spica_authTokenMissing" = "The auth token is missing";
-"error.spica_noLoginTokenReturned" = "The API didn't return a token, please try again";
-"error.spica_invalidStatusCode" = "The API returned an invalid status code";
-"error.spica_unknownError" = "An unknown error occurred";
-"error.spica_valueNotAllowed" = "The specified value is not allowed";
+"error.spica_authTokenMissing" = "Autentisk token mangler";
+"error.spica_noLoginTokenReturned" = "API returnerte ikke et symbol, prøv igjen";
+"error.spica_invalidStatusCode" = "API returnerte en ugyldig statuskode";
+"error.spica_unknownError" = "En intern feil oppstod";
+"error.spica_valueNotAllowed" = "Den angitte verdien er ikke tillatt";
 
-"error.default" = "An unknown error occurred (you did it)";
+"error.default" = "En unkjent feil oppstod";
