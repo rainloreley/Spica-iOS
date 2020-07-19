@@ -9,7 +9,7 @@ Hello! 👋 Thank you for considering contributing to Spica! To keep everything 
 Contributing directly means that you make changes to the code and create a pull request. Here is how you do this:
 
 1. Fork the repo
-2. Build Spica (more information in the [README](README))
+2. Build Spica (more information in the [README](README.md))
 3. Code
 4. Commit & push to your forked repo
 5. Create a pull request
