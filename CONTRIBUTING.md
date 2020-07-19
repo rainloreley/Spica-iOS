@@ -23,6 +23,10 @@ If you need help feel free to contact me via [twitter](https://twitter.com/adria
 If you don't know how to code or you're not familiar with swift, you can create an issue. You can report a bug/crash or suggest a new feautre.
 We will read them and implement the features if we like them.
 
+### Translations
+
+Translations are not managed here. The project is available on [Crowdin](https://crowdin.com/project/spica).
+
 ## Other stuff
 
 We want to keep everything friendly here. Please do not use any offensive language or insult somebody.
