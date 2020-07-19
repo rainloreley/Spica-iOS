@@ -22,4 +22,4 @@ If you want to contribute please read the [Code of Conduct](CODE_OF_CONDUCT.md) 
 
 ## License
 
-Spica is licensed under the GPLv3 license. More information can be found in the [LICENSE file](LICENSE.md).
+Spica is licensed under the GPLv3 license. More information can be found in the [LICENSE file](LICENSE).
