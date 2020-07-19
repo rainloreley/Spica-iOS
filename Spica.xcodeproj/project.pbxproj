@@ -200,6 +200,14 @@
 			path = Sidebar;
 			sourceTree = "<group>";
 		};
+		3A26F24824C46C7300E66724 /* Launchscreen */ = {
+			isa = PBXGroup;
+			children = (
+				3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */,
+			);
+			path = Launchscreen;
+			sourceTree = "<group>";
+		};
 		3A332F3024C3BC8300A91C4E /* Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -294,13 +302,13 @@
 				3A6AABD124BB5D6300C71BC0 /* Localization */,
 				3A9D965D24BA59AA00703466 /* Spica.entitlements */,
 				3A5CF34B24ACBCC0002A829A /* Cells */,
-				3A96F6A924AB445100482C5A /* Views */,
+				3A96F6A924AB445100482C5A /* View Controllers */,
 				3A96F69D24AB3F9C00482C5A /* Services */,
 				3A96F69C24AB3F9300482C5A /* Data */,
 				3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */,
 				3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */,
+				3A26F24824C46C7300E66724 /* Launchscreen */,
 				3A7145EA24AA8755000FA3C3 /* Assets.xcassets */,
-				3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */,
 				3A7145EF24AA8755000FA3C3 /* Info.plist */,
 				3A7145E724AA8753000FA3C3 /* Alles_App.xcdatamodeld */,
 			);
@@ -368,7 +376,7 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
-		3A96F6A924AB445100482C5A /* Views */ = {
+		3A96F6A924AB445100482C5A /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				3A3CBE3024C0C0CF00B00D8D /* User Edit */,
@@ -383,7 +391,7 @@
 				3A0252C224ADE30700A4E4FD /* LoginViewController.swift */,
 				3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */,
 			);
-			path = Views;
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		3AD04A3424C0C4EC007F7306 /* Cells */ = {
