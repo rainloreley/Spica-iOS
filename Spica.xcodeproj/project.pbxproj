@@ -137,6 +137,10 @@
 		3ADDC58024AD162500B58DA9 /* NewPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPost.swift; sourceTree = "<group>"; };
 		3ADDC58224AD182100B58DA9 /* SentPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentPost.swift; sourceTree = "<group>"; };
 		3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
+		3AE55BE124C44ED1002D539E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3AE55BE224C44ED1002D539E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		3AE55BE324C44F06002D539E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		3AE55BE424C44F0F002D539E /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
@@ -574,6 +578,8 @@
 				en,
 				Base,
 				de,
+				es,
+				fr,
 			);
 			mainGroup = 3A7145D224AA8753000FA3C3;
 			packageReferences = (
@@ -829,6 +835,8 @@
 			children = (
 				3A332F3224C3BC8300A91C4E /* de */,
 				3A332F3324C3BC8300A91C4E /* en */,
+				3AE55BE124C44ED1002D539E /* es */,
+				3AE55BE424C44F0F002D539E /* fr */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -838,6 +846,8 @@
 			children = (
 				3A7145ED24AA8755000FA3C3 /* Base */,
 				3A2A968E24C336E80082C781 /* de */,
+				3AE55BE224C44ED1002D539E /* es */,
+				3AE55BE324C44F06002D539E /* fr */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
