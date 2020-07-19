@@ -6,13 +6,13 @@
   
 */
 
-"HOME" = "Home";
+"HOME" = "Accueil";
 "NOTIFICATIONS" = "Notifications";
-"ACCOUNT" = "Account";
-"SETTINGS" = "Settings";
+"ACCOUNT" = "Compte";
+"SETTINGS" = "Paramètres";
 
-"REPLY_SINGULAR" = "Reply";
-"REPLY_PLURAL" = "Replies";
+"REPLY_SINGULAR" = "Répondre";
+"REPLY_PLURAL" = "Réponses";
 
 "LOADING_ACTION" = "Loading";
 
