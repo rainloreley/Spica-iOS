@@ -61,13 +61,13 @@
 "SIGN_OUT" = "Déconnectez-vous au votre compte";
 
 "PRIVACY_POLICY" = "Politique de confidentialité";
-"TERMS_OF_SERVICE" = "Terms of Service";
-"WEBSITE" = "Website";
+"TERMS_OF_SERVICE" = "Conditions d'utilisation";
+"WEBSITE" = "Site internet";
 
-"USED_LIBRARIES" = "Used Libraries";
-"CREDITS" = "Credits";
+"USED_LIBRARIES" = "Les bibliothèques usées";
+"CREDITS" = "Les crédits";
 
-"OTHER" = "Other";
+"OTHER" = "Des autres";
 
 "SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. All rights reserved.";
 
