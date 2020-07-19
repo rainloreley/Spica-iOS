@@ -86,7 +86,6 @@
 		30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A0252C224ADE30700A4E4FD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3A1BD40A24C094FF00B842E5 /* SpicaRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpicaRelease.entitlements; sourceTree = "<group>"; };
-		3A2A968E24C336E80082C781 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3A332F3224C3BC8300A91C4E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A332F3324C3BC8300A91C4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -138,7 +137,6 @@
 		3ADDC58224AD182100B58DA9 /* SentPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentPost.swift; sourceTree = "<group>"; };
 		3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
 		3AE55BE124C44ED1002D539E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3AE55BE224C44ED1002D539E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
@@ -198,14 +196,6 @@
 				3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */,
 			);
 			path = Sidebar;
-			sourceTree = "<group>";
-		};
-		3A26F24824C46C7300E66724 /* Launchscreen */ = {
-			isa = PBXGroup;
-			children = (
-				3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */,
-			);
-			path = Launchscreen;
 			sourceTree = "<group>";
 		};
 		3A332F3024C3BC8300A91C4E /* Files */ = {
@@ -307,7 +297,7 @@
 				3A96F69C24AB3F9300482C5A /* Data */,
 				3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */,
 				3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */,
-				3A26F24824C46C7300E66724 /* Launchscreen */,
+				3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */,
 				3A7145EA24AA8755000FA3C3 /* Assets.xcassets */,
 				3A7145EF24AA8755000FA3C3 /* Info.plist */,
 				3A7145E724AA8753000FA3C3 /* Alles_App.xcdatamodeld */,
@@ -849,8 +839,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				3A7145ED24AA8755000FA3C3 /* Base */,
-				3A2A968E24C336E80082C781 /* de */,
-				3AE55BE224C44ED1002D539E /* es */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
