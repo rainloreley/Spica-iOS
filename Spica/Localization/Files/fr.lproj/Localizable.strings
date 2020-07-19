@@ -16,7 +16,7 @@
 
 "LOADING_ACTION" = "Chargement";
 
-"POST_NOUN" = "Post";
+"POST_NOUN" = "Publier";
 "NEWPOST_PLACEHOLDER" = "Comment ça va?";
 
 "IMAGE" = "Image";
@@ -34,17 +34,17 @@
 "RUBY_SINGULAR" = "Rubis";
 "RUBY_PLURAL" = "Rubis";
 
-"FOLLOW_ACTION" = "Follow";
-"FOLLOWING_ACTION" = "Following";
+"FOLLOW_ACTION" = "Suivre";
+"FOLLOWING_ACTION" = "Suivant";
 
-"FOLLOWS_YOU" = "Follows you";
+"FOLLOWS_YOU" = "Vous suit";
 
 "EDIT_PROFILE" = "Éditer le profil";
 "NAME" = "Nom";
 "NICKNAME" = "Surnom";
 "ABOUT" = "À propos";
 
-"SAVED_ACTION" = "Saved";
+"SAVED_ACTION" = "Sauvé";
 
 "COPIED_ACTION" = "Copié";
 "DELETED_ACTION" = "Effacé";
@@ -117,7 +117,7 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 "error.restrictedAccess" = "Cette AllesID n'est pas autorisé à exécuter la demande";
 "error.stableOnly" = "Vous ne pouvez pas cette action dans le version bêta";
 "error.user.follow.limit" = "Le nombre de personnes que vous pouvez suivre est limité";
-"error.user.follow.self" = "You cannot follow yourself (nice try)";
+"error.user.follow.self" = "Vous ne pouvez pas vous suivre (bon essai)";
 "error.user.password.incorrect" = "Le mot de passe est incorrect";
 "error.user.password.requirements" = "Le mot de passe ne répond pas aux exigences. Essayez de le rendre plus complexe";
 "error.user.password.same" = "Les anciens et les nouveaux passe de mots sont le même";
@@ -126,10 +126,10 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 "error.validation.tooShort" = "L'entrée est trop court";
 "error.validation.tooLong" = "L'entrée est trop long";
 
-"error.spica_authTokenMissing" = "The auth token is missing";
-"error.spica_noLoginTokenReturned" = "The API didn't return a token, please try again";
-"error.spica_invalidStatusCode" = "The API returned an invalid status code";
-"error.spica_unknownError" = "An unknown error occurred";
-"error.spica_valueNotAllowed" = "The specified value is not allowed";
+"error.spica_authTokenMissing" = "Le jeton d'authentification est manquant";
+"error.spica_noLoginTokenReturned" = "L'API n'a pas renvoyé de jeton, veuillez réessayer";
+"error.spica_invalidStatusCode" = "L'API a renvoyé un code d'état non valide";
+"error.spica_unknownError" = "Une erreur inconnue est survenue";
+"error.spica_valueNotAllowed" = "La valeur spécifiée n'est pas autorisée";
 
 "error.default" = "An unknown error occurred (you did it)";
