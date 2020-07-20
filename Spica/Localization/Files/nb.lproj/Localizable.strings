@@ -1,0 +1,135 @@
+/* 
+  Localizable.strings
+  Spica
+
+  Created by Adrian Baumgart on 12.07.20.
+  
+*/
+
+"HOME" = "Hjem";
+"NOTIFICATIONS" = "Varsler";
+"ACCOUNT" = "Konto";
+"SETTINGS" = "Innstillinger";
+
+"REPLY_SINGULAR" = "Svar";
+"REPLY_PLURAL" = "Svar";
+
+"LOADING_ACTION" = "Laster";
+
+"POST_NOUN" = "Innlegg";
+"NEWPOST_PLACEHOLDER" = "Hva skjer?";
+
+"IMAGE" = "Bilde";
+"SELECT_ANOTHER_IMAGE" = "Velg et annet bilde";
+"REMOVE" = "Ta vekk";
+"CANCEL" = "Avbryt";
+
+"POST_SENT" = "Innleggen din ble sendt!";
+
+"REPLY_ACTION" = "Svar";
+
+"FOLLOWER_SINGULAR" = "Følger";
+"FOLLOWER_PLURAL" = "Følgere";
+
+"RUBY_SINGULAR" = "Rubin";
+"RUBY_PLURAL" = "Rubiner";
+
+"FOLLOW_ACTION" = "Følg";
+"FOLLOWING_ACTION" = "Følger";
+
+"FOLLOWS_YOU" = "Følger deg";
+
+"EDIT_PROFILE" = "Rediger profil";
+"NAME" = "Navn";
+"NICKNAME" = "Kallenavn";
+"ABOUT" = "Om meg";
+
+"SAVED_ACTION" = "Lagrede";
+
+"COPIED_ACTION" = "Kopiert";
+"DELETED_ACTION" = "Slettet";
+
+"DELETE_POST" = "Slett inlegg";
+"DELETE_CONFIRMATION" = "Er du sikker på at du vil slette dette innlegget?";
+"DELETE_ACTION" = "Slett";
+
+
+"VERSION" = "Versjon";
+"BUILD" = "Bygge";
+
+"GO_TO_PROFILE" = "Gå til profil";
+"SIGN_OUT" = "Logg ut";
+
+"PRIVACY_POLICY" = "Personvernerklæring";
+"TERMS_OF_SERVICE" = "Vilkår";
+"WEBSITE" = "Nettsted";
+
+"USED_LIBRARIES" = "Brukte biblioteker";
+"CREDITS" = "Studiepoeng";
+
+"OTHER" = "Annen";
+
+"SPICA_COPYRIGHT" = "©2020, Adrian Baumgart. Alle rettigheter forbeholdt.";
+
+"ALLES_LOGIN" = "Logg inn til Alles";
+"USERNAME" = "Brukernavn";
+"PASSWORD" = "Passord";
+"SIGN_IN" = "Logg inn";
+"NO_ACCOUNT" = "Har du ikke en konto? Lag en!";
+
+"ERROR" = "Feil";
+
+/* Error messages
+If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
+*/
+
+"error.alreadySet" = "Denne handlingen har blitt utført før";
+"error.applications.badRedirect" = "Omadresseringsadressen er ikke tillatt eller er misformet";
+"error.applications.firstPartyOnly" = "Denne handlingen kan bare utføres av førsteparts tjenester";
+"error.applications.scopes.invalid" = "Et forespurt OAUTH-omfang eksisterer ikke";
+"error.applications.scopes.tooMany" = "For mange OAUTH-omfang ble specifisert";
+"error.badAuthorization" = "Du er ikke autorisert å utføre denne handlingen. Vi vil omdirigere deg til innloggingsskjermen";
+"error.badRequest" = "Noen data mangler";
+"error.billing.invalidPlan" = "Denne plan eksisterer ikke";
+"error.billing.unregistered" = "Du må konfigurere fakturering først";
+"error.bot" = "Vi kan ikke bekrefte at du er et menneske";
+"error.email.inUse" = "Denne e-postadressen er allerede i bruk";
+"error.email.invalid" = "E-postadressen din er ugyldig";
+"error.internalError" = "En intern feil oppstod";
+"error.missingResource" = "Ressursen du ba om eksisterer ikke";
+"error.notFound" = "Denne sluttpunket eksisterer ikke";
+"error.plusOnly" = "Denne handlingen kan bare utføres av Alles+ medlemmer";
+"error.post.content.length" = "Innholdets lengde er ugyldig (dette er for kort eller for lenge)";
+"error.post.invalidParent" = "Foreldreinnlegget er ugyldig";
+"error.primaryOnly" = "Denne handlingen er bare tilgjengelig for primærkontoer";
+"error.profile.username.chars" = "En karakter på brukernavnet ditt er ugyldig";
+"error.profile.username.unavailable" = "Dette brukernavn er ikke tilgjengelig";
+"error.profile.username.tooShort" = "Brukernavn ditt er for kort";
+"error.profile.username.tooLong" = "Brukernavnet ditt er for langt";
+"error.profile.name.tooShort" = "Navnet ditt er for kort";
+"error.profile.name.tooLong" = "Navnet ditt er for langt";
+"error.profile.nickname.tooShort" = "Kallenavnet ditt er for kort";
+"error.profile.nickname.tooLong" = "Kallenavnet ditt er for langt";
+"error.profile.about.tooShort" = "Den 'om' teksten er for kort";
+"error.profile.about.tooLong" = "Den 'om' teksten er for lenge";
+"error.pulsar.badToken" = "Pulsar-symbolet er ugyldig";
+"error.rateLimited" = "Denne handlingen har blitt utført for ofte på kort tid";
+"error.restrictedAccess" = "Denne AllesID er ikke tillatt å utføre denne forespørselen";
+"error.stableOnly" = "Du kan ikke utføre denne handlingen på beta versjonen";
+"error.user.follow.limit" = "Mengden du kan følge er begrenset";
+"error.user.follow.self" = "Du kan ikke følge deg selv (godt forsøk)";
+"error.user.password.incorrect" = "Passordet er feil";
+"error.user.password.requirements" = "Passordet oppfyller ikke kravene. Prøv å gjøre det mer komplekst";
+"error.user.password.same" = "Det gamle og det nye passord er det samme";
+"error.user.signIn.credentials" = "Dette brukernavn eller passord er ugyldig";
+"error.validation.chars" = "Innspillet inneholder tegn som ikke er tillatt";
+"error.validation.tooShort" = "Innspillet er for kort";
+"error.validation.tooLong" = "Innspillet er for lenge";
+
+"error.spica_authTokenMissing" = "Autentisk token mangler";
+"error.spica_noLoginTokenReturned" = "API returnerte ikke et symbol, prøv igjen";
+"error.spica_invalidStatusCode" = "API returnerte en ugyldig statuskode";
+"error.spica_unknownError" = "En intern feil oppstod";
+"error.spica_valueNotAllowed" = "Den angitte verdien er ikke tillatt";
+
+"error.default" = "En unkjent feil oppstod";
