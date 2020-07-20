@@ -17,7 +17,7 @@
 "LOADING_ACTION" = "Cargando";
 
 "POST_NOUN" = "Publicación";
-"NEWPOST_PLACEHOLDER" = "¿Qué hay en tu mente?";
+"NEWPOST_PLACEHOLDER" = "¿Qué se te ocurre?";
 
 "IMAGE" = "Imagen";
 "SELECT_ANOTHER_IMAGE" = "Selecciona otra imagen";
@@ -84,7 +84,7 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 */
 
 "error.alreadySet" = "Esta acción se ha realizado antes";
-"error.applications.badRedirect" = "La dirección de redirección no está permitida o malformada";
+"error.applications.badRedirect" = "La URL de redirección no está permitida o es incorrecta";
 "error.applications.firstPartyOnly" = "Esta acción sólo puede ser realizada por servicios de origen";
 "error.applications.scopes.invalid" = "El ámbito OAuth solicitado no existe";
 "error.applications.scopes.tooMany" = "Demasiados ámbitos OAuth fueron especificados";
@@ -100,7 +100,7 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 "error.notFound" = "Este endpoint no existe";
 "error.plusOnly" = "Esta acción sólo puede ser realizada por miembros de Alles+";
 "error.post.content.length" = "La longitud del contenido es inválida (muy corta o muy larga)";
-"error.post.invalidParent" = "La publicación padre es inválida";
+"error.post.invalidParent" = "La publicación principal es inválida";
 "error.primaryOnly" = "Esta acción está solo disponible para cuentas primarias";
 "error.profile.username.chars" = "Un carácter en tu nombre de usuario es inválido";
 "error.profile.username.unavailable" = "Este nombre de usuario no está disponible";
@@ -115,8 +115,8 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 "error.pulsar.badToken" = "El token de pulsar es inválido";
 "error.rateLimited" = "Esta acción se ha realizado demasiadas veces en un periodo determinado de tiempo";
 "error.restrictedAccess" = "Este AllesID no tiene permitido realizar esta petición";
-"error.stableOnly" = "No puedes realizar esta acción en la versión de pruebas";
-"error.user.follow.limit" = "Las personas que sigues están limitadas";
+"error.stableOnly" = "No puedes realizar esta acción en la versión beta";
+"error.user.follow.limit" = "El número de personas que puedes seguir es limitado";
 "error.user.follow.self" = "No puedes seguirte a ti mismo (buen intento)";
 "error.user.password.incorrect" = "La contraseña es incorrecta";
 "error.user.password.requirements" = "La contraseña no cumple con los requisitos mínimos. Intenta hacerla más compleja";
@@ -132,4 +132,4 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 "error.spica_unknownError" = "Un error desconocido ha ocurrido";
 "error.spica_valueNotAllowed" = "El valor especificado no está permitido";
 
-"error.default" = "Un error desconocido ha ocurrido (tú lo has hecho)";
+"error.default" = "Un error desconocido ha ocurrido (ya la has liado)";

@@ -6,130 +6,130 @@
   
 */
 
-"HOME" = "Home";
+"HOME" = "Accueil";
 "NOTIFICATIONS" = "Notifications";
-"ACCOUNT" = "Account";
-"SETTINGS" = "Settings";
+"ACCOUNT" = "Compte";
+"SETTINGS" = "Paramètres";
 
-"REPLY_SINGULAR" = "Reply";
-"REPLY_PLURAL" = "Replies";
+"REPLY_SINGULAR" = "Répondre";
+"REPLY_PLURAL" = "Réponses";
 
-"LOADING_ACTION" = "Loading";
+"LOADING_ACTION" = "Chargement";
 
-"POST_NOUN" = "Post";
-"NEWPOST_PLACEHOLDER" = "What's on your mind?";
+"POST_NOUN" = "Publier";
+"NEWPOST_PLACEHOLDER" = "Comment ça va?";
 
 "IMAGE" = "Image";
-"SELECT_ANOTHER_IMAGE" = "Select another image";
-"REMOVE" = "Remove";
-"CANCEL" = "Cancel";
+"SELECT_ANOTHER_IMAGE" = "Sélectionnez une autre image";
+"REMOVE" = "Retirer";
+"CANCEL" = "Annuler";
 
-"POST_SENT" = "Post sent!";
+"POST_SENT" = "Le message envoyé!";
 
-"REPLY_ACTION" = "Reply";
+"REPLY_ACTION" = "Réponse";
 
-"FOLLOWER_SINGULAR" = "Follower";
-"FOLLOWER_PLURAL" = "Followers";
+"FOLLOWER_SINGULAR" = "Abonné";
+"FOLLOWER_PLURAL" = "Abonnés";
 
-"RUBY_SINGULAR" = "Ruby";
-"RUBY_PLURAL" = "Rubies";
+"RUBY_SINGULAR" = "Rubis";
+"RUBY_PLURAL" = "Rubis";
 
-"FOLLOW_ACTION" = "Follow";
-"FOLLOWING_ACTION" = "Following";
+"FOLLOW_ACTION" = "Suivre";
+"FOLLOWING_ACTION" = "Suivant";
 
-"FOLLOWS_YOU" = "Follows you";
+"FOLLOWS_YOU" = "Vous suit";
 
-"EDIT_PROFILE" = "Edit Profile";
-"NAME" = "Name";
-"NICKNAME" = "Nickname";
-"ABOUT" = "About";
+"EDIT_PROFILE" = "Éditer le profil";
+"NAME" = "Nom";
+"NICKNAME" = "Surnom";
+"ABOUT" = "À propos";
 
-"SAVED_ACTION" = "Saved";
+"SAVED_ACTION" = "Sauvé";
 
-"COPIED_ACTION" = "Copied";
-"DELETED_ACTION" = "Deleted";
+"COPIED_ACTION" = "Copié";
+"DELETED_ACTION" = "Effacé";
 
-"DELETE_POST" = "Delete post";
-"DELETE_CONFIRMATION" = "Are you sure you want to delete this post?";
-"DELETE_ACTION" = "Delete";
+"DELETE_POST" = "Supprimer le message";
+"DELETE_CONFIRMATION" = "Es-tu sur de vouloir supprimer cette message?";
+"DELETE_ACTION" = "Effacer";
 
 
 "VERSION" = "Version";
-"BUILD" = "Build";
+"BUILD" = "Constriure";
 
-"GO_TO_PROFILE" = "Go to Profile";
-"SIGN_OUT" = "Sign out";
+"GO_TO_PROFILE" = "Aller au profil";
+"SIGN_OUT" = "Déconnectez-vous au votre compte";
 
-"PRIVACY_POLICY" = "Privacy Policy";
-"TERMS_OF_SERVICE" = "Terms of Service";
-"WEBSITE" = "Website";
+"PRIVACY_POLICY" = "Politique de confidentialité";
+"TERMS_OF_SERVICE" = "Conditions d'utilisation";
+"WEBSITE" = "Site internet";
 
-"USED_LIBRARIES" = "Used Libraries";
-"CREDITS" = "Credits";
+"USED_LIBRARIES" = "Les bibliothèques usées";
+"CREDITS" = "Les crédits";
 
-"OTHER" = "Other";
+"OTHER" = "Des autres";
 
-"SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. All rights reserved.";
+"SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. Tous les droits sont réservés.";
 
-"ALLES_LOGIN" = "Alles Login";
-"USERNAME" = "Username";
-"PASSWORD" = "Password";
-"SIGN_IN" = "Sign in";
-"NO_ACCOUNT" = "No account? Create one!";
+"ALLES_LOGIN" = "Le login pour Alles";
+"USERNAME" = "Nom d'utilisateur";
+"PASSWORD" = "Mot de passe";
+"SIGN_IN" = "Se connecter";
+"NO_ACCOUNT" = "Pas de compte? Créer une!";
 
-"ERROR" = "Error";
+"ERROR" = "Erreur";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */
 
-"error.alreadySet" = "This action has been performed before";
-"error.applications.badRedirect" = "The redirect URL is not allowed or malformed";
-"error.applications.firstPartyOnly" = "This action can only be performed by first party services";
-"error.applications.scopes.invalid" = "A requested OAuth scope does not exist";
-"error.applications.scopes.tooMany" = "Too many OAuth scopes were specified";
-"error.badAuthorization" = "You're not authorized to perform this action. We'll redirect you to the login screen";
-"error.badRequest" = "Some data is missing";
-"error.billing.invalidPlan" = "This plan does not exist";
-"error.billing.unregistered" = "You need to setup billing first";
-"error.bot" = "We can't verify that you're a human";
-"error.email.inUse" = "This email address is already in use";
-"error.email.invalid" = "Your email address is invalid";
-"error.internalError" = "An internal error occurred";
-"error.missingResource" = "The resource you requested does not exist";
-"error.notFound" = "This endpoint does not exist";
-"error.plusOnly" = "This action can only be performed by Alles+ members";
-"error.post.content.length" = "The content length is invalid (too short or too long)";
-"error.post.invalidParent" = "The parent post is invalid";
-"error.primaryOnly" = "This action is only available for primary accounts";
-"error.profile.username.chars" = "A character in your username is invalid";
-"error.profile.username.unavailable" = "This username is not available";
-"error.profile.username.tooShort" = "Your username is too short";
-"error.profile.username.tooLong" = "Your username is too long";
-"error.profile.name.tooShort" = "Your name is too short";
-"error.profile.name.tooLong" = "Your name is too long";
-"error.profile.nickname.tooShort" = "Your nickname is too short";
-"error.profile.nickname.tooLong" = "Your nickname is too long";
-"error.profile.about.tooShort" = "The 'about' text is too short";
-"error.profile.about.tooLong" = "The 'about' text is too long";
-"error.pulsar.badToken" = "The pulsar token is invalid";
-"error.rateLimited" = "This action has been performed too often in a certain period of time";
-"error.restrictedAccess" = "This AllesID is not permitted to perform the request";
-"error.stableOnly" = "You cannot perform this action on the beta version";
-"error.user.follow.limit" = "The amount of people you can follow is limited";
-"error.user.follow.self" = "You cannot follow yourself (nice try)";
-"error.user.password.incorrect" = "The password is incorrect";
-"error.user.password.requirements" = "The password does not meet the requirements. Try making it more complex";
-"error.user.password.same" = "The old and new passwords are the same";
-"error.user.signIn.credentials" = "This username / password is invalid";
-"error.validation.chars" = "The input contains characters that are not allowed";
-"error.validation.tooShort" = "The input is too short";
-"error.validation.tooLong" = "The input is too long";
+"error.alreadySet" = "Cette action a été effectuée avant";
+"error.applications.badRedirect" = "L'URL de redirection n'est pas autorisé ou est malformé";
+"error.applications.firstPartyOnly" = "Cette action ne peut être effectuée que par des services propriétaires";
+"error.applications.scopes.invalid" = "Une étendue OAUTH demandée n'existe pas";
+"error.applications.scopes.tooMany" = "Trop plus étendues OAUTH ont été spécifiés";
+"error.badAuthorization" = "Vous n'ets pas autorisé cette action. Nous vous redirigeons vers l'écran de connexion";
+"error.badRequest" = "Certaines données sont manquantes";
+"error.billing.invalidPlan" = "Ce plan n'existe pas";
+"error.billing.unregistered" = "Vous devez d'abord configurer la facturation";
+"error.bot" = "Nous ne pouvons pas vérifier que vous êtes un humain";
+"error.email.inUse" = "Cette adresse email est déjà utilisée";
+"error.email.invalid" = "Votre adresse email est invalide";
+"error.internalError" = "Une erreur internale a eu lieu";
+"error.missingResource" = "La ressource que vous avez demandée n'existe pas";
+"error.notFound" = "Ce point final n'existe pas";
+"error.plusOnly" = "Cela ne peut être effectué que par les membres de Alles+";
+"error.post.content.length" = "La longueur du contenu n'est pas valide (c'est trop court ou trop long)";
+"error.post.invalidParent" = "Le message parent est invalide";
+"error.primaryOnly" = "Cette action est disponible uniquement pour les comptes principal";
+"error.profile.username.chars" = "Une lettre dans votre nom d'utilisateur est invalide";
+"error.profile.username.unavailable" = "Cette nom d'utilisateur n'est pas disponible";
+"error.profile.username.tooShort" = "Votre nom d'utilisateur est trop courts";
+"error.profile.username.tooLong" = "Votre nom d'utilisateur est trop long";
+"error.profile.name.tooShort" = "Votre nom est trop court";
+"error.profile.name.tooLong" = "Votre nom est trop long";
+"error.profile.nickname.tooShort" = "Votre surnom est trop courts";
+"error.profile.nickname.tooLong" = "Votre surnom est trop courts";
+"error.profile.about.tooShort" = "Le texte 'à propos' est trop court";
+"error.profile.about.tooLong" = "Le texte 'à propos' est trop long";
+"error.pulsar.badToken" = "Le jeton pulsar n'est pas valide";
+"error.rateLimited" = "Cette action a exécuté trop souvent dans une certaine période de temps";
+"error.restrictedAccess" = "Cette AllesID n'est pas autorisé à exécuter la demande";
+"error.stableOnly" = "Vous ne pouvez pas cette action dans le version bêta";
+"error.user.follow.limit" = "Le nombre de personnes que vous pouvez suivre est limité";
+"error.user.follow.self" = "Vous ne pouvez pas vous suivre (bon essai)";
+"error.user.password.incorrect" = "Le mot de passe est incorrect";
+"error.user.password.requirements" = "Le mot de passe ne répond pas aux exigences. Essayez de le rendre plus complexe";
+"error.user.password.same" = "Les anciens et les nouveaux passe de mots sont le même";
+"error.user.signIn.credentials" = "Cette nom d'utilisateur ou passe de mots est invalide";
+"error.validation.chars" = "L'entrée contient des caractères non autorisés";
+"error.validation.tooShort" = "L'entrée est trop court";
+"error.validation.tooLong" = "L'entrée est trop long";
 
-"error.spica_authTokenMissing" = "The auth token is missing";
-"error.spica_noLoginTokenReturned" = "The API didn't return a token, please try again";
-"error.spica_invalidStatusCode" = "The API returned an invalid status code";
-"error.spica_unknownError" = "An unknown error occurred";
-"error.spica_valueNotAllowed" = "The specified value is not allowed";
+"error.spica_authTokenMissing" = "Le jeton d'authentification est manquant";
+"error.spica_noLoginTokenReturned" = "L'API n'a pas renvoyé de jeton, veuillez réessayer";
+"error.spica_invalidStatusCode" = "L'API a renvoyé un code d'état non valide";
+"error.spica_unknownError" = "Une erreur inconnue est survenue";
+"error.spica_valueNotAllowed" = "La valeur spécifiée n'est pas autorisée";
 
-"error.default" = "An unknown error occurred (you did it)";
+"error.default" = "Une erreur inconnue s'est produite (vous l'avez fait)";

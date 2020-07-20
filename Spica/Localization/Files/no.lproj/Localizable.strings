@@ -6,130 +6,130 @@
   
 */
 
-"HOME" = "Home";
-"NOTIFICATIONS" = "Notifications";
-"ACCOUNT" = "Account";
-"SETTINGS" = "Settings";
+"HOME" = "Hjem";
+"NOTIFICATIONS" = "Varsler";
+"ACCOUNT" = "Konto";
+"SETTINGS" = "Innstillinger";
 
-"REPLY_SINGULAR" = "Reply";
-"REPLY_PLURAL" = "Replies";
+"REPLY_SINGULAR" = "Svar";
+"REPLY_PLURAL" = "Svar";
 
-"LOADING_ACTION" = "Loading";
+"LOADING_ACTION" = "Laster";
 
-"POST_NOUN" = "Post";
-"NEWPOST_PLACEHOLDER" = "What's on your mind?";
+"POST_NOUN" = "Innlegg";
+"NEWPOST_PLACEHOLDER" = "Hva skjer?";
 
-"IMAGE" = "Image";
-"SELECT_ANOTHER_IMAGE" = "Select another image";
-"REMOVE" = "Remove";
-"CANCEL" = "Cancel";
+"IMAGE" = "Bilde";
+"SELECT_ANOTHER_IMAGE" = "Velg et annet bilde";
+"REMOVE" = "Ta vekk";
+"CANCEL" = "Avbryt";
 
-"POST_SENT" = "Post sent!";
+"POST_SENT" = "Innleggen din ble sendt!";
 
-"REPLY_ACTION" = "Reply";
+"REPLY_ACTION" = "Svar";
 
-"FOLLOWER_SINGULAR" = "Follower";
-"FOLLOWER_PLURAL" = "Followers";
+"FOLLOWER_SINGULAR" = "Følger";
+"FOLLOWER_PLURAL" = "Følgere";
 
-"RUBY_SINGULAR" = "Ruby";
-"RUBY_PLURAL" = "Rubies";
+"RUBY_SINGULAR" = "Rubin";
+"RUBY_PLURAL" = "Rubiner";
 
-"FOLLOW_ACTION" = "Follow";
-"FOLLOWING_ACTION" = "Following";
+"FOLLOW_ACTION" = "Følg";
+"FOLLOWING_ACTION" = "Følger";
 
-"FOLLOWS_YOU" = "Follows you";
+"FOLLOWS_YOU" = "Følger deg";
 
-"EDIT_PROFILE" = "Edit Profile";
-"NAME" = "Name";
-"NICKNAME" = "Nickname";
-"ABOUT" = "About";
+"EDIT_PROFILE" = "Rediger profil";
+"NAME" = "Navn";
+"NICKNAME" = "Kallenavn";
+"ABOUT" = "Om meg";
 
-"SAVED_ACTION" = "Saved";
+"SAVED_ACTION" = "Lagrede";
 
-"COPIED_ACTION" = "Copied";
-"DELETED_ACTION" = "Deleted";
+"COPIED_ACTION" = "Kopiert";
+"DELETED_ACTION" = "Slettet";
 
-"DELETE_POST" = "Delete post";
-"DELETE_CONFIRMATION" = "Are you sure you want to delete this post?";
-"DELETE_ACTION" = "Delete";
+"DELETE_POST" = "Slett inlegg";
+"DELETE_CONFIRMATION" = "Er du sikker på at du vil slette dette innlegget?";
+"DELETE_ACTION" = "Slett";
 
 
-"VERSION" = "Version";
-"BUILD" = "Build";
+"VERSION" = "Versjon";
+"BUILD" = "Bygge";
 
-"GO_TO_PROFILE" = "Go to Profile";
-"SIGN_OUT" = "Sign out";
+"GO_TO_PROFILE" = "Gå til profil";
+"SIGN_OUT" = "Logg ut";
 
-"PRIVACY_POLICY" = "Privacy Policy";
-"TERMS_OF_SERVICE" = "Terms of Service";
-"WEBSITE" = "Website";
+"PRIVACY_POLICY" = "Personvernerklæring";
+"TERMS_OF_SERVICE" = "Vilkår";
+"WEBSITE" = "Nettsted";
 
-"USED_LIBRARIES" = "Used Libraries";
-"CREDITS" = "Credits";
+"USED_LIBRARIES" = "Brukte biblioteker";
+"CREDITS" = "Studiepoeng";
 
-"OTHER" = "Other";
+"OTHER" = "Annen";
 
-"SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. All rights reserved.";
+"SPICA_COPYRIGHT" = "©2020, Adrian Baumgart. Alle rettigheter forbeholdt.";
 
-"ALLES_LOGIN" = "Alles Login";
-"USERNAME" = "Username";
-"PASSWORD" = "Password";
-"SIGN_IN" = "Sign in";
-"NO_ACCOUNT" = "No account? Create one!";
+"ALLES_LOGIN" = "Logg inn til Alles";
+"USERNAME" = "Brukernavn";
+"PASSWORD" = "Passord";
+"SIGN_IN" = "Logg inn";
+"NO_ACCOUNT" = "Har du ikke en konto? Lag en!";
 
-"ERROR" = "Error";
+"ERROR" = "Feil";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */
 
-"error.alreadySet" = "This action has been performed before";
-"error.applications.badRedirect" = "The redirect URL is not allowed or malformed";
-"error.applications.firstPartyOnly" = "This action can only be performed by first party services";
-"error.applications.scopes.invalid" = "A requested OAuth scope does not exist";
-"error.applications.scopes.tooMany" = "Too many OAuth scopes were specified";
-"error.badAuthorization" = "You're not authorized to perform this action. We'll redirect you to the login screen";
-"error.badRequest" = "Some data is missing";
-"error.billing.invalidPlan" = "This plan does not exist";
-"error.billing.unregistered" = "You need to setup billing first";
-"error.bot" = "We can't verify that you're a human";
-"error.email.inUse" = "This email address is already in use";
-"error.email.invalid" = "Your email address is invalid";
-"error.internalError" = "An internal error occurred";
-"error.missingResource" = "The resource you requested does not exist";
-"error.notFound" = "This endpoint does not exist";
-"error.plusOnly" = "This action can only be performed by Alles+ members";
-"error.post.content.length" = "The content length is invalid (too short or too long)";
-"error.post.invalidParent" = "The parent post is invalid";
-"error.primaryOnly" = "This action is only available for primary accounts";
-"error.profile.username.chars" = "A character in your username is invalid";
-"error.profile.username.unavailable" = "This username is not available";
-"error.profile.username.tooShort" = "Your username is too short";
-"error.profile.username.tooLong" = "Your username is too long";
-"error.profile.name.tooShort" = "Your name is too short";
-"error.profile.name.tooLong" = "Your name is too long";
-"error.profile.nickname.tooShort" = "Your nickname is too short";
-"error.profile.nickname.tooLong" = "Your nickname is too long";
-"error.profile.about.tooShort" = "The 'about' text is too short";
-"error.profile.about.tooLong" = "The 'about' text is too long";
-"error.pulsar.badToken" = "The pulsar token is invalid";
-"error.rateLimited" = "This action has been performed too often in a certain period of time";
-"error.restrictedAccess" = "This AllesID is not permitted to perform the request";
-"error.stableOnly" = "You cannot perform this action on the beta version";
-"error.user.follow.limit" = "The amount of people you can follow is limited";
-"error.user.follow.self" = "You cannot follow yourself (nice try)";
-"error.user.password.incorrect" = "The password is incorrect";
-"error.user.password.requirements" = "The password does not meet the requirements. Try making it more complex";
-"error.user.password.same" = "The old and new passwords are the same";
-"error.user.signIn.credentials" = "This username / password is invalid";
-"error.validation.chars" = "The input contains characters that are not allowed";
-"error.validation.tooShort" = "The input is too short";
-"error.validation.tooLong" = "The input is too long";
+"error.alreadySet" = "Denne handlingen har blitt utført før";
+"error.applications.badRedirect" = "Omadresseringsadressen er ikke tillatt eller er misformet";
+"error.applications.firstPartyOnly" = "Denne handlingen kan bare utføres av førsteparts tjenester";
+"error.applications.scopes.invalid" = "Et forespurt OAUTH-omfang eksisterer ikke";
+"error.applications.scopes.tooMany" = "For mange OAUTH-omfang ble specifisert";
+"error.badAuthorization" = "Du er ikke autorisert å utføre denne handlingen. Vi vil omdirigere deg til innloggingsskjermen";
+"error.badRequest" = "Noen data mangler";
+"error.billing.invalidPlan" = "Denne plan eksisterer ikke";
+"error.billing.unregistered" = "Du må konfigurere fakturering først";
+"error.bot" = "Vi kan ikke bekrefte at du er et menneske";
+"error.email.inUse" = "Denne e-postadressen er allerede i bruk";
+"error.email.invalid" = "E-postadressen din er ugyldig";
+"error.internalError" = "En intern feil oppstod";
+"error.missingResource" = "Ressursen du ba om eksisterer ikke";
+"error.notFound" = "Denne sluttpunket eksisterer ikke";
+"error.plusOnly" = "Denne handlingen kan bare utføres av Alles+ medlemmer";
+"error.post.content.length" = "Innholdets lengde er ugyldig (dette er for kort eller for lenge)";
+"error.post.invalidParent" = "Foreldreinnlegget er ugyldig";
+"error.primaryOnly" = "Denne handlingen er bare tilgjengelig for primærkontoer";
+"error.profile.username.chars" = "En karakter på brukernavnet ditt er ugyldig";
+"error.profile.username.unavailable" = "Dette brukernavn er ikke tilgjengelig";
+"error.profile.username.tooShort" = "Brukernavn ditt er for kort";
+"error.profile.username.tooLong" = "Brukernavnet ditt er for langt";
+"error.profile.name.tooShort" = "Navnet ditt er for kort";
+"error.profile.name.tooLong" = "Navnet ditt er for langt";
+"error.profile.nickname.tooShort" = "Kallenavnet ditt er for kort";
+"error.profile.nickname.tooLong" = "Kallenavnet ditt er for langt";
+"error.profile.about.tooShort" = "Den 'om' teksten er for kort";
+"error.profile.about.tooLong" = "Den 'om' teksten er for lenge";
+"error.pulsar.badToken" = "Pulsar-symbolet er ugyldig";
+"error.rateLimited" = "Denne handlingen har blitt utført for ofte på kort tid";
+"error.restrictedAccess" = "Denne AllesID er ikke tillatt å utføre denne forespørselen";
+"error.stableOnly" = "Du kan ikke utføre denne handlingen på beta versjonen";
+"error.user.follow.limit" = "Mengden du kan følge er begrenset";
+"error.user.follow.self" = "Du kan ikke følge deg selv (godt forsøk)";
+"error.user.password.incorrect" = "Passordet er feil";
+"error.user.password.requirements" = "Passordet oppfyller ikke kravene. Prøv å gjøre det mer komplekst";
+"error.user.password.same" = "Det gamle og det nye passord er det samme";
+"error.user.signIn.credentials" = "Dette brukernavn eller passord er ugyldig";
+"error.validation.chars" = "Innspillet inneholder tegn som ikke er tillatt";
+"error.validation.tooShort" = "Innspillet er for kort";
+"error.validation.tooLong" = "Innspillet er for lenge";
 
-"error.spica_authTokenMissing" = "The auth token is missing";
-"error.spica_noLoginTokenReturned" = "The API didn't return a token, please try again";
-"error.spica_invalidStatusCode" = "The API returned an invalid status code";
-"error.spica_unknownError" = "An unknown error occurred";
-"error.spica_valueNotAllowed" = "The specified value is not allowed";
+"error.spica_authTokenMissing" = "Autentisk token mangler";
+"error.spica_noLoginTokenReturned" = "API returnerte ikke et symbol, prøv igjen";
+"error.spica_invalidStatusCode" = "API returnerte en ugyldig statuskode";
+"error.spica_unknownError" = "En intern feil oppstod";
+"error.spica_valueNotAllowed" = "Den angitte verdien er ikke tillatt";
 
-"error.default" = "An unknown error occurred (you did it)";
+"error.default" = "En unkjent feil oppstod";
