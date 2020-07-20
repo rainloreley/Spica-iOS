@@ -79,8 +79,8 @@
 
 "ERROR" = "Error";
 
-"REPOST" = "Repost";
-"COPY_ID" = "Copy ID";
+"REPOST" = "Republicar";
+"COPY_ID" = "Copiar ID";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
