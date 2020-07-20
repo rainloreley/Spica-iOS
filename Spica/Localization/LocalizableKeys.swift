@@ -58,6 +58,8 @@ enum LocalizableKeys: String {
 	case SIGN_IN = "SIGN_IN"
 	case NO_ACCOUNT = "NO_ACCOUNT"
 	case ERROR = "ERROR"
+	case REPOST = "REPOST"
+	case COPY_ID = "COPY_ID"
 	case error_alreadySet = "error.alreadySet"
 	case error_applications_badRedirect = "error.applications.badRedirect"
 	case error_applications_firstPartyOnly = "error.applications.firstPartyOnly"

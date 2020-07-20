@@ -154,7 +154,7 @@ class MainSettingsViewController: UITableViewController {
         let version = dictionary["CFBundleShortVersionString"] as! String
         let build = dictionary["CFBundleVersion"] as! String
 
-        versionBuildLabel.text = "Version \(version) Build \(build)"
+		versionBuildLabel.text = "\(SLocale(.VERSION)) \(version) \(SLocale(.BUILD)) \(build)"
 
         DispatchQueue.global(qos: .utility).async {
             self.username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")!

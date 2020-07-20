@@ -128,6 +128,7 @@
 		3A9D965D24BA59AA00703466 /* Spica.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Spica.entitlements; sourceTree = "<group>"; };
 		3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextFieldCell.swift; sourceTree = "<group>"; };
 		3AA12EF324B0F3CD009C904A /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
+		3AB0980E24C5BCB0005CCA27 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEditHeaderCell.swift; sourceTree = "<group>"; };
 		3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorMessage.swift; sourceTree = "<group>"; };
@@ -140,6 +141,7 @@
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
+		3AEEE93B24C5C9E4006E4812 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.release.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
@@ -575,6 +577,8 @@
 				Base,
 				de,
 				es,
+				fr,
+				nb,
 			);
 			mainGroup = 3A7145D224AA8753000FA3C3;
 			packageReferences = (
@@ -831,6 +835,8 @@
 				3A332F3224C3BC8300A91C4E /* de */,
 				3A332F3324C3BC8300A91C4E /* en */,
 				3AE55BE124C44ED1002D539E /* es */,
+				3AB0980E24C5BCB0005CCA27 /* fr */,
+				3AEEE93B24C5C9E4006E4812 /* nb */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
