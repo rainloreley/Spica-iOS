@@ -132,4 +132,4 @@ If you need more context, most errors are from the Alles API: https://erroneous.
 "error.spica_unknownError" = "Une erreur inconnue est survenue";
 "error.spica_valueNotAllowed" = "La valeur spécifiée n'est pas autorisée";
 
-"error.default" = "An unknown error occurred (you did it)";
+"error.default" = "Une erreur inconnue s'est produite (vous l'avez fait)";
