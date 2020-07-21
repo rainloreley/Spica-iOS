@@ -9,6 +9,7 @@ import SwiftKeychainWrapper
 import UIKit
 import Cache
 import SPAlert
+import RealmSwift
 
 protocol MainSettingsDelegate {
     func clickedMore(username: String)
@@ -39,6 +40,7 @@ class MainSettingsViewController: UITableViewController {
 	
 	@IBOutlet weak var translateSymbol: UIImageView!
 	@IBOutlet weak var clearCacheButton: UIButton!
+	@IBOutlet weak var cacheSizeLabel: UILabel!
 	
     var username = ""
 
@@ -87,7 +89,17 @@ class MainSettingsViewController: UITableViewController {
     }
 	
 	@IBAction func clearCache(_ sender: Any) {
-		let diskConfig = DiskConfig(name: "SpicaImageCache")
+		let realm = try! Realm()
+		
+		try! realm.write {
+			realm.deleteAll()
+		}
+		
+		let path = realm.configuration.fileURL!.path
+		let attributes = try! FileManager.default.attributesOfItem(atPath: path)
+		let fileSize = attributes[.size]
+		cacheSizeLabel.text = "\(ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file))"
+		/*let diskConfig = DiskConfig(name: "SpicaImageCache")
 		let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
 		
 		
@@ -97,7 +109,7 @@ class MainSettingsViewController: UITableViewController {
 		  transformer: TransformerFactory.forCodable(ofType: Data.self) // Storage<User>
 		)
 		
-		try? storage?.removeAll()
+		try? storage?.removeAll()*/
 		
 		SPAlert.present(title: SLocale(.CACHE_CLEARED), preset: .done)
 	}
@@ -171,6 +183,14 @@ class MainSettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = SLocale(.SETTINGS)
+		
+		let realm = try! Realm()
+		
+		let path = realm.configuration.fileURL!.path
+		let attributes = try! FileManager.default.attributesOfItem(atPath: path)
+		let fileSize = attributes[.size]
+		cacheSizeLabel.text = "\(ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file))"
+		
 		
 		if #available(iOS 14.0, *) {
 			

@@ -8,35 +8,38 @@
 import Foundation
 import UIKit
 import Cache
+import RealmSwift
 
 let imageCache = NSCache<NSString, UIImage>()
 
 public class ImageLoader {
     public static func loadImageFromInternet(url: URL) -> UIImage {
+	
+		let realm = try! Realm()
 		
-		let diskConfig = DiskConfig(name: "SpicaImageCache")
-		let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
-
-		let storage = try? Storage(
-		  diskConfig: diskConfig,
-		  memoryConfig: memoryConfig,
-		  transformer: TransformerFactory.forCodable(ofType: Data.self) // Storage<User>
-		)
-		
-		if let cachedImage = try? storage!.entry(forKey: url.absoluteString)/*imageCache.object(forKey: url.absoluteString as NSString)*/ {
-			return UIImage(data: cachedImage.object)!
+		if let cachedImage = realm.objects(CacheImage.self).filter("id == \"\(url.absoluteString)\"").first {
+			return UIImage(data: cachedImage.image!)!
         } else {
         let tempImg: UIImage?
         let data = try? Data(contentsOf: url)
         if let data = data {
             tempImg = UIImage(data: data)
-			try? storage?.setObject((tempImg?.pngData())!, forKey: url.absoluteString)
-            //imageCache.setObject(tempImg!, forKey: url.absoluteString as NSString)
+			let cachedImage = CacheImage()
+			cachedImage.id = url.absoluteString
+			cachedImage.image = tempImg?.pngData()
+			
+			try! realm.write {
+				realm.add(cachedImage)
+			}
         } else {
             tempImg = UIImage(systemName: "person.circle")
         }
-
         return tempImg!
         }
     }
+}
+
+class CacheImage: Object {
+	@objc dynamic var id: String = ""
+	@objc dynamic var image: Data? = nil
 }

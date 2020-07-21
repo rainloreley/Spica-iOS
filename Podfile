@@ -9,6 +9,7 @@ target 'Spica' do
 		pod 'SwiftKeychainWrapper'
 		pod 'Lightbox'
 		pod 'Imaginary'
+		pod 'RealmSwift'
 		
   # Pods for Spica
 

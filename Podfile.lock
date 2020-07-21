@@ -5,12 +5,18 @@ PODS:
   - KMPlaceholderTextView (1.4.0)
   - Lightbox (2.4.2):
     - Imaginary (~> 4.3.1)
+  - Realm (5.3.1):
+    - Realm/Headers (= 5.3.1)
+  - Realm/Headers (5.3.1)
+  - RealmSwift (5.3.1):
+    - Realm (= 5.3.1)
   - SwiftKeychainWrapper (3.4.0)
 
 DEPENDENCIES:
   - Imaginary
   - KMPlaceholderTextView (~> 1.4.0)
   - Lightbox
+  - RealmSwift
   - SwiftKeychainWrapper
 
 SPEC REPOS:
@@ -19,6 +25,8 @@ SPEC REPOS:
     - Imaginary
     - KMPlaceholderTextView
     - Lightbox
+    - Realm
+    - RealmSwift
     - SwiftKeychainWrapper
 
 SPEC CHECKSUMS:
@@ -26,8 +34,10 @@ SPEC CHECKSUMS:
   Imaginary: 18c5bba364229eef383b925199db442e71d175e1
   KMPlaceholderTextView: 2206c3df39979e9396e2d96fa9f427a8951121b0
   Lightbox: 8837c35c1150fa0410d94296e369b432d37f18c7
+  Realm: 8ec860dc0c3079f7cab1085d95661a06f162d487
+  RealmSwift: ca9d0df752157befb8c28034301f988a56ce91eb
   SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
 
-PODFILE CHECKSUM: 3431e67d1bb8fd0b979db9bb00f83e16c976bf4a
+PODFILE CHECKSUM: a560e042506737962f1e1e61ac3ddffe03a02005
 
 COCOAPODS: 1.9.3

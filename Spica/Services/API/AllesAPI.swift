@@ -11,6 +11,7 @@ import Foundation
 import SwiftKeychainWrapper
 import SwiftyJSON
 import UIKit
+import RealmSwift
 
 public class AllesAPI {
     static let `default` = AllesAPI()
@@ -73,6 +74,7 @@ public class AllesAPI {
     }
 	
     public static func loadFeed() -> Future<[Post], AllesAPIErrorMessage> {
+		
         Future<[Post], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
