@@ -9,6 +9,7 @@ import Combine
 import JGProgressHUD
 import SPAlert
 import UIKit
+import Lightbox
 
 class PostDetailViewController: UIViewController, PostCreateDelegate {
     var selectedPostID: String!
@@ -73,12 +74,12 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
                 titleBar.toolbar = nil
             }
-        #endif
+        #endif*/
         loadPostDetail()
     }
 
@@ -383,6 +384,11 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension PostDetailViewController: PostCellViewDelegate {
+	
+	func clickedOnImage(controller: LightboxController) {
+		present(controller, animated: true, completion: nil)
+	}
+	
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post

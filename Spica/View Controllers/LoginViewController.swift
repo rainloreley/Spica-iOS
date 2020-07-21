@@ -124,12 +124,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
                 titleBar.toolbar = nil
             }
-        #endif
+        #endif*/
     }
 
     @objc func openCreateAccount() {
@@ -191,12 +191,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
                             globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
 
-                            #if targetEnvironment(macCatalyst)
+                            /*#if targetEnvironment(macCatalyst)
                                 if let titlebar = mySceneDelegate.window?.windowScene?.titlebar {
                                     titlebar.titleVisibility = .hidden
                                     titlebar.toolbar = nil
                                 }
-                            #endif
+                            #endif*/
 
                             mySceneDelegate.window?.rootViewController = globalSplitViewController
 

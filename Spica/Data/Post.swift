@@ -8,6 +8,7 @@
 import Foundation
 import SwiftyJSON
 import UIKit
+import Cache
 
 public struct Post: Hashable {
     var id: String
@@ -51,9 +52,24 @@ public struct Post: Hashable {
         repliesCount = json["replyCount"].intValue
         score = json["score"].int ?? 0
         content = json["content"].string!
+		
+		let diskConfig = DiskConfig(name: "SpicaImageCache")
+		let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
+
+		let storage = try? Storage(
+		  diskConfig: diskConfig,
+		  memoryConfig: memoryConfig,
+		  transformer: TransformerFactory.forCodable(ofType: Data.self) // Storage<User>
+		)
+		
         if let imageURLString = json["image"].string {
             imageURL = URL(string: imageURLString)
+			
+			if let cachedImage = try? storage!.entry(forKey: imageURLString) {
+				image = UIImage(data: cachedImage.object)!
+			}
         }
+		
         voteStatus = json["vote"].int ?? 0
     }
 }

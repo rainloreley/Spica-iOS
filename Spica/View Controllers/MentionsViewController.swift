@@ -9,6 +9,7 @@ import Combine
 import JGProgressHUD
 import SPAlert
 import UIKit
+import Lightbox
 
 class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
@@ -118,14 +119,14 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setSidebar()
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
                 let toolBar = NSToolbar(identifier: "mentionsToolbar")
                 toolBar.delegate = self
                 titleBar.toolbar = toolBar
             }
-        #endif
+        #endif*/
         loadMentions()
     }
 
@@ -249,6 +250,11 @@ extension MentionsViewController: UITableViewDelegate {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
+	
+	func clickedOnImage(controller: LightboxController) {
+		present(controller, animated: true, completion: nil)
+	}
+	
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post

@@ -152,7 +152,11 @@ class UserHeaderCellView: UITableViewCell {
     }()
 
     var followButton: UIButton = {
-        let button = UIButton(type: .system)
+		#if targetEnvironment(macCatalyst)
+		var button = UIButton(type: .custom)
+		#else
+		var button = UIButton(type: .system)
+		#endif
         button.setTitle("Follow", for: .normal)
         return button
     }()

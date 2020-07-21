@@ -11,6 +11,7 @@ import SnapKit
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
+import Lightbox
 
 class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
@@ -38,12 +39,12 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
         let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
 
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             navigationController?.navigationBar.prefersLargeTitles = true
             navigationController?.navigationItem.largeTitleDisplayMode = .always
-        #else
+        #else*/
             navigationItem.rightBarButtonItems = [createPostBarButtonItem]
-        #endif
+        //#endif
 
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
             //
@@ -188,14 +189,14 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
         setSidebar()
 
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
                 let toolBar = NSToolbar(identifier: "timelineToolbar")
                 toolBar.delegate = self
                 titleBar.toolbar = toolBar
             }
-        #endif
+        #endif*/
 
         loadFeed()
     }
@@ -332,6 +333,11 @@ extension TimelineViewController: MainSettingsDelegate {
 }
 
 extension TimelineViewController: PostCellViewDelegate {
+	
+	func clickedOnImage(controller: LightboxController) {
+		present(controller, animated: true, completion: nil)
+	}
+	
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post

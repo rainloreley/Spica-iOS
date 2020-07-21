@@ -10,10 +10,12 @@ import JGProgressHUD
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
+import Lightbox
 
 class UserProfileViewController: UIViewController, UserEditDelegate {
     var user: User!
     var tableView: UITableView!
+	var loadedPreviously = false
     var userPosts = [Post]() {
         didSet {
             DispatchQueue.main.async {
@@ -42,17 +44,19 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         super.viewDidLoad()
 
         hero.isEnabled = true
+		
+		loadedPreviously = false
 
         view.backgroundColor = .systemBackground
 
         signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             if traitCollection.userInterfaceIdiom == .mac {
                 navigationController?.isToolbarHidden = true
                 navigationController?.setNavigationBarHidden(true, animated: false)
             }
-        #else
+        #else*/
             navigationItem.title = "\(user.displayName)"
             navigationController?.navigationBar.prefersLargeTitles = false
             var rightItems = [UIBarButtonItem]()
@@ -64,7 +68,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             }
 
             navigationItem.rightBarButtonItems = rightItems
-        #endif
+        //#endif
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView?.delegate = self
@@ -107,11 +111,11 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     override func viewWillAppear(_: Bool) {
         setSidebar()
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             navigationController?.setNavigationBarHidden(true, animated: false)
         #else
             navigationController?.navigationBar.prefersLargeTitles = false
-        #endif
+        #endif*/
     }
 
     @objc func openUserSettings() {
@@ -124,21 +128,21 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     override func viewWillDisappear(_: Bool) {
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             navigationController?.setNavigationBarHidden(false, animated: false)
-        #endif
+        #endif*/
     }
 
     override func viewDidAppear(_: Bool) {
         setSidebar()
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
                 let toolBar = NSToolbar(identifier: "userProfileToolbar")
                 toolBar.delegate = self
                 titleBar.toolbar = toolBar
             }
-        #endif
+        #endif*/
         loadUser()
     }
 
@@ -183,14 +187,14 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 } receiveValue: { [unowned self] in
                     self.user = $0
                     self.navigationItem.title = "\(self.user.displayName)"
-                    #if targetEnvironment(macCatalyst)
+                    /*#if targetEnvironment(macCatalyst)
                         let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
                         if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
                             let toolBar = NSToolbar(identifier: "userProfileToolbar")
                             toolBar.delegate = self
                             titleBar.toolbar = toolBar
                         }
-                    #endif
+                    #endif*/
                     self.loadPfp()
                     self.loadPosts()
                 }
@@ -266,7 +270,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                     } else {
                         userPosts[index].image = UIImage()
                     }
-                    if index < 5 {
+                    if index < 5, !loadedPreviously {
                         DispatchQueue.main.async {
                             self.tableView.beginUpdates()
                             self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
@@ -277,6 +281,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 }
             }
             DispatchQueue.main.async {
+				loadedPreviously = true
                 self.tableView.reloadData()
             }
         }
@@ -463,6 +468,11 @@ extension UserProfileViewController: PostCreateDelegate {
 }
 
 extension UserProfileViewController: PostCellViewDelegate {
+	
+	func clickedOnImage(controller: LightboxController) {
+		present(controller, animated: true, completion: nil)
+	}
+	
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post

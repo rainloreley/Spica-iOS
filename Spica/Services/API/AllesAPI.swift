@@ -71,7 +71,7 @@ public class AllesAPI {
             }
         }
     }
-
+	
     public static func loadFeed() -> Future<[Post], AllesAPIErrorMessage> {
         Future<[Post], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -90,6 +90,7 @@ public class AllesAPI {
                                 Post(json)
                             }
                             promise(.success(tempPosts))
+							promise(.success(tempPosts))
                         } else {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))

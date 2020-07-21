@@ -9,6 +9,7 @@ import Combine
 import JGProgressHUD
 import SPAlert
 import UIKit
+import Cache
 
 protocol UserEditDelegate {
     func didSaveUser(user: UpdateUser)
@@ -41,7 +42,11 @@ class UserEditViewController: UIViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: SLocale(.SAVE_ACTION), style: .plain, target: self, action: #selector(saveData))
 
-        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+		#if targetEnvironment(macCatalyst)
+		tableView = UITableView(frame: view.bounds, style: .plain)
+		#else
+		tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+		#endif
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UserEditHeaderCell.self, forCellReuseIdentifier: "userHeader")
@@ -94,6 +99,7 @@ class UserEditViewController: UIViewController {
             } receiveValue: { [unowned self] in
                 navigationController?.popViewController(animated: true)
                 SPAlert.present(title: SLocale(.SAVED_ACTION), preset: .done)
+				
                 delegate.didSaveUser(user: $0)
             }
             .store(in: &subscriptions)

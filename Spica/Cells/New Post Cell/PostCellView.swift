@@ -8,6 +8,7 @@
 import KMPlaceholderTextView
 import SwiftKeychainWrapper
 import UIKit
+import Lightbox
 
 // https://github.com/devxoul/UITextView-Placeholder
 
@@ -22,6 +23,8 @@ protocol PostCellViewDelegate {
     func replyToPost(id: String)
 
     func repost(id: String, username: String)
+	
+	func clickedOnImage(controller: LightboxController)
 }
 
 class PostCellView: UITableViewCell, UITextViewDelegate {
@@ -117,6 +120,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                     make.trailing.equalTo(self.snp.trailing).offset(-16)
                     make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
                 }
+				
+				let tap = UITapGestureRecognizer(target: self, action: #selector(clickImage))
+
+				mediaImageView.isUserInteractionEnabled = true
+				mediaImageView.addGestureRecognizer(tap)
             }
 
             if post!.voteStatus == 1 {
@@ -133,8 +141,36 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             let contextInteraction = UIContextMenuInteraction(delegate: self)
             contentView.addInteraction(contextInteraction)
             moreImageView.isUserInteractionEnabled = true
+			
+			
         }
     }
+	
+	@objc func clickImage() {
+		if let image = post?.image {
+			
+			// Create an array of images.
+			let images = [
+			  LightboxImage(
+				image: image,
+				text: post!.content
+			  )
+			]
+
+			// Create an instance of LightboxController.
+			let controller = LightboxController(images: images)
+
+			// Set delegates.
+			/*controller.pageDelegate = self
+			controller.dismissalDelegate = self*/
+
+			// Use dynamic background.
+			controller.dynamicBackground = true
+			
+			delegate.clickedOnImage(controller: controller)
+		}
+		
+	}
 
     var pfpImageView: UIImageView = {
         let imgView = UIImageView(frame: .zero)
@@ -183,7 +219,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
     }()
 
     var upvoteButton: UIButton = {
-        let button = UIButton(type: .system)
+		#if targetEnvironment(macCatalyst)
+		var button = UIButton(type: .custom)
+		#else
+		var button = UIButton(type: .system)
+		#endif
         button.setTitle("+", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 23)
         button.setTitleColor(.systemBlue, for: .normal)
@@ -194,7 +234,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
     }()
 
     var downvoteButton: UIButton = {
-        let button = UIButton(type: .system)
+		#if targetEnvironment(macCatalyst)
+		var button = UIButton(type: .custom)
+		#else
+		var button = UIButton(type: .system)
+		#endif
         button.setTitle("-", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 29)
         button.setTitleColor(.systemBlue, for: .normal)

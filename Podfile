@@ -5,8 +5,11 @@ target 'Spica' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
- pod 'KMPlaceholderTextView', '~> 1.4.0'
- pod 'SwiftKeychainWrapper'
+		pod 'KMPlaceholderTextView', '~> 1.4.0'
+		pod 'SwiftKeychainWrapper'
+		pod 'Lightbox'
+		pod 'Imaginary'
+		
   # Pods for Spica
 
   target 'SpicaTests' do
