@@ -157,7 +157,7 @@ extension UserEditViewController: UITableViewDelegate, UITableViewDataSource {
 
             // cell.placeholder = EditHeaders.init(rawValue: indexPath.section)?.title
 
-            cell.textChanged { [weak tableView] _ in
+            cell.textChanged { _ in
                 switch EditHeaders(rawValue: indexPath.section) {
                 case .user: return
                 case .name: self.editableUser.name = cell.textField.text!
@@ -198,7 +198,7 @@ extension UserEditViewController: UITableViewDelegate, UITableViewDataSource {
             case .name: return SLocale(.NAME)
             case .nickname: return SLocale(.NICKNAME)
             case .about: return SLocale(.ABOUT)
-            default: return ""
+            //default: return ""
             }
         }
     }

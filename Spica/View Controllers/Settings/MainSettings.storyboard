@@ -530,6 +530,7 @@
                         <outlet property="spicaPrivacyButton" destination="Oy4-xm-Dzg" id="nOI-MJ-CRR"/>
                         <outlet property="spicaWebsiteButton" destination="84R-QP-t4i" id="4SY-hK-Non"/>
                         <outlet property="translateAppLabel" destination="sZy-Ln-O0v" id="wrq-Cd-XXB"/>
+                        <outlet property="translateSymbol" destination="M67-j8-cUL" id="dja-ip-2TJ"/>
                         <outlet property="usedLibrariesButton" destination="6Se-L2-3YP" id="kxn-95-YaB"/>
                         <outlet property="userPfpImageView" destination="gIJ-HF-6XP" id="XdG-WZ-tLb"/>
                         <outlet property="usernameLabel" destination="im2-ye-Kme" id="9mP-oT-gHD"/>

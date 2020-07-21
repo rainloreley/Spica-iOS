@@ -34,7 +34,9 @@ class MainSettingsViewController: UITableViewController {
     @IBOutlet var copyrightLabel: UILabel!
     @IBOutlet var translateAppLabel: UIButton!
     @IBOutlet var contactLabel: UIButton!
-
+	
+	@IBOutlet weak var translateSymbol: UIImageView!
+	
     var username = ""
 
     var delegate: MainSettingsDelegate!
@@ -149,6 +151,14 @@ class MainSettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = SLocale(.SETTINGS)
+		
+		if #available(iOS 14.0, *) {
+			
+		}
+		else {
+			translateSymbol.image = translateSymbol.image?.withRenderingMode(.alwaysTemplate)
+			translateSymbol.tintColor = .link
+		}
         /* tableView = UITableView(frame: .zero, style: .insetGrouped)
          tableView.delegate = self
          tableView.dataSource = self
