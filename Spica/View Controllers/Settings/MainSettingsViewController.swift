@@ -7,6 +7,8 @@
 
 import SwiftKeychainWrapper
 import UIKit
+import Cache
+import SPAlert
 
 protocol MainSettingsDelegate {
     func clickedMore(username: String)
@@ -36,6 +38,7 @@ class MainSettingsViewController: UITableViewController {
     @IBOutlet var contactLabel: UIButton!
 	
 	@IBOutlet weak var translateSymbol: UIImageView!
+	@IBOutlet weak var clearCacheButton: UIButton!
 	
     var username = ""
 
@@ -58,6 +61,7 @@ class MainSettingsViewController: UITableViewController {
         copyrightLabel.text = SLocale(.SPICA_COPYRIGHT)
         translateAppLabel.setTitle(SLocale(.TRANSLATE_APP), for: .normal)
         contactLabel.setTitle(SLocale(.CONTACT), for: .normal)
+		clearCacheButton.setTitle(SLocale(.CLEAR_CACHE), for: .normal)
     }
 
     @IBAction func profileMore(_: Any) {
@@ -81,7 +85,23 @@ class MainSettingsViewController: UITableViewController {
             UIApplication.shared.open(url!)
         }
     }
-
+	
+	@IBAction func clearCache(_ sender: Any) {
+		let diskConfig = DiskConfig(name: "SpicaImageCache")
+		let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
+		
+		
+		let storage = try? Storage(
+		  diskConfig: diskConfig,
+		  memoryConfig: memoryConfig,
+		  transformer: TransformerFactory.forCodable(ofType: Data.self) // Storage<User>
+		)
+		
+		try? storage?.removeAll()
+		
+		SPAlert.present(title: SLocale(.CACHE_CLEARED), preset: .done)
+	}
+	
     @IBAction func github(_: Any) {
         let url = URL(string: "https://github.com/adrianbaumgart/Spica")
         if UIApplication.shared.canOpenURL(url!) {
@@ -210,14 +230,14 @@ class MainSettingsViewController: UITableViewController {
     override func viewDidAppear(_: Bool) {
         setSidebar()
 
-        #if targetEnvironment(macCatalyst)
+        /*#if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
                 let toolBar = NSToolbar(identifier: "settingsToolbar")
 
                 titleBar.toolbar = toolBar
             }
-        #endif
+        #endif*/
     }
 
     override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -225,13 +245,15 @@ class MainSettingsViewController: UITableViewController {
         switch section {
         case 0:
             return SLocale(.ACCOUNT)
-        case 1:
-            return "Spica"
+		case 1:
+			return SLocale(.SETTINGS)
         case 2:
-            return "Alles"
+            return "Spica"
         case 3:
-            return SLocale(.OTHER)
+            return "Alles"
         case 4:
+            return SLocale(.OTHER)
+        case 5:
             return ""
         default:
             return ""
@@ -255,13 +277,15 @@ class MainSettingsViewController: UITableViewController {
         switch section {
         case 0:
             return 3
-        case 1:
-            return 2
+		case 1:
+			return 1
         case 2:
-            return 3
+            return 2
         case 3:
-            return 5
+            return 3
         case 4:
+            return 5
+        case 5:
             return 2
         default:
             return 0
