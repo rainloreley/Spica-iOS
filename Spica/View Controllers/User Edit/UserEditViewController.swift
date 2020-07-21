@@ -39,7 +39,7 @@ class UserEditViewController: UIViewController {
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.arrow.up.on.square"), style: .plain, target: self, action: #selector(saveData))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: SLocale(.SAVE_ACTION), style: .plain, target: self, action: #selector(saveData))
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self

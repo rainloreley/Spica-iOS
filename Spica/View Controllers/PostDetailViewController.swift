@@ -330,6 +330,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "dividerCell", for: indexPath) as! AncestorPostDividerCell
+                cell.selectionStyle = .none
                 cell.backgroundColor = .clear
                 return cell
             }
@@ -367,15 +368,16 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section != 1 {
             let detailVC = PostDetailViewController()
-            if indexPath.section == 0 {
+            detailVC.hidesBottomBarWhenPushed = true
+            if indexPath.section == 0, indexPath.row % 2 == 0 {
+                let detailVC = PostDetailViewController()
                 let count = Array(0 ... indexPath.row).filter { !$0.isMultiple(of: 2) }.count
                 detailVC.selectedPostID = postAncestors[indexPath.row - count].id
+                navigationController?.pushViewController(detailVC, animated: true)
             } else if indexPath.section == 2 {
                 detailVC.selectedPostID = postReplies[indexPath.row].id
+                navigationController?.pushViewController(detailVC, animated: true)
             }
-
-            detailVC.hidesBottomBarWhenPushed = true
-            navigationController?.pushViewController(detailVC, animated: true)
         }
     }
 }

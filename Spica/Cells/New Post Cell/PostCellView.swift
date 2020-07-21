@@ -382,19 +382,19 @@ extension PostCellView: UIContextMenuInteractionDelegate {
 
         var actionsArray = [UIAction]()
 
-		let copyID = UIAction(title: SLocale(.COPY_ID), image: UIImage(systemName: "doc.on.doc")) { _ in
+        let copyID = UIAction(title: SLocale(.COPY_ID), image: UIImage(systemName: "doc.on.doc")) { _ in
             self.delegate.copyPostID(id: self.post!.id)
         }
 
         actionsArray.append(copyID)
 
-		let reply = UIAction(title: SLocale(.REPLY_ACTION), image: UIImage(systemName: "arrowshape.turn.up.left")) { _ in
+        let reply = UIAction(title: SLocale(.REPLY_ACTION), image: UIImage(systemName: "arrowshape.turn.up.left")) { _ in
             self.delegate.replyToPost(id: self.post!.id)
         }
 
         actionsArray.append(reply)
 
-		let repost = UIAction(title: SLocale(.REPOST), image: UIImage(systemName: "square.and.arrow.up")) { _ in
+        let repost = UIAction(title: SLocale(.REPOST), image: UIImage(systemName: "square.and.arrow.up")) { _ in
             self.delegate.repost(id: self.post!.id, username: self.post!.author.username)
         }
 
@@ -403,13 +403,13 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         let userID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
         if post?.author.id == userID {
-			let delete = UIAction(title: SLocale(.DELETE_ACTION), image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+            let delete = UIAction(title: SLocale(.DELETE_ACTION), image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
                 self.delegate.deletePost(id: self.post!.id)
             }
             actionsArray.append(delete)
         }
 
         // Create and return a UIMenu with the share action
-		return UIMenu(title: SLocale(.POST_NOUN), children: actionsArray)
+        return UIMenu(title: SLocale(.POST_NOUN), children: actionsArray)
     }
 }

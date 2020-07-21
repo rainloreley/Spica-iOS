@@ -32,6 +32,8 @@ class MainSettingsViewController: UITableViewController {
     @IBOutlet var creditsButton: UIButton!
 
     @IBOutlet var copyrightLabel: UILabel!
+    @IBOutlet var translateAppLabel: UIButton!
+    @IBOutlet var contactLabel: UIButton!
 
     var username = ""
 
@@ -52,6 +54,8 @@ class MainSettingsViewController: UITableViewController {
         creditsButton.setTitle(SLocale(.CREDITS), for: .normal)
 
         copyrightLabel.text = SLocale(.SPICA_COPYRIGHT)
+        translateAppLabel.setTitle(SLocale(.TRANSLATE_APP), for: .normal)
+        contactLabel.setTitle(SLocale(.CONTACT), for: .normal)
     }
 
     @IBAction func profileMore(_: Any) {
@@ -66,6 +70,27 @@ class MainSettingsViewController: UITableViewController {
             if delegate != nil {
                 delegate.clickedMore(username: username)
             }
+        }
+    }
+
+    @IBAction func translateApp(_: Any) {
+        let url = URL(string: "https://go.fliney.eu/BWhtmsECgJ49")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+    }
+
+    @IBAction func github(_: Any) {
+        let url = URL(string: "https://github.com/adrianbaumgart/Spica")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
+        }
+    }
+
+    @IBAction func contact(_: Any) {
+        let url = URL(string: "mailto:adrian@abmgrt.dev")
+        if UIApplication.shared.canOpenURL(url!) {
+            UIApplication.shared.open(url!)
         }
     }
 
@@ -124,54 +149,69 @@ class MainSettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = SLocale(.SETTINGS)
+        /* tableView = UITableView(frame: .zero, style: .insetGrouped)
+         tableView.delegate = self
+         tableView.dataSource = self
+         view.addSubview(tableView)
+         tableView.snp.makeConstraints { (make) in
+         	make.top.equalTo(view.snp.top)
+         	make.leading.equalTo(view.snp.leading)
+         	make.bottom.equalTo(view.snp.bottom)
+         	make.trailing.equalTo(view.snp.trailing)
+         } */
         // self.tableView.delegate = self
         localizeView()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-	
-	func setSidebar() {
-		if #available(iOS 14.0, *) {
-			if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-				if let sidebar = globalSideBarController {
-					if let collectionView = sidebar.collectionView {
-						collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.settings.rawValue), animated: true, scrollPosition: .top)
-					}
-				}
-			}
-		}
-	}
+
+    func setSidebar() {
+        if #available(iOS 14.0, *) {
+            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+                if let sidebar = globalSideBarController {
+                    if let collectionView = sidebar.collectionView {
+                        collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.settings.rawValue), animated: true, scrollPosition: .top)
+                    }
+                }
+            }
+        }
+    }
 
     override func viewWillAppear(_: Bool) {
         setSidebar()
-		navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = true
 
         let dictionary = Bundle.main.infoDictionary!
         let version = dictionary["CFBundleShortVersionString"] as! String
         let build = dictionary["CFBundleVersion"] as! String
 
-		versionBuildLabel.text = "\(SLocale(.VERSION)) \(version) \(SLocale(.BUILD)) \(build)"
+        versionBuildLabel.text = "\(SLocale(.VERSION)) \(version) \(SLocale(.BUILD)) \(build)"
 
-        DispatchQueue.global(qos: .utility).async {
+        DispatchQueue.global(qos: .background).async {
             self.username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")!
-
-            DispatchQueue.main.async {
-                self.usernameLabel.text = "@\(self.username)"
-            }
 
             let userImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(self.username)")!)
 
             DispatchQueue.main.async {
+                self.usernameLabel.text = "@\(self.username)"
                 self.userPfpImageView.image = userImage
             }
         }
     }
 
+    override func viewDidAppear(_: Bool) {
+        setSidebar()
+
+        #if targetEnvironment(macCatalyst)
+            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                let toolBar = NSToolbar(identifier: "settingsToolbar")
+
+                titleBar.toolbar = toolBar
+            }
+        #endif
+    }
+
     override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
+        // return tableViewData[section].title
         switch section {
         case 0:
             return SLocale(.ACCOUNT)
@@ -188,27 +228,20 @@ class MainSettingsViewController: UITableViewController {
         }
     }
 
-    override func viewDidAppear(_: Bool) {
-		setSidebar()
-        #if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                let toolBar = NSToolbar(identifier: "settingsToolbar")
-
-                titleBar.toolbar = toolBar
-            }
-        #endif
-    }
-
     // MARK: - Table view data source
 
     override func numberOfSections(in _: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
+        // return tableViewData.count
+
         return 5
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+
+        // return tableViewData[section].cells.count
+
         switch section {
         case 0:
             return 3
@@ -217,11 +250,31 @@ class MainSettingsViewController: UITableViewController {
         case 2:
             return 3
         case 3:
-            return 2
+            return 5
         case 4:
             return 2
         default:
             return 0
         }
     }
+
+    /* func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+     	let cell = UITableViewCell()
+
+     	return cell
+     }
+
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+     	<#code#>
+     }
+
+     struct Section {
+     	var title: String?
+     	var cells: [Cell]
+     }
+
+     struct Cell {
+     	var image: UIImage?
+     	var title: String?
+     } */
 }

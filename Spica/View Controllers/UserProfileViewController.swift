@@ -89,22 +89,21 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
     }
-	
-	func setSidebar() {
-		if #available(iOS 14.0, *) {
-			signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-			if signedInUsername == user.username {
-				if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-					if let sidebar = globalSideBarController {
-						if let collectionView = sidebar.collectionView {
-							collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
-						}
-						
-					}
-				}
-			}
-		}
-	}
+
+    func setSidebar() {
+        if #available(iOS 14.0, *) {
+            signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+            if signedInUsername == user.username {
+                if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+                    if let sidebar = globalSideBarController {
+                        if let collectionView = sidebar.collectionView {
+                            collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     override func viewWillAppear(_: Bool) {
         setSidebar()
@@ -131,7 +130,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-		setSidebar()
+        setSidebar()
         #if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
@@ -255,45 +254,74 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     func loadImages() {
-        DispatchQueue.global(qos: .utility).async {
+        DispatchQueue.global(qos: .background).async { [self] in
             let dispatchGroup = DispatchGroup()
-
-            for (index, post) in self.userPosts.enumerated() {
-                if index > self.userPosts.count - 1 {
-                } else {
-                    dispatchGroup.enter()
-
-                    DispatchQueue.main.async {
-                        self.userPosts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
-                    }
-
-                    if index > 10 {
-                        if index % 5 == 0 {}
-                    }
-
-                    if index % 5 == 0 {
-                        DispatchQueue.main.async {
-                            self.tableView.reloadData()
-                        }
-                    }
-
+            for (index, post) in userPosts.enumerated() {
+                dispatchGroup.enter()
+                if index <= userPosts.count - 1 {
+                    userPosts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                    // applyChanges()
                     if let url = post.imageURL {
-                        self.userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
+                        userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
-                        self.userPosts[index].image = UIImage()
+                        userPosts[index].image = UIImage()
                     }
-
-                    if index % 5 == 0 {
+                    if index < 5 {
                         DispatchQueue.main.async {
-                            self.tableView.reloadData()
+                            self.tableView.beginUpdates()
+                            self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
+                            self.tableView.endUpdates()
                         }
                     }
-
                     dispatchGroup.leave()
                 }
             }
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
+
+    /* func loadImages() {
+         DispatchQueue.global(qos: .utility).async {
+             let dispatchGroup = DispatchGroup()
+
+             for (index, post) in self.userPosts.enumerated() {
+                 if index > self.userPosts.count - 1 {
+                 } else {
+                     dispatchGroup.enter()
+
+                     DispatchQueue.main.async {
+                         self.userPosts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                     }
+
+                     if index > 10 {
+                         if index % 5 == 0 {}
+                     }
+
+                     if index % 5 == 0 {
+                         DispatchQueue.main.async {
+                             self.tableView.reloadData()
+                         }
+                     }
+
+                     if let url = post.imageURL {
+                         self.userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
+                     } else {
+                         self.userPosts[index].image = UIImage()
+                     }
+
+                     if index % 5 == 0 {
+                         DispatchQueue.main.async {
+                             self.tableView.reloadData()
+                         }
+                     }
+
+                     dispatchGroup.leave()
+                 }
+             }
+         }
+     } */
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
         let userByTag = userPosts[sender.view!.tag].author

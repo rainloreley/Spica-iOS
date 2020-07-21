@@ -14,11 +14,11 @@ class CreditsViewController: UIViewController {
         Credit(name: "Adrian Baumgart", role: "iOS Developer", url: "https://twitter.com/adrianbaumgart", imageURL: "https://avatar.alles.cx/u/adrian", image: UIImage(systemName: "person.circle")!),
         Credit(name: "Patrik Svoboda", role: "iOS Developer", url: "https://twitter.com/PatrikTheDev", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
         Credit(name: "Archie Baer", role: "Alles Founder", url: "https://twitter.com/onlytruearchie", imageURL: "https://avatar.alles.cx/u/archie", image: UIImage(systemName: "person.circle")!),
-		Credit(name: "David Muñoz", role: "Translator (Spanish)", url: "https://twitter.com/Dmunozv04", imageURL: "https://crowdin-static.downloads.crowdin.com/avatar/13940729/small/bf4ab120766769e9c9deed4b51c2661c.jpg", image: UIImage(systemName: "person.circle")!),
-		Credit(name: "James Young", role: "Translator (French, Norwegian)", url: "https://twitter.com/onlytruejames", imageURL: "https://avatar.alles.cx/u/james", image: UIImage(systemName: "person.circle")!),
-		Credit(name: "@DaThinkingChair", role: "Translator (Spanish)", url: "https://twitter.com/DaThinkingChair", imageURL: "https://pbs.twimg.com/profile_images/1259314332950769666/UPvu5g-e_400x400.jpg", image: UIImage(systemName: "person.circle")!),
-		Credit(name: "Storm", role: "Translator (Norwegian)", url: "https://twitter.com/StormLovesTech", imageURL: "https://avatar.alles.cx/u/storm", image: UIImage(systemName: "person.circle")!),
-		Credit(name: "primenate32", role: "Translator (Frensh, Spanish)", url: "http://123computer.net", imageURL: "", image: UIImage(systemName: "person.circle")!)
+        Credit(name: "David Muñoz", role: "Translator (Spanish)", url: "https://twitter.com/Dmunozv04", imageURL: "https://crowdin-static.downloads.crowdin.com/avatar/13940729/small/bf4ab120766769e9c9deed4b51c2661c.jpg", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "James Young", role: "Translator (French, Norwegian)", url: "https://twitter.com/onlytruejames", imageURL: "https://avatar.alles.cx/u/james", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "@DaThinkingChair", role: "Translator (Spanish)", url: "https://twitter.com/DaThinkingChair", imageURL: "https://pbs.twimg.com/profile_images/1259314332950769666/UPvu5g-e_400x400.jpg", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Storm", role: "Translator (Norwegian)", url: "https://twitter.com/StormLovesTech", imageURL: "https://avatar.alles.cx/u/storm", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "primenate32", role: "Translator (Frensh, Spanish)", url: "http://123computer.net", imageURL: "", image: UIImage(systemName: "person.circle")!),
     ]
 
     override func viewDidLoad() {
@@ -32,7 +32,7 @@ class CreditsViewController: UIViewController {
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.equalTo(view.snp.top)
-			make.bottom.equalTo(view.snp.bottom)
+            make.bottom.equalTo(view.snp.bottom)
             make.leading.equalTo(view.snp.leading)
             make.trailing.equalTo(view.snp.trailing)
         }
@@ -43,13 +43,13 @@ class CreditsViewController: UIViewController {
     override func viewDidAppear(_: Bool) {
         DispatchQueue.global(qos: .utility).async {
             for (index, item) in self.credits.enumerated() {
-				if let url = URL(string: item.imageURL) {
-					let image = ImageLoader.loadImageFromInternet(url: url)
-					self.credits[index].image = image
-					DispatchQueue.main.async {
-						self.tableView.reloadRows(at: [IndexPath(row: 0, section: index)], with: .automatic)
-					}
-				}
+                if let url = URL(string: item.imageURL) {
+                    let image = ImageLoader.loadImageFromInternet(url: url)
+                    self.credits[index].image = image
+                    DispatchQueue.main.async {
+                        self.tableView.reloadRows(at: [IndexPath(row: 0, section: index)], with: .automatic)
+                    }
+                }
             }
         }
     }

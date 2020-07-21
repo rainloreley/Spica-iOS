@@ -95,29 +95,29 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
         }
     }
-	
-	func setSidebar() {
-		if #available(iOS 14.0, *) {
-			if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-				if let sidebar = globalSideBarController {
-					if let collectionView = sidebar.collectionView {
-						collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.mentions.rawValue), animated: true, scrollPosition: .top)
-					}
-				}
-			}
-		}
-	}
+
+    func setSidebar() {
+        if #available(iOS 14.0, *) {
+            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+                if let sidebar = globalSideBarController {
+                    if let collectionView = sidebar.collectionView {
+                        collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.mentions.rawValue), animated: true, scrollPosition: .top)
+                    }
+                }
+            }
+        }
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-		setSidebar()
+        setSidebar()
 
         navigationController?.navigationBar.prefersLargeTitles = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-		setSidebar()
+        setSidebar()
         #if targetEnvironment(macCatalyst)
             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
@@ -165,25 +165,25 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     }
 
     func loadImages() {
-        DispatchQueue.global(qos: .utility).async {
+        DispatchQueue.global(qos: .background).async { [self] in
             let dispatchGroup = DispatchGroup()
-
-            for (index, post) in self.mentions.enumerated() {
+            for (index, post) in mentions.enumerated() {
                 dispatchGroup.enter()
-
-                self.mentions[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
-
-                self.applyChanges()
-
-                if let url = post.imageURL {
-                    self.mentions[index].image = ImageLoader.loadImageFromInternet(url: url)
-                } else {
-                    self.mentions[index].image = UIImage()
+                if index <= mentions.count - 1 {
+                    mentions[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                    // applyChanges()
+                    if let url = post.imageURL {
+                        mentions[index].image = ImageLoader.loadImageFromInternet(url: url)
+                    } else {
+                        mentions[index].image = UIImage()
+                    }
+                    if index < 5 {
+                        applyChanges()
+                    }
+                    dispatchGroup.leave()
                 }
-
-                self.applyChanges()
-                dispatchGroup.leave()
             }
+            applyChanges()
         }
     }
 

@@ -16,7 +16,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     var tableView: UITableView!
     var createPostBtn: UIButton!
     var posts = [Post]() {
-        didSet { applyChanges() }
+        didSet { /* applyChanges() */ }
     }
 
     var refreshControl = UIRefreshControl()
@@ -162,18 +162,18 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         vc.delegate = self
         present(UINavigationController(rootViewController: vc), animated: true)
     }
-	
-	func setSidebar() {
-		if #available(iOS 14.0, *) {
-			if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-				if let sidebar = globalSideBarController {
-					if let collectionView = sidebar.collectionView {
-						collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
-					}
-				}
-			}
-		}
-	}
+
+    func setSidebar() {
+        if #available(iOS 14.0, *) {
+            if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+                if let sidebar = globalSideBarController {
+                    if let collectionView = sidebar.collectionView {
+                        collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
+                    }
+                }
+            }
+        }
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -228,6 +228,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             } receiveValue: { posts in
                 // DispatchQueue.main.async {
                 self.posts = posts
+                self.applyChanges()
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
                 self.loadImages()
@@ -237,22 +238,26 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     }
 
     func loadImages() {
-        DispatchQueue.global(qos: .utility).async { [self] in
+        DispatchQueue.global(qos: .background).async { [self] in
             let dispatchGroup = DispatchGroup()
             for (index, post) in posts.enumerated() {
                 dispatchGroup.enter()
                 if index <= posts.count - 1 {
                     posts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
-                    applyChanges()
+                    // applyChanges()
                     if let url = post.imageURL {
                         posts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
                         posts[index].image = UIImage()
                     }
-                    applyChanges()
+                    if index < 5 {
+                        applyChanges()
+                    }
+
                     dispatchGroup.leave()
                 }
             }
+            applyChanges()
         }
     }
 
