@@ -81,6 +81,9 @@
 
 "REPOST" = "Republier";
 "COPY_ID" = "Copier l'identification";
+"TRANSLATE_APP" = "Translate the app";
+"CONTACT" = "Contact";
+"SAVE_ACTION" = "Save";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
