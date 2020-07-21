@@ -79,8 +79,11 @@
 
 "ERROR" = "Error";
 
-"REPOST" = "Repost";
-"COPY_ID" = "Copy ID";
+"REPOST" = "Republicar";
+"COPY_ID" = "Copiar ID";
+"TRANSLATE_APP" = "Translate the app";
+"CONTACT" = "Contact";
+"SAVE_ACTION" = "Save";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
