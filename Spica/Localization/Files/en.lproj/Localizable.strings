@@ -86,6 +86,7 @@
 "SAVE_ACTION" = "Save";
 "CLEAR_CACHE" = "Clear Cache";
 "CACHE_CLEARED" = "Cache cleared!";
+"CLOSE_ACTION" = "Close";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx

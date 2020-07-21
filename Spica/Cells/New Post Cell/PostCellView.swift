@@ -166,11 +166,13 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
 			// Use dynamic background.
 			controller.dynamicBackground = true
-			
+			controller.headerView.closeButton.setTitle(SLocale(.CLOSE_ACTION), for: .normal)
 			delegate.clickedOnImage(controller: controller)
 		}
 		
 	}
+	
+
 
     var pfpImageView: UIImageView = {
         let imgView = UIImageView(frame: .zero)
