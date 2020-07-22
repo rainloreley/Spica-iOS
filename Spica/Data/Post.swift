@@ -5,14 +5,15 @@
 //  Created by Adrian Baumgart on 29.06.20.
 //
 
+import Cache
 import Foundation
+import RealmSwift
 import SwiftyJSON
 import UIKit
-import Cache
 
 public struct Post: Hashable {
     var id: String
-    var author: User
+    var author: User?
     var date: Date
     var repliesCount: Int
     var score: Int
@@ -21,7 +22,7 @@ public struct Post: Hashable {
     var imageURL: URL?
     var voteStatus: Int
 
-    init(id: String, author: User, date: Date, repliesCount: Int, score: Int, content: String, image: UIImage? = nil, imageURL: URL? = nil, voteStatus: Int) {
+    public init(id: String, author: User, date: Date, repliesCount: Int, score: Int, content: String, image: UIImage? = nil, imageURL: URL? = nil, voteStatus: Int) {
         self.id = id
         self.author = author
         self.date = date
@@ -33,7 +34,7 @@ public struct Post: Hashable {
         self.voteStatus = voteStatus
     }
 
-    init(_ json: JSON) {
+    public init(_ json: JSON) {
         id = json["slug"].string!
         author = User(json["author"], isOnline: false)
         /* author = User(id: json["author"]["id"].string!,
@@ -52,24 +53,10 @@ public struct Post: Hashable {
         repliesCount = json["replyCount"].intValue
         score = json["score"].int ?? 0
         content = json["content"].string!
-		
-		let diskConfig = DiskConfig(name: "SpicaImageCache")
-		let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
-
-		let storage = try? Storage(
-		  diskConfig: diskConfig,
-		  memoryConfig: memoryConfig,
-		  transformer: TransformerFactory.forCodable(ofType: Data.self) // Storage<User>
-		)
-		
         if let imageURLString = json["image"].string {
             imageURL = URL(string: imageURLString)
-			
-			if let cachedImage = try? storage!.entry(forKey: imageURLString) {
-				image = UIImage(data: cachedImage.object)!
-			}
         }
-		
+
         voteStatus = json["vote"].int ?? 0
     }
 }

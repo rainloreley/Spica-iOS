@@ -7,15 +7,15 @@
 
 import Combine
 import JGProgressHUD
+import Lightbox
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
-import Lightbox
 
 class UserProfileViewController: UIViewController, UserEditDelegate {
     var user: User!
     var tableView: UITableView!
-	var loadedPreviously = false
+    var loadedPreviously = false
     var userPosts = [Post]() {
         didSet {
             DispatchQueue.main.async {
@@ -44,31 +44,31 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         super.viewDidLoad()
 
         hero.isEnabled = true
-		
-		loadedPreviously = false
+
+        loadedPreviously = false
 
         view.backgroundColor = .systemBackground
 
         signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-        /*#if targetEnvironment(macCatalyst)
-            if traitCollection.userInterfaceIdiom == .mac {
-                navigationController?.isToolbarHidden = true
-                navigationController?.setNavigationBarHidden(true, animated: false)
-            }
-        #else*/
-            navigationItem.title = "\(user.displayName)"
-            navigationController?.navigationBar.prefersLargeTitles = false
-            var rightItems = [UIBarButtonItem]()
+        /* #if targetEnvironment(macCatalyst)
+             if traitCollection.userInterfaceIdiom == .mac {
+                 navigationController?.isToolbarHidden = true
+                 navigationController?.setNavigationBarHidden(true, animated: false)
+             }
+         #else */
+        navigationItem.title = "\(user.displayName)"
+        navigationController?.navigationBar.prefersLargeTitles = false
+        var rightItems = [UIBarButtonItem]()
 
-            rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
+        rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
 
-            if signedInUsername == user.username {
-                rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
-            }
+        if signedInUsername == user.username {
+            rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
+        }
 
-            navigationItem.rightBarButtonItems = rightItems
-        //#endif
+        navigationItem.rightBarButtonItems = rightItems
+        // #endif
 
         tableView = UITableView(frame: view.bounds, style: .plain)
         tableView?.delegate = self
@@ -111,11 +111,11 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     override func viewWillAppear(_: Bool) {
         setSidebar()
-        /*#if targetEnvironment(macCatalyst)
-            navigationController?.setNavigationBarHidden(true, animated: false)
-        #else
-            navigationController?.navigationBar.prefersLargeTitles = false
-        #endif*/
+        /* #if targetEnvironment(macCatalyst)
+             navigationController?.setNavigationBarHidden(true, animated: false)
+         #else
+             navigationController?.navigationBar.prefersLargeTitles = false
+         #endif */
     }
 
     @objc func openUserSettings() {
@@ -128,21 +128,21 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     override func viewWillDisappear(_: Bool) {
-        /*#if targetEnvironment(macCatalyst)
-            navigationController?.setNavigationBarHidden(false, animated: false)
-        #endif*/
+        /* #if targetEnvironment(macCatalyst)
+             navigationController?.setNavigationBarHidden(false, animated: false)
+         #endif */
     }
 
     override func viewDidAppear(_: Bool) {
         setSidebar()
-        /*#if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                let toolBar = NSToolbar(identifier: "userProfileToolbar")
-                toolBar.delegate = self
-                titleBar.toolbar = toolBar
-            }
-        #endif*/
+        /* #if targetEnvironment(macCatalyst)
+             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                 let toolBar = NSToolbar(identifier: "userProfileToolbar")
+                 toolBar.delegate = self
+                 titleBar.toolbar = toolBar
+             }
+         #endif */
         loadUser()
     }
 
@@ -166,35 +166,23 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                     switch $0 {
                     case let .failure(err):
                         DispatchQueue.main.async {
-                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                                if self.refreshControl.isRefreshing {
-                                    self.refreshControl.endRefreshing()
-                                }
-                                self.loadingHud.dismiss()
-                                if err.action != nil, err.actionParameter != nil {
-                                    if err.action == AllesAPIErrorAction.navigate {
-                                        if err.actionParameter == "login" {
-                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                            mySceneDelegate.window?.makeKeyAndVisible()
-                                        }
-                                    }
-                                }
-                            }
+                            self.refreshControl.endRefreshing()
+                            self.loadingHud.dismiss()
+                            AllesAPI.default.errorHandling(error: err, caller: self.view)
                         }
                     default: break
                     }
                 } receiveValue: { [unowned self] in
                     self.user = $0
                     self.navigationItem.title = "\(self.user.displayName)"
-                    /*#if targetEnvironment(macCatalyst)
-                        let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-                        if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                            let toolBar = NSToolbar(identifier: "userProfileToolbar")
-                            toolBar.delegate = self
-                            titleBar.toolbar = toolBar
-                        }
-                    #endif*/
+                    /* #if targetEnvironment(macCatalyst)
+                         let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+                         if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                             let toolBar = NSToolbar(identifier: "userProfileToolbar")
+                             toolBar.delegate = self
+                             titleBar.toolbar = toolBar
+                         }
+                     #endif */
                     self.loadPfp()
                     self.loadPosts()
                 }
@@ -209,21 +197,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 switch $0 {
                 case let .failure(err):
                     DispatchQueue.main.async {
-                        EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                            if self.refreshControl.isRefreshing {
-                                self.refreshControl.endRefreshing()
-                            }
-                            self.loadingHud.dismiss()
-                            if err.action != nil, err.actionParameter != nil {
-                                if err.action == AllesAPIErrorAction.navigate {
-                                    if err.actionParameter == "login" {
-                                        let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                        mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                        mySceneDelegate.window?.makeKeyAndVisible()
-                                    }
-                                }
-                            }
-                        }
+                        self.refreshControl.endRefreshing()
+                        self.loadingHud.dismiss()
+                        AllesAPI.default.errorHandling(error: err, caller: self.view)
                     }
                 default: break
                 }
@@ -263,7 +239,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             for (index, post) in userPosts.enumerated() {
                 dispatchGroup.enter()
                 if index <= userPosts.count - 1 {
-                    userPosts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                    userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
                     // applyChanges()
                     if let url = post.imageURL {
                         userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -281,7 +257,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 }
             }
             DispatchQueue.main.async {
-				loadedPreviously = true
+                loadedPreviously = true
                 self.tableView.reloadData()
             }
         }
@@ -351,17 +327,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: { [unowned self] in
@@ -379,17 +347,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: { [unowned self] in
@@ -468,11 +428,10 @@ extension UserProfileViewController: PostCreateDelegate {
 }
 
 extension UserProfileViewController: PostCellViewDelegate {
-	
-	func clickedOnImage(controller: LightboxController) {
-		present(controller, animated: true, completion: nil)
-	}
-	
+    func clickedOnImage(controller: LightboxController) {
+        present(controller, animated: true, completion: nil)
+    }
+
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post
@@ -503,21 +462,11 @@ extension UserProfileViewController: PostCellViewDelegate {
                     .sink {
                         switch $0 {
                         case let .failure(err):
-                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                                if self.refreshControl.isRefreshing {
-                                    self.refreshControl.endRefreshing()
-                                }
-                                self.loadingHud.dismiss()
-                                if err.action != nil, err.actionParameter != nil {
-                                    if err.action == AllesAPIErrorAction.navigate {
-                                        if err.actionParameter == "login" {
-                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                            mySceneDelegate.window?.makeKeyAndVisible()
-                                        }
-                                    }
-                                }
-                            }
+
+                            self.refreshControl.endRefreshing()
+                            self.loadingHud.dismiss()
+                            AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                         default: break
                         }
                     } receiveValue: { _ in

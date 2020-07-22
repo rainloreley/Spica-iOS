@@ -129,7 +129,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GyG-ds-xQo">
-                                                    <rect key="frame" x="50" y="11" width="264" height="22"/>
+                                                    <rect key="frame" x="50" y="11" width="304" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <state key="normal" title="Clear Cache">
                                                         <color key="titleColor" systemColor="systemRedColor"/>
@@ -138,19 +138,10 @@
                                                         <action selector="clearCache:" destination="sv3-Zw-cNs" eventType="touchUpInside" id="Ema-nQ-Bjg"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0KB" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WGJ-Fg-c3w">
-                                                    <rect key="frame" x="322" y="11" width="32" height="22"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="WGJ-Fg-c3w" firstAttribute="top" secondItem="tfb-xF-1D7" secondAttribute="topMargin" id="5vW-gu-HPt"/>
                                                 <constraint firstItem="Egy-vL-b87" firstAttribute="bottom" secondItem="tfb-xF-1D7" secondAttribute="bottomMargin" id="KxP-aX-B0k"/>
-                                                <constraint firstItem="WGJ-Fg-c3w" firstAttribute="leading" secondItem="GyG-ds-xQo" secondAttribute="trailing" constant="8" symbolic="YES" id="Ock-yH-WnO"/>
-                                                <constraint firstItem="WGJ-Fg-c3w" firstAttribute="trailing" secondItem="tfb-xF-1D7" secondAttribute="trailingMargin" id="Udp-vv-POU"/>
-                                                <constraint firstItem="WGJ-Fg-c3w" firstAttribute="bottom" secondItem="tfb-xF-1D7" secondAttribute="bottomMargin" id="grT-Yh-Yh4"/>
+                                                <constraint firstItem="GyG-ds-xQo" firstAttribute="trailing" secondItem="tfb-xF-1D7" secondAttribute="trailingMargin" id="Vw7-8h-eeR"/>
                                                 <constraint firstItem="Egy-vL-b87" firstAttribute="leading" secondItem="tfb-xF-1D7" secondAttribute="leadingMargin" id="kfc-Pw-flM"/>
                                                 <constraint firstItem="Egy-vL-b87" firstAttribute="top" secondItem="tfb-xF-1D7" secondAttribute="topMargin" id="lBd-88-vp1"/>
                                                 <constraint firstItem="GyG-ds-xQo" firstAttribute="bottom" secondItem="tfb-xF-1D7" secondAttribute="bottomMargin" id="lcV-hV-2Y8"/>
@@ -573,7 +564,6 @@
                         <outlet property="allesPrivacyButton" destination="5Yn-4i-ED1" id="H0A-IQ-xD5"/>
                         <outlet property="allesTOSButton" destination="Ppo-hm-iII" id="Jz0-p8-ouz"/>
                         <outlet property="allesWebsiteButton" destination="Iez-I5-iLp" id="QIL-ZO-q2A"/>
-                        <outlet property="cacheSizeLabel" destination="WGJ-Fg-c3w" id="CXg-Us-qdp"/>
                         <outlet property="clearCacheButton" destination="GyG-ds-xQo" id="8H6-BT-eym"/>
                         <outlet property="contactLabel" destination="70g-gG-vMK" id="qDq-P8-MF5"/>
                         <outlet property="copyrightLabel" destination="OvF-Bn-Tew" id="pff-CS-AJ3"/>

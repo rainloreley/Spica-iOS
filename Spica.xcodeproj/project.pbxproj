@@ -34,6 +34,7 @@
 		3A71461424AA8907000FA3C3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461324AA8907000FA3C3 /* User.swift */; };
 		3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A741A4F24B8BBC70083925A /* CreditsCell.swift */; };
 		3A746A9424BDD975008C9309 /* VotePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A746A9324BDD975008C9309 /* VotePost.swift */; };
+		3A7E9E4724C884A000767AAA /* NotificationBannerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 3A7E9E4624C884A000767AAA /* NotificationBannerSwift */; };
 		3A91971624B89DDB00B7066B /* MainSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A91971524B89DDB00B7066B /* MainSettings.storyboard */; };
 		3A91971824B89E1100B7066B /* MainSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A91971724B89E1100B7066B /* MainSettingsViewController.swift */; };
 		3A95B3B824C0EC0A0066FE7B /* LocalizableKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A95B3B724C0EC0A0066FE7B /* LocalizableKeys.swift */; };
@@ -164,6 +165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A25FBA924B753D400324136 /* SPAlert in Frameworks */,
+				3A7E9E4724C884A000767AAA /* NotificationBannerSwift in Frameworks */,
 				3A96F6A524AB404100482C5A /* SwiftyJSON in Frameworks */,
 				3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */,
 				3A96F6A224AB403100482C5A /* Alamofire in Frameworks */,
@@ -502,6 +504,7 @@
 				3A34226B24B359BE00B8AFA9 /* JGProgressHUD */,
 				3A25FBA824B753D400324136 /* SPAlert */,
 				3AA108A924C0CBDF006FCA1A /* Hero */,
+				3A7E9E4624C884A000767AAA /* NotificationBannerSwift */,
 			);
 			productName = "Alles App";
 			productReference = 3A7145DB24AA8753000FA3C3 /* Spica.app */;
@@ -588,6 +591,7 @@
 				3A34226A24B359BE00B8AFA9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				3A25FBA724B753D400324136 /* XCRemoteSwiftPackageReference "SPAlert" */,
 				3AA108A824C0CBDF006FCA1A /* XCRemoteSwiftPackageReference "Hero" */,
+				3A7E9E4524C884A000767AAA /* XCRemoteSwiftPackageReference "NotificationBanner" */,
 			);
 			productRefGroup = 3A7145DC24AA8753000FA3C3 /* Products */;
 			projectDirPath = "";
@@ -1178,6 +1182,14 @@
 				minimumVersion = 5.0.1;
 			};
 		};
+		3A7E9E4524C884A000767AAA /* XCRemoteSwiftPackageReference "NotificationBanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Daltron/NotificationBanner";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.4;
+			};
+		};
 		3A96F6A024AB403100482C5A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -1219,6 +1231,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3A4B92F824AA9176000534FD /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		3A7E9E4624C884A000767AAA /* NotificationBannerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A7E9E4524C884A000767AAA /* XCRemoteSwiftPackageReference "NotificationBanner" */;
+			productName = NotificationBannerSwift;
 		};
 		3A96F6A124AB403100482C5A /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

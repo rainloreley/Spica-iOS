@@ -5,20 +5,21 @@
 //  Created by Adrian Baumgart on 29.06.20.
 //
 
+import Cache
 import Foundation
 import SwiftyJSON
 import UIKit
-import Cache
 
 public struct User: Hashable {
     var id: String
     var username: String
     var displayName: String
     var nickname: String
-    var imageURL: URL
+
     var isPlus: Bool
     var rubies: Int
     var followers: Int
+    var imageURL: URL
     var image: UIImage?
     var isFollowing: Bool
     var followsMe: Bool
@@ -42,18 +43,6 @@ public struct User: Hashable {
     }
 
     init(_ json: JSON, isOnline: Bool) {
-		
-		let diskConfig = DiskConfig(name: "SpicaImageCache")
-		let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
-
-		let storage = try? Storage(
-		  diskConfig: diskConfig,
-		  memoryConfig: memoryConfig,
-		  transformer: TransformerFactory.forCodable(ofType: Data.self) // Storage<User>
-		)
-		
-		
-		
         id = json["id"].string!
         username = json["username"].string!
         displayName = json["name"].string!
@@ -62,13 +51,13 @@ public struct User: Hashable {
         isPlus = json["plus"].bool ?? false
         rubies = json["rubies"].int ?? 0
         followers = json["followers"].int ?? 0
-		
-		if let cachedImage = try? storage!.entry(forKey: imageURL.absoluteString) {
-			image = UIImage(data: cachedImage.object)!
-		}
-		else {
-			image = UIImage(systemName: "person.circle")
-		}
+
+        image = UIImage(systemName: "person.circle")
+        /* if let cachedImage = try? storage!.entry(forKey: imageURL!) {
+         image = cachedImage.object
+         } else {
+         image = UIImage(systemName: "person.circle")?.pngData()
+         } */
         isFollowing = json["following"].bool ?? false
         followsMe = json["followingUser"].bool ?? false
         about = json["about"].string ?? ""

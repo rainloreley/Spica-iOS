@@ -14,11 +14,11 @@ class ReplyButtonCell: UITableViewCell {
     }
 
     var replyBtn: UIButton! = {
-		#if targetEnvironment(macCatalyst)
-		var button = UIButton(type: .custom)
-		#else
-		var button = UIButton(type: .system)
-		#endif
+        #if targetEnvironment(macCatalyst)
+            var button = UIButton(type: .custom)
+        #else
+            var button = UIButton(type: .system)
+        #endif
         button.backgroundColor = UIColor(named: "PostButtonColor")
         button.setTitle(SLocale(.REPLY_ACTION), for: .normal)
         button.setTitleColor(.white, for: .normal)

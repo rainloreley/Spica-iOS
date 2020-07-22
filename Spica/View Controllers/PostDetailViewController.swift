@@ -7,9 +7,9 @@
 
 import Combine
 import JGProgressHUD
+import Lightbox
 import SPAlert
 import UIKit
-import Lightbox
 
 class PostDetailViewController: UIViewController, PostCreateDelegate {
     var selectedPostID: String!
@@ -74,12 +74,12 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-        /*#if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                titleBar.toolbar = nil
-            }
-        #endif*/
+        /* #if targetEnvironment(macCatalyst)
+             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                 titleBar.toolbar = nil
+             }
+         #endif */
         loadPostDetail()
     }
 
@@ -97,19 +97,10 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                 switch $0 {
                 case let .failure(err):
 
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        self.refreshControl.endRefreshing()
-                        self.loadingHud.dismiss()
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+                    self.refreshControl.endRefreshing()
+                    self.loadingHud.dismiss()
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: {
@@ -124,7 +115,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             for (index, post) in self.postAncestors.enumerated() {
                 dispatchGroup.enter()
 
-                self.postAncestors[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                self.postAncestors[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
 
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
@@ -150,7 +141,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             for (index, post) in self.postReplies.enumerated() {
                 dispatchGroup.enter()
 
-                self.postReplies[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                self.postReplies[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
 
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
@@ -239,17 +230,11 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+
+                    self.refreshControl.endRefreshing()
+                    self.loadingHud.dismiss()
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: { [unowned self] in
@@ -384,11 +369,10 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension PostDetailViewController: PostCellViewDelegate {
-	
-	func clickedOnImage(controller: LightboxController) {
-		present(controller, animated: true, completion: nil)
-	}
-	
+    func clickedOnImage(controller: LightboxController) {
+        present(controller, animated: true, completion: nil)
+    }
+
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post
@@ -419,21 +403,11 @@ extension PostDetailViewController: PostCellViewDelegate {
                     .sink {
                         switch $0 {
                         case let .failure(err):
-                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                                if self.refreshControl.isRefreshing {
-                                    self.refreshControl.endRefreshing()
-                                }
-                                self.loadingHud.dismiss()
-                                if err.action != nil, err.actionParameter != nil {
-                                    if err.action == AllesAPIErrorAction.navigate {
-                                        if err.actionParameter == "login" {
-                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                            mySceneDelegate.window?.makeKeyAndVisible()
-                                        }
-                                    }
-                                }
-                            }
+
+                            self.refreshControl.endRefreshing()
+                            self.loadingHud.dismiss()
+                            AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                         default: break
                         }
                     } receiveValue: { _ in

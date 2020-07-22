@@ -7,9 +7,9 @@
 
 import Combine
 import JGProgressHUD
+import Lightbox
 import SPAlert
 import UIKit
-import Lightbox
 
 class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
@@ -119,14 +119,14 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         setSidebar()
-        /*#if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                let toolBar = NSToolbar(identifier: "mentionsToolbar")
-                toolBar.delegate = self
-                titleBar.toolbar = toolBar
-            }
-        #endif*/
+        /* #if targetEnvironment(macCatalyst)
+             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                 let toolBar = NSToolbar(identifier: "mentionsToolbar")
+                 toolBar.delegate = self
+                 titleBar.toolbar = toolBar
+             }
+         #endif */
         loadMentions()
     }
 
@@ -140,21 +140,11 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        if self.refreshControl.isRefreshing {
-                            self.refreshControl.endRefreshing()
-                        }
-                        self.loadingHud.dismiss()
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+
+                    self.refreshControl.endRefreshing()
+                    self.loadingHud.dismiss()
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: { [unowned self] in
@@ -171,7 +161,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             for (index, post) in mentions.enumerated() {
                 dispatchGroup.enter()
                 if index <= mentions.count - 1 {
-                    mentions[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                    mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
                     // applyChanges()
                     if let url = post.imageURL {
                         mentions[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -211,17 +201,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
                 default: break
                 }
             } receiveValue: { [unowned self] in
@@ -250,11 +231,10 @@ extension MentionsViewController: UITableViewDelegate {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
-	
-	func clickedOnImage(controller: LightboxController) {
-		present(controller, animated: true, completion: nil)
-	}
-	
+    func clickedOnImage(controller: LightboxController) {
+        present(controller, animated: true, completion: nil)
+    }
+
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post
@@ -285,21 +265,11 @@ extension MentionsViewController: PostCellViewDelegate {
                     .sink {
                         switch $0 {
                         case let .failure(err):
-                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                                if self.refreshControl.isRefreshing {
-                                    self.refreshControl.endRefreshing()
-                                }
-                                self.loadingHud.dismiss()
-                                if err.action != nil, err.actionParameter != nil {
-                                    if err.action == AllesAPIErrorAction.navigate {
-                                        if err.actionParameter == "login" {
-                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                            mySceneDelegate.window?.makeKeyAndVisible()
-                                        }
-                                    }
-                                }
-                            }
+
+                            self.refreshControl.endRefreshing()
+                            self.loadingHud.dismiss()
+                            AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                         default: break
                         }
                     } receiveValue: { _ in

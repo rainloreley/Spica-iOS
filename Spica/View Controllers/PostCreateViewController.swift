@@ -214,17 +214,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
                         self.loadingHud.dismiss()
                         self.sendButton.isEnabled = true
 
-                        EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                            if err.action != nil, err.actionParameter != nil {
-                                if err.action == AllesAPIErrorAction.navigate {
-                                    if err.actionParameter == "login" {
-                                        let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                        mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                        mySceneDelegate.window?.makeKeyAndVisible()
-                                    }
-                                }
-                            }
-                        }
+                        AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                     default: break
                     }
                 } receiveValue: { [unowned self] in

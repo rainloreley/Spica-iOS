@@ -7,11 +7,12 @@
 
 import Combine
 import JGProgressHUD
+import Lightbox
+import NotificationBannerSwift
 import SnapKit
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
-import Lightbox
 
 class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
@@ -26,6 +27,15 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     private var subscriptions = Set<AnyCancellable>()
 
+    var containsCachedElements = false {
+        didSet {
+            if containsCachedElements {
+                let banner = NotificationBanner(title: "Cached items", subtitle: "The timeline contains cached information. Please reload to get the most recent data.", style: .warning)
+                banner.show(queuePosition: .front, bannerPosition: .top, queue: .default, on: self)
+            }
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = SLocale(.HOME)
@@ -39,12 +49,12 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
         let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
 
-        /*#if targetEnvironment(macCatalyst)
-            navigationController?.navigationBar.prefersLargeTitles = true
-            navigationController?.navigationItem.largeTitleDisplayMode = .always
-        #else*/
-            navigationItem.rightBarButtonItems = [createPostBarButtonItem]
-        //#endif
+        /* #if targetEnvironment(macCatalyst)
+             navigationController?.navigationBar.prefersLargeTitles = true
+             navigationController?.navigationItem.largeTitleDisplayMode = .always
+         #else */
+        navigationItem.rightBarButtonItems = [createPostBarButtonItem]
+        // #endif
 
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
             //
@@ -152,7 +162,9 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     @objc func openOwnProfileView() {
         let vc = UserProfileViewController()
         let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+
         vc.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -189,14 +201,14 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
         setSidebar()
 
-        /*#if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                let toolBar = NSToolbar(identifier: "timelineToolbar")
-                toolBar.delegate = self
-                titleBar.toolbar = toolBar
-            }
-        #endif*/
+        /* #if targetEnvironment(macCatalyst)
+             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                 let toolBar = NSToolbar(identifier: "timelineToolbar")
+                 toolBar.delegate = self
+                 titleBar.toolbar = toolBar
+             }
+         #endif */
 
         loadFeed()
     }
@@ -206,28 +218,21 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
         // DispatchQueue.global(qos: .utility).async {
 
-        AllesAPI.loadFeed()
+        AllesAPI.loadFeed(cache: .cache)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    // DispatchQueue.main.async {
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { [self] _, _ in
-                        refreshControl.endRefreshing()
-                        loadingHud.dismiss()
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate, err.actionParameter == "login" {
-                                let mySceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-                                mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                mySceneDelegate.window?.makeKeyAndVisible()
-                            }
-                        }
-                    }
-                // }
+                    self.refreshControl.endRefreshing()
+                    self.loadingHud.dismiss()
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: { posts in
                 // DispatchQueue.main.async {
+                /* self.containsCachedElements = posts.filter { $0.isCached == true }.isEmpty ? false : true
+                 self.posts = posts.map { $0.post! } */
                 self.posts = posts
                 self.applyChanges()
                 self.refreshControl.endRefreshing()
@@ -235,6 +240,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 self.loadImages()
                 // }
             }.store(in: &subscriptions)
+
         // }
     }
 
@@ -244,7 +250,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             for (index, post) in posts.enumerated() {
                 dispatchGroup.enter()
                 if index <= posts.count - 1 {
-                    posts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                    posts[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
                     // applyChanges()
                     if let url = post.imageURL {
                         posts[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -285,17 +291,9 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: { [unowned self] in
@@ -333,11 +331,10 @@ extension TimelineViewController: MainSettingsDelegate {
 }
 
 extension TimelineViewController: PostCellViewDelegate {
-	
-	func clickedOnImage(controller: LightboxController) {
-		present(controller, animated: true, completion: nil)
-	}
-	
+    func clickedOnImage(controller: LightboxController) {
+        present(controller, animated: true, completion: nil)
+    }
+
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post
@@ -369,21 +366,11 @@ extension TimelineViewController: PostCellViewDelegate {
                 .sink {
                     switch $0 {
                     case let .failure(err):
-                        EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                            if self.refreshControl.isRefreshing {
-                                self.refreshControl.endRefreshing()
-                            }
-                            self.loadingHud.dismiss()
-                            if err.action != nil, err.actionParameter != nil {
-                                if err.action == AllesAPIErrorAction.navigate {
-                                    if err.actionParameter == "login" {
-                                        let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                        mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                        mySceneDelegate.window?.makeKeyAndVisible()
-                                    }
-                                }
-                            }
-                        }
+
+                        self.refreshControl.endRefreshing()
+                        self.loadingHud.dismiss()
+                        AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                     default: break
                     }
                 } receiveValue: { _ in

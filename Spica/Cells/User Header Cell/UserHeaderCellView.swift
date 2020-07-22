@@ -12,7 +12,7 @@ import UIKit
 class UserHeaderCellView: UITableViewCell {
     var user: User! {
         didSet {
-            pfpImageView.image = user.image
+            pfpImageView.image = user.image!
 
             let rectShape = CAShapeLayer()
             rectShape.bounds = contentView.frame
@@ -152,11 +152,11 @@ class UserHeaderCellView: UITableViewCell {
     }()
 
     var followButton: UIButton = {
-		#if targetEnvironment(macCatalyst)
-		var button = UIButton(type: .custom)
-		#else
-		var button = UIButton(type: .system)
-		#endif
+        #if targetEnvironment(macCatalyst)
+            var button = UIButton(type: .custom)
+        #else
+            var button = UIButton(type: .system)
+        #endif
         button.setTitle("Follow", for: .normal)
         return button
     }()

@@ -8,10 +8,11 @@
 import Alamofire
 import Combine
 import Foundation
+import RealmSwift
 import SwiftKeychainWrapper
 import SwiftyJSON
 import UIKit
-import RealmSwift
+import Unrealm
 
 public class AllesAPI {
     static let `default` = AllesAPI()
@@ -72,16 +73,18 @@ public class AllesAPI {
             }
         }
     }
-	
-    public static func loadFeed() -> Future<[Post], AllesAPIErrorMessage> {
-		
+
+    public static func loadFeed(cache _: CachePolicy = .remote) -> Future<[Post], AllesAPIErrorMessage> {
         Future<[Post], AllesAPIErrorMessage> { promise in
+            // DispatchQueue.main.async {
+            // var cacheOption = cache
+            // let realm = try! Realm()
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
             AF.request("https://alles.cx/api/feed", method: .get, parameters: nil, headers: [
                 "Authorization": authKey,
-            ]).responseJSON(queue: .global(qos: .utility)) { response in
+            ]).responseJSON { response in
                 switch response.result {
                 case .success:
 
@@ -89,10 +92,15 @@ public class AllesAPI {
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
                             let tempPosts = responseJSON["feed"].map { _, json in
+                                // FeedObject(id: json["slug"].string!, isCached: false, post: Post(json))
                                 Post(json)
                             }
+
+                            /* try! realm.write {
+                                 realm.add(tempPosts)
+                             } */
+
                             promise(.success(tempPosts))
-							promise(.success(tempPosts))
                         } else {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
@@ -109,11 +117,34 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
+
+                    /* if err.isSessionTaskError, let error = err.underlyingError, (error as! URLError).code == .notConnectedToInternet {
+                     let cachedElements = realm.objects(FeedObject.self).filter { $0.post!.date > Calendar.current.date(byAdding: .day, value: -3, to: Date())! }
+
+                     var cacheArray = [FeedObject]()
+                     for item in cachedElements {
+                     if cacheArray.filter({ $0.id == item.id }).count == 0 {
+                     cacheArray.append(FeedObject(id: item.id, isCached: true, post: Post(id: item.post!.id, author: item.post!.author!, date: item.post!.date, repliesCount: item.post!.repliesCount, score: item.post!.score, content: item.post!.content, image: item.post!.image, imageURL: item.post!.imageURL!, voteStatus: item.post!.voteStatus)))
+                     }
+                     }
+
+                     if !cacheArray.isEmpty {
+                     	promise(.success(cacheArray))
+                     }
+                     else {
+                     	var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                     	apiError.message.append("\nError: \(err.localizedDescription)")
+                     	promise(.failure(apiError))
+                     }
+
+                     } else { */
                     var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
-                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    apiError.message.append("\nError: \(err.localizedDescription)")
                     promise(.failure(apiError))
+                    // }
                 }
             }
+            // }
         }
     }
 
@@ -263,6 +294,7 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
+                    // if err == AFError.
                     var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
                     apiError.message.append("\nError: \(err.errorDescription!)")
                     promise(.failure(apiError))
@@ -543,6 +575,19 @@ public class AllesAPI {
             }
         }
     }
+
+    public func errorHandling(error: AllesAPIErrorMessage, caller: UIView) {
+        EZAlertController.alert(SLocale(.ERROR), message: error.message, buttons: ["Ok"]) { _, _ in
+
+            if error.action != nil, error.actionParameter != nil {
+                if error.action == AllesAPIErrorAction.navigate, error.actionParameter == "login" {
+                    let mySceneDelegate = caller.window!.windowScene!.delegate as! SceneDelegate
+                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
+                    mySceneDelegate.window?.makeKeyAndVisible()
+                }
+            }
+        }
+    }
 }
 
 public enum FollowAction {
@@ -568,4 +613,26 @@ struct PostDetail {
     var ancestors: [Post]
     var post: Post
     var replies: [Post]
+}
+
+public enum CachePolicy {
+    case cache, both, remote
+}
+
+public struct FeedObject: Realmable {
+    public init() {
+        id = ""
+        isCached = false
+        post = nil
+    }
+
+    var id: String = ""
+    var isCached = false
+    var post: Post?
+
+    init(id: String, isCached: Bool, post: Post) {
+        self.id = id
+        self.isCached = isCached
+        self.post = post
+    }
 }

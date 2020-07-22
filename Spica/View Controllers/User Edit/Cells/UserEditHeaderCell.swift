@@ -10,7 +10,7 @@ import UIKit
 class UserEditHeaderCell: UITableViewCell {
     var user: User! {
         didSet {
-            pfpImageView.image = user.image
+            pfpImageView.image = user.image!
             if user.isPlus {
                 // let font:UIFont? = UIFont(name: "Helvetica", size:20)
                 let font: UIFont = UIFont.boldSystemFont(ofSize: 18)

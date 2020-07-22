@@ -6,8 +6,9 @@
 //
 
 import CoreData
-import UIKit
 import RealmSwift
+import UIKit
+import Unrealm
 
 let globalDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
@@ -20,26 +21,30 @@ let globalDateFormatter: DateFormatter = {
 class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-		// Inside your application(application:didFinishLaunchingWithOptions:)
+        // Inside your application(application:didFinishLaunchingWithOptions:)
 
-		/*let config = Realm.Configuration(
-			// Set the new schema version. This must be greater than the previously used
-			// version (if you've never set a schema version before, the version is 0).
-			schemaVersion: 2,
+        let config = Realm.Configuration(
+            // Set the new schema version. This must be greater than the previously used
+            // version (if you've never set a schema version before, the version is 0).
+            schemaVersion: 7,
 
-			// Set the block which will be called automatically when opening a Realm with
-			// a schema version lower than the one set above
-			migrationBlock: { migration, oldSchemaVersion in
-				// We haven’t migrated anything yet, so oldSchemaVersion == 0
-				if (oldSchemaVersion < 1) {
-					// Nothing to do!
-					// Realm will automatically detect new properties and removed properties
-					// And will update the schema on disk automatically
-				}
-			})
+            // Set the block which will be called automatically when opening a Realm with
+            // a schema version lower than the one set above
+            migrationBlock: { _, oldSchemaVersion in
+                // We haven’t migrated anything yet, so oldSchemaVersion == 0
+                if oldSchemaVersion < 1 {
+                    // Nothing to do!
+                    // Realm will automatically detect new properties and removed properties
+                    // And will update the schema on disk automatically
+                }
+            }
+        )
 
-		// Tell Realm to use this new configuration object for the default Realm
-		Realm.Configuration.defaultConfiguration = config*/
+        // Tell Realm to use this new configuration object for the default Realm
+        Realm.Configuration.defaultConfiguration = config
+
+        // Realm.registerRealmables(FeedObject.self)
+        Realm.registerRealmables(CacheImage.self)
 
         return true
     }

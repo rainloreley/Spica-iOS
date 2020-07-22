@@ -62,9 +62,9 @@ enum LocalizableKeys: String {
     case TRANSLATE_APP
     case CONTACT
     case SAVE_ACTION
-	case CLEAR_CACHE
-	case CACHE_CLEARED
-	case CLOSE_ACTION
+    case CLEAR_CACHE
+    case CACHE_CLEARED
+    case CLOSE_ACTION
     case error_alreadySet = "error.alreadySet"
     case error_applications_badRedirect = "error.applications.badRedirect"
     case error_applications_firstPartyOnly = "error.applications.firstPartyOnly"

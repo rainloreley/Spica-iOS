@@ -5,11 +5,11 @@
 //  Created by Adrian Baumgart on 16.07.20.
 //
 
+import Cache
 import Combine
 import JGProgressHUD
 import SPAlert
 import UIKit
-import Cache
 
 protocol UserEditDelegate {
     func didSaveUser(user: UpdateUser)
@@ -42,11 +42,11 @@ class UserEditViewController: UIViewController {
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: SLocale(.SAVE_ACTION), style: .plain, target: self, action: #selector(saveData))
 
-		#if targetEnvironment(macCatalyst)
-		tableView = UITableView(frame: view.bounds, style: .plain)
-		#else
-		tableView = UITableView(frame: view.bounds, style: .insetGrouped)
-		#endif
+        #if targetEnvironment(macCatalyst)
+            tableView = UITableView(frame: view.bounds, style: .plain)
+        #else
+            tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        #endif
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UserEditHeaderCell.self, forCellReuseIdentifier: "userHeader")
@@ -81,25 +81,15 @@ class UserEditViewController: UIViewController {
                 switch $0 {
                 case let .failure(err):
                     DispatchQueue.main.async {
-                        EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                            self.loadingHud.dismiss()
-                            if err.action != nil, err.actionParameter != nil {
-                                if err.action == AllesAPIErrorAction.navigate {
-                                    if err.actionParameter == "login" {
-                                        let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                        mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                        mySceneDelegate.window?.makeKeyAndVisible()
-                                    }
-                                }
-                            }
-                        }
+                        self.loadingHud.dismiss()
+                        AllesAPI.default.errorHandling(error: err, caller: self.view)
                     }
                 default: break
                 }
             } receiveValue: { [unowned self] in
                 navigationController?.popViewController(animated: true)
                 SPAlert.present(title: SLocale(.SAVED_ACTION), preset: .done)
-				
+
                 delegate.didSaveUser(user: $0)
             }
             .store(in: &subscriptions)
@@ -167,7 +157,6 @@ extension UserEditViewController: UITableViewDelegate, UITableViewDataSource {
                 switch EditHeaders(rawValue: indexPath.section) {
                 case .user: return
                 case .name: self.editableUser.name = cell.textField.text!
-                    print("TEXTI: \(self.editableUser.name)")
                 case .nickname: self.editableUser.nickname = cell.textField.text!
                 case .about: self.editableUser.about = cell.textField.text!
                 case .none:
@@ -204,7 +193,7 @@ extension UserEditViewController: UITableViewDelegate, UITableViewDataSource {
             case .name: return SLocale(.NAME)
             case .nickname: return SLocale(.NICKNAME)
             case .about: return SLocale(.ABOUT)
-            //default: return ""
+                // default: return ""
             }
         }
     }
