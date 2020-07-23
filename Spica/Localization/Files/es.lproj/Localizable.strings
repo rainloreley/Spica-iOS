@@ -89,7 +89,7 @@
 "CLOSE_ACTION" = "Close";
 
 "UNLOCK_SPICA" = "Unlock Spica";
-"BIOMETRIC_AUTH_FAILED" = "Authenticaten failed";
+"BIOMETRIC_AUTH_FAILED" = "Authenticaton failed";
 "PLEASE_TRY_AGAIN" = "Please try again";
 "RETRY_ACTION" = "Retry";
 "DEVICE_ERROR" = "Device error";
