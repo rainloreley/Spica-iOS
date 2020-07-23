@@ -89,12 +89,12 @@
 "CLOSE_ACTION" = "Schließen";
 
 "UNLOCK_SPICA" = "Spica entsperren";
-"BIOMETRIC_AUTH_FAILED" = "Authenticaton failed";
-"PLEASE_TRY_AGAIN" = "Please try again";
-"RETRY_ACTION" = "Retry";
-"DEVICE_ERROR" = "Device error";
-"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Your device is not able to use %@. Make sure that %@ is enabled in the settings app.";
-"BIOMETRICS" = "Biometrics";
+"BIOMETRIC_AUTH_FAILED" = "Authentifizierung fehlgeschlagen";
+"PLEASE_TRY_AGAIN" = "Bitte versuche es erneut";
+"RETRY_ACTION" = "Nochmal versuchen";
+"DEVICE_ERROR" = "Gerätefehler";
+"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Dein Gerät kann %@ nicht nutzen. Bitte stelle sicher, dass %@ in den Geräteeinstellungen aktiviert ist.";
+"BIOMETRICS" = "Biometrie";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
