@@ -20,6 +20,10 @@ NOTE: You need a mac and Xcode :)
 
 If you want to contribute please read the [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing](CONTRIBUTING.md).
 
+## Disclaimer
+
+If you want to build/install the app, please keep in mind that everything here could be very unstable and/or incomplete. I recommend waiting for the official releases instead.
+
 ## License
 
 Spica is licensed under the GPLv3 license. More information can be found in the [LICENSE file](LICENSE).
