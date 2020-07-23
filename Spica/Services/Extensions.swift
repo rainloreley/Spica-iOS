@@ -6,7 +6,31 @@
 //
 
 import Foundation
+import LocalAuthentication
 import SwiftUI
+
+func biometricType() -> BiometricType {
+    let authContext = LAContext()
+    if #available(iOS 11, *) {
+        _ = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        switch authContext.biometryType {
+        case .none:
+            return .none
+        case .touchID:
+            return .touch
+        case .faceID:
+            return .face
+        }
+    } else {
+        return authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) ? .touch : .none
+    }
+}
+
+enum BiometricType {
+    case none
+    case touch
+    case face
+}
 
 extension Date {
     static func ISOStringFromDate(date: Date) -> String {

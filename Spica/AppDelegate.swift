@@ -19,6 +19,8 @@ let globalDateFormatter: DateFormatter = {
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    var sessionAuthorized = false
+
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // Inside your application(application:didFinishLaunchingWithOptions:)

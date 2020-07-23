@@ -26,6 +26,7 @@ protocol PostCellViewDelegate {
     func repost(id: String, username: String)
 
     func clickedOnImage(controller: LightboxController)
+    func saveImage(image: UIImage?)
 }
 
 class PostCellView: UITableViewCell, UITextViewDelegate {
@@ -165,8 +166,28 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             // Use dynamic background.
             controller.dynamicBackground = true
             controller.headerView.closeButton.setTitle(SLocale(.CLOSE_ACTION), for: .normal)
+
+            let saveBtn: UIButton = {
+                let btn = UIButton(type: .system)
+                btn.setImage(UIImage(systemName: "square.and.arrow.down"), for: .normal)
+                btn.addTarget(self, action: #selector(saveImage), for: .touchUpInside)
+                btn.tintColor = .white
+                return btn
+            }()
+
+            controller.headerView.addSubview(saveBtn)
+            saveBtn.snp.makeConstraints { make in
+                make.top.equalTo(controller.headerView.snp.top).offset(-2)
+                make.leading.equalTo(controller.headerView.snp.leading).offset(8)
+                make.width.equalTo(50)
+                make.height.equalTo(50)
+            }
             delegate.clickedOnImage(controller: controller)
         }
+    }
+
+    @objc func saveImage() {
+        delegate.saveImage(image: post?.image)
     }
 
     var pfpImageView: UIImageView = {

@@ -6,6 +6,7 @@
 //
 
 import Cache
+import LocalAuthentication
 import RealmSwift
 import SPAlert
 import SwiftKeychainWrapper
@@ -41,6 +42,9 @@ class MainSettingsViewController: UITableViewController {
     @IBOutlet var translateSymbol: UIImageView!
     @IBOutlet var clearCacheButton: UIButton!
 
+    @IBOutlet var biometricsLabel: UILabel!
+    @IBOutlet var biometricsSwitch: UISwitch!
+
     var username = ""
 
     var delegate: MainSettingsDelegate!
@@ -63,6 +67,35 @@ class MainSettingsViewController: UITableViewController {
         translateAppLabel.setTitle(SLocale(.TRANSLATE_APP), for: .normal)
         contactLabel.setTitle(SLocale(.CONTACT), for: .normal)
         clearCacheButton.setTitle(SLocale(.CLEAR_CACHE), for: .normal)
+
+        biometricsLabel.text = SLocale(.BIOMETRICS)
+    }
+
+    @IBAction func toggleBiometrics(_: Any) {
+        let context = LAContext()
+        var error: NSError?
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            UserDefaults.standard.set(biometricsSwitch.isOn, forKey: "biometricAuthEnabled")
+            appDelegate?.sessionAuthorized = true
+        } else {
+            appDelegate?.sessionAuthorized = true
+            biometricsSwitch.isEnabled = false
+            biometricsSwitch.setOn(false, animated: true)
+            UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
+
+            var type = "FaceID / TouchID"
+            let biometric = biometricType()
+            switch biometric {
+            case .face:
+                type = "FaceID"
+            case .touch:
+                type = "TouchID"
+            case .none:
+                type = "FaceID / TouchID"
+            }
+            EZAlertController.alert(SLocale(.DEVICE_ERROR), message: String(format: SLocale(.BIOMETRIC_DEVICE_NOTAVAILABLE), "\(type)", "\(type)"))
+        }
     }
 
     @IBAction func profileMore(_: Any) {
@@ -198,11 +231,13 @@ class MainSettingsViewController: UITableViewController {
          let fileSize = attributes[.size]
          cacheSizeLabel.text = "\(ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file))" */
 
-        if #available(iOS 14.0, *) {
-        } else {
-            translateSymbol.image = translateSymbol.image?.withRenderingMode(.alwaysTemplate)
-            translateSymbol.tintColor = .link
-        }
+        /* if #available(iOS 14.0, *) {
+         translateSymbol.image = UIImage(systemName: "translate")
+         } else { */
+        translateSymbol.image = UIImage(named: "translate")
+        translateSymbol.image = translateSymbol.image?.withRenderingMode(.alwaysTemplate)
+        translateSymbol.tintColor = .link
+        // }
         /* tableView = UITableView(frame: .zero, style: .insetGrouped)
          tableView.delegate = self
          tableView.dataSource = self
@@ -238,6 +273,20 @@ class MainSettingsViewController: UITableViewController {
         let build = dictionary["CFBundleVersion"] as! String
 
         versionBuildLabel.text = "\(SLocale(.VERSION)) \(version) \(SLocale(.BUILD)) \(build)"
+
+        let context = LAContext()
+        var error: NSError?
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            biometricsSwitch.isEnabled = true
+        } else {
+            biometricsSwitch.isEnabled = false
+        }
+
+        if UserDefaults.standard.bool(forKey: "biometricAuthEnabled") {
+            biometricsSwitch.setOn(true, animated: false)
+        } else {
+            biometricsSwitch.setOn(false, animated: false)
+        }
 
         /* let realm = try! Realm()
 
@@ -310,7 +359,7 @@ class MainSettingsViewController: UITableViewController {
         case 0:
             return 3
         case 1:
-            return 1
+            return 2
         case 2:
             return 2
         case 3:
