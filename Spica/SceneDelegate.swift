@@ -21,6 +21,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
 
+        if !UserDefaults.standard.bool(forKey: "hasRunBefore") {
+            // Remove login data for security
+
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")
+        }
+
+        UserDefaults.standard.set(true, forKey: "hasRunBefore")
+
         // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
         /* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
          KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")

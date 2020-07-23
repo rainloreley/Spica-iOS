@@ -65,6 +65,13 @@ enum LocalizableKeys: String {
     case CLEAR_CACHE
     case CACHE_CLEARED
     case CLOSE_ACTION
+    case UNLOCK_SPICA
+    case BIOMETRIC_AUTH_FAILED
+    case PLEASE_TRY_AGAIN
+    case RETRY_ACTION
+    case DEVICE_ERROR
+    case BIOMETRIC_DEVICE_NOTAVAILABLE
+    case BIOMETRICS
     case error_alreadySet = "error.alreadySet"
     case error_applications_badRedirect = "error.applications.badRedirect"
     case error_applications_firstPartyOnly = "error.applications.firstPartyOnly"

@@ -8,7 +8,8 @@
 import Combine
 import JGProgressHUD
 import Lightbox
-import NotificationBannerSwift
+import LocalAuthentication
+// import NotificationBannerSwift
 import SnapKit
 import SPAlert
 import SwiftKeychainWrapper
@@ -29,10 +30,10 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     var containsCachedElements = false {
         didSet {
-            if containsCachedElements {
-                let banner = NotificationBanner(title: "Cached items", subtitle: "The timeline contains cached information. Please reload to get the most recent data.", style: .warning)
-                banner.show(queuePosition: .front, bannerPosition: .top, queue: .default, on: self)
-            }
+            /* if containsCachedElements {
+                 let banner = NotificationBanner(title: "Cached items", subtitle: "The timeline contains cached information. Please reload to get the most recent data.", style: .warning)
+                 banner.show(queuePosition: .front, bannerPosition: .top, queue: .default, on: self)
+             } */
         }
     }
 
@@ -198,7 +199,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        requestBiometricAuth()
         setSidebar()
 
         /* #if targetEnvironment(macCatalyst)
@@ -242,6 +243,71 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             }.store(in: &subscriptions)
 
         // }
+    }
+
+    func requestBiometricAuth() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+        let sceneRootView = sceneDelegate.window?.rootViewController?.view!
+
+        if UserDefaults.standard.bool(forKey: "biometricAuthEnabled"), appDelegate?.sessionAuthorized == false {
+            let blurStyle = traitCollection.userInterfaceStyle == .dark ? UIBlurEffect.Style.dark : UIBlurEffect.Style.light
+            let blurEffect = UIBlurEffect(style: blurStyle)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = view.bounds
+            blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            blurEffectView.alpha = 1.0
+            blurEffectView.tag = 395
+            if let blurTag = sceneRootView!.viewWithTag(395) {
+            } else {
+                sceneRootView!.addSubview(blurEffectView)
+                blurEffectView.snp.makeConstraints { make in
+                    make.top.equalTo(sceneRootView!.snp.top)
+                    make.leading.equalTo(sceneRootView!.snp.leading)
+                    make.bottom.equalTo(sceneRootView!.snp.bottom)
+                    make.trailing.equalTo(sceneRootView!.snp.trailing)
+                }
+            }
+
+            let context = LAContext()
+            var error: NSError?
+            if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: SLocale(.UNLOCK_SPICA)) { success, _ in
+                    if success {
+                        DispatchQueue.main.async {
+                            appDelegate!.sessionAuthorized = true
+                            UIView.animate(withDuration: 0.3, animations: {
+                                blurEffectView.alpha = 0.0
+										}) { _ in
+                                if let blurTag = sceneRootView!.viewWithTag(395) {
+                                    blurTag.removeFromSuperview()
+                                }
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            EZAlertController.alert(SLocale(.BIOMETRIC_AUTH_FAILED), message: SLocale(.PLEASE_TRY_AGAIN), acceptMessage: SLocale(.RETRY_ACTION)) {
+                                self.requestBiometricAuth()
+                            }
+                        }
+                    }
+                }
+            } else {
+                var type = "FaceID / TouchID"
+                let biometric = biometricType()
+                switch biometric {
+                case .face:
+                    type = "FaceID"
+                case .touch:
+                    type = "TouchID"
+                case .none:
+                    type = "FaceID / TouchID"
+                }
+                EZAlertController.alert(SLocale(.DEVICE_ERROR), message: String(format: SLocale(.BIOMETRIC_DEVICE_NOTAVAILABLE), "\(type)", "\(type)"), acceptMessage: SLocale(.RETRY_ACTION)) {
+                    self.requestBiometricAuth()
+                }
+            }
+        }
     }
 
     func loadImages() {
@@ -330,7 +396,23 @@ extension TimelineViewController: MainSettingsDelegate {
     }
 }
 
-extension TimelineViewController: PostCellViewDelegate {
+extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    func saveImage(image: UIImage?) {
+        if let savingImage = image {
+            UIImageWriteToSavedPhotosAlbum(savingImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
+
+    @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
+
+        } else {
+            SPAlert.present(title: SLocale(.SAVED_ACTION), preset: .done)
+        }
+    }
+
     func selectedTag(tag: String, indexPath _: IndexPath) {
         let vc = TagDetailViewController()
         vc.tag = Tag(name: tag, posts: [])

@@ -88,6 +88,14 @@
 "CACHE_CLEARED" = "Cache cleared!";
 "CLOSE_ACTION" = "Close";
 
+"UNLOCK_SPICA" = "Unlock Spica";
+"BIOMETRIC_AUTH_FAILED" = "Authenticaten failed";
+"PLEASE_TRY_AGAIN" = "Please try again";
+"RETRY_ACTION" = "Retry";
+"DEVICE_ERROR" = "Device error";
+"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Your device is not able to use %@. Make sure that %@ is enabled in the settings app.";
+"BIOMETRICS" = "Biometrics";
+
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */

@@ -230,7 +230,23 @@ extension MentionsViewController: UITableViewDelegate {
     }
 }
 
-extension MentionsViewController: PostCellViewDelegate {
+extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    func saveImage(image: UIImage?) {
+        if let savingImage = image {
+            UIImageWriteToSavedPhotosAlbum(savingImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
+
+    @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
+
+        } else {
+            SPAlert.present(title: SLocale(.SAVED_ACTION), preset: .done)
+        }
+    }
+
     func selectedTag(tag: String, indexPath _: IndexPath) {
         let vc = TagDetailViewController()
         vc.tag = Tag(name: tag, posts: [])
