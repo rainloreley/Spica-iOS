@@ -84,17 +84,17 @@
 "TRANSLATE_APP" = "Traduce la app";
 "CONTACT" = "Contacto";
 "SAVE_ACTION" = "Guardar";
-"CLEAR_CACHE" = "Clear Cache";
-"CACHE_CLEARED" = "Cache cleared!";
-"CLOSE_ACTION" = "Close";
+"CLEAR_CACHE" = "Vaciar cache";
+"CACHE_CLEARED" = "¡Cache vaciado!";
+"CLOSE_ACTION" = "Cerrar";
 
-"UNLOCK_SPICA" = "Unlock Spica";
-"BIOMETRIC_AUTH_FAILED" = "Authenticaton failed";
-"PLEASE_TRY_AGAIN" = "Please try again";
-"RETRY_ACTION" = "Retry";
-"DEVICE_ERROR" = "Device error";
-"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Your device is not able to use %@. Make sure that %@ is enabled in the settings app.";
-"BIOMETRICS" = "Biometrics";
+"UNLOCK_SPICA" = "Desbloquear Spica";
+"BIOMETRIC_AUTH_FAILED" = "Autenticación fallida";
+"PLEASE_TRY_AGAIN" = "Por favor, vuelve a intentarlo";
+"RETRY_ACTION" = "Volver a intentar";
+"DEVICE_ERROR" = "Error del dispositivo";
+"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Tu dispositivo no puede usar %@. Comprueba que %@ está activado en la app de ajustes.";
+"BIOMETRICS" = "Biométrico";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
