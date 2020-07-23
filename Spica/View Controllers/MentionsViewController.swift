@@ -231,6 +231,12 @@ extension MentionsViewController: UITableViewDelegate {
 }
 
 extension MentionsViewController: PostCellViewDelegate {
+    func selectedTag(tag: String, indexPath _: IndexPath) {
+        let vc = TagDetailViewController()
+        vc.tag = Tag(name: tag, posts: [])
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
     func clickedOnImage(controller: LightboxController) {
         present(controller, animated: true, completion: nil)
     }

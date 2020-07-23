@@ -298,7 +298,7 @@ class MainSettingsViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         // return tableViewData.count
 
-        return 5
+        return 6
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {

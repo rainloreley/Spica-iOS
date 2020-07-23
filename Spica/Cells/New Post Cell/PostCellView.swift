@@ -16,6 +16,7 @@ protocol PostCellViewDelegate {
     func selectedUser(username: String, indexPath: IndexPath)
     func selectedURL(url: String, indexPath: IndexPath)
     func selectedPost(post: String, indexPath: IndexPath)
+    func selectedTag(tag: String, indexPath: IndexPath)
 
     func copyPostID(id: String)
     func deletePost(id: String)
@@ -403,6 +404,9 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             } else if stringURL.hasPrefix("post:") {
                 let postID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
                 delegate.selectedPost(post: String(postID), indexPath: indexPath)
+            } else if stringURL.hasPrefix("tag:") {
+                let tagID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
+                delegate.selectedTag(tag: String(tagID), indexPath: indexPath)
             }
         }
         return false

@@ -16,7 +16,6 @@ let imageCache = NSCache<NSString, UIImage>()
 public class ImageLoader {
     public static func loadImageFromInternet(url: URL) -> UIImage {
         let realm = try! Realm()
-        print("LOADIMAGE: \(url)")
         if let cachedImage = realm.objects(CacheImage.self).filter({ $0.id == url.absoluteString }).first {
             return UIImage(data: cachedImage.image!)!
         } else {

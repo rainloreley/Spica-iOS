@@ -303,6 +303,54 @@ public class AllesAPI {
         }
     }
 
+    public static func loadTag(tag: String) -> Future<Tag, AllesAPIErrorMessage> {
+        Future<Tag, AllesAPIErrorMessage> { promise in
+            guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
+                return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
+            }
+            AF.request("https://alles.cx/api/tag/\(tag)", method: .get, parameters: nil, headers: [
+                "Authorization": authKey,
+            ]).responseJSON(queue: .global(qos: .utility)) { response in
+                switch response.result {
+                case .success:
+
+                    let responseJSON = JSON(response.data!)
+                    if !responseJSON["err"].exists() {
+                        if response.response?.statusCode == 200 {
+                            var tempPosts = responseJSON["posts"].map { _, json in
+                                Post(json)
+                            }
+
+                            tempPosts.sort { $0.date.compare($1.date) == .orderedDescending }
+
+                            let tag = Tag(name: responseJSON["name"].string!, posts: tempPosts)
+
+                            promise(.success(tag))
+                        } else {
+                            if response.response!.statusCode == 401 {
+                                promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                            } else {
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
+                            }
+                        }
+
+                    } else {
+                        let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                        promise(.failure(apiError))
+                    }
+
+                case let .failure(err):
+                    // if err == AFError.
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
+                }
+            }
+        }
+    }
+
     static func loadPostDetail(id: String) -> Future<PostDetail, AllesAPIErrorMessage> {
         Future<PostDetail, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -590,49 +638,4 @@ public class AllesAPI {
     }
 }
 
-public enum FollowAction {
-    case follow, unfollow
-
-    var actionString: String {
-        switch self {
-        case .follow: return "follow"
-        case .unfollow: return "unfollow"
-        }
-    }
-}
-
 public struct EmptyCompletion {}
-
-public struct UpdateUser {
-    var about: String
-    var name: String
-    var nickname: String
-}
-
-struct PostDetail {
-    var ancestors: [Post]
-    var post: Post
-    var replies: [Post]
-}
-
-public enum CachePolicy {
-    case cache, both, remote
-}
-
-public struct FeedObject: Realmable {
-    public init() {
-        id = ""
-        isCached = false
-        post = nil
-    }
-
-    var id: String = ""
-    var isCached = false
-    var post: Post?
-
-    init(id: String, isCached: Bool, post: Post) {
-        self.id = id
-        self.isCached = isCached
-        self.post = post
-    }
-}
