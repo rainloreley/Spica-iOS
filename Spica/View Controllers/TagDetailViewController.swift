@@ -30,6 +30,8 @@ class TagDetailViewController: UIViewController {
     private var subscriptions = Set<AnyCancellable>()
     private lazy var dataSource = makeDataSource()
 
+	var verificationString = ""
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "#\(tag.name)"
@@ -63,6 +65,7 @@ class TagDetailViewController: UIViewController {
 
     @objc func loadTag() {
         loadingHud.show(in: view)
+		self.verificationString = ""
         AllesAPI.loadTag(tag: tag.name)
             .receive(on: RunLoop.main)
             .sink {
@@ -79,25 +82,30 @@ class TagDetailViewController: UIViewController {
                 self.applyChanges()
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
+				self.verificationString = randomString(length: 30)
                 self.loadImages()
             }
             .store(in: &subscriptions)
     }
 
     func loadImages() {
+		let veri = verificationString
         DispatchQueue.global(qos: .background).async { [self] in
             let dispatchGroup = DispatchGroup()
             for (index, post) in tag.posts.enumerated() {
                 dispatchGroup.enter()
                 if index <= tag.posts.count - 1 {
+					if veri != verificationString { return }
                     tag.posts[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
                     // applyChanges()
+					if veri != verificationString { return }
                     if let url = post.imageURL {
                         tag.posts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
                         tag.posts[index].image = UIImage()
                     }
                     if index < 5 {
+						if veri != verificationString { return }
                         applyChanges()
                     }
 

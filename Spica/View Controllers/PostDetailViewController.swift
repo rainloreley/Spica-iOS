@@ -31,6 +31,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     var loadingHud: JGProgressHUD!
 
     private var subscriptions = Set<AnyCancellable>()
+	var verificationString = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +85,9 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     @objc func loadPostDetail() {
+		
+		self.verificationString = ""
+		
         if postAncestors.isEmpty || postReplies.isEmpty {
             DispatchQueue.main.async { [self] in
                 loadingHud.show(in: view)
@@ -107,28 +111,30 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                 self.configure(with: $0)
             }.store(in: &subscriptions)
     }
+	
 
     func loadImages() {
-        DispatchQueue.global(qos: .utility).async {
+		let veri = verificationString
+		DispatchQueue.global(qos: .utility).async { [self] in
             let dispatchGroup = DispatchGroup()
 
             for (index, post) in self.postAncestors.enumerated() {
                 dispatchGroup.enter()
-
+				if veri != verificationString { return }
                 self.postAncestors[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
-
+				if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: 2 * index, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-
+				if veri != verificationString { return }
                 if let url = post.imageURL {
                     self.postAncestors[index].image = ImageLoader.loadImageFromInternet(url: url)
                 } else {
                     self.postAncestors[index].image = UIImage()
                 }
-
+				if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: 2 * index, section: 0)], with: .automatic)
@@ -140,21 +146,21 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
             for (index, post) in self.postReplies.enumerated() {
                 dispatchGroup.enter()
-
+				if veri != verificationString { return }
                 self.postReplies[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
-
+				if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: index, section: 2)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-
+				if veri != verificationString { return }
                 if let url = post.imageURL {
                     self.postReplies[index].image = ImageLoader.loadImageFromInternet(url: url)
                 } else {
                     self.postReplies[index].image = UIImage()
                 }
-
+				if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: index, section: 2)], with: .automatic)
@@ -178,6 +184,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         if let index = postAncestors.firstIndex(where: { $0.id == mainPost.id }) {
             tableView.scrollToRow(at: IndexPath(row: 2 * index, section: 0), at: .middle, animated: false)
         }
+		self.verificationString = randomString(length: 30)
         loadImages()
     }
 
