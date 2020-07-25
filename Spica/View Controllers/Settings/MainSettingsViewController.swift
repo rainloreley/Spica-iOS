@@ -359,7 +359,7 @@ class MainSettingsViewController: UITableViewController {
         case 0:
             return 3
         case 1:
-            return 2
+            return 1
         case 2:
             return 2
         case 3:
