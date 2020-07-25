@@ -7,6 +7,7 @@
 
 import Combine
 import JGProgressHUD
+import Lightbox
 import SPAlert
 import UIKit
 
@@ -30,6 +31,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     var loadingHud: JGProgressHUD!
 
     private var subscriptions = Set<AnyCancellable>()
+    var verificationString = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,16 +75,18 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-        #if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                titleBar.toolbar = nil
-            }
-        #endif
+        /* #if targetEnvironment(macCatalyst)
+             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                 titleBar.toolbar = nil
+             }
+         #endif */
         loadPostDetail()
     }
 
     @objc func loadPostDetail() {
+        verificationString = ""
+
         if postAncestors.isEmpty || postReplies.isEmpty {
             DispatchQueue.main.async { [self] in
                 loadingHud.show(in: view)
@@ -96,19 +100,10 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                 switch $0 {
                 case let .failure(err):
 
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        self.refreshControl.endRefreshing()
-                        self.loadingHud.dismiss()
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+                    self.refreshControl.endRefreshing()
+                    self.loadingHud.dismiss()
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: {
@@ -117,26 +112,27 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     func loadImages() {
-        DispatchQueue.global(qos: .utility).async {
+        let veri = verificationString
+        DispatchQueue.global(qos: .utility).async { [self] in
             let dispatchGroup = DispatchGroup()
 
             for (index, post) in self.postAncestors.enumerated() {
                 dispatchGroup.enter()
-
-                self.postAncestors[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
-
+                if veri != verificationString { return }
+                self.postAncestors[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
+                if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: 2 * index, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-
+                if veri != verificationString { return }
                 if let url = post.imageURL {
                     self.postAncestors[index].image = ImageLoader.loadImageFromInternet(url: url)
                 } else {
                     self.postAncestors[index].image = UIImage()
                 }
-
+                if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: 2 * index, section: 0)], with: .automatic)
@@ -148,21 +144,21 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
             for (index, post) in self.postReplies.enumerated() {
                 dispatchGroup.enter()
-
-                self.postReplies[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
-
+                if veri != verificationString { return }
+                self.postReplies[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
+                if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: index, section: 2)], with: .automatic)
                     self.tableView.endUpdates()
                 }
-
+                if veri != verificationString { return }
                 if let url = post.imageURL {
                     self.postReplies[index].image = ImageLoader.loadImageFromInternet(url: url)
                 } else {
                     self.postReplies[index].image = UIImage()
                 }
-
+                if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
                     self.tableView.reloadRows(at: [IndexPath(row: index, section: 2)], with: .automatic)
@@ -186,6 +182,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         if let index = postAncestors.firstIndex(where: { $0.id == mainPost.id }) {
             tableView.scrollToRow(at: IndexPath(row: 2 * index, section: 0), at: .middle, animated: false)
         }
+        verificationString = randomString(length: 30)
         loadImages()
     }
 
@@ -238,17 +235,11 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+
+                    self.refreshControl.endRefreshing()
+                    self.loadingHud.dismiss()
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: { [unowned self] in
@@ -382,7 +373,33 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension PostDetailViewController: PostCellViewDelegate {
+extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    func saveImage(image: UIImage?) {
+        if let savingImage = image {
+            UIImageWriteToSavedPhotosAlbum(savingImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
+
+    @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
+
+        } else {
+            SPAlert.present(title: SLocale(.SAVED_ACTION), preset: .done)
+        }
+    }
+
+    func selectedTag(tag: String, indexPath _: IndexPath) {
+        let vc = TagDetailViewController()
+        vc.tag = Tag(name: tag, posts: [])
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func clickedOnImage(controller: LightboxController) {
+        present(controller, animated: true, completion: nil)
+    }
+
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post
@@ -413,21 +430,11 @@ extension PostDetailViewController: PostCellViewDelegate {
                     .sink {
                         switch $0 {
                         case let .failure(err):
-                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                                if self.refreshControl.isRefreshing {
-                                    self.refreshControl.endRefreshing()
-                                }
-                                self.loadingHud.dismiss()
-                                if err.action != nil, err.actionParameter != nil {
-                                    if err.action == AllesAPIErrorAction.navigate {
-                                        if err.actionParameter == "login" {
-                                            let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                            mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                            mySceneDelegate.window?.makeKeyAndVisible()
-                                        }
-                                    }
-                                }
-                            }
+
+                            self.refreshControl.endRefreshing()
+                            self.loadingHud.dismiss()
+                            AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                         default: break
                         }
                     } receiveValue: { _ in

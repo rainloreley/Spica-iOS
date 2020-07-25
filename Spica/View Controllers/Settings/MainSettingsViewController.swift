@@ -5,6 +5,10 @@
 //  Created by Adrian Baumgart on 10.07.20.
 //
 
+import Cache
+import LocalAuthentication
+import RealmSwift
+import SPAlert
 import SwiftKeychainWrapper
 import UIKit
 
@@ -34,9 +38,13 @@ class MainSettingsViewController: UITableViewController {
     @IBOutlet var copyrightLabel: UILabel!
     @IBOutlet var translateAppLabel: UIButton!
     @IBOutlet var contactLabel: UIButton!
-	
-	@IBOutlet weak var translateSymbol: UIImageView!
-	
+
+    @IBOutlet var translateSymbol: UIImageView!
+    @IBOutlet var clearCacheButton: UIButton!
+
+    @IBOutlet var biometricsLabel: UILabel!
+    @IBOutlet var biometricsSwitch: UISwitch!
+
     var username = ""
 
     var delegate: MainSettingsDelegate!
@@ -58,6 +66,36 @@ class MainSettingsViewController: UITableViewController {
         copyrightLabel.text = SLocale(.SPICA_COPYRIGHT)
         translateAppLabel.setTitle(SLocale(.TRANSLATE_APP), for: .normal)
         contactLabel.setTitle(SLocale(.CONTACT), for: .normal)
+        clearCacheButton.setTitle(SLocale(.CLEAR_CACHE), for: .normal)
+
+        biometricsLabel.text = SLocale(.BIOMETRICS)
+    }
+
+    @IBAction func toggleBiometrics(_: Any) {
+        let context = LAContext()
+        var error: NSError?
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            UserDefaults.standard.set(biometricsSwitch.isOn, forKey: "biometricAuthEnabled")
+            appDelegate?.sessionAuthorized = true
+        } else {
+            appDelegate?.sessionAuthorized = true
+            biometricsSwitch.isEnabled = false
+            biometricsSwitch.setOn(false, animated: true)
+            UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
+
+            var type = "FaceID / TouchID"
+            let biometric = biometricType()
+            switch biometric {
+            case .face:
+                type = "FaceID"
+            case .touch:
+                type = "TouchID"
+            case .none:
+                type = "FaceID / TouchID"
+            }
+            EZAlertController.alert(SLocale(.DEVICE_ERROR), message: String(format: SLocale(.BIOMETRIC_DEVICE_NOTAVAILABLE), "\(type)", "\(type)"))
+        }
     }
 
     @IBAction func profileMore(_: Any) {
@@ -80,6 +118,40 @@ class MainSettingsViewController: UITableViewController {
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
         }
+    }
+
+    @IBAction func clearCache(_: Any) {
+        let realm = try! Realm()
+
+        try! realm.write {
+            realm.deleteAll()
+        }
+
+        /* let path = realm.configuration.fileURL?.relativePath
+         let subPaths = try? FileManager.default.contentsOfDirectory(atPath: path!)
+         for i in subPaths ?? [] {
+         	print("SUBPATH: \(i)")
+         	try! FileManager.default.removeItem(atPath: i)
+         }
+         let attributes = try! FileManager.default.attributesOfItem(atPath: path!)
+
+         let fileSize = attributes[.size]
+         let mbFile = ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file)
+         print("MBFIII: \(mbFile)") */
+        // cacheSizeLabel.text = "\(mbFile)"
+        // cacheSizeLabel.text = "\(fileSize)"
+        /* let diskConfig = DiskConfig(name: "SpicaImageCache")
+         let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
+
+         let storage = try? Storage(
+           diskConfig: diskConfig,
+           memoryConfig: memoryConfig,
+           transformer: TransformerFactory.forCodable(ofType: Data.self) // Storage<User>
+         )
+
+         try? storage?.removeAll() */
+
+        SPAlert.present(title: SLocale(.CACHE_CLEARED), preset: .done)
     }
 
     @IBAction func github(_: Any) {
@@ -151,14 +223,21 @@ class MainSettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = SLocale(.SETTINGS)
-		
-		if #available(iOS 14.0, *) {
-			
-		}
-		else {
-			translateSymbol.image = translateSymbol.image?.withRenderingMode(.alwaysTemplate)
-			translateSymbol.tintColor = .link
-		}
+
+        /* let realm = try! Realm()
+
+         let path = realm.configuration.fileURL!.path
+         let attributes = try! FileManager.default.attributesOfItem(atPath: path)
+         let fileSize = attributes[.size]
+         cacheSizeLabel.text = "\(ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file))" */
+
+        /* if #available(iOS 14.0, *) {
+         translateSymbol.image = UIImage(systemName: "translate")
+         } else { */
+        translateSymbol.image = UIImage(named: "translate")
+        translateSymbol.image = translateSymbol.image?.withRenderingMode(.alwaysTemplate)
+        translateSymbol.tintColor = .link
+        // }
         /* tableView = UITableView(frame: .zero, style: .insetGrouped)
          tableView.delegate = self
          tableView.dataSource = self
@@ -195,6 +274,28 @@ class MainSettingsViewController: UITableViewController {
 
         versionBuildLabel.text = "\(SLocale(.VERSION)) \(version) \(SLocale(.BUILD)) \(build)"
 
+        let context = LAContext()
+        var error: NSError?
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            biometricsSwitch.isEnabled = true
+        } else {
+            biometricsSwitch.isEnabled = false
+        }
+
+        if UserDefaults.standard.bool(forKey: "biometricAuthEnabled") {
+            biometricsSwitch.setOn(true, animated: false)
+        } else {
+            biometricsSwitch.setOn(false, animated: false)
+        }
+
+        /* let realm = try! Realm()
+
+         let path = realm.configuration.fileURL?.relativePath
+         let attributes = try! FileManager.default.attributesOfItem(atPath: path!)
+         let fileSize = attributes[.size]
+         cacheSizeLabel.text = "\(ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file))" */
+        // cacheSizeLabel.text = "\(fileSize)"
+
         DispatchQueue.global(qos: .background).async {
             self.username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")!
 
@@ -210,14 +311,14 @@ class MainSettingsViewController: UITableViewController {
     override func viewDidAppear(_: Bool) {
         setSidebar()
 
-        #if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                let toolBar = NSToolbar(identifier: "settingsToolbar")
+        /* #if targetEnvironment(macCatalyst)
+             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                 let toolBar = NSToolbar(identifier: "settingsToolbar")
 
-                titleBar.toolbar = toolBar
-            }
-        #endif
+                 titleBar.toolbar = toolBar
+             }
+         #endif */
     }
 
     override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -226,12 +327,14 @@ class MainSettingsViewController: UITableViewController {
         case 0:
             return SLocale(.ACCOUNT)
         case 1:
-            return "Spica"
+            return SLocale(.SETTINGS)
         case 2:
-            return "Alles"
+            return "Spica"
         case 3:
-            return SLocale(.OTHER)
+            return "Alles"
         case 4:
+            return SLocale(.OTHER)
+        case 5:
             return ""
         default:
             return ""
@@ -244,7 +347,7 @@ class MainSettingsViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         // return tableViewData.count
 
-        return 5
+        return 6
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -256,12 +359,14 @@ class MainSettingsViewController: UITableViewController {
         case 0:
             return 3
         case 1:
-            return 2
+            return 1
         case 2:
-            return 3
+            return 2
         case 3:
-            return 5
+            return 3
         case 4:
+            return 5
+        case 5:
             return 2
         default:
             return 0

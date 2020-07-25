@@ -124,12 +124,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-        #if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                titleBar.toolbar = nil
-            }
-        #endif
+        /* #if targetEnvironment(macCatalyst)
+             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                 titleBar.toolbar = nil
+             }
+         #endif */
     }
 
     @objc func openCreateAccount() {
@@ -152,18 +152,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                     case let .failure(err):
                         DispatchQueue.main.async {
                             self.loadingHud.dismiss()
-                            EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                                if err.action != nil, err.actionParameter != nil {
-                                    /* if apiError.action == AllesAPIErrorAction.navigate  {
-                                     if apiError.actionParameter == "login" {
-                                     	let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                     	mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: ViewController())
-                                     		mySceneDelegate.window?.makeKeyAndVisible()
 
-                                     }
-                                     } */
-                                }
-                            }
+                            AllesAPI.default.errorHandling(error: err, caller: self.view)
                         }
                     default: break
                     }
@@ -191,12 +181,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
                             globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
 
-                            #if targetEnvironment(macCatalyst)
-                                if let titlebar = mySceneDelegate.window?.windowScene?.titlebar {
-                                    titlebar.titleVisibility = .hidden
-                                    titlebar.toolbar = nil
-                                }
-                            #endif
+                            /* #if targetEnvironment(macCatalyst)
+                                 if let titlebar = mySceneDelegate.window?.windowScene?.titlebar {
+                                     titlebar.titleVisibility = .hidden
+                                     titlebar.toolbar = nil
+                                 }
+                             #endif */
 
                             mySceneDelegate.window?.rootViewController = globalSplitViewController
 

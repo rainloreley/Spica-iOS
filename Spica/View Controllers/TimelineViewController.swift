@@ -7,6 +7,9 @@
 
 import Combine
 import JGProgressHUD
+import Lightbox
+import LocalAuthentication
+// import NotificationBannerSwift
 import SnapKit
 import SPAlert
 import SwiftKeychainWrapper
@@ -25,6 +28,17 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     private var subscriptions = Set<AnyCancellable>()
 
+    var verificationString = ""
+
+    var containsCachedElements = false {
+        didSet {
+            /* if containsCachedElements {
+                 let banner = NotificationBanner(title: "Cached items", subtitle: "The timeline contains cached information. Please reload to get the most recent data.", style: .warning)
+                 banner.show(queuePosition: .front, bannerPosition: .top, queue: .default, on: self)
+             } */
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = SLocale(.HOME)
@@ -38,12 +52,12 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
         let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
 
-        #if targetEnvironment(macCatalyst)
-            navigationController?.navigationBar.prefersLargeTitles = true
-            navigationController?.navigationItem.largeTitleDisplayMode = .always
-        #else
-            navigationItem.rightBarButtonItems = [createPostBarButtonItem]
-        #endif
+        /* #if targetEnvironment(macCatalyst)
+             navigationController?.navigationBar.prefersLargeTitles = true
+             navigationController?.navigationItem.largeTitleDisplayMode = .always
+         #else */
+        navigationItem.rightBarButtonItems = [createPostBarButtonItem]
+        // #endif
 
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
             //
@@ -151,7 +165,9 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     @objc func openOwnProfileView() {
         let vc = UserProfileViewController()
         let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+
         vc.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -185,75 +201,143 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        requestBiometricAuth()
         setSidebar()
 
-        #if targetEnvironment(macCatalyst)
-            let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-            if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                let toolBar = NSToolbar(identifier: "timelineToolbar")
-                toolBar.delegate = self
-                titleBar.toolbar = toolBar
-            }
-        #endif
+        /* #if targetEnvironment(macCatalyst)
+             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
+                 let toolBar = NSToolbar(identifier: "timelineToolbar")
+                 toolBar.delegate = self
+                 titleBar.toolbar = toolBar
+             }
+         #endif */
 
         loadFeed()
     }
 
     @objc func loadFeed() {
+        verificationString = ""
         if posts.isEmpty { loadingHud.show(in: view) }
 
         // DispatchQueue.global(qos: .utility).async {
 
-        AllesAPI.loadFeed()
+        AllesAPI.loadFeed(cache: .cache)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    // DispatchQueue.main.async {
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { [self] _, _ in
-                        refreshControl.endRefreshing()
-                        loadingHud.dismiss()
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate, err.actionParameter == "login" {
-                                let mySceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-                                mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                mySceneDelegate.window?.makeKeyAndVisible()
-                            }
-                        }
-                    }
-                // }
+                    self.refreshControl.endRefreshing()
+                    self.loadingHud.dismiss()
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
-            } receiveValue: { posts in
+            } receiveValue: { [self] posts in
                 // DispatchQueue.main.async {
+                /* self.containsCachedElements = posts.filter { $0.isCached == true }.isEmpty ? false : true
+                 self.posts = posts.map { $0.post! } */
                 self.posts = posts
                 self.applyChanges()
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
+                verificationString = randomString(length: 30)
                 self.loadImages()
                 // }
             }.store(in: &subscriptions)
+
         // }
     }
 
+    func requestBiometricAuth() {
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+        let sceneRootView = sceneDelegate.window?.rootViewController?.view!
+
+        if UserDefaults.standard.bool(forKey: "biometricAuthEnabled"), appDelegate?.sessionAuthorized == false {
+            let blurStyle = traitCollection.userInterfaceStyle == .dark ? UIBlurEffect.Style.dark : UIBlurEffect.Style.light
+            let blurEffect = UIBlurEffect(style: blurStyle)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = view.bounds
+            blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            blurEffectView.alpha = 1.0
+            blurEffectView.tag = 395
+            if let blurTag = sceneRootView!.viewWithTag(395) {
+            } else {
+                sceneRootView!.addSubview(blurEffectView)
+                blurEffectView.snp.makeConstraints { make in
+                    make.top.equalTo(sceneRootView!.snp.top)
+                    make.leading.equalTo(sceneRootView!.snp.leading)
+                    make.bottom.equalTo(sceneRootView!.snp.bottom)
+                    make.trailing.equalTo(sceneRootView!.snp.trailing)
+                }
+            }
+
+            let context = LAContext()
+            var error: NSError?
+            if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: SLocale(.UNLOCK_SPICA)) { success, _ in
+                    if success {
+                        DispatchQueue.main.async {
+                            appDelegate!.sessionAuthorized = true
+                            UIView.animate(withDuration: 0.3, animations: {
+                                blurEffectView.alpha = 0.0
+										}) { _ in
+                                if let blurTag = sceneRootView!.viewWithTag(395) {
+                                    blurTag.removeFromSuperview()
+                                }
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            EZAlertController.alert(SLocale(.BIOMETRIC_AUTH_FAILED), message: SLocale(.PLEASE_TRY_AGAIN), acceptMessage: SLocale(.RETRY_ACTION)) {
+                                self.requestBiometricAuth()
+                            }
+                        }
+                    }
+                }
+            } else {
+                var type = "FaceID / TouchID"
+                let biometric = biometricType()
+                switch biometric {
+                case .face:
+                    type = "FaceID"
+                case .touch:
+                    type = "TouchID"
+                case .none:
+                    type = "FaceID / TouchID"
+                }
+                EZAlertController.alert(SLocale(.DEVICE_ERROR), message: String(format: SLocale(.BIOMETRIC_DEVICE_NOTAVAILABLE), "\(type)", "\(type)"), acceptMessage: SLocale(.RETRY_ACTION)) {
+                    self.requestBiometricAuth()
+                }
+            }
+        }
+    }
+
     func loadImages() {
+        let veri = verificationString
         DispatchQueue.global(qos: .background).async { [self] in
             let dispatchGroup = DispatchGroup()
             for (index, post) in posts.enumerated() {
+                if veri != verificationString { return }
                 dispatchGroup.enter()
                 if index <= posts.count - 1 {
-                    posts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
+                    if let author = posts[index].author {
+                        if veri != verificationString { return }
+                        posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
+                    }
+
                     // applyChanges()
                     if let url = post.imageURL {
+                        if veri != verificationString { return }
                         posts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
                         posts[index].image = UIImage()
                     }
                     if index < 5 {
+                        if veri != verificationString { return }
                         applyChanges()
                     }
-
                     dispatchGroup.leave()
                 }
             }
@@ -284,17 +368,9 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             .sink {
                 switch $0 {
                 case let .failure(err):
-                    EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                        if err.action != nil, err.actionParameter != nil {
-                            if err.action == AllesAPIErrorAction.navigate {
-                                if err.actionParameter == "login" {
-                                    let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                    mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                    mySceneDelegate.window?.makeKeyAndVisible()
-                                }
-                            }
-                        }
-                    }
+
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                 default: break
                 }
             } receiveValue: { [unowned self] in
@@ -331,7 +407,33 @@ extension TimelineViewController: MainSettingsDelegate {
     }
 }
 
-extension TimelineViewController: PostCellViewDelegate {
+extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    func saveImage(image: UIImage?) {
+        if let savingImage = image {
+            UIImageWriteToSavedPhotosAlbum(savingImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
+
+    @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
+        if let error = error {
+            // we got back an error!
+            SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
+
+        } else {
+            SPAlert.present(title: SLocale(.SAVED_ACTION), preset: .done)
+        }
+    }
+
+    func selectedTag(tag: String, indexPath _: IndexPath) {
+        let vc = TagDetailViewController()
+        vc.tag = Tag(name: tag, posts: [])
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func clickedOnImage(controller: LightboxController) {
+        present(controller, animated: true, completion: nil)
+    }
+
     func repost(id: String, username: String) {
         let vc = PostCreateViewController()
         vc.type = .post
@@ -363,21 +465,11 @@ extension TimelineViewController: PostCellViewDelegate {
                 .sink {
                     switch $0 {
                     case let .failure(err):
-                        EZAlertController.alert(SLocale(.ERROR), message: err.message, buttons: ["Ok"]) { _, _ in
-                            if self.refreshControl.isRefreshing {
-                                self.refreshControl.endRefreshing()
-                            }
-                            self.loadingHud.dismiss()
-                            if err.action != nil, err.actionParameter != nil {
-                                if err.action == AllesAPIErrorAction.navigate {
-                                    if err.actionParameter == "login" {
-                                        let mySceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-                                        mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                                        mySceneDelegate.window?.makeKeyAndVisible()
-                                    }
-                                }
-                            }
-                        }
+
+                        self.refreshControl.endRefreshing()
+                        self.loadingHud.dismiss()
+                        AllesAPI.default.errorHandling(error: err, caller: self.view)
+
                     default: break
                     }
                 } receiveValue: { _ in

@@ -6,6 +6,7 @@
 //
 
 import KMPlaceholderTextView
+import Lightbox
 import SwiftKeychainWrapper
 import UIKit
 
@@ -15,6 +16,7 @@ protocol PostCellViewDelegate {
     func selectedUser(username: String, indexPath: IndexPath)
     func selectedURL(url: String, indexPath: IndexPath)
     func selectedPost(post: String, indexPath: IndexPath)
+    func selectedTag(tag: String, indexPath: IndexPath)
 
     func copyPostID(id: String)
     func deletePost(id: String)
@@ -22,6 +24,9 @@ protocol PostCellViewDelegate {
     func replyToPost(id: String)
 
     func repost(id: String, username: String)
+
+    func clickedOnImage(controller: LightboxController)
+    func saveImage(image: UIImage?)
 }
 
 class PostCellView: UITableViewCell, UITextViewDelegate {
@@ -31,7 +36,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
     var post: Post? {
         didSet {
             // ASSIGN VALUES
-            pfpImageView.image = post?.author.image
+            pfpImageView.image = post?.author?.image
             contentTextView.isUserInteractionEnabled = true
             contentTextView.delaysContentTouches = false
             // required for tap to pass through on to superview & for links to work
@@ -40,19 +45,19 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             contentTextView.isUserInteractionEnabled = true
             contentTextView.isSelectable = true
 
-            if post?.author.isPlus == true {
+            if post?.author?.isPlus == true {
                 let font: UIFont? = UIFont.boldSystemFont(ofSize: 18)
 
                 let fontSuper: UIFont? = UIFont.boldSystemFont(ofSize: 12)
-                let attrDisplayName = NSMutableAttributedString(string: "\(post!.author.displayName)+", attributes: [.font: font!])
-                attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: (post?.author.displayName.count)!, length: 1))
+                let attrDisplayName = NSMutableAttributedString(string: "\(post!.author!.displayName)+", attributes: [.font: font!])
+                attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: (post?.author!.displayName.count)!, length: 1))
 
                 displaynameLabel.attributedText = attrDisplayName
             } else {
-                displaynameLabel.text = post!.author.displayName
+                displaynameLabel.text = post!.author?.displayName
             }
 
-            usernameLabel.text = "@\(post!.author.username)"
+            usernameLabel.text = "@\(post!.author!.username)"
             voteCountLabel.text = String(post!.score)
             contentTextView.delegate = self
 
@@ -113,10 +118,15 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 mediaImageView.image = post?.image!
                 mediaImageView.snp.remakeConstraints { make in
                     make.bottom.equalTo(replyCountLabel.snp.top).offset(-16)
-                    make.height.equalTo((post?.image?.size.height)! / 3)
+                    make.height.equalTo(((post?.image!.size.height)!) / 3)
                     make.trailing.equalTo(self.snp.trailing).offset(-16)
                     make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
                 }
+
+                let tap = UITapGestureRecognizer(target: self, action: #selector(clickImage))
+
+                mediaImageView.isUserInteractionEnabled = true
+                mediaImageView.addGestureRecognizer(tap)
             }
 
             if post!.voteStatus == 1 {
@@ -134,6 +144,50 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             contentView.addInteraction(contextInteraction)
             moreImageView.isUserInteractionEnabled = true
         }
+    }
+
+    @objc func clickImage() {
+        if let image = post?.image {
+            // Create an array of images.
+            let images = [
+                LightboxImage(
+                    image: image,
+                    text: post!.content
+                ),
+            ]
+
+            // Create an instance of LightboxController.
+            let controller = LightboxController(images: images)
+
+            // Set delegates.
+            /* controller.pageDelegate = self
+             controller.dismissalDelegate = self */
+
+            // Use dynamic background.
+            controller.dynamicBackground = true
+            controller.headerView.closeButton.setTitle(SLocale(.CLOSE_ACTION), for: .normal)
+
+            let saveBtn: UIButton = {
+                let btn = UIButton(type: .system)
+                btn.setImage(UIImage(systemName: "square.and.arrow.down"), for: .normal)
+                btn.addTarget(self, action: #selector(saveImage), for: .touchUpInside)
+                btn.tintColor = .white
+                return btn
+            }()
+
+            controller.headerView.addSubview(saveBtn)
+            saveBtn.snp.makeConstraints { make in
+                make.top.equalTo(controller.headerView.snp.top).offset(-2)
+                make.leading.equalTo(controller.headerView.snp.leading).offset(8)
+                make.width.equalTo(50)
+                make.height.equalTo(50)
+            }
+            delegate.clickedOnImage(controller: controller)
+        }
+    }
+
+    @objc func saveImage() {
+        delegate.saveImage(image: post?.image)
     }
 
     var pfpImageView: UIImageView = {
@@ -183,7 +237,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
     }()
 
     var upvoteButton: UIButton = {
-        let button = UIButton(type: .system)
+        #if targetEnvironment(macCatalyst)
+            var button = UIButton(type: .custom)
+        #else
+            var button = UIButton(type: .system)
+        #endif
         button.setTitle("+", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 23)
         button.setTitleColor(.systemBlue, for: .normal)
@@ -194,7 +252,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
     }()
 
     var downvoteButton: UIButton = {
-        let button = UIButton(type: .system)
+        #if targetEnvironment(macCatalyst)
+            var button = UIButton(type: .custom)
+        #else
+            var button = UIButton(type: .system)
+        #endif
         button.setTitle("-", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 29)
         button.setTitleColor(.systemBlue, for: .normal)
@@ -363,6 +425,9 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             } else if stringURL.hasPrefix("post:") {
                 let postID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
                 delegate.selectedPost(post: String(postID), indexPath: indexPath)
+            } else if stringURL.hasPrefix("tag:") {
+                let tagID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
+                delegate.selectedTag(tag: String(tagID), indexPath: indexPath)
             }
         }
         return false
@@ -395,14 +460,14 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         actionsArray.append(reply)
 
         let repost = UIAction(title: SLocale(.REPOST), image: UIImage(systemName: "square.and.arrow.up")) { _ in
-            self.delegate.repost(id: self.post!.id, username: self.post!.author.username)
+            self.delegate.repost(id: self.post!.id, username: self.post!.author!.username)
         }
 
         actionsArray.append(repost)
 
         let userID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
-        if post?.author.id == userID {
+        if post?.author?.id == userID! {
             let delete = UIAction(title: SLocale(.DELETE_ACTION), image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
                 self.delegate.deletePost(id: self.post!.id)
             }
