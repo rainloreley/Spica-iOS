@@ -16,6 +16,10 @@ NOTE: You need a mac and Xcode :)
 5. Set a new development team
 6. Run
 
+## Progress
+
+We store most of our ideas on Trello. You can find it [here](https://trello.com/b/EtFFbUoq/spica).
+
 ## Contributing
 
 If you want to contribute please read the [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing](CONTRIBUTING.md).
