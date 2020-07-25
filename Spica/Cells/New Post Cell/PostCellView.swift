@@ -148,7 +148,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
     @objc func clickImage() {
         if let image = post?.image {
-            // Create an array of images.
             let images = [
                 LightboxImage(
                     image: image,
@@ -156,16 +155,13 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 ),
             ]
 
-            // Create an instance of LightboxController.
+            LightboxConfig.CloseButton.text = SLocale(.CLOSE_ACTION)
             let controller = LightboxController(images: images)
 
-            // Set delegates.
             /* controller.pageDelegate = self
              controller.dismissalDelegate = self */
 
-            // Use dynamic background.
             controller.dynamicBackground = true
-            controller.headerView.closeButton.setTitle(SLocale(.CLOSE_ACTION), for: .normal)
 
             let saveBtn: UIButton = {
                 let btn = UIButton(type: .system)
@@ -182,6 +178,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 make.width.equalTo(50)
                 make.height.equalTo(50)
             }
+
             delegate.clickedOnImage(controller: controller)
         }
     }
@@ -474,7 +471,6 @@ extension PostCellView: UIContextMenuInteractionDelegate {
             actionsArray.append(delete)
         }
 
-        // Create and return a UIMenu with the share action
         return UIMenu(title: SLocale(.POST_NOUN), children: actionsArray)
     }
 }
