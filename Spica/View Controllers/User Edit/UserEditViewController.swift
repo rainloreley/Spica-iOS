@@ -19,6 +19,8 @@ class UserEditViewController: UIViewController {
     var delegate: UserEditDelegate!
 
     var loadingHud: JGProgressHUD!
+	var toolbarDelegate = ToolbarDelegate()
+	private var saveAccountSubscriber: AnyCancellable?
 
     var tableView: UITableView!
     var user: User! {
@@ -65,13 +67,26 @@ class UserEditViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+		
+		let notificationCenter = NotificationCenter.default
+		saveAccountSubscriber = notificationCenter.publisher(for: .saveProfile)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.saveData()
+			})
+		
         // Do any additional setup after loading the view.
     }
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		saveAccountSubscriber?.cancel()
+	}
 
     override func viewWillAppear(_: Bool) {
         navigationItem.title = SLocale(.EDIT_PROFILE)
         navigationController?.navigationBar.prefersLargeTitles = false
     }
+	
 
     @objc func saveData() {
         loadingHud.show(in: view)
@@ -119,6 +134,22 @@ class UserEditViewController: UIViewController {
      }*/
 
     override func viewDidAppear(_: Bool) {
+		
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "editUserProfile")
+			toolbar.delegate = toolbarDelegate
+		toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			navigationController?.setToolbarHidden(true, animated: false)
+		#endif
+		
         tableView.reloadData()
     }
 }

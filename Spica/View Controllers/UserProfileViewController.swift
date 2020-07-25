@@ -16,6 +16,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     var user: User!
     var tableView: UITableView!
     var loadedPreviously = false
+	var toolbarDelegate = ToolbarDelegate()
+	private var createPostSubscriber: AnyCancellable?
+	private var editProfileSubscriber: AnyCancellable?
     var userPosts = [Post]() {
         didSet {
             DispatchQueue.main.async {
@@ -94,6 +97,19 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
+		
+		let notificationCenter = NotificationCenter.default
+		createPostSubscriber = notificationCenter.publisher(for: .createPost)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.openPostCreateView()
+			})
+		
+		editProfileSubscriber = notificationCenter.publisher(for: .editProfile)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.openUserSettings()
+			})
     }
 
     func setSidebar() {
@@ -119,6 +135,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
              navigationController?.navigationBar.prefersLargeTitles = false
          #endif */
     }
+	
 
     @objc func openUserSettings() {
         let vc = UserEditViewController()
@@ -130,12 +147,30 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     override func viewWillDisappear(_: Bool) {
+		createPostSubscriber?.cancel()
+		editProfileSubscriber?.cancel()
         /* #if targetEnvironment(macCatalyst)
              navigationController?.setNavigationBarHidden(false, animated: false)
          #endif */
     }
 
     override func viewDidAppear(_: Bool) {
+		
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "userprofile")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			navigationController?.setToolbarHidden(true, animated: false)
+		#endif
+		
         setSidebar()
         /* #if targetEnvironment(macCatalyst)
              let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate

@@ -15,6 +15,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var usernameField: UITextField!
     var passwordField: UITextField!
     var signInButton: UIButton!
+	var toolbarDelegate = ToolbarDelegate()
 
     var createAccountButton: UIButton!
 
@@ -124,6 +125,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "other")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = nil
+				//titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(false, animated: false)
+			navigationController?.setToolbarHidden(false, animated: false)
+		#endif
         /* #if targetEnvironment(macCatalyst)
              let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
              if let titleBar = sceneDelegate.window?.windowScene?.titlebar {

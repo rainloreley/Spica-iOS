@@ -7,7 +7,6 @@
 
 import Cache
 import Foundation
-import RealmSwift
 import SwiftyJSON
 import UIKit
 

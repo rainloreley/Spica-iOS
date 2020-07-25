@@ -7,9 +7,7 @@
 
 import Cache
 import Foundation
-import RealmSwift
 import UIKit
-import Unrealm
 
 let imageCache = NSCache<NSString, UIImage>()
 
@@ -40,17 +38,18 @@ public class ImageLoader {
     }
 }
 
-struct CacheImage: Realmable {
-    init() {
-        id = ""
-        image = nil
-    }
+/* struct CacheImage: Realmable {
+     init() {
+         id = ""
+         image = nil
+     }
 
-    var id: String = ""
-    var image: Data?
+     var id: String = ""
+     var image: Data?
 
-    init(id: String, image: Data) {
-        self.id = id
-        self.image = image
-    }
-}
+     init(id: String, image: Data) {
+         self.id = id
+         self.image = image
+     }
+ }
+ */

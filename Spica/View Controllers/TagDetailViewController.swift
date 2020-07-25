@@ -12,9 +12,11 @@ import SPAlert
 import UIKit
 
 class TagDetailViewController: UIViewController {
+	
     typealias DataSource = UITableViewDiffableDataSource<Section, Post>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
-
+	
+	var toolbarDelegate = ToolbarDelegate()
     var tableView: UITableView!
     var refreshControl = UIRefreshControl()
     var loadingHud: JGProgressHUD!
@@ -117,6 +119,22 @@ class TagDetailViewController: UIViewController {
     }
 
     override func viewDidAppear(_: Bool) {
+		
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "other")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			navigationController?.setToolbarHidden(true, animated: false)
+		#endif
+		
         if tag != nil {
             loadTag()
         }

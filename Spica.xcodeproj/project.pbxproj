@@ -66,6 +66,8 @@
 		3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */; };
 		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
 		3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */; };
+		3AF30CCC24CCABEC005D0CC3 /* ToolbarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF30CCB24CCABEC005D0CC3 /* ToolbarDelegate.swift */; };
+		3AF30CCE24CCAF84005D0CC3 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */; };
 		3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */; };
 		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
 		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
@@ -161,6 +163,8 @@
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
 		3AEEE93B24C5C9E4006E4812 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3AF30CCB24CCABEC005D0CC3 /* ToolbarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarDelegate.swift; sourceTree = "<group>"; };
+		3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.release.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
@@ -316,6 +320,8 @@
 				3A96F6A924AB445100482C5A /* View Controllers */,
 				3A96F69D24AB3F9C00482C5A /* Services */,
 				3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */,
+				3AF30CCB24CCABEC005D0CC3 /* ToolbarDelegate.swift */,
+				3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */,
 				3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */,
 				3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */,
 				3A7145EA24AA8755000FA3C3 /* Assets.xcassets */,
@@ -795,6 +801,7 @@
 				3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */,
 				3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */,
 				3AD04A3624C0C50E007F7306 /* UserEditHeaderCell.swift in Sources */,
+				3AF30CCC24CCABEC005D0CC3 /* ToolbarDelegate.swift in Sources */,
 				3A4DF24B24BF7D1C003C6BF3 /* SidebarViewController.swift in Sources */,
 				3A61B26F24C8B52800AC1A9C /* FollowAction.swift in Sources */,
 				3AA108A724C0C622006FCA1A /* EditTextFieldCell.swift in Sources */,
@@ -811,6 +818,7 @@
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
 				3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */,
+				3AF30CCE24CCAF84005D0CC3 /* NotificationName.swift in Sources */,
 				3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */,
 				3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */,
 				3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */,

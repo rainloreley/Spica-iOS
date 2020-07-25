@@ -18,6 +18,7 @@ import UIKit
 class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
     var createPostBtn: UIButton!
+	var toolbarDelegate = ToolbarDelegate()
     var posts = [Post]() {
         didSet { /* applyChanges() */ }
     }
@@ -27,6 +28,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     var loadingHud: JGProgressHUD!
 
     private var subscriptions = Set<AnyCancellable>()
+	private var createPostSubscriber: AnyCancellable?
 
     var verificationString = ""
 
@@ -38,6 +40,10 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
              } */
         }
     }
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		createPostSubscriber?.cancel()
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,6 +112,13 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
              make.bottom.equalTo(view.snp.bottom).offset(-100)
              make.trailing.equalTo(view.snp.trailing).offset(-16)
          } */
+		
+		let notificationCenter = NotificationCenter.default
+		createPostSubscriber = notificationCenter.publisher(for: .createPost)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.openPostCreateView()
+			})
     }
 
     // MARK: - Datasource
@@ -197,10 +210,29 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         setSidebar()
 
         navigationController?.navigationBar.prefersLargeTitles = true
+		
+		
+		
     }
+	
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+		
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "timeline")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: animated)
+			navigationController?.setToolbarHidden(true, animated: animated)
+		#endif
         requestBiometricAuth()
         setSidebar()
 

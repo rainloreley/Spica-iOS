@@ -5,23 +5,12 @@ PODS:
   - KMPlaceholderTextView (1.4.0)
   - Lightbox (2.4.2):
     - Imaginary (~> 4.3.1)
-  - Realm (5.0.3):
-    - Realm/Headers (= 5.0.3)
-  - Realm/Headers (5.0.3)
-  - RealmSwift (5.0.3):
-    - Realm (= 5.0.3)
-  - RuntimeNew (2.1.5)
   - SwiftKeychainWrapper (3.4.0)
-  - Unrealm (1.3.5):
-    - RealmSwift (= 5.0.3)
-    - RuntimeNew (= 2.1.5)
 
 DEPENDENCIES:
   - KMPlaceholderTextView (~> 1.4.0)
   - Lightbox
-  - RealmSwift (~> 5.0.3)
   - SwiftKeychainWrapper
-  - Unrealm (~> 1.3.5)
 
 SPEC REPOS:
   trunk:
@@ -29,23 +18,15 @@ SPEC REPOS:
     - Imaginary
     - KMPlaceholderTextView
     - Lightbox
-    - Realm
-    - RealmSwift
-    - RuntimeNew
     - SwiftKeychainWrapper
-    - Unrealm
 
 SPEC CHECKSUMS:
   Cache: 48762993ec44e1d93483c4d4a13edd18452326f4
   Imaginary: 18c5bba364229eef383b925199db442e71d175e1
   KMPlaceholderTextView: 2206c3df39979e9396e2d96fa9f427a8951121b0
   Lightbox: 8837c35c1150fa0410d94296e369b432d37f18c7
-  Realm: bfca1699b61b0b17c3a69ae0e648314eae91fbdb
-  RealmSwift: 493c9f089cd3893b3959007973c0e4f640906ba0
-  RuntimeNew: ef34cf1783be4c1cbe798970bc590924dab5df87
   SwiftKeychainWrapper: 6fc49fbf7d4a6b0772917acb0e53a1639f6078d6
-  Unrealm: ba1c168935344084ba28dd6bff5ded86f4837d7f
 
-PODFILE CHECKSUM: 37a9562137a3750602c91ccd69e89fabba97f05e
+PODFILE CHECKSUM: af309479aba29fc19a29a26e70a64723aff63ef4
 
 COCOAPODS: 1.9.3

@@ -6,22 +6,24 @@
 //
 
 import Foundation
-import Unrealm
 
-public struct FeedObject: Realmable {
-    public init() {
-        id = ""
-        isCached = false
-        post = nil
-    }
+// DO NOT DELETE - I MAY NEED THAT LATER
 
-    var id: String = ""
-    var isCached = false
-    var post: Post?
+/* public struct FeedObject: {
+     public init() {
+         id = ""
+         isCached = false
+         post = nil
+     }
 
-    init(id: String, isCached: Bool, post: Post) {
-        self.id = id
-        self.isCached = isCached
-        self.post = post
-    }
-}
+     var id: String = ""
+     var isCached = false
+     var post: Post?
+
+     init(id: String, isCached: Bool, post: Post) {
+         self.id = id
+         self.isCached = isCached
+         self.post = post
+     }
+ }
+ */
