@@ -23,8 +23,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     var loadingHud: JGProgressHUD!
 
     private var subscriptions = Set<AnyCancellable>()
-	
-	var verificationString = ""
+
+    var verificationString = ""
 
     // MARK: - Setup
 
@@ -136,8 +136,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         if mentions.isEmpty {
             loadingHud.show(in: view)
         }
-		
-		self.verificationString = ""
+
+        verificationString = ""
 
         AllesAPI.default.loadMentions()
             .receive(on: RunLoop.main)
@@ -155,41 +155,41 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                 self.mentions = $0
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
-				self.verificationString = randomString(length: 30)
+                self.verificationString = randomString(length: 30)
                 self.loadImages()
             }.store(in: &subscriptions)
     }
-	
-	func loadImages() {
-		let veri = verificationString
-		DispatchQueue.global(qos: .background).async { [self] in
-			let dispatchGroup = DispatchGroup()
-			for (index, post) in mentions.enumerated() {
-				if veri != verificationString { return }
-				dispatchGroup.enter()
-				if index <= mentions.count - 1 {
-					if let author = mentions[index].author {
-						if veri != verificationString { return }
-						mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
-					}
-					
-					// applyChanges()
-					if let url = post.imageURL {
-						if veri != verificationString { return }
-						mentions[index].image = ImageLoader.loadImageFromInternet(url: url)
-					} else {
-						mentions[index].image = UIImage()
-					}
-					if index < 5 {
-						if veri != verificationString { return }
-						applyChanges()
-					}
-					dispatchGroup.leave()
-				}
-			}
-			applyChanges()
-		}
-	}
+
+    func loadImages() {
+        let veri = verificationString
+        DispatchQueue.global(qos: .background).async { [self] in
+            let dispatchGroup = DispatchGroup()
+            for (index, post) in mentions.enumerated() {
+                if veri != verificationString { return }
+                dispatchGroup.enter()
+                if index <= mentions.count - 1 {
+                    if let author = mentions[index].author {
+                        if veri != verificationString { return }
+                        mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
+                    }
+
+                    // applyChanges()
+                    if let url = post.imageURL {
+                        if veri != verificationString { return }
+                        mentions[index].image = ImageLoader.loadImageFromInternet(url: url)
+                    } else {
+                        mentions[index].image = UIImage()
+                    }
+                    if index < 5 {
+                        if veri != verificationString { return }
+                        applyChanges()
+                    }
+                    dispatchGroup.leave()
+                }
+            }
+            applyChanges()
+        }
+    }
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
         let userByTag = mentions[sender.view!.tag].author

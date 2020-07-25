@@ -29,8 +29,8 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     var refreshControl = UIRefreshControl()
 
     var loadingHud: JGProgressHUD!
-	
-	var verificationString = ""
+
+    var verificationString = ""
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -193,9 +193,8 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     func loadPosts() {
-		
-		self.verificationString = ""
-		
+        verificationString = ""
+
         AllesAPI.default.loadUserPosts(user: user)
             .receive(on: RunLoop.main)
             .sink {
@@ -215,7 +214,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                     self.refreshControl.endRefreshing()
                 }
                 self.loadingHud.dismiss()
-				verificationString = randomString(length: 20)
+                verificationString = randomString(length: 20)
                 self.loadImages()
             }
             .store(in: &subscriptions)
@@ -240,27 +239,27 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     func loadImages() {
-		let veri = verificationString
+        let veri = verificationString
         DispatchQueue.global(qos: .background).async { [self] in
             let dispatchGroup = DispatchGroup()
             for (index, post) in userPosts.enumerated() {
-				if veri != verificationString { return }
+                if veri != verificationString { return }
                 dispatchGroup.enter()
                 if index <= userPosts.count - 1 {
-					if let author = userPosts[index].author {
-						if veri != verificationString { return }
-						userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
-					}
-                    
+                    if let author = userPosts[index].author {
+                        if veri != verificationString { return }
+                        userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
+                    }
+
                     // applyChanges()
                     if let url = post.imageURL {
-						if veri != verificationString { return }
+                        if veri != verificationString { return }
                         userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
                         userPosts[index].image = UIImage()
                     }
                     if index < 5 {
-						if veri != verificationString { return }
+                        if veri != verificationString { return }
                         DispatchQueue.main.async {
                             self.tableView.beginUpdates()
                             self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)

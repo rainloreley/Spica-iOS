@@ -27,8 +27,8 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     var loadingHud: JGProgressHUD!
 
     private var subscriptions = Set<AnyCancellable>()
-	
-	var verificationString = ""
+
+    var verificationString = ""
 
     var containsCachedElements = false {
         didSet {
@@ -217,7 +217,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     }
 
     @objc func loadFeed() {
-		self.verificationString = ""
+        verificationString = ""
         if posts.isEmpty { loadingHud.show(in: view) }
 
         // DispatchQueue.global(qos: .utility).async {
@@ -233,7 +233,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
                 default: break
                 }
-			} receiveValue: { [self] posts in
+            } receiveValue: { [self] posts in
                 // DispatchQueue.main.async {
                 /* self.containsCachedElements = posts.filter { $0.isCached == true }.isEmpty ? false : true
                  self.posts = posts.map { $0.post! } */
@@ -241,7 +241,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 self.applyChanges()
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
-				verificationString = randomString(length: 30)
+                verificationString = randomString(length: 30)
                 self.loadImages()
                 // }
             }.store(in: &subscriptions)
@@ -313,38 +313,37 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             }
         }
     }
-	
-	
-	func loadImages() {
-		let veri = verificationString
-		DispatchQueue.global(qos: .background).async { [self] in
-			let dispatchGroup = DispatchGroup()
-			for (index, post) in posts.enumerated() {
-				if veri != verificationString { return }
-				dispatchGroup.enter()
-				if index <= posts.count - 1 {
-					if let author = posts[index].author {
-						if veri != verificationString { return }
-						posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
-					}
-					
-					// applyChanges()
-					if let url = post.imageURL {
-						if veri != verificationString { return }
-						posts[index].image = ImageLoader.loadImageFromInternet(url: url)
-					} else {
-						posts[index].image = UIImage()
-					}
-					if index < 5 {
-						if veri != verificationString { return }
-						applyChanges()
-					}
-					dispatchGroup.leave()
-				}
-			}
-			applyChanges()
-		}
-	}
+
+    func loadImages() {
+        let veri = verificationString
+        DispatchQueue.global(qos: .background).async { [self] in
+            let dispatchGroup = DispatchGroup()
+            for (index, post) in posts.enumerated() {
+                if veri != verificationString { return }
+                dispatchGroup.enter()
+                if index <= posts.count - 1 {
+                    if let author = posts[index].author {
+                        if veri != verificationString { return }
+                        posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
+                    }
+
+                    // applyChanges()
+                    if let url = post.imageURL {
+                        if veri != verificationString { return }
+                        posts[index].image = ImageLoader.loadImageFromInternet(url: url)
+                    } else {
+                        posts[index].image = UIImage()
+                    }
+                    if index < 5 {
+                        if veri != verificationString { return }
+                        applyChanges()
+                    }
+                    dispatchGroup.leave()
+                }
+            }
+            applyChanges()
+        }
+    }
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
         let userByTag = posts[sender.view!.tag].author
