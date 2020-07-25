@@ -9,6 +9,8 @@ import Combine
 import SwiftUI
 
 class ProgressBarController: ObservableObject {
+	
+	@Published var color: Color
     @Published var progress: Float {
         didSet {
             if progress == 0 {
@@ -22,8 +24,6 @@ class ProgressBarController: ObservableObject {
             }
         }
     }
-
-    @Published var color: Color
 
     init(progress: Float, color: Color) {
         self.progress = progress
