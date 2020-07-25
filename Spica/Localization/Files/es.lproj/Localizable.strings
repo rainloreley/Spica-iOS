@@ -11,7 +11,7 @@
 "ACCOUNT" = "Cuenta";
 "SETTINGS" = "Ajustes";
 
-"REPLY_SINGULAR" = "Responder";
+"REPLY_SINGULAR" = "Respuesta";
 "REPLY_PLURAL" = "Respuestas";
 
 "LOADING_ACTION" = "Cargando";
@@ -26,7 +26,7 @@
 
 "POST_SENT" = "¡Publicación enviada!";
 
-"REPLY_ACTION" = "Respuesta";
+"REPLY_ACTION" = "Responder";
 
 "FOLLOWER_SINGULAR" = "Seguidor";
 "FOLLOWER_PLURAL" = "Seguidores";
@@ -81,9 +81,20 @@
 
 "REPOST" = "Republicar";
 "COPY_ID" = "Copiar ID";
-"TRANSLATE_APP" = "Translate the app";
-"CONTACT" = "Contact";
-"SAVE_ACTION" = "Save";
+"TRANSLATE_APP" = "Traduce la app";
+"CONTACT" = "Contacto";
+"SAVE_ACTION" = "Guardar";
+"CLEAR_CACHE" = "Vaciar cache";
+"CACHE_CLEARED" = "¡Cache vaciado!";
+"CLOSE_ACTION" = "Cerrar";
+
+"UNLOCK_SPICA" = "Desbloquear Spica";
+"BIOMETRIC_AUTH_FAILED" = "Autenticación fallida";
+"PLEASE_TRY_AGAIN" = "Por favor, vuelve a intentarlo";
+"RETRY_ACTION" = "Volver a intentar";
+"DEVICE_ERROR" = "Error del dispositivo";
+"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Tu dispositivo no puede usar %@. Comprueba que %@ está activado en la app de ajustes.";
+"BIOMETRICS" = "Biométrico";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx

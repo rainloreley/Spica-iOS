@@ -5,3 +5,7 @@
   Created by Adrian Baumgart on 23.07.20.
   
 */
+
+"NSFaceIDUsageDescription" = "Spica usa FaceID para restringir el acceso a la app";
+"NSCameraUsageDescription" = "Puedes usar tu cámara para hacer fotos que puedes compartir en Alles";
+"NSPhotoLibraryUsageDescription" = "Puedes elegir una imagen para compartirla en Alles";

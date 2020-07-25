@@ -84,6 +84,17 @@
 "TRANSLATE_APP" = "App übersetzen";
 "CONTACT" = "Kontakt";
 "SAVE_ACTION" = "Speichern";
+"CLEAR_CACHE" = "Cache leeren";
+"CACHE_CLEARED" = "Cache gelöscht!";
+"CLOSE_ACTION" = "Schließen";
+
+"UNLOCK_SPICA" = "Spica entsperren";
+"BIOMETRIC_AUTH_FAILED" = "Authentifizierung fehlgeschlagen";
+"PLEASE_TRY_AGAIN" = "Bitte versuche es erneut";
+"RETRY_ACTION" = "Nochmal versuchen";
+"DEVICE_ERROR" = "Gerätefehler";
+"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Dein Gerät kann %@ nicht nutzen. Bitte stelle sicher, dass %@ in den Geräteeinstellungen aktiviert ist.";
+"BIOMETRICS" = "Biometrie";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
