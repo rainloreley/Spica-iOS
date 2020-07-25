@@ -27,6 +27,12 @@ protocol PostCellViewDelegate {
 
     func clickedOnImage(controller: LightboxController)
     func saveImage(image: UIImage?)
+
+    func editBookmark(id: String, action: BookmarkAction)
+}
+
+enum BookmarkAction {
+    case add, remove
 }
 
 class PostCellView: UITableViewCell, UITextViewDelegate {
@@ -461,6 +467,14 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         }
 
         actionsArray.append(repost)
+
+		let bookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks") as? [Bookmark] ?? []
+
+		let bookmark = UIAction(title: bookmarks.contains(where: { $0.id == post!.id }) ? "Remove bookmark" : "Add bookmark", image: bookmarks.contains(where: { $0.id == post!.id }) ? UIImage(systemName: "bookmark.slash") : UIImage(systemName: "bookmark")) { _ in
+			self.delegate.editBookmark(id: self.post!.id, action: bookmarks.contains(where: { $0.id == self.post!.id }) ? .remove : .add)
+        }
+
+        actionsArray.append(bookmark)
 
         let userID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 

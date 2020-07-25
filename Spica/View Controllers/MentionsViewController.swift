@@ -96,6 +96,12 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         snapshot.appendItems(mentions, toSection: .main)
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
+			if self.mentions.isEmpty {
+				self.tableView.setEmptyMessage(message: SLocale(.MENTIONS_EMPTY_TITLE), subtitle: SLocale(.MENTIONS_EMPTY_SUBTITLE))
+			}
+			else {
+				self.tableView.restore()
+			}
         }
     }
 
@@ -244,6 +250,28 @@ extension MentionsViewController: UITableViewDelegate {
 }
 
 extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    
+	func editBookmark(id: String, action: BookmarkAction) {
+		switch action {
+		case .add:
+			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+			currentBookmarks.append(Bookmark(id: id, added: Date()))
+			UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+			SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
+		case .remove:
+			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+			if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
+				currentBookmarks.remove(at: index)
+				UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+				SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
+			}
+			else {
+				SPAlert.present(title: SLocale(.ERROR), preset: .error)
+			}
+			
+		}
+	}
+
     func saveImage(image: UIImage?) {
         if let savingImage = image {
             UIImageWriteToSavedPhotosAlbum(savingImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)

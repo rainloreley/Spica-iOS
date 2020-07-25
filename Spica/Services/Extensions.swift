@@ -130,3 +130,86 @@ func randomString(length: Int) -> String {
     let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     return String((0 ..< length).map { _ in letters.randomElement()! })
 }
+
+extension UserDefaults {
+	open func setStruct<T: Codable>(_ value: T?, forKey defaultName: String) {
+		let data = try? JSONEncoder().encode(value)
+		set(data, forKey: defaultName)
+	}
+
+	open func structData<T>(_ type: T.Type, forKey defaultName: String) -> T? where T: Decodable {
+		guard let encodedData = data(forKey: defaultName) else {
+			return nil
+		}
+
+		return try! JSONDecoder().decode(type, from: encodedData)
+	}
+
+	open func setStructArray<T: Codable>(_ value: [T], forKey defaultName: String) {
+		let data = value.map { try? JSONEncoder().encode($0) }
+
+		set(data, forKey: defaultName)
+	}
+
+	open func structArrayData<T>(_ type: T.Type, forKey defaultName: String) -> [T] where T: Decodable {
+		guard let encodedData = array(forKey: defaultName) as? [Data] else {
+			return []
+		}
+
+		return encodedData.map { try! JSONDecoder().decode(type, from: $0) }
+	}
+}
+
+extension UITableView {
+
+	func setEmptyMessage(message: String, subtitle: String) {
+		
+		let backView = UIView(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
+		let messageLabel: UILabel = {
+			let label = UILabel(frame: .zero)
+			label.text = message
+			label.textColor = .label
+			label.numberOfLines = 0
+			label.textAlignment = .center
+			label.font = .boldSystemFont(ofSize: 25)
+			return label
+			//label.sizeToFit()
+		}()
+		
+		let subtitleLabel: UILabel = {
+			let label = UILabel(frame: .zero)
+			label.text = subtitle
+			label.textColor = .tertiaryLabel
+			label.numberOfLines = 0
+			label.textAlignment = .center
+			label.font = .boldSystemFont(ofSize: 20)
+			return label
+		}()
+
+		self.backgroundView = backView
+	
+		backView.addSubview(messageLabel)
+		backView.addSubview(subtitleLabel)
+		
+		messageLabel.snp.makeConstraints { (make) in
+			make.centerX.equalTo(backView.snp.centerX)
+			make.centerY.equalTo(backView.snp.centerY).offset(-16)
+			make.height.equalTo(50)
+			make.width.equalTo(backView.snp.width)
+		}
+		
+		subtitleLabel.snp.makeConstraints { (make) in
+			make.centerX.equalTo(backView.snp.centerX)
+			make.centerY.equalTo(backView.snp.centerY).offset(16)
+			make.height.equalTo(50)
+			make.width.equalTo(backView.snp.width)
+		}
+		
+		self.separatorStyle = .none
+	}
+
+	func restore() {
+		self.backgroundView = nil
+		self.separatorStyle = .singleLine
+	}
+}

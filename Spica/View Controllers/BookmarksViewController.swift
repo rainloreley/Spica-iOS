@@ -5,176 +5,353 @@
 //  Created by Adrian Baumgart on 25.07.20.
 //
 
-import UIKit
-import JGProgressHUD
 import Combine
+import JGProgressHUD
 import Lightbox
+import UIKit
+import SPAlert
 
 class BookmarksViewController: UIViewController {
 	
-	var tableView: UITableView!
-	var refreshControl = UIRefreshControl()
-	var loadingHud: JGProgressHUD!
-	private var subscriptions = Set<AnyCancellable>()
-	
-	var bookmarks = [Post]()
+    var tableView: UITableView!
+    var refreshControl = UIRefreshControl()
+    var loadingHud: JGProgressHUD!
+    private var subscriptions = Set<AnyCancellable>()
+    var verificationString = ""
+
+    var bookmarks = [AdvancedBookmark]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		view.backgroundColor = .systemBackground
-		navigationItem.title = "Bookmarks"
-		navigationController?.navigationBar.prefersLargeTitles = true
+        view.backgroundColor = .systemBackground
+		navigationItem.title = SLocale(.BOOKMARKS)
+        navigationController?.navigationBar.prefersLargeTitles = true
 
-		tableView = UITableView(frame: view.bounds, style: .insetGrouped)
-		tableView.delegate = self
-		tableView.dataSource = dataSource
-		tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-		view.addSubview(tableView)
+        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView.delegate = self
+        tableView.dataSource = dataSource
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
+        view.addSubview(tableView)
 
-		tableView.snp.makeConstraints { make in
-			make.top.equalTo(view.snp.top)
-			make.leading.equalTo(view.snp.leading)
-			make.trailing.equalTo(view.snp.trailing)
-			make.bottom.equalTo(view.snp.bottom)
-		}
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top)
+            make.leading.equalTo(view.snp.leading)
+            make.trailing.equalTo(view.snp.trailing)
+            make.bottom.equalTo(view.snp.bottom)
+        }
 
-		// refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-		refreshControl.addTarget(self, action: #selector(loadBookmarks), for: .valueChanged)
-		tableView.addSubview(refreshControl)
+        // refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(loadBookmarks), for: .valueChanged)
+        tableView.addSubview(refreshControl)
 
-		loadingHud = JGProgressHUD(style: .dark)
-		loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
-		loadingHud.interactionType = .blockNoTouches
+        loadingHud = JGProgressHUD(style: .dark)
+        loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
+        loadingHud.interactionType = .blockNoTouches
     }
-	
-	@objc func loadBookmarks() {
-		let savedBookmarks = UserDefaults.standard.array(forKey: "savedBookmarks") ?? []
-		for i in savedBookmarks {
-			
-		}
-	}
-	
-	typealias DataSource = UITableViewDiffableDataSource<Section, Post>
-	typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
 
-	private lazy var dataSource = makeDataSource()
+    override func viewDidAppear(_: Bool) {
+        loadBookmarks()
+    }
 
-	enum Section {
-		case main
-	}
+    @objc func loadBookmarks() {
+		
+        if bookmarks.isEmpty {
+            loadingHud.show(in: view)
+        }
+		
+		bookmarks.removeAll()
 
-	func makeDataSource() -> DataSource {
-		let source = DataSource(tableView: tableView) { [self] (tableView, indexPath, post) -> UITableViewCell? in
-			let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+        DispatchQueue.global(qos: .utility).async { [self] in
 
-			cell.delegate = self
-			cell.indexPath = indexPath
-			cell.post = post
+            let myGroup = DispatchGroup()
 
-			let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-			cell.pfpImageView.tag = indexPath.row
-			cell.pfpImageView.isUserInteractionEnabled = true
-			cell.pfpImageView.addGestureRecognizer(tap)
-			cell.upvoteButton.tag = indexPath.row
-			cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-			cell.downvoteButton.tag = indexPath.row
-			cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+			var savedBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            for i in savedBookmarks {
+                myGroup.enter()
+				AllesAPI.loadPost(id: i.id)
+                    .receive(on: RunLoop.main)
+                    .sink {
+                        switch $0 {
+                        case let .failure(err):
+                            /*self.refreshControl.endRefreshing()
+                            self.loadingHud.dismiss()*/
+							if err.error == .missingResource {
+								savedBookmarks.remove(at: savedBookmarks.firstIndex(of: i)!)
+								UserDefaults.standard.setStructArray(savedBookmarks, forKey: "savedBookmarks")
+							}
+							else {
+								AllesAPI.default.errorHandling(error: err, caller: self.view)
+							}
+							myGroup.leave()
 
-			return cell
-		}
-		source.defaultRowAnimation = .fade
-		return source
-	}
+                        default: break
+                        }
+                    }
+                receiveValue: { post in
+					self.bookmarks.append(AdvancedBookmark(bookmark: i, post: post))
+                    myGroup.leave()
+                }
+                .store(in: &subscriptions)
+            }
 
-	func applyChanges(_ animated: Bool = true) {
-		var snapshot = Snapshot()
-		snapshot.appendSections([.main])
-		snapshot.appendItems(bookmarks, toSection: .main)
-		DispatchQueue.main.async {
-			self.dataSource.apply(snapshot, animatingDifferences: animated)
-		}
-	}
-	
-	
-	@objc func openUserProfile(_ sender: UITapGestureRecognizer) {
-		let userByTag = bookmarks[sender.view!.tag].author
-		let vc = UserProfileViewController()
-		vc.user = userByTag
-		vc.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(vc, animated: true)
-	}
+            myGroup.notify(queue: .main) {
+                DispatchQueue.main.async { [self] in
+					bookmarks.sort { $0.bookmark.added.compare($1.bookmark.added) == .orderedDescending }
+                    loadingHud.dismiss()
+                    refreshControl.endRefreshing()
+                    applyChanges()
+                    verificationString = randomString(length: 30)
+                    loadImages()
+                }
+            }
+        }
+    }
 
-	@objc func upvotePost(_ sender: UIButton) {
-		vote(tag: sender.tag, vote: .upvote)
-	}
+    func loadImages() {
+        let veri = verificationString
+        DispatchQueue.global(qos: .background).async { [self] in
+            let dispatchGroup = DispatchGroup()
+            for (index, post) in bookmarks.enumerated() {
+                dispatchGroup.enter()
+                if index <= bookmarks.count - 1 {
+                    if veri != verificationString { return }
+					bookmarks[index].post.author?.image = ImageLoader.loadImageFromInternet(url: post.post.author!.imageURL)
+                    // applyChanges()
+                    if veri != verificationString { return }
+					if let url = post.post.imageURL {
+						bookmarks[index].post.image = ImageLoader.loadImageFromInternet(url: url)
+                    } else {
+						bookmarks[index].post.image = UIImage()
+                    }
+                    if index < 5 {
+                        if veri != verificationString { return }
+                        applyChanges()
+                    }
 
-	@objc func downvotePost(_ sender: UIButton) {
-		vote(tag: sender.tag, vote: .downvote)
-	}
+                    dispatchGroup.leave()
+                }
+            }
+            applyChanges()
+        }
+    }
 
-	func vote(tag: Int, vote: VoteType) {
-		let selectedPost = bookmarks[tag]
-		VotePost.default.vote(post: selectedPost, vote: vote)
-			.receive(on: RunLoop.main)
-			.sink {
-				switch $0 {
-				case let .failure(err):
+    typealias DataSource = UITableViewDiffableDataSource<Section, AdvancedBookmark>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, AdvancedBookmark>
 
-					AllesAPI.default.errorHandling(error: err, caller: self.view)
-				default: break
-				}
-			} receiveValue: { [unowned self] in
-				bookmarks[tag].voteStatus = $0.status
-				bookmarks[tag].score = $0.score
-				applyChanges()
-			}.store(in: &subscriptions)
-	}
+    private lazy var dataSource = makeDataSource()
+
+    enum Section {
+        case main
+    }
+
+    func makeDataSource() -> DataSource {
+        let source = DataSource(tableView: tableView) { [self] (tableView, indexPath, post) -> UITableViewCell? in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+
+            cell.delegate = self
+            cell.indexPath = indexPath
+			cell.post = post.post
+
+            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+            cell.pfpImageView.tag = indexPath.row
+            cell.pfpImageView.isUserInteractionEnabled = true
+            cell.pfpImageView.addGestureRecognizer(tap)
+            cell.upvoteButton.tag = indexPath.row
+            cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+            cell.downvoteButton.tag = indexPath.row
+            cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+            return cell
+        }
+        source.defaultRowAnimation = .fade
+        return source
+    }
+
+    func applyChanges(_ animated: Bool = true) {
+        var snapshot = Snapshot()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(bookmarks, toSection: .main)
+        DispatchQueue.main.async {
+            self.dataSource.apply(snapshot, animatingDifferences: animated)
+			if self.bookmarks.isEmpty {
+				self.tableView.setEmptyMessage(message: SLocale(.BOOKMARKS_EMPTY_TITLE), subtitle: SLocale(.BOOKMARKS_EMPTY_SUBTITLE))
+			}
+			else {
+				self.tableView.restore()
+			}
+        }
+    }
+
+    @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
+		let userByTag = bookmarks[sender.view!.tag].post.author
+        let vc = UserProfileViewController()
+        vc.user = userByTag
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    @objc func upvotePost(_ sender: UIButton) {
+        vote(tag: sender.tag, vote: .upvote)
+    }
+
+    @objc func downvotePost(_ sender: UIButton) {
+        vote(tag: sender.tag, vote: .downvote)
+    }
+
+    func vote(tag: Int, vote: VoteType) {
+        let selectedPost = bookmarks[tag]
+		VotePost.default.vote(post: selectedPost.post, vote: vote)
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
+
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+                default: break
+                }
+            } receiveValue: { [unowned self] in
+				bookmarks[tag].post.voteStatus = $0.status
+				bookmarks[tag].post.score = $0.score
+                applyChanges()
+            }.store(in: &subscriptions)
+    }
 }
 
 extension BookmarksViewController: UITableViewDelegate {
-	
+	func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+		guard let post = dataSource.itemIdentifier(for: indexPath) else { return }
+		let detailVC = PostDetailViewController()
+		detailVC.selectedPost = post.post
+		detailVC.hidesBottomBarWhenPushed = true
+		navigationController?.pushViewController(detailVC, animated: true)
+	}
 }
 
 extension BookmarksViewController: PostCellViewDelegate {
-	func selectedUser(username: String, indexPath: IndexPath) {
-		//
+	func editBookmark(id: String, action: BookmarkAction) {
+		switch action {
+		case .add:
+			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+			currentBookmarks.append(Bookmark(id: id, added: Date()))
+			UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+			SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
+			self.loadBookmarks()
+		case .remove:
+			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+			if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
+				currentBookmarks.remove(at: index)
+				UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+				SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
+				self.loadBookmarks()
+			}
+			else {
+				SPAlert.present(title: SLocale(.ERROR), preset: .error)
+			}
+			
+		}
 	}
-	
-	func selectedURL(url: String, indexPath: IndexPath) {
-		//
-	}
-	
-	func selectedPost(post: String, indexPath: IndexPath) {
-		//
-	}
-	
-	func selectedTag(tag: String, indexPath: IndexPath) {
-		//
-	}
-	
-	func copyPostID(id: String) {
-		//
-	}
-	
-	func deletePost(id: String) {
-		//
-	}
-	
-	func replyToPost(id: String) {
-		//
-	}
-	
-	func repost(id: String, username: String) {
-		//
-	}
-	
-	func clickedOnImage(controller: LightboxController) {
-		//
-	}
-	
+
 	func saveImage(image: UIImage?) {
-		//
+		if let savingImage = image {
+			UIImageWriteToSavedPhotosAlbum(savingImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+		}
+	}
+
+	@objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
+		if let error = error {
+			// we got back an error!
+			SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
+
+		} else {
+			SPAlert.present(title: SLocale(.SAVED_ACTION), preset: .done)
+		}
+	}
+
+	func selectedTag(tag: String, indexPath _: IndexPath) {
+		let vc = TagDetailViewController()
+		vc.tag = Tag(name: tag, posts: [])
+		navigationController?.pushViewController(vc, animated: true)
+	}
+
+	func clickedOnImage(controller: LightboxController) {
+		present(controller, animated: true, completion: nil)
+	}
+
+	func repost(id: String, username: String) {
+		let vc = PostCreateViewController()
+		vc.type = .post
+		vc.delegate = self
+		vc.preText = "@\(username)\n\n\n\n%\(id)"
+		present(UINavigationController(rootViewController: vc), animated: true)
+	}
+
+	func replyToPost(id: String) {
+		let vc = PostCreateViewController()
+		vc.type = .reply
+		vc.delegate = self
+		vc.parentID = id
+		present(UINavigationController(rootViewController: vc), animated: true)
+	}
+
+	func copyPostID(id: String) {
+		let pasteboard = UIPasteboard.general
+		pasteboard.string = id
+		SPAlert.present(title: SLocale(.COPIED_ACTION), preset: .done)
+	}
+
+	func deletePost(id: String) {
+		EZAlertController.alert(SLocale(.DELETE_POST), message: SLocale(.DELETE_CONFIRMATION), buttons: [SLocale(.CANCEL), SLocale(.DELETE_ACTION)], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, index in
+			guard index == 1 else { return }
+
+			AllesAPI.default.deletePost(id: id)
+				.receive(on: RunLoop.main)
+				.sink {
+					switch $0 {
+					case let .failure(err):
+
+						self.refreshControl.endRefreshing()
+						self.loadingHud.dismiss()
+						AllesAPI.default.errorHandling(error: err, caller: self.view)
+
+					default: break
+					}
+				} receiveValue: { _ in
+					SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
+					self.loadBookmarks()
+				}.store(in: &subscriptions)
+		}
+	}
+
+	func selectedPost(post: String, indexPath _: IndexPath) {
+		let detailVC = PostDetailViewController()
+		detailVC.selectedPostID = post
+		detailVC.hidesBottomBarWhenPushed = true
+		navigationController?.pushViewController(detailVC, animated: true)
+	}
+
+	func selectedURL(url: String, indexPath _: IndexPath) {
+		if let url = URL(string: url), UIApplication.shared.canOpenURL(url) {
+			UIApplication.shared.open(url)
+		}
+	}
+
+	func selectedUser(username: String, indexPath _: IndexPath) {
+		let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+		let vc = UserProfileViewController()
+		vc.user = user
+		vc.hidesBottomBarWhenPushed = true
+		navigationController?.pushViewController(vc, animated: true)
+	}
+}
+
+extension BookmarksViewController: PostCreateDelegate {
+	
+	func didSendPost(sentPost: SentPost) {
+		let detailVC = PostDetailViewController()
+		detailVC.selectedPostID = sentPost.id
+		detailVC.hidesBottomBarWhenPushed = true
+		navigationController?.pushViewController(detailVC, animated: true)
 	}
 	
 	

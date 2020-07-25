@@ -152,6 +152,12 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         snapshot.appendItems(posts, toSection: .main)
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
+			if self.posts.isEmpty {
+				self.tableView.setEmptyMessage(message: SLocale(.TIMELINE_EMPTY_TITLE), subtitle: SLocale(.TIMELINE_EMPTY_SUBTITLE))
+			}
+			else {
+				self.tableView.restore()
+			}
         }
     }
 
@@ -408,6 +414,27 @@ extension TimelineViewController: MainSettingsDelegate {
 }
 
 extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    func editBookmark(id: String, action: BookmarkAction) {
+        switch action {
+        case .add:
+			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+			currentBookmarks.append(Bookmark(id: id, added: Date()))
+			UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+            SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
+        case .remove:
+			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+			if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
+				currentBookmarks.remove(at: index)
+				UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+				SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
+			}
+			else {
+				SPAlert.present(title: SLocale(.ERROR), preset: .error)
+			}
+			
+        }
+    }
+
     func saveImage(image: UIImage?) {
         if let savingImage = image {
             UIImageWriteToSavedPhotosAlbum(savingImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)

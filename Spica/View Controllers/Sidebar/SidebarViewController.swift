@@ -82,7 +82,7 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
         snapshot.appendSections(SidebarSection.allCases)
         snapshot.appendItems([SidebarSection.home.sidebar], toSection: .home)
         snapshot.appendItems([SidebarSection.mentions.sidebar], toSection: .mentions)
-		snapshot.appendItems([SidebarSection.bookmarks.sidebar], toSection: .bookmarks)
+        snapshot.appendItems([SidebarSection.bookmarks.sidebar], toSection: .bookmarks)
         snapshot.appendItems([SidebarSection.account.sidebar], toSection: .account)
         snapshot.appendItems([SidebarSection.settings.sidebar], toSection: .settings)
 
@@ -170,7 +170,7 @@ struct SidebarItem: Hashable {
 enum SidebarSection: Int, Hashable, CaseIterable {
     case home = 0
     case mentions = 1
-	case bookmarks = 2
+    case bookmarks = 2
     case account = 3
     case settings = 4
 
@@ -179,9 +179,9 @@ enum SidebarSection: Int, Hashable, CaseIterable {
         case .home:
             return SidebarItem(name: SLocale(.HOME), image: UIImage(systemName: "house")!)
         case .mentions:
-			return SidebarItem(name: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell")!)
-		case .bookmarks:
-			return SidebarItem(name: "Bookmarks", image: UIImage(systemName: "bookmark")!)
+            return SidebarItem(name: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell")!)
+        case .bookmarks:
+			return SidebarItem(name: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark")!)
         case .account:
             return SidebarItem(name: SLocale(.ACCOUNT), image: UIImage(systemName: "person.circle")!)
         case .settings:
@@ -200,10 +200,10 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             let vc = MentionsViewController()
             vc.navigationItem.hidesBackButton = true
             return vc
-			case .bookmarks:
-				let vc = BookmarksViewController()
-				vc.navigationItem.hidesBackButton = true
-				return vc
+        case .bookmarks:
+            let vc = BookmarksViewController()
+            vc.navigationItem.hidesBackButton = true
+            return vc
         case .account:
             let vc = UserProfileViewController()
             vc.navigationItem.hidesBackButton = true

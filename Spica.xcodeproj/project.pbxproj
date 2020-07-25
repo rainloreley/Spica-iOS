@@ -67,6 +67,7 @@
 		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
 		3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */; };
 		3AF9231A24CC6CC200DAAE0F /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */; };
+		3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231B24CC747700DAAE0F /* Bookmark.swift */; };
 		3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */; };
 		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
 		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
@@ -163,6 +164,7 @@
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
 		3AEEE93B24C5C9E4006E4812 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
+		3AF9231B24CC747700DAAE0F /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.release.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
@@ -378,6 +380,7 @@
 				3A61B27424C8B55800AC1A9C /* PostDetail.swift */,
 				3A61B27624C8B56900AC1A9C /* CachePolicy.swift */,
 				3A61B27824C8B57600AC1A9C /* FeedObject.swift */,
+				3AF9231B24CC747700DAAE0F /* Bookmark.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -405,12 +408,12 @@
 				3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */,
 				3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */,
 				3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */,
+				3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */,
 				3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */,
 				3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */,
 				3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */,
 				3A0252C224ADE30700A4E4FD /* LoginViewController.swift */,
 				3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */,
-				3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -789,6 +792,7 @@
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
 				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
 				3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */,
+				3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */,
 				3A61B27924C8B57600AC1A9C /* FeedObject.swift in Sources */,
 				3A61B27324C8B54800AC1A9C /* Tag.swift in Sources */,
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
