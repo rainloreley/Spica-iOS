@@ -15,6 +15,7 @@ var globalSideBarController: SidebarViewController!
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    var toolbarDelegate = ToolbarDelegate()
 
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
@@ -37,40 +38,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
          KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username") */
 
         let tabBar = UITabBarController()
-
         let homeView = UINavigationController(rootViewController: TimelineViewController())
         homeView.tabBarItem = UITabBarItem(title: SLocale(.HOME), image: UIImage(systemName: "house"), tag: 0)
-
         let mentionView = UINavigationController(rootViewController: MentionsViewController())
         mentionView.tabBarItem = UITabBarItem(title: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell"), tag: 1)
-
         tabBar.viewControllers = [homeView, mentionView]
 
-        if #available(iOS 14.0, *) {
-            globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
-            globalSideBarController = SidebarViewController()
-            // splitViewController.presentsWithGesture = false
-            globalSplitViewController.setViewController(globalSideBarController, for: .primary)
-            globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
-            globalSplitViewController.setViewController(tabBar, for: .compact)
-            globalSplitViewController.primaryBackgroundStyle = .sidebar
-
-            globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
-
-            #if targetEnvironment(macCatalyst)
-                if let titlebar = windowScene.titlebar {
-                    titlebar.titleVisibility = .hidden
-                    titlebar.toolbar = nil
-                }
-            #endif
-
-            window?.rootViewController = globalSplitViewController
-
-        } else {
-            window?.rootViewController = tabBar
-        }
-
         if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
+            if #available(iOS 14.0, *) {
+                globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
+                globalSideBarController = SidebarViewController()
+                // splitViewController.presentsWithGesture = false
+                globalSplitViewController.setViewController(globalSideBarController, for: .primary)
+                globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
+                globalSplitViewController.setViewController(tabBar, for: .compact)
+                globalSplitViewController.primaryBackgroundStyle = .sidebar
+
+                globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
+
+                window?.rootViewController = globalSplitViewController
+
+            } else {
+                window?.rootViewController = tabBar
+            }
+
             window?.makeKeyAndVisible()
         } else {
             window?.rootViewController = UINavigationController(rootViewController: LoginViewController())

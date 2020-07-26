@@ -13,6 +13,7 @@ import UIKit
 
 class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
+	var toolbarDelegate = ToolbarDelegate()
 
     var mentions = [Post]() {
         didSet { applyChanges() }
@@ -122,10 +123,28 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         setSidebar()
 
         navigationController?.navigationBar.prefersLargeTitles = true
+		
+		
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+		
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "mentions")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: animated)
+			navigationController?.setToolbarHidden(true, animated: animated)
+		#endif
+		
         setSidebar()
         /* #if targetEnvironment(macCatalyst)
              let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate

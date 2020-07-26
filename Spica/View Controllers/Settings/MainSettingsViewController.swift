@@ -7,7 +7,6 @@
 
 import Cache
 import LocalAuthentication
-import RealmSwift
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
@@ -17,6 +16,8 @@ protocol MainSettingsDelegate {
 }
 
 class MainSettingsViewController: UITableViewController {
+	var toolbarDelegate = ToolbarDelegate()
+	
     @IBOutlet var userPfpImageView: UIImageView!
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var versionBuildLabel: UILabel!
@@ -121,11 +122,11 @@ class MainSettingsViewController: UITableViewController {
     }
 
     @IBAction func clearCache(_: Any) {
-        let realm = try! Realm()
+        /* let realm = try! Realm()
 
-        try! realm.write {
-            realm.deleteAll()
-        }
+         try! realm.write {
+             realm.deleteAll()
+         } */
 
         /* let path = realm.configuration.fileURL?.relativePath
          let subPaths = try? FileManager.default.contentsOfDirectory(atPath: path!)
@@ -151,7 +152,7 @@ class MainSettingsViewController: UITableViewController {
 
          try? storage?.removeAll() */
 
-        SPAlert.present(title: SLocale(.CACHE_CLEARED), preset: .done)
+        // SPAlert.present(title: SLocale(.CACHE_CLEARED), preset: .done)
     }
 
     @IBAction func github(_: Any) {
@@ -309,6 +310,20 @@ class MainSettingsViewController: UITableViewController {
     }
 
     override func viewDidAppear(_: Bool) {
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "other")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			navigationController?.setToolbarHidden(true, animated: false)
+		#endif
         setSidebar()
 
         /* #if targetEnvironment(macCatalyst)

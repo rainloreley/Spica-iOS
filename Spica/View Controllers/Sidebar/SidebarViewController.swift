@@ -87,44 +87,14 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
         snapshot.appendItems([SidebarSection.settings.sidebar], toSection: .settings)
 
         dataSource.apply(snapshot)
-
-        // collectionView.dragInteractionEnabled = true
-        // collectionView.dropDelegate = self
-
-        /* tableView = UITableView(frame: .zero, style: .insetGrouped)
-         tableView.delegate = self
-         tableView.dataSource = dataSource
-
-         view.addSubview(tableView)
-
-         tableView.snp.makeConstraints { make in
-             make.top.equalTo(view.snp.top)
-             make.bottom.equalTo(view.snp.bottom)
-             make.leading.equalTo(view.snp.leading)
-             make.trailing.equalTo(view.snp.trailing)
-         }
-
-         if traitCollection.userInterfaceIdiom == .mac {
-             navigationController?.setNavigationBarHidden(true, animated: false)
-         }
-
-         navigationItem.title = "Spica"
-         navigationController?.navigationBar.prefersLargeTitles = true
-         navigationItem.setLeftBarButton(nil, animated: false)
-
-         applyChanges() */
-
-        // Do any additional setup after loading the view.
     }
 
-    override func viewDidAppear(_: Bool) {
-        /* DispatchQueue.global(qos: .utility).async {
-         	let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")!
-         	let image = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!)
-         	DispatchQueue.main.async {
-         		//self.userPfpView.image = image
-         	}
-         } */
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        #if targetEnvironment(macCatalyst)
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+        #endif
     }
 
     /* func makeDataSource() -> UITableViewDiffableDataSource<Section, SidebarItem> {

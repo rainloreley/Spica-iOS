@@ -13,6 +13,7 @@ import UIKit
 
 class PostDetailViewController: UIViewController, PostCreateDelegate {
     var selectedPostID: String!
+	var toolbarDelegate = ToolbarDelegate()
     var selectedPost: Post! {
         didSet {
             selectedPostID = selectedPost.id
@@ -81,6 +82,22 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                  titleBar.toolbar = nil
              }
          #endif */
+		
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "other")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			navigationController?.setToolbarHidden(true, animated: false)
+		#endif
+		
         loadPostDetail()
     }
 

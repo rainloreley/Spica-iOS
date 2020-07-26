@@ -8,6 +8,8 @@
 import UIKit
 
 class UsedLibrariesViewController: UIViewController {
+	
+	var toolbarDelegate = ToolbarDelegate()
     var libraries: [Library] = [
         Library(name: "Alamofire", url: "https://github.com/Alamofire/Alamofire", license: """
         Copyright (c) 2014-2020 Alamofire Software Foundation (http://alamofire.org/)
@@ -498,6 +500,23 @@ class UsedLibrariesViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
+	
+	override func viewDidAppear(_ animated: Bool) {
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "other")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: false)
+			navigationController?.setToolbarHidden(true, animated: false)
+		#endif
+	}
 
     /*
      // MARK: - Navigation

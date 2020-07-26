@@ -8,8 +8,6 @@ target 'Spica' do
 		pod 'KMPlaceholderTextView', '~> 1.4.0'
 		pod 'SwiftKeychainWrapper'
 		pod 'Lightbox'
-		pod 'RealmSwift', '~> 5.0.3'
-		pod 'Unrealm', '~> 1.3.5'
 		
   # Pods for Spica
 
