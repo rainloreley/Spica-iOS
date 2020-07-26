@@ -96,6 +96,22 @@
 "BIOMETRIC_DEVICE_NOTAVAILABLE" = "Dein Gerät kann %@ nicht nutzen. Bitte stelle sicher, dass %@ in den Geräteeinstellungen aktiviert ist.";
 "BIOMETRICS" = "Biometrie";
 
+"BOOKMARKS" = "Lesezeichen";
+"BOOKMARKS_EMPTY_TITLE" = "Keine Lesezeichen";
+"BOOKMARKS_EMPTY_SUBTITLE" = "Drücke lange auf einen Beitrag um ein Lesezeichen hinzuzufügen";
+
+"ADDED_ACTION" = "Hinzugefügt";
+"REMOVED_ACTION" = "Entfernt";
+
+"TIMELINE_EMPTY_TITLE" = "Keine Beiträge";
+"TIMELINE_EMPTY_SUBTITLE" = "Versuche etwas zu posten";
+
+"NOTIFICATIONS_EMPTY_TITLE" = "Keine Benachrichtigungen";
+"NOTIFICATIONS_EMPTY_SUBTITLE" = "Wenn Personen dir antworten oder dich erwähnen erscheinen diese Beiträge hier";
+
+"ADD_BOOKMARK" = "Lesezeichen hinzufügen";
+"REMOVE_BOOKMARK" = "Lesezeichen entfernen";
+
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */
