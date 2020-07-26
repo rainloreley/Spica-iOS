@@ -81,23 +81,23 @@
 
 "REPOST" = "Republier";
 "COPY_ID" = "Copier l'identification";
-"TRANSLATE_APP" = "Translate the app";
-"CONTACT" = "Contact";
-"SAVE_ACTION" = "Save";
-"CLEAR_CACHE" = "Clear Cache";
-"CACHE_CLEARED" = "Cache cleared!";
-"CLOSE_ACTION" = "Close";
+"TRANSLATE_APP" = "Traduire l'application";
+"CONTACT" = "Contacter";
+"SAVE_ACTION" = "Enregistrer";
+"CLEAR_CACHE" = "Vider le Cache";
+"CACHE_CLEARED" = "Cache effacé!";
+"CLOSE_ACTION" = "Fermer";
 
-"UNLOCK_SPICA" = "Unlock Spica";
-"BIOMETRIC_AUTH_FAILED" = "Authenticaton failed";
-"PLEASE_TRY_AGAIN" = "Please try again";
-"RETRY_ACTION" = "Retry";
-"DEVICE_ERROR" = "Device error";
-"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Your device is not able to use %@. Make sure that %@ is enabled in the settings app.";
-"BIOMETRICS" = "Biometrics";
+"UNLOCK_SPICA" = "Ouvrir Spica";
+"BIOMETRIC_AUTH_FAILED" = "Échec de l'authentification";
+"PLEASE_TRY_AGAIN" = "Veuillez réessayer";
+"RETRY_ACTION" = "Réessayer";
+"DEVICE_ERROR" = "Erreur du Dispositif I/O";
+"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Votre appareil n'est pas en mesure d'utiliser %@. Assurez-vous que %@ est activé dans l'application de paramètres.";
+"BIOMETRICS" = "Biométrie";
 
-"BOOKMARKS" = "Bookmarks";
-"BOOKMARKS_EMPTY_TITLE" = "No bookmarks";
+"BOOKMARKS" = "Favoris";
+"BOOKMARKS_EMPTY_TITLE" = "Pas de signets";
 "BOOKMARKS_EMPTY_SUBTITLE" = "Long press a post to add a bookmark";
 
 "ADDED_ACTION" = "Added";
