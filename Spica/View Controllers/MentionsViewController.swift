@@ -98,7 +98,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
 			if self.mentions.isEmpty {
-				self.tableView.setEmptyMessage(message: SLocale(.MENTIONS_EMPTY_TITLE), subtitle: SLocale(.MENTIONS_EMPTY_SUBTITLE))
+				self.tableView.setEmptyMessage(message: SLocale(.NOTIFICATIONS_EMPTY_TITLE), subtitle: SLocale(.NOTIFICATIONS_EMPTY_SUBTITLE))
 			}
 			else {
 				self.tableView.restore()
