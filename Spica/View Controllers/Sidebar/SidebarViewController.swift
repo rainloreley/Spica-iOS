@@ -84,7 +84,9 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
         snapshot.appendItems([SidebarSection.mentions.sidebar], toSection: .mentions)
         snapshot.appendItems([SidebarSection.bookmarks.sidebar], toSection: .bookmarks)
         snapshot.appendItems([SidebarSection.account.sidebar], toSection: .account)
-        snapshot.appendItems([SidebarSection.settings.sidebar], toSection: .settings)
+		if traitCollection.userInterfaceIdiom != .mac {
+			snapshot.appendItems([SidebarSection.settings.sidebar], toSection: .settings)
+		}
 
         dataSource.apply(snapshot)
     }

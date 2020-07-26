@@ -18,6 +18,7 @@ class BookmarksViewController: UIViewController {
     var loadingHud: JGProgressHUD!
     private var subscriptions = Set<AnyCancellable>()
     var verificationString = ""
+	var toolbarDelegate = ToolbarDelegate()
 
     var bookmarks = [AdvancedBookmark]()
 
@@ -50,7 +51,23 @@ class BookmarksViewController: UIViewController {
         loadingHud.interactionType = .blockNoTouches
     }
 
-    override func viewDidAppear(_: Bool) {
+	override func viewDidAppear(_ animated: Bool) {
+		
+		#if targetEnvironment(macCatalyst)
+		
+			let toolbar = NSToolbar(identifier: "bookmarks")
+			toolbar.delegate = toolbarDelegate
+			toolbar.displayMode = .iconOnly
+		
+			if let titlebar = view.window!.windowScene!.titlebar {
+				titlebar.toolbar = toolbar
+				titlebar.toolbarStyle = .automatic
+			}
+	
+			navigationController?.setNavigationBarHidden(true, animated: animated)
+			navigationController?.setToolbarHidden(true, animated: animated)
+		#endif
+		
         loadBookmarks()
     }
 

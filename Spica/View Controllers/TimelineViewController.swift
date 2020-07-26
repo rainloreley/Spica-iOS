@@ -112,13 +112,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
              make.bottom.equalTo(view.snp.bottom).offset(-100)
              make.trailing.equalTo(view.snp.trailing).offset(-16)
          } */
-		
-		let notificationCenter = NotificationCenter.default
-		createPostSubscriber = notificationCenter.publisher(for: .createPost)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.openPostCreateView()
-			})
     }
 
     // MARK: - Datasource
@@ -214,6 +207,13 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         super.viewWillAppear(animated)
 
         setSidebar()
+		
+		let notificationCenter = NotificationCenter.default
+		createPostSubscriber = notificationCenter.publisher(for: .createPost)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.openPostCreateView()
+			})
 
         navigationController?.navigationBar.prefersLargeTitles = true
 		

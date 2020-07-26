@@ -98,18 +98,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
 		
-		let notificationCenter = NotificationCenter.default
-		createPostSubscriber = notificationCenter.publisher(for: .createPost)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.openPostCreateView()
-			})
-		
-		editProfileSubscriber = notificationCenter.publisher(for: .editProfile)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.openUserSettings()
-			})
     }
 
     func setSidebar() {
@@ -129,6 +117,19 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     override func viewWillAppear(_: Bool) {
         setSidebar()
+		
+		let notificationCenter = NotificationCenter.default
+		createPostSubscriber = notificationCenter.publisher(for: .createPost)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.openPostCreateView()
+			})
+		
+		editProfileSubscriber = notificationCenter.publisher(for: .editProfile)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.openUserSettings()
+			})
         /* #if targetEnvironment(macCatalyst)
              navigationController?.setNavigationBarHidden(true, animated: false)
          #else
