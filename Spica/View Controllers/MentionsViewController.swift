@@ -24,6 +24,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     var loadingHud: JGProgressHUD!
 
     private var subscriptions = Set<AnyCancellable>()
+	private var navigateBackSubscriber: AnyCancellable?
 
     var verificationString = ""
 
@@ -110,6 +111,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         if #available(iOS 14.0, *) {
             if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                 if let sidebar = globalSideBarController {
+					navigationController?.viewControllers = [self]
                     if let collectionView = sidebar.collectionView {
                         collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.mentions.rawValue), animated: true, scrollPosition: .top)
                     }
@@ -117,6 +119,10 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             }
         }
     }
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		navigateBackSubscriber?.cancel()
+	}
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -124,8 +130,19 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
         navigationController?.navigationBar.prefersLargeTitles = true
 		
-		
+		let notificationCenter = NotificationCenter.default
+		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.navigateBack()
+			})
     }
+	
+	@objc func navigateBack() {
+		if (navigationController?.viewControllers.count)! > 1 {
+			navigationController?.popViewController(animated: true)
+		}
+	}
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -133,6 +150,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 		#if targetEnvironment(macCatalyst)
 		
 			let toolbar = NSToolbar(identifier: "mentions")
+		toolbarDelegate.navStack = (navigationController?.viewControllers)!
 			toolbar.delegate = toolbarDelegate
 			toolbar.displayMode = .iconOnly
 		

@@ -20,6 +20,7 @@ class TagDetailViewController: UIViewController {
     var tableView: UITableView!
     var refreshControl = UIRefreshControl()
     var loadingHud: JGProgressHUD!
+	private var navigateBackSubscriber: AnyCancellable?
 
     var tag: Tag! {
         didSet {
@@ -62,8 +63,25 @@ class TagDetailViewController: UIViewController {
     }
 
     override func viewWillAppear(_: Bool) {
-        navigationController?.navigationBar.prefersLargeTitles = true
+		navigationController?.navigationBar.prefersLargeTitles = true
+		
+		let notificationCenter = NotificationCenter.default
+		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.navigateBack()
+			})
     }
+	
+	@objc func navigateBack() {
+		if (navigationController?.viewControllers.count)! > 1 {
+			navigationController?.popViewController(animated: true)
+		}
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		navigateBackSubscriber?.cancel()
+	}
 
     @objc func loadTag() {
         loadingHud.show(in: view)
@@ -122,7 +140,8 @@ class TagDetailViewController: UIViewController {
 		
 		#if targetEnvironment(macCatalyst)
 		
-			let toolbar = NSToolbar(identifier: "other")
+			let toolbar = NSToolbar(identifier: "tagdetail")
+		toolbarDelegate.navStack = (navigationController?.viewControllers)!
 			toolbar.delegate = toolbarDelegate
 			toolbar.displayMode = .iconOnly
 		

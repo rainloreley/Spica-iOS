@@ -29,6 +29,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     private var subscriptions = Set<AnyCancellable>()
 	private var createPostSubscriber: AnyCancellable?
+	private var navigateBackSubscriber: AnyCancellable?
 
     var verificationString = ""
 
@@ -43,6 +44,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 	
 	override func viewWillDisappear(_ animated: Bool) {
 		createPostSubscriber?.cancel()
+		navigateBackSubscriber?.cancel()
 	}
 
     override func viewDidLoad() {
@@ -195,6 +197,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         if #available(iOS 14.0, *) {
             if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                 if let sidebar = globalSideBarController {
+					navigationController?.viewControllers = [self]
                     if let collectionView = sidebar.collectionView {
                         collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
                     }
@@ -208,11 +211,17 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
         setSidebar()
 		
+		
 		let notificationCenter = NotificationCenter.default
 		createPostSubscriber = notificationCenter.publisher(for: .createPost)
 			.receive(on: RunLoop.main)
 			.sink(receiveValue: { notificationCenter in
 				self.openPostCreateView()
+			})
+		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.navigateBack()
 			})
 
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -221,6 +230,12 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 		
     }
 	
+	@objc func navigateBack() {
+		if (navigationController?.viewControllers.count)! > 1 {
+			navigationController?.popViewController(animated: true)
+		}
+	}
+	
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -228,6 +243,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 		#if targetEnvironment(macCatalyst)
 		
 			let toolbar = NSToolbar(identifier: "timeline")
+		toolbarDelegate.navStack = (navigationController?.viewControllers)!
 			toolbar.delegate = toolbarDelegate
 			toolbar.displayMode = .iconOnly
 		

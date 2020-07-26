@@ -7,7 +7,9 @@
 
 import UIKit
 
-class ToolbarDelegate: NSObject {}
+class ToolbarDelegate: NSObject {
+	var navStack: [UIViewController] = []
+}
 
 #if targetEnvironment(macCatalyst)
 
@@ -15,9 +17,13 @@ extension NSToolbarItem.Identifier {
 	static let createPost = NSToolbarItem.Identifier("dev.abmgrt.spica.createPost")
 	static let editAccount = NSToolbarItem.Identifier("dev.abmgrt.spica.editAccount")
 	static let saveAccount = NSToolbarItem.Identifier("dev.abmgrt.spica.saveAccount")
+	static let navigateBack = NSToolbarItem.Identifier("dev.abmgrt.spica.navigateBack")
 }
 
 extension ToolbarDelegate {
+	
+	
+	
 	@objc func createPost(_ sender: Any?) {
 		NotificationCenter.default.post(name: .createPost, object: self)
 	}
@@ -29,6 +35,11 @@ extension ToolbarDelegate {
 	@objc func saveAccount(_ sender: Any?) {
 		NotificationCenter.default.post(name: .saveProfile, object: self)
 	}
+	
+	@objc func navigateBack(_ sender: Any?) {
+		print("ALERTED")
+		NotificationCenter.default.post(name: .navigateBack, object: self)
+	}
 }
 
     extension ToolbarDelegate: NSToolbarDelegate {
@@ -37,18 +48,31 @@ extension ToolbarDelegate {
 				case .init("timeline"):
 					let identifiers: [NSToolbarItem.Identifier] = [
 						.toggleSidebar,
+						.navigateBack,
 						.flexibleSpace,
 						.createPost
 					]
 					return identifiers
 				case .init("mentions"):
 					let identifiers: [NSToolbarItem.Identifier] = [
-						.toggleSidebar
+						.toggleSidebar,
+						.navigateBack,
 					]
 					return identifiers
+				case .init("bookmarks"):
+					return [
+						.toggleSidebar,
+						.navigateBack
+					]
+				case .init("tagdetail"):
+					return [
+						.toggleSidebar,
+						.navigateBack
+					]
 				case .init("userprofile"):
 					return [
 						.toggleSidebar,
+						.navigateBack,
 						.flexibleSpace,
 						.editAccount,
 						.createPost
@@ -56,11 +80,17 @@ extension ToolbarDelegate {
 				case .init("editUserProfile"):
 					return [
 						.toggleSidebar,
+						.navigateBack,
 						.flexibleSpace,
 						.saveAccount
 					]
-					
+				case .init("detail"):
+					return [
+						.toggleSidebar,
+						.navigateBack
+					]
 				default:
+				
 					return [.toggleSidebar,
 							.flexibleSpace]
 			}
@@ -98,6 +128,19 @@ extension ToolbarDelegate {
 					item.action = #selector(saveAccount(_:))
 					item.target = self
 					toolbarItem = item
+				case .navigateBack:
+					if navStack.count > 1 {
+						let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+						item.label = "Back"
+						item.image = UIImage(systemName: "chevron.left")
+						item.action = #selector(navigateBack(_:))
+						item.target = self
+						toolbarItem = item
+					}
+					else {
+						toolbarItem = nil
+					}
+					
             default:
                 toolbarItem = nil
             }

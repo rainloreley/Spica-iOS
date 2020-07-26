@@ -21,6 +21,7 @@ class UserEditViewController: UIViewController {
     var loadingHud: JGProgressHUD!
 	var toolbarDelegate = ToolbarDelegate()
 	private var saveAccountSubscriber: AnyCancellable?
+	private var navigateBackSubscriber: AnyCancellable?
 
     var tableView: UITableView!
     var user: User! {
@@ -68,24 +69,38 @@ class UserEditViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
 		
+        // Do any additional setup after loading the view.
+    }
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		saveAccountSubscriber?.cancel()
+		navigateBackSubscriber?.cancel()
+	}
+
+    override func viewWillAppear(_: Bool) {
+        navigationItem.title = SLocale(.EDIT_PROFILE)
+        navigationController?.navigationBar.prefersLargeTitles = false
+		
 		let notificationCenter = NotificationCenter.default
+		
 		saveAccountSubscriber = notificationCenter.publisher(for: .saveProfile)
 			.receive(on: RunLoop.main)
 			.sink(receiveValue: { notificationCenter in
 				self.saveData()
 			})
 		
-        // Do any additional setup after loading the view.
+		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.navigateBack()
+			})
     }
 	
-	override func viewWillDisappear(_ animated: Bool) {
-		saveAccountSubscriber?.cancel()
+	@objc func navigateBack() {
+		if (navigationController?.viewControllers.count)! > 1 {
+			navigationController?.popViewController(animated: true)
+		}
 	}
-
-    override func viewWillAppear(_: Bool) {
-        navigationItem.title = SLocale(.EDIT_PROFILE)
-        navigationController?.navigationBar.prefersLargeTitles = false
-    }
 	
 
     @objc func saveData() {
@@ -138,6 +153,7 @@ class UserEditViewController: UIViewController {
 		#if targetEnvironment(macCatalyst)
 		
 			let toolbar = NSToolbar(identifier: "editUserProfile")
+		toolbarDelegate.navStack = (navigationController?.viewControllers)!
 			toolbar.delegate = toolbarDelegate
 		toolbar.displayMode = .iconOnly
 		

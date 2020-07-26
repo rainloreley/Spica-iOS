@@ -11,11 +11,14 @@ import UIKit
 @available(iOS 14.0, *)
 class SidebarViewController: UIViewController, UICollectionViewDelegate, UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
+        //splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
     }
 
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
+		splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
+        //splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
+		//splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
+		//navigationController?.setViewControllers([SidebarSection(rawValue: indexPath.section)!.viewController], animated: true)
     }
 
     var dataSource: UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>!

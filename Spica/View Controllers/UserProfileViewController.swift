@@ -19,6 +19,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 	var toolbarDelegate = ToolbarDelegate()
 	private var createPostSubscriber: AnyCancellable?
 	private var editProfileSubscriber: AnyCancellable?
+	private var navigateBackSubscriber: AnyCancellable?
     var userPosts = [Post]() {
         didSet {
             DispatchQueue.main.async {
@@ -99,6 +100,12 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         loadingHud.interactionType = .blockNoTouches
 		
     }
+	
+	@objc func navigateBack() {
+		if (navigationController?.viewControllers.count)! > 1 {
+			navigationController?.popViewController(animated: true)
+		}
+	}
 
     func setSidebar() {
         if #available(iOS 14.0, *) {
@@ -106,6 +113,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             if signedInUsername == user.username {
                 if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                     if let sidebar = globalSideBarController {
+						navigationController?.viewControllers = [self]
                         if let collectionView = sidebar.collectionView {
                             collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
                         }
@@ -118,11 +126,18 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     override func viewWillAppear(_: Bool) {
         setSidebar()
 		
+		
 		let notificationCenter = NotificationCenter.default
 		createPostSubscriber = notificationCenter.publisher(for: .createPost)
 			.receive(on: RunLoop.main)
 			.sink(receiveValue: { notificationCenter in
 				self.openPostCreateView()
+			})
+		
+		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.navigateBack()
 			})
 		
 		editProfileSubscriber = notificationCenter.publisher(for: .editProfile)
@@ -149,6 +164,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     override func viewWillDisappear(_: Bool) {
 		createPostSubscriber?.cancel()
+		navigateBackSubscriber?.cancel()
 		editProfileSubscriber?.cancel()
         /* #if targetEnvironment(macCatalyst)
              navigationController?.setNavigationBarHidden(false, animated: false)
@@ -160,6 +176,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 		#if targetEnvironment(macCatalyst)
 		
 			let toolbar = NSToolbar(identifier: "userprofile")
+		toolbarDelegate.navStack = (navigationController?.viewControllers)!
 			toolbar.delegate = toolbarDelegate
 			toolbar.displayMode = .iconOnly
 		

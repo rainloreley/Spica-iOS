@@ -19,6 +19,7 @@ class BookmarksViewController: UIViewController {
     private var subscriptions = Set<AnyCancellable>()
     var verificationString = ""
 	var toolbarDelegate = ToolbarDelegate()
+	private var navigateBackSubscriber: AnyCancellable?
 
     var bookmarks = [AdvancedBookmark]()
 
@@ -50,12 +51,50 @@ class BookmarksViewController: UIViewController {
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
     }
+	
+	func setSidebar() {
+		if #available(iOS 14.0, *) {
+			if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+				if let sidebar = globalSideBarController {
+					navigationController?.viewControllers = [self]
+					if let collectionView = sidebar.collectionView {
+						collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.bookmarks.rawValue), animated: true, scrollPosition: .top)
+					}
+				}
+			}
+		}
+	}
+	
+	@objc func navigateBack() {
+		if (navigationController?.viewControllers.count)! > 1 {
+			navigationController?.popViewController(animated: true)
+		}
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		navigateBackSubscriber?.cancel()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		setSidebar()
+		
+		navigationController?.navigationBar.prefersLargeTitles = true
+		
+		let notificationCenter = NotificationCenter.default
+		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.navigateBack()
+			})
+
+	}
 
 	override func viewDidAppear(_ animated: Bool) {
 		
 		#if targetEnvironment(macCatalyst)
 		
 			let toolbar = NSToolbar(identifier: "bookmarks")
+		toolbarDelegate.navStack = (navigationController?.viewControllers)!
 			toolbar.delegate = toolbarDelegate
 			toolbar.displayMode = .iconOnly
 		

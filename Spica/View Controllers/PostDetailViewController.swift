@@ -14,6 +14,7 @@ import UIKit
 class PostDetailViewController: UIViewController, PostCreateDelegate {
     var selectedPostID: String!
 	var toolbarDelegate = ToolbarDelegate()
+	private var navigateBackSubscriber: AnyCancellable?
     var selectedPost: Post! {
         didSet {
             selectedPostID = selectedPost.id
@@ -66,14 +67,33 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 
         // Do any additional setup after loading the view.
     }
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		navigateBackSubscriber?.cancel()
+	}
 
     override func viewWillAppear(_: Bool) {
+		
+		let notificationCenter = NotificationCenter.default
+		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+			.receive(on: RunLoop.main)
+			.sink(receiveValue: { notificationCenter in
+				self.navigateBack()
+			})
+
+		
         navigationController?.navigationBar.prefersLargeTitles = false
         if selectedPost != nil {
             postAncestors = [selectedPost]
             tableView.reloadData()
         }
     }
+	
+	@objc func navigateBack() {
+		if (navigationController?.viewControllers.count)! > 1 {
+			navigationController?.popViewController(animated: true)
+		}
+	}
 
     override func viewDidAppear(_: Bool) {
         /* #if targetEnvironment(macCatalyst)
@@ -85,7 +105,8 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
 		
 		#if targetEnvironment(macCatalyst)
 		
-			let toolbar = NSToolbar(identifier: "other")
+			let toolbar = NSToolbar(identifier: "detail")
+		toolbarDelegate.navStack = (navigationController?.viewControllers)!
 			toolbar.delegate = toolbarDelegate
 			toolbar.displayMode = .iconOnly
 		
