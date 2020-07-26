@@ -10,15 +10,15 @@ import UIKit
 
 @available(iOS 14.0, *)
 class SidebarViewController: UIViewController, UICollectionViewDelegate, UITableViewDelegate {
-    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
+    func tableView(_: UITableView, didSelectRowAt _: IndexPath) {
+        // splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
     }
 
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
-        //splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
-		//splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
-		//navigationController?.setViewControllers([SidebarSection(rawValue: indexPath.section)!.viewController], animated: true)
+        splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
+        // splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
+        // splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
+        // navigationController?.setViewControllers([SidebarSection(rawValue: indexPath.section)!.viewController], animated: true)
     }
 
     var dataSource: UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>!
@@ -87,9 +87,9 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
         snapshot.appendItems([SidebarSection.mentions.sidebar], toSection: .mentions)
         snapshot.appendItems([SidebarSection.bookmarks.sidebar], toSection: .bookmarks)
         snapshot.appendItems([SidebarSection.account.sidebar], toSection: .account)
-		if traitCollection.userInterfaceIdiom != .mac {
-			snapshot.appendItems([SidebarSection.settings.sidebar], toSection: .settings)
-		}
+        if traitCollection.userInterfaceIdiom != .mac {
+            snapshot.appendItems([SidebarSection.settings.sidebar], toSection: .settings)
+        }
 
         dataSource.apply(snapshot)
     }
@@ -156,7 +156,7 @@ enum SidebarSection: Int, Hashable, CaseIterable {
         case .mentions:
             return SidebarItem(name: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell")!)
         case .bookmarks:
-			return SidebarItem(name: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark")!)
+            return SidebarItem(name: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark")!)
         case .account:
             return SidebarItem(name: SLocale(.ACCOUNT), image: UIImage(systemName: "person.circle")!)
         case .settings:

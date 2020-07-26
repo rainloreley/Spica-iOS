@@ -19,9 +19,9 @@ class UserEditViewController: UIViewController {
     var delegate: UserEditDelegate!
 
     var loadingHud: JGProgressHUD!
-	var toolbarDelegate = ToolbarDelegate()
-	private var saveAccountSubscriber: AnyCancellable?
-	private var navigateBackSubscriber: AnyCancellable?
+    var toolbarDelegate = ToolbarDelegate()
+    private var saveAccountSubscriber: AnyCancellable?
+    private var navigateBackSubscriber: AnyCancellable?
 
     var tableView: UITableView!
     var user: User! {
@@ -68,40 +68,39 @@ class UserEditViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-		
+
         // Do any additional setup after loading the view.
     }
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		saveAccountSubscriber?.cancel()
-		navigateBackSubscriber?.cancel()
-	}
+
+    override func viewWillDisappear(_: Bool) {
+        saveAccountSubscriber?.cancel()
+        navigateBackSubscriber?.cancel()
+    }
 
     override func viewWillAppear(_: Bool) {
         navigationItem.title = SLocale(.EDIT_PROFILE)
         navigationController?.navigationBar.prefersLargeTitles = false
-		
-		let notificationCenter = NotificationCenter.default
-		
-		saveAccountSubscriber = notificationCenter.publisher(for: .saveProfile)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.saveData()
+
+        let notificationCenter = NotificationCenter.default
+
+        saveAccountSubscriber = notificationCenter.publisher(for: .saveProfile)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.saveData()
 			})
-		
-		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.navigateBack()
+
+        navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.navigateBack()
 			})
     }
-	
-	@objc func navigateBack() {
-		if (navigationController?.viewControllers.count)! > 1 {
-			navigationController?.popViewController(animated: true)
-		}
-	}
-	
+
+    @objc func navigateBack() {
+        if (navigationController?.viewControllers.count)! > 1 {
+            navigationController?.popViewController(animated: true)
+        }
+    }
 
     @objc func saveData() {
         loadingHud.show(in: view)
@@ -149,23 +148,22 @@ class UserEditViewController: UIViewController {
      }*/
 
     override func viewDidAppear(_: Bool) {
-		
-		#if targetEnvironment(macCatalyst)
-		
-			let toolbar = NSToolbar(identifier: "editUserProfile")
-		toolbarDelegate.navStack = (navigationController?.viewControllers)!
-			toolbar.delegate = toolbarDelegate
-		toolbar.displayMode = .iconOnly
-		
-			if let titlebar = view.window!.windowScene!.titlebar {
-				titlebar.toolbar = toolbar
-				titlebar.toolbarStyle = .automatic
-			}
-	
-			navigationController?.setNavigationBarHidden(true, animated: false)
-			navigationController?.setToolbarHidden(true, animated: false)
-		#endif
-		
+        #if targetEnvironment(macCatalyst)
+
+            let toolbar = NSToolbar(identifier: "editUserProfile")
+            toolbarDelegate.navStack = (navigationController?.viewControllers)!
+            toolbar.delegate = toolbarDelegate
+            toolbar.displayMode = .iconOnly
+
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.toolbar = toolbar
+                titlebar.toolbarStyle = .automatic
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
+
         tableView.reloadData()
     }
 }

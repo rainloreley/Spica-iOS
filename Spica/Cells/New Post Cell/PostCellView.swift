@@ -468,10 +468,10 @@ extension PostCellView: UIContextMenuInteractionDelegate {
 
         actionsArray.append(repost)
 
-		let bookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks") as? [Bookmark] ?? []
+        let bookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks") as? [Bookmark] ?? []
 
-		let bookmark = UIAction(title: bookmarks.contains(where: { $0.id == post!.id }) ? SLocale(.REMOVE_BOOKMARK) : SLocale(.ADD_BOOKMARK), image: bookmarks.contains(where: { $0.id == post!.id }) ? UIImage(systemName: "bookmark.slash") : UIImage(systemName: "bookmark")) { _ in
-			self.delegate.editBookmark(id: self.post!.id, action: bookmarks.contains(where: { $0.id == self.post!.id }) ? .remove : .add)
+        let bookmark = UIAction(title: bookmarks.contains(where: { $0.id == post!.id }) ? SLocale(.REMOVE_BOOKMARK) : SLocale(.ADD_BOOKMARK), image: bookmarks.contains(where: { $0.id == post!.id }) ? UIImage(systemName: "bookmark.slash") : UIImage(systemName: "bookmark")) { _ in
+            self.delegate.editBookmark(id: self.post!.id, action: bookmarks.contains(where: { $0.id == self.post!.id }) ? .remove : .add)
         }
 
         actionsArray.append(bookmark)

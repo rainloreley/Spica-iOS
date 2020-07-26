@@ -13,7 +13,7 @@ import UIKit
 
 class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
-	var toolbarDelegate = ToolbarDelegate()
+    var toolbarDelegate = ToolbarDelegate()
 
     var mentions = [Post]() {
         didSet { applyChanges() }
@@ -24,7 +24,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     var loadingHud: JGProgressHUD!
 
     private var subscriptions = Set<AnyCancellable>()
-	private var navigateBackSubscriber: AnyCancellable?
+    private var navigateBackSubscriber: AnyCancellable?
 
     var verificationString = ""
 
@@ -98,12 +98,11 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         snapshot.appendItems(mentions, toSection: .main)
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
-			if self.mentions.isEmpty {
-				self.tableView.setEmptyMessage(message: SLocale(.NOTIFICATIONS_EMPTY_TITLE), subtitle: SLocale(.NOTIFICATIONS_EMPTY_SUBTITLE))
-			}
-			else {
-				self.tableView.restore()
-			}
+            if self.mentions.isEmpty {
+                self.tableView.setEmptyMessage(message: SLocale(.NOTIFICATIONS_EMPTY_TITLE), subtitle: SLocale(.NOTIFICATIONS_EMPTY_SUBTITLE))
+            } else {
+                self.tableView.restore()
+            }
         }
     }
 
@@ -111,7 +110,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         if #available(iOS 14.0, *) {
             if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                 if let sidebar = globalSideBarController {
-					navigationController?.viewControllers = [self]
+                    navigationController?.viewControllers = [self]
                     if let collectionView = sidebar.collectionView {
                         collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.mentions.rawValue), animated: true, scrollPosition: .top)
                     }
@@ -119,50 +118,50 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             }
         }
     }
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		navigateBackSubscriber?.cancel()
-	}
+
+    override func viewWillDisappear(_: Bool) {
+        navigateBackSubscriber?.cancel()
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setSidebar()
 
         navigationController?.navigationBar.prefersLargeTitles = true
-		
-		let notificationCenter = NotificationCenter.default
-		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.navigateBack()
+
+        let notificationCenter = NotificationCenter.default
+        navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.navigateBack()
 			})
     }
-	
-	@objc func navigateBack() {
-		if (navigationController?.viewControllers.count)! > 1 {
-			navigationController?.popViewController(animated: true)
-		}
-	}
+
+    @objc func navigateBack() {
+        if (navigationController?.viewControllers.count)! > 1 {
+            navigationController?.popViewController(animated: true)
+        }
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-		
-		#if targetEnvironment(macCatalyst)
-		
-			let toolbar = NSToolbar(identifier: "mentions")
-		toolbarDelegate.navStack = (navigationController?.viewControllers)!
-			toolbar.delegate = toolbarDelegate
-			toolbar.displayMode = .iconOnly
-		
-			if let titlebar = view.window!.windowScene!.titlebar {
-				titlebar.toolbar = toolbar
-				titlebar.toolbarStyle = .automatic
-			}
-	
-			navigationController?.setNavigationBarHidden(true, animated: animated)
-			navigationController?.setToolbarHidden(true, animated: animated)
-		#endif
-		
+
+        #if targetEnvironment(macCatalyst)
+
+            let toolbar = NSToolbar(identifier: "mentions")
+            toolbarDelegate.navStack = (navigationController?.viewControllers)!
+            toolbar.delegate = toolbarDelegate
+            toolbar.displayMode = .iconOnly
+
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.toolbar = toolbar
+                titlebar.toolbarStyle = .automatic
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+            navigationController?.setToolbarHidden(true, animated: animated)
+        #endif
+
         setSidebar()
         /* #if targetEnvironment(macCatalyst)
              let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
@@ -287,27 +286,24 @@ extension MentionsViewController: UITableViewDelegate {
 }
 
 extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
-    
-	func editBookmark(id: String, action: BookmarkAction) {
-		switch action {
-		case .add:
-			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
-			currentBookmarks.append(Bookmark(id: id, added: Date()))
-			UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
-			SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
-		case .remove:
-			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
-			if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
-				currentBookmarks.remove(at: index)
-				UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
-				SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
-			}
-			else {
-				SPAlert.present(title: SLocale(.ERROR), preset: .error)
-			}
-			
-		}
-	}
+    func editBookmark(id: String, action: BookmarkAction) {
+        switch action {
+        case .add:
+            var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            currentBookmarks.append(Bookmark(id: id, added: Date()))
+            UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+            SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
+        case .remove:
+            var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
+                currentBookmarks.remove(at: index)
+                UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+                SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
+            } else {
+                SPAlert.present(title: SLocale(.ERROR), preset: .error)
+            }
+        }
+    }
 
     func saveImage(image: UIImage?) {
         if let savingImage = image {

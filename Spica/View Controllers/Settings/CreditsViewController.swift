@@ -8,9 +8,8 @@
 import UIKit
 
 class CreditsViewController: UIViewController {
-	
     var tableView: UITableView!
-	var toolbarDelegate = ToolbarDelegate()
+    var toolbarDelegate = ToolbarDelegate()
 
     var credits = [
         Credit(name: "Adrian Baumgart", role: "iOS Developer", url: "https://twitter.com/adrianbaumgart", imageURL: "https://avatar.alles.cx/u/adrian", image: UIImage(systemName: "person.circle")!),
@@ -43,22 +42,21 @@ class CreditsViewController: UIViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-		
-		#if targetEnvironment(macCatalyst)
-		
-			let toolbar = NSToolbar(identifier: "other")
-			toolbar.delegate = toolbarDelegate
-			toolbar.displayMode = .iconOnly
-		
-			if let titlebar = view.window!.windowScene!.titlebar {
-				titlebar.toolbar = toolbar
-				titlebar.toolbarStyle = .automatic
-			}
-	
-			navigationController?.setNavigationBarHidden(true, animated: false)
-			navigationController?.setToolbarHidden(true, animated: false)
-		#endif
-		
+        #if targetEnvironment(macCatalyst)
+
+            let toolbar = NSToolbar(identifier: "other")
+            toolbar.delegate = toolbarDelegate
+            toolbar.displayMode = .iconOnly
+
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.toolbar = toolbar
+                titlebar.toolbarStyle = .automatic
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
+
         DispatchQueue.global(qos: .utility).async {
             for (index, item) in self.credits.enumerated() {
                 if let url = URL(string: item.imageURL) {

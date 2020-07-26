@@ -6,21 +6,20 @@
 //
 
 import Cache
+import Combine
 import LocalAuthentication
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
-import Combine
 
 protocol MainSettingsDelegate {
     func clickedMore(username: String)
 }
 
 class MainSettingsViewController: UITableViewController {
-	
-	var toolbarDelegate = ToolbarDelegate()
-	private var navigateBackSubscriber: AnyCancellable?
-	
+    var toolbarDelegate = ToolbarDelegate()
+    private var navigateBackSubscriber: AnyCancellable?
+
     @IBOutlet var userPfpImageView: UIImageView!
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var versionBuildLabel: UILabel!
@@ -255,23 +254,22 @@ class MainSettingsViewController: UITableViewController {
         // self.tableView.delegate = self
         localizeView()
     }
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		navigateBackSubscriber?.cancel()
-	}
-	
-	@objc func navigateBack() {
-		if (navigationController?.viewControllers.count)! > 1 {
-			navigationController?.popViewController(animated: true)
-		}
-	}
 
-	
+    override func viewWillDisappear(_: Bool) {
+        navigateBackSubscriber?.cancel()
+    }
+
+    @objc func navigateBack() {
+        if (navigationController?.viewControllers.count)! > 1 {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+
     func setSidebar() {
         if #available(iOS 14.0, *) {
             if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                 if let sidebar = globalSideBarController {
-					navigationController?.viewControllers = [self]
+                    navigationController?.viewControllers = [self]
                     if let collectionView = sidebar.collectionView {
                         collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.settings.rawValue), animated: true, scrollPosition: .top)
                     }
@@ -282,14 +280,14 @@ class MainSettingsViewController: UITableViewController {
 
     override func viewWillAppear(_: Bool) {
         setSidebar()
-		
-		navigationController?.navigationBar.prefersLargeTitles = true
-		
-		let notificationCenter = NotificationCenter.default
-		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.navigateBack()
+
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        let notificationCenter = NotificationCenter.default
+        navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.navigateBack()
 			})
 
         let dictionary = Bundle.main.infoDictionary!
@@ -333,21 +331,21 @@ class MainSettingsViewController: UITableViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-		#if targetEnvironment(macCatalyst)
-		
-			let toolbar = NSToolbar(identifier: "settings")
-		toolbarDelegate.navStack = (navigationController?.viewControllers)!
-			toolbar.delegate = toolbarDelegate
-			toolbar.displayMode = .iconOnly
-		
-			if let titlebar = view.window!.windowScene!.titlebar {
-				titlebar.toolbar = toolbar
-				titlebar.toolbarStyle = .automatic
-			}
-	
-			navigationController?.setNavigationBarHidden(true, animated: false)
-			navigationController?.setToolbarHidden(true, animated: false)
-		#endif
+        #if targetEnvironment(macCatalyst)
+
+            let toolbar = NSToolbar(identifier: "settings")
+            toolbarDelegate.navStack = (navigationController?.viewControllers)!
+            toolbar.delegate = toolbarDelegate
+            toolbar.displayMode = .iconOnly
+
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.toolbar = toolbar
+                titlebar.toolbarStyle = .automatic
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
         setSidebar()
 
         /* #if targetEnvironment(macCatalyst)

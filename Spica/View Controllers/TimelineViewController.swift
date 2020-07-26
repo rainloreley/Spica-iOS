@@ -18,7 +18,7 @@ import UIKit
 class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDelegate {
     var tableView: UITableView!
     var createPostBtn: UIButton!
-	var toolbarDelegate = ToolbarDelegate()
+    var toolbarDelegate = ToolbarDelegate()
     var posts = [Post]() {
         didSet { /* applyChanges() */ }
     }
@@ -28,8 +28,8 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     var loadingHud: JGProgressHUD!
 
     private var subscriptions = Set<AnyCancellable>()
-	private var createPostSubscriber: AnyCancellable?
-	private var navigateBackSubscriber: AnyCancellable?
+    private var createPostSubscriber: AnyCancellable?
+    private var navigateBackSubscriber: AnyCancellable?
 
     var verificationString = ""
 
@@ -41,11 +41,11 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
              } */
         }
     }
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		createPostSubscriber?.cancel()
-		navigateBackSubscriber?.cancel()
-	}
+
+    override func viewWillDisappear(_: Bool) {
+        createPostSubscriber?.cancel()
+        navigateBackSubscriber?.cancel()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,12 +160,11 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         snapshot.appendItems(posts, toSection: .main)
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
-			if self.posts.isEmpty {
-				self.tableView.setEmptyMessage(message: SLocale(.TIMELINE_EMPTY_TITLE), subtitle: SLocale(.TIMELINE_EMPTY_SUBTITLE))
-			}
-			else {
-				self.tableView.restore()
-			}
+            if self.posts.isEmpty {
+                self.tableView.setEmptyMessage(message: SLocale(.TIMELINE_EMPTY_TITLE), subtitle: SLocale(.TIMELINE_EMPTY_SUBTITLE))
+            } else {
+                self.tableView.restore()
+            }
         }
     }
 
@@ -197,7 +196,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         if #available(iOS 14.0, *) {
             if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                 if let sidebar = globalSideBarController {
-					navigationController?.viewControllers = [self]
+                    navigationController?.viewControllers = [self]
                     if let collectionView = sidebar.collectionView {
                         collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.home.rawValue), animated: true, scrollPosition: .top)
                     }
@@ -210,51 +209,46 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         super.viewWillAppear(animated)
 
         setSidebar()
-		
-		
-		let notificationCenter = NotificationCenter.default
-		createPostSubscriber = notificationCenter.publisher(for: .createPost)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.openPostCreateView()
+
+        let notificationCenter = NotificationCenter.default
+        createPostSubscriber = notificationCenter.publisher(for: .createPost)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.openPostCreateView()
 			})
-		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.navigateBack()
+        navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.navigateBack()
 			})
 
         navigationController?.navigationBar.prefersLargeTitles = true
-		
-		
-		
     }
-	
-	@objc func navigateBack() {
-		if (navigationController?.viewControllers.count)! > 1 {
-			navigationController?.popViewController(animated: true)
-		}
-	}
-	
+
+    @objc func navigateBack() {
+        if (navigationController?.viewControllers.count)! > 1 {
+            navigationController?.popViewController(animated: true)
+        }
+    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-		
-		#if targetEnvironment(macCatalyst)
-		
-			let toolbar = NSToolbar(identifier: "timeline")
-		toolbarDelegate.navStack = (navigationController?.viewControllers)!
-			toolbar.delegate = toolbarDelegate
-			toolbar.displayMode = .iconOnly
-		
-			if let titlebar = view.window!.windowScene!.titlebar {
-				titlebar.toolbar = toolbar
-				titlebar.toolbarStyle = .automatic
-			}
-	
-			navigationController?.setNavigationBarHidden(true, animated: animated)
-			navigationController?.setToolbarHidden(true, animated: animated)
-		#endif
+
+        #if targetEnvironment(macCatalyst)
+
+            let toolbar = NSToolbar(identifier: "timeline")
+            toolbarDelegate.navStack = (navigationController?.viewControllers)!
+            toolbar.delegate = toolbarDelegate
+            toolbar.displayMode = .iconOnly
+
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.toolbar = toolbar
+                titlebar.toolbarStyle = .automatic
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+            navigationController?.setToolbarHidden(true, animated: animated)
+        #endif
         requestBiometricAuth()
         setSidebar()
 
@@ -465,21 +459,19 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
     func editBookmark(id: String, action: BookmarkAction) {
         switch action {
         case .add:
-			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
-			currentBookmarks.append(Bookmark(id: id, added: Date()))
-			UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+            var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            currentBookmarks.append(Bookmark(id: id, added: Date()))
+            UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
             SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
         case .remove:
-			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
-			if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
-				currentBookmarks.remove(at: index)
-				UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
-				SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
-			}
-			else {
-				SPAlert.present(title: SLocale(.ERROR), preset: .error)
-			}
-			
+            var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
+                currentBookmarks.remove(at: index)
+                UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+                SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
+            } else {
+                SPAlert.present(title: SLocale(.ERROR), preset: .error)
+            }
         }
     }
 

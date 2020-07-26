@@ -12,15 +12,14 @@ import SPAlert
 import UIKit
 
 class TagDetailViewController: UIViewController {
-	
     typealias DataSource = UITableViewDiffableDataSource<Section, Post>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
-	
-	var toolbarDelegate = ToolbarDelegate()
+
+    var toolbarDelegate = ToolbarDelegate()
     var tableView: UITableView!
     var refreshControl = UIRefreshControl()
     var loadingHud: JGProgressHUD!
-	private var navigateBackSubscriber: AnyCancellable?
+    private var navigateBackSubscriber: AnyCancellable?
 
     var tag: Tag! {
         didSet {
@@ -63,25 +62,25 @@ class TagDetailViewController: UIViewController {
     }
 
     override func viewWillAppear(_: Bool) {
-		navigationController?.navigationBar.prefersLargeTitles = true
-		
-		let notificationCenter = NotificationCenter.default
-		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.navigateBack()
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        let notificationCenter = NotificationCenter.default
+        navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.navigateBack()
 			})
     }
-	
-	@objc func navigateBack() {
-		if (navigationController?.viewControllers.count)! > 1 {
-			navigationController?.popViewController(animated: true)
-		}
-	}
-	
-	override func viewWillDisappear(_ animated: Bool) {
-		navigateBackSubscriber?.cancel()
-	}
+
+    @objc func navigateBack() {
+        if (navigationController?.viewControllers.count)! > 1 {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+
+    override func viewWillDisappear(_: Bool) {
+        navigateBackSubscriber?.cancel()
+    }
 
     @objc func loadTag() {
         loadingHud.show(in: view)
@@ -137,23 +136,22 @@ class TagDetailViewController: UIViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-		
-		#if targetEnvironment(macCatalyst)
-		
-			let toolbar = NSToolbar(identifier: "tagdetail")
-		toolbarDelegate.navStack = (navigationController?.viewControllers)!
-			toolbar.delegate = toolbarDelegate
-			toolbar.displayMode = .iconOnly
-		
-			if let titlebar = view.window!.windowScene!.titlebar {
-				titlebar.toolbar = toolbar
-				titlebar.toolbarStyle = .automatic
-			}
-	
-			navigationController?.setNavigationBarHidden(true, animated: false)
-			navigationController?.setToolbarHidden(true, animated: false)
-		#endif
-		
+        #if targetEnvironment(macCatalyst)
+
+            let toolbar = NSToolbar(identifier: "tagdetail")
+            toolbarDelegate.navStack = (navigationController?.viewControllers)!
+            toolbar.delegate = toolbarDelegate
+            toolbar.displayMode = .iconOnly
+
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.toolbar = toolbar
+                titlebar.toolbarStyle = .automatic
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
+
         if tag != nil {
             loadTag()
         }
@@ -255,27 +253,24 @@ extension TagDetailViewController: PostCreateDelegate {
 }
 
 extension TagDetailViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
-    
-	func editBookmark(id: String, action: BookmarkAction) {
-		switch action {
-		case .add:
-			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
-			currentBookmarks.append(Bookmark(id: id, added: Date()))
-			UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
-			SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
-		case .remove:
-			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
-			if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
-				currentBookmarks.remove(at: index)
-				UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
-				SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
-			}
-			else {
-				SPAlert.present(title: SLocale(.ERROR), preset: .error)
-			}
-			
-		}
-	}
+    func editBookmark(id: String, action: BookmarkAction) {
+        switch action {
+        case .add:
+            var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            currentBookmarks.append(Bookmark(id: id, added: Date()))
+            UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+            SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
+        case .remove:
+            var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
+                currentBookmarks.remove(at: index)
+                UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+                SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
+            } else {
+                SPAlert.present(title: SLocale(.ERROR), preset: .error)
+            }
+        }
+    }
 
     func saveImage(image: UIImage?) {
         if let savingImage = image {

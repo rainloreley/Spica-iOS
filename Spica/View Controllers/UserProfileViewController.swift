@@ -16,10 +16,10 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     var user: User!
     var tableView: UITableView!
     var loadedPreviously = false
-	var toolbarDelegate = ToolbarDelegate()
-	private var createPostSubscriber: AnyCancellable?
-	private var editProfileSubscriber: AnyCancellable?
-	private var navigateBackSubscriber: AnyCancellable?
+    var toolbarDelegate = ToolbarDelegate()
+    private var createPostSubscriber: AnyCancellable?
+    private var editProfileSubscriber: AnyCancellable?
+    private var navigateBackSubscriber: AnyCancellable?
     var userPosts = [Post]() {
         didSet {
             DispatchQueue.main.async {
@@ -98,14 +98,13 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
-		
     }
-	
-	@objc func navigateBack() {
-		if (navigationController?.viewControllers.count)! > 1 {
-			navigationController?.popViewController(animated: true)
-		}
-	}
+
+    @objc func navigateBack() {
+        if (navigationController?.viewControllers.count)! > 1 {
+            navigationController?.popViewController(animated: true)
+        }
+    }
 
     func setSidebar() {
         if #available(iOS 14.0, *) {
@@ -113,7 +112,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             if signedInUsername == user.username {
                 if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                     if let sidebar = globalSideBarController {
-						navigationController?.viewControllers = [self]
+                        navigationController?.viewControllers = [self]
                         if let collectionView = sidebar.collectionView {
                             collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
                         }
@@ -125,25 +124,24 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     override func viewWillAppear(_: Bool) {
         setSidebar()
-		
-		
-		let notificationCenter = NotificationCenter.default
-		createPostSubscriber = notificationCenter.publisher(for: .createPost)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.openPostCreateView()
+
+        let notificationCenter = NotificationCenter.default
+        createPostSubscriber = notificationCenter.publisher(for: .createPost)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.openPostCreateView()
 			})
-		
-		navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.navigateBack()
+
+        navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.navigateBack()
 			})
-		
-		editProfileSubscriber = notificationCenter.publisher(for: .editProfile)
-			.receive(on: RunLoop.main)
-			.sink(receiveValue: { notificationCenter in
-				self.openUserSettings()
+
+        editProfileSubscriber = notificationCenter.publisher(for: .editProfile)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.openUserSettings()
 			})
         /* #if targetEnvironment(macCatalyst)
              navigationController?.setNavigationBarHidden(true, animated: false)
@@ -151,7 +149,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
              navigationController?.navigationBar.prefersLargeTitles = false
          #endif */
     }
-	
 
     @objc func openUserSettings() {
         let vc = UserEditViewController()
@@ -163,32 +160,31 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     override func viewWillDisappear(_: Bool) {
-		createPostSubscriber?.cancel()
-		navigateBackSubscriber?.cancel()
-		editProfileSubscriber?.cancel()
+        createPostSubscriber?.cancel()
+        navigateBackSubscriber?.cancel()
+        editProfileSubscriber?.cancel()
         /* #if targetEnvironment(macCatalyst)
              navigationController?.setNavigationBarHidden(false, animated: false)
          #endif */
     }
 
     override func viewDidAppear(_: Bool) {
-		
-		#if targetEnvironment(macCatalyst)
-		
-			let toolbar = NSToolbar(identifier: "userprofile")
-		toolbarDelegate.navStack = (navigationController?.viewControllers)!
-			toolbar.delegate = toolbarDelegate
-			toolbar.displayMode = .iconOnly
-		
-			if let titlebar = view.window!.windowScene!.titlebar {
-				titlebar.toolbar = toolbar
-				titlebar.toolbarStyle = .automatic
-			}
-	
-			navigationController?.setNavigationBarHidden(true, animated: false)
-			navigationController?.setToolbarHidden(true, animated: false)
-		#endif
-		
+        #if targetEnvironment(macCatalyst)
+
+            let toolbar = NSToolbar(identifier: "userprofile")
+            toolbarDelegate.navStack = (navigationController?.viewControllers)!
+            toolbar.delegate = toolbarDelegate
+            toolbar.displayMode = .iconOnly
+
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.toolbar = toolbar
+                titlebar.toolbarStyle = .automatic
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
+
         setSidebar()
         /* #if targetEnvironment(macCatalyst)
              let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
@@ -494,27 +490,24 @@ extension UserProfileViewController: PostCreateDelegate {
 }
 
 extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
-    
-	func editBookmark(id: String, action: BookmarkAction) {
-		switch action {
-		case .add:
-			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
-			currentBookmarks.append(Bookmark(id: id, added: Date()))
-			UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
-			SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
-		case .remove:
-			var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
-			if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
-				currentBookmarks.remove(at: index)
-				UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
-				SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
-			}
-			else {
-				SPAlert.present(title: SLocale(.ERROR), preset: .error)
-			}
-			
-		}
-	}
+    func editBookmark(id: String, action: BookmarkAction) {
+        switch action {
+        case .add:
+            var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            currentBookmarks.append(Bookmark(id: id, added: Date()))
+            UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+            SPAlert.present(title: SLocale(.ADDED_ACTION), preset: .done)
+        case .remove:
+            var currentBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
+            if let index = currentBookmarks.firstIndex(where: { $0.id == id }) {
+                currentBookmarks.remove(at: index)
+                UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+                SPAlert.present(title: SLocale(.REMOVED_ACTION), preset: .done)
+            } else {
+                SPAlert.present(title: SLocale(.ERROR), preset: .error)
+            }
+        }
+    }
 
     func saveImage(image: UIImage?) {
         if let savingImage = image {

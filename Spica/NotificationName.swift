@@ -8,8 +8,8 @@
 import Foundation
 
 extension Notification.Name {
-	static let createPost = Notification.Name("createPost")
-	static let editProfile = Notification.Name("editProfile")
-	static let saveProfile = Notification.Name("saveProfile")
-	static let navigateBack = Notification.Name("navigateBack")
+    static let createPost = Notification.Name("createPost")
+    static let editProfile = Notification.Name("editProfile")
+    static let saveProfile = Notification.Name("saveProfile")
+    static let navigateBack = Notification.Name("navigateBack")
 }

@@ -72,17 +72,17 @@ enum LocalizableKeys: String {
     case DEVICE_ERROR
     case BIOMETRIC_DEVICE_NOTAVAILABLE
     case BIOMETRICS
-	case BOOKMARKS
-	case BOOKMARKS_EMPTY_TITLE
-	case BOOKMARKS_EMPTY_SUBTITLE
-	case ADDED_ACTION
-	case REMOVED_ACTION
-	case TIMELINE_EMPTY_TITLE
-	case TIMELINE_EMPTY_SUBTITLE
-	case NOTIFICATIONS_EMPTY_TITLE
-	case NOTIFICATIONS_EMPTY_SUBTITLE
-	case ADD_BOOKMARK
-	case REMOVE_BOOKMARK
+    case BOOKMARKS
+    case BOOKMARKS_EMPTY_TITLE
+    case BOOKMARKS_EMPTY_SUBTITLE
+    case ADDED_ACTION
+    case REMOVED_ACTION
+    case TIMELINE_EMPTY_TITLE
+    case TIMELINE_EMPTY_SUBTITLE
+    case NOTIFICATIONS_EMPTY_TITLE
+    case NOTIFICATIONS_EMPTY_SUBTITLE
+    case ADD_BOOKMARK
+    case REMOVE_BOOKMARK
     case error_alreadySet = "error.alreadySet"
     case error_applications_badRedirect = "error.applications.badRedirect"
     case error_applications_firstPartyOnly = "error.applications.firstPartyOnly"
