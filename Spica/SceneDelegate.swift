@@ -42,7 +42,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         homeView.tabBarItem = UITabBarItem(title: SLocale(.HOME), image: UIImage(systemName: "house"), tag: 0)
         let mentionView = UINavigationController(rootViewController: MentionsViewController())
         mentionView.tabBarItem = UITabBarItem(title: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell"), tag: 1)
-        tabBar.viewControllers = [homeView, mentionView]
+		let bookmarksView = UINavigationController(rootViewController: BookmarksViewController())
+		bookmarksView.tabBarItem = UITabBarItem(title: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark"), tag: 2)
+        tabBar.viewControllers = [homeView, mentionView, bookmarksView]
 
         if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
             if #available(iOS 14.0, *) {
