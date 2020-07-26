@@ -65,7 +65,7 @@
 "WEBSITE" = "Nettsted";
 
 "USED_LIBRARIES" = "Brukte biblioteker";
-"CREDITS" = "Studiepoeng";
+"CREDITS" = "Takk til";
 
 "OTHER" = "Annen";
 
@@ -79,10 +79,10 @@
 
 "ERROR" = "Feil";
 
-"REPOST" = "Repost";
-"COPY_ID" = "Copy ID";
-"TRANSLATE_APP" = "Translate the app";
-"CONTACT" = "Contact";
+"REPOST" = "Del";
+"COPY_ID" = "Kopier ID";
+"TRANSLATE_APP" = "Oversett appen";
+"CONTACT" = "Kontakt meg";
 "SAVE_ACTION" = "Save";
 "CLEAR_CACHE" = "Clear Cache";
 "CACHE_CLEARED" = "Cache cleared!";
