@@ -106,11 +106,11 @@
 "TIMELINE_EMPTY_TITLE" = "Keine Beiträge";
 "TIMELINE_EMPTY_SUBTITLE" = "Versuche etwas zu posten";
 
-"NOTIFICATIONS_EMPTY_TITLE" = "No notifications";
-"NOTIFICATIONS_EMPTY_SUBTITLE" = "When people reply or mention you, their posts appear here";
+"NOTIFICATIONS_EMPTY_TITLE" = "Keine Benachrichtigungen";
+"NOTIFICATIONS_EMPTY_SUBTITLE" = "Wenn Personen dir antworten oder dich erwähnen erscheinen diese Beiträge hier";
 
-"ADD_BOOKMARK" = "Add bookmark";
-"REMOVE_BOOKMARK" = "Remove bookmark";
+"ADD_BOOKMARK" = "Lesezeichen hinzufügen";
+"REMOVE_BOOKMARK" = "Lesezeichen entfernen";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
