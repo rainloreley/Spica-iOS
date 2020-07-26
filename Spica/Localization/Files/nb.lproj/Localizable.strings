@@ -96,6 +96,19 @@
 "BIOMETRIC_DEVICE_NOTAVAILABLE" = "Your device is not able to use %@. Make sure that %@ is enabled in the settings app.";
 "BIOMETRICS" = "Biometrics";
 
+"BOOKMARKS" = "Bookmarks";
+"BOOKMARKS_EMPTY_TITLE" = "No bookmarks";
+"BOOKMARKS_EMPTY_SUBTITLE" = "Long press a post to add a bookmark";
+
+"ADDED_ACTION" = "Added";
+"REMOVED_ACTION" = "Removed";
+
+"TIMELINE_EMPTY_TITLE" = "No porsts";
+"TIMELINE_EMPTY_SUBTITLE" = "Try posting something";
+
+"MENTIONS_EMPTY_TITLE" = "No mentions";
+"MENTIONS_EMPTY_SUBTITLE" = "When people reply or mention you, their posts appear here";
+
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */
