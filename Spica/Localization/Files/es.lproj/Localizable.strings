@@ -106,8 +106,8 @@
 "TIMELINE_EMPTY_TITLE" = "No posts";
 "TIMELINE_EMPTY_SUBTITLE" = "Try posting something";
 
-"MENTIONS_EMPTY_TITLE" = "No mentions";
-"MENTIONS_EMPTY_SUBTITLE" = "When people reply or mention you, their posts appear here";
+"NOTIFICATIONS_EMPTY_TITLE" = "No notifications";
+"NOTIFICATIONS_EMPTY_SUBTITLE" = "When people reply or mention you, their posts appear here";
 
 "ADD_BOOKMARK" = "Add bookmark";
 "REMOVE_BOOKMARK" = "Remove bookmark";
