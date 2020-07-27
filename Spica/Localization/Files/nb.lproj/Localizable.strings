@@ -96,9 +96,9 @@
 "BIOMETRIC_DEVICE_NOTAVAILABLE" = "Your device is not able to use %@. Make sure that %@ is enabled in the settings app.";
 "BIOMETRICS" = "Biometrics";
 
-"BOOKMARKS" = "Bookmarks";
-"BOOKMARKS_EMPTY_TITLE" = "No bookmarks";
-"BOOKMARKS_EMPTY_SUBTITLE" = "Long press a post to add a bookmark";
+"BOOKMARKS" = "Bokmerker";
+"BOOKMARKS_EMPTY_TITLE" = "Ingen bokmerker";
+"BOOKMARKS_EMPTY_SUBTITLE" = "Hold inne på en post for å legge den til i bokmerker";
 
 "ADDED_ACTION" = "Added";
 "REMOVED_ACTION" = "Removed";
