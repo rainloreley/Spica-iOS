@@ -35,6 +35,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
     var sendButton: UIBarButtonItem!
 
+    var imagePreview: UIImageView!
+
     var preText: String!
 
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
@@ -103,13 +105,6 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
         view.addSubview(contentTextView)
 
-        /* sendButton.snp.makeConstraints { make in
-             make.bottom.equalTo(view.snp.bottom).offset(-50)
-             make.centerX.equalTo(view.snp.centerX)
-             make.height.equalTo(50)
-             make.width.equalTo(view.snp.width).offset(-32)
-         } */
-
         userPfp.snp.makeConstraints { make in
             make.height.equalTo(40)
             make.width.equalTo(40)
@@ -117,18 +112,27 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             make.leading.equalTo(view.snp.leading).offset(16)
         }
 
-        /* imageButton.snp.makeConstraints { (make) in
-         	make.height.equalTo(40)
-         	make.width.equalTo(40)
-         	make.bottom.equalTo(view.snp.bottom).offset(-80)
-         	make.leading.equalTo(view.snp.leading).offset(16)
-         } */
+        imagePreview = UIImageView(frame: .zero)
+        imagePreview.image = nil
+        view.addSubview(imagePreview)
+
+        imagePreview.snp.makeConstraints { make in
+            make.leading.equalTo(view.snp.leading).offset(72)
+            make.trailing.equalTo(view.snp.trailing).offset(-32)
+            make.height.equalTo(0)
+            make.bottom.equalTo(view.snp.bottom).offset(-16)
+        }
+		
+		imagePreview.isUserInteractionEnabled = true
+		imagePreview.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(openImagePicker)))
+		
 
         contentTextView.snp.makeConstraints { make in
             make.top.equalTo(view.snp.top).offset(80)
             make.leading.equalTo(view.snp.leading).offset(72)
             make.trailing.equalTo(view.snp.trailing).offset(-32)
-            make.bottom.equalTo(view.snp.bottom).offset(-16)
+            make.bottom.equalTo(imagePreview.snp.top).offset(-16)
+            // make.bottom.equalTo(view.snp.bottom).offset(-16)
         }
 
         // progressRing = CircularProgressView()
@@ -145,8 +149,44 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         let calculation = Double(contentTextView.text.count) / Double(500)
 
         progressBarController.progress = Float(calculation)
+    }
 
-        // Do any additional setup after loading the view.
+    func resizeImagePreview(image: UIImage?) {
+        if image != nil {
+            imagePreview.clipsToBounds = true
+            imagePreview.contentMode = .scaleAspectFit
+
+            let aspectRatio = image!.size.width / image!.size.height
+
+            var width = image!.size.width
+            var dividerCounter = CGFloat(1)
+            var height = image!.size.height
+
+            while /* width > self.view.frame.width && */ height > (view.frame.height / 3) {
+                height = view.frame.height / dividerCounter
+                width = height * aspectRatio
+                dividerCounter += 1
+            }
+
+            if width - view.frame.width > 1 {
+                width = width - (width - view.frame.width) - 32
+                height = height - (width - view.frame.width) - 32
+            }
+
+            imagePreview.snp.remakeConstraints { make in
+                make.centerX.equalTo(view.snp.centerX)
+                make.height.equalTo(height)
+                make.width.equalTo(width)
+                make.bottom.equalTo(view.snp.bottom).offset(-16)
+            }
+        } else {
+            imagePreview.snp.remakeConstraints { make in
+                make.leading.equalTo(view.snp.leading).offset(72)
+                make.trailing.equalTo(view.snp.trailing).offset(-32)
+                make.height.equalTo(0)
+                make.bottom.equalTo(view.snp.bottom).offset(-16)
+            }
+        }
     }
 
     @objc func dismissView() {
@@ -164,7 +204,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         return newText.count < 501
     }
 
-    @objc func openImagePicker(sender _: UIBarButtonItem) {
+    @objc func openImagePicker(sender _: Any?/*UIBarButtonItem*/) {
         if selectedImage != nil {
             EZAlertController.actionSheet(SLocale(.IMAGE), message: "", sourceView: view, actions: [
                 UIAlertAction(title: SLocale(.SELECT_ANOTHER_IMAGE), style: .default, handler: { _ in
@@ -173,6 +213,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 				}), UIAlertAction(title: SLocale(.REMOVE), style: .destructive, handler: { _ in
                     self.selectedImage = nil
                     self.imageButton.image = UIImage(systemName: "photo")
+                    self.imagePreview.image = nil
+                    self.resizeImagePreview(image: nil)
 				}), UIAlertAction(title: SLocale(.CANCEL), style: .cancel, handler: nil),
             ])
         } else {
@@ -245,6 +287,8 @@ extension PostCreateViewController: UIImagePickerControllerDelegate & UINavigati
         if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             selectedImage = pickedImage
             imageButton.image = UIImage(systemName: "photo.fill")
+            imagePreview.image = pickedImage
+            resizeImagePreview(image: pickedImage)
         }
 
         dismiss(animated: true)
@@ -274,6 +318,8 @@ extension PostCreateViewController: UIDropInteractionDelegate {
             let images = imageItems as! [UIImage]
             self.selectedImage = images.first
             self.imageButton.image = UIImage(systemName: "photo.fill")
+            self.imagePreview.image = images.first
+            self.resizeImagePreview(image: images.first)
         }
     }
 }
