@@ -19,7 +19,7 @@ class CreditsViewController: UIViewController {
         Credit(name: "James Young", role: "Translator (French, Norwegian)", url: "https://twitter.com/onlytruejames", imageURL: "https://avatar.alles.cx/u/james", image: UIImage(systemName: "person.circle")!),
         Credit(name: "@DaThinkingChair", role: "Translator (Spanish)", url: "https://twitter.com/DaThinkingChair", imageURL: "https://pbs.twimg.com/profile_images/1259314332950769666/UPvu5g-e_400x400.jpg", image: UIImage(systemName: "person.circle")!),
         Credit(name: "Storm", role: "Translator (Norwegian)", url: "https://twitter.com/StormLovesTech", imageURL: "https://avatar.alles.cx/u/storm", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "primenate32", role: "Translator (Frensh, Spanish)", url: "http://123computer.net", imageURL: "", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "primenate32", role: "Translator (Frensh, Spanish)", url: "http://123computer.net", imageURL: "https://pbs.twimg.com/profile_images/1288564622795182082/VduMZJzR_400x400.jpg", image: UIImage(systemName: "person.circle")!),
     ]
 
     override func viewDidLoad() {

@@ -319,9 +319,9 @@
 		3A7145DD24AA8753000FA3C3 /* Spica */ = {
 			isa = PBXGroup;
 			children = (
+				3A9D965D24BA59AA00703466 /* Spica.entitlements */,
 				3A8FD74C24CDA9B0004B247C /* SpicaRelease.entitlements */,
 				3A6AABD124BB5D6300C71BC0 /* Localization */,
-				3A9D965D24BA59AA00703466 /* Spica.entitlements */,
 				3A5CF34B24ACBCC0002A829A /* Cells */,
 				3A96F6A924AB445100482C5A /* View Controllers */,
 				3A96F69D24AB3F9C00482C5A /* Services */,
