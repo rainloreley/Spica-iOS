@@ -31,7 +31,7 @@ class BookmarksViewController: UIViewController {
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
-        tableView.dataSource = dataSource
+        tableView.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         view.addSubview(tableView)
 
@@ -63,6 +63,19 @@ class BookmarksViewController: UIViewController {
             }
         }
     }
+	
+	@objc func deleteAllConfirmation() {
+		EZAlertController.alert(SLocale(.DELETE_ALL_BOOKMARKS), message: SLocale(.DELETE_ALL_BOOKMARKS_CONFIRMATION), actions: [
+			UIAlertAction(title: SLocale(.DELETE_ACTION), style: .destructive, handler: { (_) in
+				UserDefaults.standard.setStructArray([Bookmark](), forKey: "savedBookmarks")
+				SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
+				self.loadBookmarks(loadingIndicator: false)
+			}),
+			UIAlertAction(title: SLocale(.CANCEL), style: .cancel, handler: { (_) in
+				//
+			})
+		])
+	}
 
     @objc func navigateBack() {
         if (navigationController?.viewControllers.count)! > 1 {
@@ -78,6 +91,8 @@ class BookmarksViewController: UIViewController {
         setSidebar()
 
         navigationController?.navigationBar.prefersLargeTitles = true
+		
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "trash"), style: .plain, target: self, action: #selector(deleteAllConfirmation))
 
         let notificationCenter = NotificationCenter.default
         navigateBackSubscriber = notificationCenter.publisher(for: .navigateBack)
@@ -107,8 +122,8 @@ class BookmarksViewController: UIViewController {
         loadBookmarks()
     }
 
-    @objc func loadBookmarks() {
-        if bookmarks.isEmpty {
+	@objc func loadBookmarks(loadingIndicator: Bool = true) {
+		if loadingIndicator {
             loadingHud.show(in: view)
         }
 
@@ -187,50 +202,17 @@ class BookmarksViewController: UIViewController {
         }
     }
 
-    typealias DataSource = UITableViewDiffableDataSource<Section, AdvancedBookmark>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, AdvancedBookmark>
-
-    private lazy var dataSource = makeDataSource()
-
-    enum Section {
-        case main
-    }
-
-    func makeDataSource() -> DataSource {
-        let source = DataSource(tableView: tableView) { [self] (tableView, indexPath, post) -> UITableViewCell? in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
-
-            cell.delegate = self
-            cell.indexPath = indexPath
-            cell.post = post.post
-
-            let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-            cell.pfpImageView.tag = indexPath.row
-            cell.pfpImageView.isUserInteractionEnabled = true
-            cell.pfpImageView.addGestureRecognizer(tap)
-            cell.upvoteButton.tag = indexPath.row
-            cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-            cell.downvoteButton.tag = indexPath.row
-            cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
-
-            return cell
-        }
-        source.defaultRowAnimation = .fade
-        return source
-    }
-
     func applyChanges(_ animated: Bool = true) {
-        var snapshot = Snapshot()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(bookmarks, toSection: .main)
-        DispatchQueue.main.async {
-            self.dataSource.apply(snapshot, animatingDifferences: animated)
-            if self.bookmarks.isEmpty {
-                self.tableView.setEmptyMessage(message: SLocale(.BOOKMARKS_EMPTY_TITLE), subtitle: SLocale(.BOOKMARKS_EMPTY_SUBTITLE))
-            } else {
-                self.tableView.restore()
-            }
-        }
+		DispatchQueue.main.async {
+			//self.tableView.beginUpdates()
+			self.tableView.reloadData()
+			//self.tableView.endUpdates()
+			if self.bookmarks.isEmpty {
+				self.tableView.setEmptyMessage(message: SLocale(.BOOKMARKS_EMPTY_TITLE), subtitle: SLocale(.BOOKMARKS_EMPTY_SUBTITLE))
+			} else {
+				self.tableView.restore()
+			}
+		}
     }
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
@@ -268,14 +250,55 @@ class BookmarksViewController: UIViewController {
     }
 }
 
-extension BookmarksViewController: UITableViewDelegate {
+enum BookmarkSection {
+	case main
+}
+
+extension BookmarksViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let post = dataSource.itemIdentifier(for: indexPath) else { return }
+		let post = bookmarks[indexPath.row]
         let detailVC = PostDetailViewController()
         detailVC.selectedPost = post.post
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
+	
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return bookmarks.count
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+
+		cell.delegate = self
+		cell.indexPath = indexPath
+		cell.post = bookmarks[indexPath.row].post
+
+		let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+		cell.pfpImageView.tag = indexPath.row
+		cell.pfpImageView.isUserInteractionEnabled = true
+		cell.pfpImageView.addGestureRecognizer(tap)
+		cell.upvoteButton.tag = indexPath.row
+		cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+		cell.downvoteButton.tag = indexPath.row
+		cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+		return cell
+	}
+	
+	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+		if editingStyle == .delete {
+			bookmarks.remove(at: indexPath.row)
+			let mappedBookmakrs = bookmarks.map { $0.bookmark }
+			UserDefaults.standard.setStructArray(mappedBookmakrs, forKey: "savedBookmarks")
+			SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
+			tableView.beginUpdates()
+			//tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .automatic)
+			tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+			tableView.endUpdates()
+			loadBookmarks(loadingIndicator: false)
+		}
+	}
 }
 
 extension BookmarksViewController: PostCellViewDelegate {
