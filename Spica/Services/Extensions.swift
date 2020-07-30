@@ -191,16 +191,22 @@ extension UITableView {
 
         messageLabel.snp.makeConstraints { make in
             make.centerX.equalTo(backView.snp.centerX)
-            make.centerY.equalTo(backView.snp.centerY).offset(-16)
-            make.height.equalTo(50)
-            make.width.equalTo(backView.snp.width)
+			make.centerY.equalTo(backView.snp.centerY)//.offset(-8)
+            //make.height.equalTo(50)
+            //make.width.equalTo(backView.snp.width)
+			make.leading.equalTo(backView.snp.leading)
+			make.trailing.equalTo(backView.snp.trailing)
         }
 
         subtitleLabel.snp.makeConstraints { make in
             make.centerX.equalTo(backView.snp.centerX)
-            make.centerY.equalTo(backView.snp.centerY).offset(16)
-            make.height.equalTo(50)
-            make.width.equalTo(backView.snp.width)
+			//make.top.equalTo(messageLabel.snp.bottom).offset(8)
+			make.top.equalTo(messageLabel.snp.bottom)//.offset(8)
+            //make.centerY.equalTo(backView.snp.centerY).offset(16)
+            //make.height.equalTo(50)
+            //make.width.equalTo(backView.snp.width)
+			make.leading.equalTo(backView.snp.leading)
+			make.trailing.equalTo(backView.snp.trailing)
         }
 
         separatorStyle = .none
