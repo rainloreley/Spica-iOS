@@ -158,7 +158,7 @@ class MainSettingsViewController: UITableViewController {
     }
 
     @IBAction func github(_: Any) {
-        let url = URL(string: "https://github.com/adrianbaumgart/Spica")
+        let url = URL(string: "https://github.com/SpicaApp/Spica-iOS")
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
         }
