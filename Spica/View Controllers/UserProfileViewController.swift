@@ -14,6 +14,7 @@ import UIKit
 
 class UserProfileViewController: UIViewController, UserEditDelegate {
     var user: User!
+	var imageAnimationAllowed = false
     var tableView: UITableView!
     var loadedPreviously = false
     var toolbarDelegate = ToolbarDelegate()
@@ -76,7 +77,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         navigationItem.rightBarButtonItems = rightItems
         // #endif
 
-        tableView = UITableView(frame: view.bounds, style: .plain)
+		tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView?.delegate = self
         tableView?.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
@@ -206,6 +207,12 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     @objc func loadUser() {
+		
+		self.imageAnimationAllowed = false
+		tableView.beginUpdates()
+		tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+		tableView.endUpdates()
+		
         if user == nil || userPosts.isEmpty {
             loadingHud.show(in: view)
         }
@@ -257,14 +264,20 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 default: break
                 }
             } receiveValue: { [unowned self] in
-
                 self.userPosts = $0
                 if self.refreshControl.isRefreshing {
                     self.refreshControl.endRefreshing()
                 }
                 self.loadingHud.dismiss()
                 verificationString = randomString(length: 20)
-                self.loadImages()
+				self.imageAnimationAllowed = true
+				self.tableView.beginUpdates()
+				self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+				self.tableView.endUpdates()
+				
+				DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 2.0) {
+					self.loadImages()
+				}
             }
             .store(in: &subscriptions)
     }
@@ -442,6 +455,7 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCellView
             cell.selectionStyle = .none
             cell.user = user
+			cell.profilePictureController.grow = self.imageAnimationAllowed
             cell.followButton.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
             if #available(iOS 13.4, *) {
                 cell.followButton.isPointerInteractionEnabled = true

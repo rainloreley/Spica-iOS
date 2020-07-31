@@ -8,19 +8,24 @@
 import Hero
 import SwiftKeychainWrapper
 import UIKit
+import SwiftUI
+import Combine
 
 class UserHeaderCellView: UITableViewCell {
     var user: User! {
         didSet {
-            pfpImageView.image = user.image!
+            //pfpImageView.image = user.image!
+			profilePictureController.profilePicture = user.image!
 
-            let rectShape = CAShapeLayer()
+            /*let rectShape = CAShapeLayer()
             rectShape.bounds = contentView.frame
             rectShape.position = contentView.center
             rectShape.path = UIBezierPath(roundedRect: contentView.bounds, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 40, height: 40)).cgPath
 
             contentView.layer.backgroundColor = UIColor(named: "UserBackground")?.cgColor
-            contentView.layer.mask = rectShape
+            contentView.layer.mask = rectShape*/
+			
+			profilePictureController.isOnline = user.isOnline
             if user.isOnline {
                 onlineIndicatorView.backgroundColor = .systemGreen
             } else {
@@ -84,15 +89,18 @@ class UserHeaderCellView: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
+	
+	var pfpImageView: UIView!
+	
 
-    var pfpImageView: UIImageView = {
+    /*var pfpImageView: UIImageView = {
         let imgView = UIImageView(frame: .zero)
         imgView.contentMode = .scaleAspectFit
         imgView.hero.id = "userPfpImageView"
         imgView.clipsToBounds = true
         imgView.layer.cornerRadius = 50
         return imgView
-    }()
+    }()*/
 
     private var displaynameLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -160,16 +168,21 @@ class UserHeaderCellView: UITableViewCell {
         button.setTitle("Follow", for: .normal)
         return button
     }()
+	
+	var profilePictureController = HeaderProfilePictureController(isOnline: false, profilePicture: UIImage(systemName: "person.circle")!, grow: false)
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+		
+		pfpImageView = UIHostingController(rootView: HeaderProfilePicture(controller: profilePictureController)).view
+		pfpImageView.backgroundColor = .clear
+		
         hero.isEnabled = true
 
         contentView.addSubview(pfpImageView)
         contentView.addSubview(displaynameLabel)
         contentView.addSubview(usernameLabel)
-        contentView.addSubview(onlineIndicatorView)
+        //contentView.addSubview(onlineIndicatorView)
         contentView.addSubview(followsYouLabel)
         contentView.addSubview(followerCountLabel)
         contentView.addSubview(rubiesLabel)
@@ -232,13 +245,13 @@ class UserHeaderCellView: UITableViewCell {
             make.height.equalTo(22)
         }
 
-        onlineIndicatorView.snp.makeConstraints { make in
+        /*onlineIndicatorView.snp.makeConstraints { make in
             make.height.equalTo(16)
             make.width.equalTo(16)
             make.leading.equalTo(usernameLabel.snp.trailing).offset(16)
             // make.top.equalTo(displaynameLabel.snp.bottom)
             make.centerY.equalTo(usernameLabel.snp.centerY)
-        }
+        }*/
 
         displaynameLabel.snp.makeConstraints { make in
             make.centerX.equalTo(contentView.snp.centerX)
