@@ -264,20 +264,20 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 default: break
                 }
             } receiveValue: { [unowned self] in
+				self.imageAnimationAllowed = true
                 self.userPosts = $0
                 if self.refreshControl.isRefreshing {
                     self.refreshControl.endRefreshing()
                 }
                 self.loadingHud.dismiss()
                 verificationString = randomString(length: 20)
-				self.imageAnimationAllowed = true
-				self.tableView.beginUpdates()
+				/*self.tableView.beginUpdates()
 				self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-				self.tableView.endUpdates()
+				self.tableView.endUpdates()*/
 				
-				DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 2.0) {
+				//DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 2.0) {
 					self.loadImages()
-				}
+				//}
             }
             .store(in: &subscriptions)
     }

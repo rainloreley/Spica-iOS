@@ -23,7 +23,7 @@ struct HeaderProfilePicture: View {
 				.overlay(Circle()
 							
 							.trim(from: 0, to: controller.grow ? 1 : 0)
-							.stroke(controller.isOnline ? Color.green : Color.gray, lineWidth: 3)
+							.stroke(controller.isOnline ? Color.green : Color.gray, lineWidth: 4)
 							.rotationEffect(.degrees(90), anchor: .center)
 							.animation(.easeInOut(duration: 1))
 							.shadow(radius: 10)
