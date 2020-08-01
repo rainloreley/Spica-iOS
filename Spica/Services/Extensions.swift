@@ -69,11 +69,22 @@ struct RoundedCorner: Shape {
     }
 }
 
-func countString(number: Int, singleText: String, multiText: String) -> String {
+func countString(number: Int, singleText: String, multiText: String, includeNumber: Bool) -> String {
     if number == 1 {
-        return "\(number) \(singleText)"
+		if includeNumber {
+			return "\(number) \(singleText)"
+		}
+		else {
+			return "\(singleText)"
+		}
+        //return "\(number) \(singleText)"
     } else {
-        return "\(number) \(multiText)"
+		if includeNumber {
+			return "\(number) \(multiText)"
+		}
+		else {
+			return "\(multiText)"
+		}
     }
 }
 

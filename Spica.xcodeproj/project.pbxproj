@@ -68,6 +68,9 @@
 		3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */; };
 		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
 		3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */; };
+		3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */; };
+		3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1DB1524D57E6A006832A7 /* UserHeaderView.swift */; };
+		3AF1DB1824D57E78006832A7 /* UserHeaderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1DB1724D57E78006832A7 /* UserHeaderViewController.swift */; };
 		3AF30CCC24CCABEC005D0CC3 /* ToolbarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF30CCB24CCABEC005D0CC3 /* ToolbarDelegate.swift */; };
 		3AF30CCE24CCAF84005D0CC3 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */; };
 		3AF9231A24CC6CC200DAAE0F /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */; };
@@ -170,6 +173,9 @@
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
 		3AEEE93B24C5C9E4006E4812 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderViewCell.swift; sourceTree = "<group>"; };
+		3AF1DB1524D57E6A006832A7 /* UserHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderView.swift; sourceTree = "<group>"; };
+		3AF1DB1724D57E78006832A7 /* UserHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderViewController.swift; sourceTree = "<group>"; };
 		3AF30CCB24CCABEC005D0CC3 /* ToolbarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarDelegate.swift; sourceTree = "<group>"; };
 		3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
@@ -476,6 +482,16 @@
 			path = ReplyButtonCell;
 			sourceTree = "<group>";
 		};
+		3AF1DB1224D57E27006832A7 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */,
+				3AF1DB1524D57E6A006832A7 /* UserHeaderView.swift */,
+				3AF1DB1724D57E78006832A7 /* UserHeaderViewController.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
 		3AFAF96024BB4D84003771B4 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -487,6 +503,7 @@
 		3AFAF96124BB4DB0003771B4 /* User Header Cell */ = {
 			isa = PBXGroup;
 			children = (
+				3AF1DB1224D57E27006832A7 /* SwiftUI */,
 				3A5C0AFC24D473C800493B69 /* ProfilePicture */,
 				3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */,
 			);
@@ -817,6 +834,7 @@
 				3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */,
 				3A61B27924C8B57600AC1A9C /* FeedObject.swift in Sources */,
 				3A61B27324C8B54800AC1A9C /* Tag.swift in Sources */,
+				3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */,
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
 				3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */,
 				3ADDC58324AD182100B58DA9 /* SentPost.swift in Sources */,
@@ -837,6 +855,7 @@
 				3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */,
 				3A95B3B824C0EC0A0066FE7B /* LocalizableKeys.swift in Sources */,
 				3A61B27B24C8B5E900AC1A9C /* TagDetailViewController.swift in Sources */,
+				3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */,
 				3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */,
 				3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
@@ -847,6 +866,7 @@
 				3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */,
 				3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */,
 				3A5C0B0024D473F100493B69 /* HeaderProfilePictureController.swift in Sources */,
+				3AF1DB1824D57E78006832A7 /* UserHeaderViewController.swift in Sources */,
 				3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */,
 				3A95B3BA24C0EC700066FE7B /* SLocale.swift in Sources */,
 				3A91971824B89E1100B7066B /* MainSettingsViewController.swift in Sources */,

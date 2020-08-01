@@ -12,7 +12,8 @@ import SPAlert
 import SwiftKeychainWrapper
 import UIKit
 
-class UserProfileViewController: UIViewController, UserEditDelegate {
+class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderDelegate {
+	
     var user: User!
 	var imageAnimationAllowed = false
     var tableView: UITableView!
@@ -82,6 +83,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         tableView?.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
+		tableView.register(UserHeaderViewCell.self, forCellReuseIdentifier: "headerCellUI")
 
         view.addSubview(tableView)
 
@@ -113,7 +115,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             if signedInUsername == user.username {
                 if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                     if let sidebar = globalSideBarController {
-                        navigationController?.viewControllers = [self]
+                        //navigationController?.viewControllers = [self]
                         if let collectionView = sidebar.collectionView {
                             collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
                         }
@@ -439,6 +441,10 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 self.tableView.endUpdates()
             }.store(in: &subscriptions)
     }
+	
+	func followUnfollowUser(uid: String) {
+		followUnfollowUser()
+	}
 }
 
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -452,7 +458,13 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCellView
+			let cell = tableView.dequeueReusableCell(withIdentifier: "headerCellUI", for: indexPath) as! UserHeaderViewCell
+			cell.selectionStyle = .none
+			cell.headerController.user = user
+			cell.headerController.delegate = self
+			cell.headerController.grow = self.imageAnimationAllowed
+			return cell
+            /*let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCellView
             cell.selectionStyle = .none
             cell.user = user
 			cell.profilePictureController.grow = self.imageAnimationAllowed
@@ -460,7 +472,7 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             if #available(iOS 13.4, *) {
                 cell.followButton.isPointerInteractionEnabled = true
             }
-            return cell
+            return cell*/
         } else {
             let post = userPosts[indexPath.row]
 

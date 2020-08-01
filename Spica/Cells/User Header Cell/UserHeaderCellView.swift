@@ -50,11 +50,11 @@ class UserHeaderCellView: UITableViewCell {
 
             let boldFont: UIFont = UIFont.boldSystemFont(ofSize: 16)
             let notBoldFont: UIFont = UIFont.systemFont(ofSize: 16)
-            let attrRubies = NSMutableAttributedString(string: countString(number: user.rubies, singleText: SLocale(.RUBY_SINGULAR), multiText: SLocale(.RUBY_PLURAL)), attributes: [.font: notBoldFont])
+			let attrRubies = NSMutableAttributedString(string: countString(number: user.rubies, singleText: SLocale(.RUBY_SINGULAR), multiText: SLocale(.RUBY_PLURAL), includeNumber: true), attributes: [.font: notBoldFont])
             attrRubies.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.rubies).count))
             rubiesLabel.attributedText = attrRubies
 
-            let attrFollowers = NSMutableAttributedString(string: countString(number: user.followers, singleText: SLocale(.FOLLOWER_SINGULAR), multiText: SLocale(.FOLLOWER_PLURAL)), attributes: [.font: notBoldFont])
+			let attrFollowers = NSMutableAttributedString(string: countString(number: user.followers, singleText: SLocale(.FOLLOWER_SINGULAR), multiText: SLocale(.FOLLOWER_PLURAL), includeNumber: true), attributes: [.font: notBoldFont])
             attrFollowers.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.followers).count))
             followerCountLabel.attributedText = attrFollowers
             aboutTextView.text = user.about
