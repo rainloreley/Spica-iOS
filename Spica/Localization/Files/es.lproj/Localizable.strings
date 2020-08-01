@@ -96,9 +96,9 @@
 "BIOMETRIC_DEVICE_NOTAVAILABLE" = "Tu dispositivo no puede usar %@. Comprueba que %@ está activado en la app de ajustes.";
 "BIOMETRICS" = "Biométrico";
 
-"BOOKMARKS" = "Favoritos";
-"BOOKMARKS_EMPTY_TITLE" = "No hay favoritos";
-"BOOKMARKS_EMPTY_SUBTITLE" = "Mantén pulsada una publicación para añadirla a favoritos";
+"BOOKMARKS" = "Marcadores";
+"BOOKMARKS_EMPTY_TITLE" = "No hay marcadores";
+"BOOKMARKS_EMPTY_SUBTITLE" = "Mantenga pulsada una publicación para añadir un marcador";
 
 "ADDED_ACTION" = "Añadido";
 "REMOVED_ACTION" = "Eliminado";
@@ -109,8 +109,11 @@
 "NOTIFICATIONS_EMPTY_TITLE" = "Sin notificaciones";
 "NOTIFICATIONS_EMPTY_SUBTITLE" = "Cuando otras personas respondan o te mencionen, sus publicaciones aparecerán aquí";
 
-"ADD_BOOKMARK" = "Añadir favorito";
-"REMOVE_BOOKMARK" = "Eliminar favorito";
+"ADD_BOOKMARK" = "Añadir marcador";
+"REMOVE_BOOKMARK" = "Eliminar marcador";
+
+"DELETE_ALL_BOOKMARKS" = "Eliminar todos los marcadores";
+"DELETE_ALL_BOOKMARKS_CONFIRMATION" = "¿Estás seguro de que quieres eliminar todos los marcadores?";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx

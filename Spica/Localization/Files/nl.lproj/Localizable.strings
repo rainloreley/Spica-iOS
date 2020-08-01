@@ -112,6 +112,9 @@
 "ADD_BOOKMARK" = "Add bookmark";
 "REMOVE_BOOKMARK" = "Remove bookmark";
 
+"DELETE_ALL_BOOKMARKS" = "Delete all bookmarks";
+"DELETE_ALL_BOOKMARKS_CONFIRMATION" = "Are you sure you want to delete all bookmarks?";
+
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */

@@ -112,6 +112,9 @@
 "ADD_BOOKMARK" = "Lesezeichen hinzufügen";
 "REMOVE_BOOKMARK" = "Lesezeichen entfernen";
 
+"DELETE_ALL_BOOKMARKS" = "Alle Lesezeichen löschen";
+"DELETE_ALL_BOOKMARKS_CONFIRMATION" = "Bist du sicher, dass du alle Lesezeichen löschen möchtest?";
+
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */
