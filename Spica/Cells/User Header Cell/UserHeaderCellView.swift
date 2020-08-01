@@ -5,27 +5,27 @@
 //  Created by Adrian Baumgart on 12.07.20.
 //
 
+import Combine
 import Hero
 import SwiftKeychainWrapper
-import UIKit
 import SwiftUI
-import Combine
+import UIKit
 
 class UserHeaderCellView: UITableViewCell {
     var user: User! {
         didSet {
-            //pfpImageView.image = user.image!
-			profilePictureController.profilePicture = user.image!
+            // pfpImageView.image = user.image!
+            profilePictureController.profilePicture = user.image!
 
-            /*let rectShape = CAShapeLayer()
-            rectShape.bounds = contentView.frame
-            rectShape.position = contentView.center
-            rectShape.path = UIBezierPath(roundedRect: contentView.bounds, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 40, height: 40)).cgPath
+            /* let rectShape = CAShapeLayer()
+             rectShape.bounds = contentView.frame
+             rectShape.position = contentView.center
+             rectShape.path = UIBezierPath(roundedRect: contentView.bounds, byRoundingCorners: [.bottomLeft, .bottomRight], cornerRadii: CGSize(width: 40, height: 40)).cgPath
 
-            contentView.layer.backgroundColor = UIColor(named: "UserBackground")?.cgColor
-            contentView.layer.mask = rectShape*/
-			
-			profilePictureController.isOnline = user.isOnline
+             contentView.layer.backgroundColor = UIColor(named: "UserBackground")?.cgColor
+             contentView.layer.mask = rectShape */
+
+            profilePictureController.isOnline = user.isOnline
             if user.isOnline {
                 onlineIndicatorView.backgroundColor = .systemGreen
             } else {
@@ -50,11 +50,11 @@ class UserHeaderCellView: UITableViewCell {
 
             let boldFont: UIFont = UIFont.boldSystemFont(ofSize: 16)
             let notBoldFont: UIFont = UIFont.systemFont(ofSize: 16)
-			let attrRubies = NSMutableAttributedString(string: countString(number: user.rubies, singleText: SLocale(.RUBY_SINGULAR), multiText: SLocale(.RUBY_PLURAL), includeNumber: true), attributes: [.font: notBoldFont])
+            let attrRubies = NSMutableAttributedString(string: countString(number: user.rubies, singleText: SLocale(.RUBY_SINGULAR), multiText: SLocale(.RUBY_PLURAL), includeNumber: true), attributes: [.font: notBoldFont])
             attrRubies.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.rubies).count))
             rubiesLabel.attributedText = attrRubies
 
-			let attrFollowers = NSMutableAttributedString(string: countString(number: user.followers, singleText: SLocale(.FOLLOWER_SINGULAR), multiText: SLocale(.FOLLOWER_PLURAL), includeNumber: true), attributes: [.font: notBoldFont])
+            let attrFollowers = NSMutableAttributedString(string: countString(number: user.followers, singleText: SLocale(.FOLLOWER_SINGULAR), multiText: SLocale(.FOLLOWER_PLURAL), includeNumber: true), attributes: [.font: notBoldFont])
             attrFollowers.setAttributes([.font: boldFont], range: NSRange(location: 0, length: String(user.followers).count))
             followerCountLabel.attributedText = attrFollowers
             aboutTextView.text = user.about
@@ -89,18 +89,17 @@ class UserHeaderCellView: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-	
-	var pfpImageView: UIView!
-	
 
-    /*var pfpImageView: UIImageView = {
-        let imgView = UIImageView(frame: .zero)
-        imgView.contentMode = .scaleAspectFit
-        imgView.hero.id = "userPfpImageView"
-        imgView.clipsToBounds = true
-        imgView.layer.cornerRadius = 50
-        return imgView
-    }()*/
+    var pfpImageView: UIView!
+
+    /* var pfpImageView: UIImageView = {
+         let imgView = UIImageView(frame: .zero)
+         imgView.contentMode = .scaleAspectFit
+         imgView.hero.id = "userPfpImageView"
+         imgView.clipsToBounds = true
+         imgView.layer.cornerRadius = 50
+         return imgView
+     }() */
 
     private var displaynameLabel: UILabel = {
         let label = UILabel(frame: .zero)
@@ -168,21 +167,21 @@ class UserHeaderCellView: UITableViewCell {
         button.setTitle("Follow", for: .normal)
         return button
     }()
-	
-	var profilePictureController = HeaderProfilePictureController(isOnline: false, profilePicture: UIImage(systemName: "person.circle")!, grow: false)
+
+    var profilePictureController = HeaderProfilePictureController(isOnline: false, profilePicture: UIImage(systemName: "person.circle")!, grow: false)
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-		
-		pfpImageView = UIHostingController(rootView: HeaderProfilePicture(controller: profilePictureController)).view
-		pfpImageView.backgroundColor = .clear
-		
+
+        pfpImageView = UIHostingController(rootView: HeaderProfilePicture(controller: profilePictureController)).view
+        pfpImageView.backgroundColor = .clear
+
         hero.isEnabled = true
 
         contentView.addSubview(pfpImageView)
         contentView.addSubview(displaynameLabel)
         contentView.addSubview(usernameLabel)
-        //contentView.addSubview(onlineIndicatorView)
+        // contentView.addSubview(onlineIndicatorView)
         contentView.addSubview(followsYouLabel)
         contentView.addSubview(followerCountLabel)
         contentView.addSubview(rubiesLabel)
@@ -245,13 +244,13 @@ class UserHeaderCellView: UITableViewCell {
             make.height.equalTo(22)
         }
 
-        /*onlineIndicatorView.snp.makeConstraints { make in
-            make.height.equalTo(16)
-            make.width.equalTo(16)
-            make.leading.equalTo(usernameLabel.snp.trailing).offset(16)
-            // make.top.equalTo(displaynameLabel.snp.bottom)
-            make.centerY.equalTo(usernameLabel.snp.centerY)
-        }*/
+        /* onlineIndicatorView.snp.makeConstraints { make in
+             make.height.equalTo(16)
+             make.width.equalTo(16)
+             make.leading.equalTo(usernameLabel.snp.trailing).offset(16)
+             // make.top.equalTo(displaynameLabel.snp.bottom)
+             make.centerY.equalTo(usernameLabel.snp.centerY)
+         } */
 
         displaynameLabel.snp.makeConstraints { make in
             make.centerX.equalTo(contentView.snp.centerX)

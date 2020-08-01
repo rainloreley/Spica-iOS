@@ -41,7 +41,7 @@ class TagDetailViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
 
-		tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
         tableView.dataSource = dataSource
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")

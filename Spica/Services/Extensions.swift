@@ -71,20 +71,18 @@ struct RoundedCorner: Shape {
 
 func countString(number: Int, singleText: String, multiText: String, includeNumber: Bool) -> String {
     if number == 1 {
-		if includeNumber {
-			return "\(number) \(singleText)"
-		}
-		else {
-			return "\(singleText)"
-		}
-        //return "\(number) \(singleText)"
+        if includeNumber {
+            return "\(number) \(singleText)"
+        } else {
+            return "\(singleText)"
+        }
+        // return "\(number) \(singleText)"
     } else {
-		if includeNumber {
-			return "\(number) \(multiText)"
-		}
-		else {
-			return "\(multiText)"
-		}
+        if includeNumber {
+            return "\(number) \(multiText)"
+        } else {
+            return "\(multiText)"
+        }
     }
 }
 
@@ -202,22 +200,22 @@ extension UITableView {
 
         messageLabel.snp.makeConstraints { make in
             make.centerX.equalTo(backView.snp.centerX)
-			make.centerY.equalTo(backView.snp.centerY)//.offset(-8)
-            //make.height.equalTo(50)
-            //make.width.equalTo(backView.snp.width)
-			make.leading.equalTo(backView.snp.leading)
-			make.trailing.equalTo(backView.snp.trailing)
+            make.centerY.equalTo(backView.snp.centerY) // .offset(-8)
+            // make.height.equalTo(50)
+            // make.width.equalTo(backView.snp.width)
+            make.leading.equalTo(backView.snp.leading)
+            make.trailing.equalTo(backView.snp.trailing)
         }
 
         subtitleLabel.snp.makeConstraints { make in
             make.centerX.equalTo(backView.snp.centerX)
-			//make.top.equalTo(messageLabel.snp.bottom).offset(8)
-			make.top.equalTo(messageLabel.snp.bottom)//.offset(8)
-            //make.centerY.equalTo(backView.snp.centerY).offset(16)
-            //make.height.equalTo(50)
-            //make.width.equalTo(backView.snp.width)
-			make.leading.equalTo(backView.snp.leading)
-			make.trailing.equalTo(backView.snp.trailing)
+            // make.top.equalTo(messageLabel.snp.bottom).offset(8)
+            make.top.equalTo(messageLabel.snp.bottom) // .offset(8)
+            // make.centerY.equalTo(backView.snp.centerY).offset(16)
+            // make.height.equalTo(50)
+            // make.width.equalTo(backView.snp.width)
+            make.leading.equalTo(backView.snp.leading)
+            make.trailing.equalTo(backView.snp.trailing)
         }
 
         separatorStyle = .none

@@ -77,7 +77,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             navigationItem.rightBarButtonItems?.append(accountBarButtonItem)
         }
 
-		tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
         tableView.dataSource = dataSource
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")

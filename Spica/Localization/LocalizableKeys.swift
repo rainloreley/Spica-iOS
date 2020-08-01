@@ -83,8 +83,8 @@ enum LocalizableKeys: String {
     case NOTIFICATIONS_EMPTY_SUBTITLE
     case ADD_BOOKMARK
     case REMOVE_BOOKMARK
-	case DELETE_ALL_BOOKMARKS
-	case DELETE_ALL_BOOKMARKS_CONFIRMATION
+    case DELETE_ALL_BOOKMARKS
+    case DELETE_ALL_BOOKMARKS_CONFIRMATION
     case error_alreadySet = "error.alreadySet"
     case error_applications_badRedirect = "error.applications.badRedirect"
     case error_applications_firstPartyOnly = "error.applications.firstPartyOnly"

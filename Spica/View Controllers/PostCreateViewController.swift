@@ -122,10 +122,9 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             make.height.equalTo(0)
             make.bottom.equalTo(view.snp.bottom).offset(-16)
         }
-		
-		imagePreview.isUserInteractionEnabled = true
-		imagePreview.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(openImagePicker)))
-		
+
+        imagePreview.isUserInteractionEnabled = true
+        imagePreview.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(openImagePicker)))
 
         contentTextView.snp.makeConstraints { make in
             make.top.equalTo(view.snp.top).offset(80)
@@ -204,7 +203,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         return newText.count < 501
     }
 
-    @objc func openImagePicker(sender _: Any?/*UIBarButtonItem*/) {
+    @objc func openImagePicker(sender _: Any? /* UIBarButtonItem */ ) {
         if selectedImage != nil {
             EZAlertController.actionSheet(SLocale(.IMAGE), message: "", sourceView: view, actions: [
                 UIAlertAction(title: SLocale(.SELECT_ANOTHER_IMAGE), style: .default, handler: { _ in

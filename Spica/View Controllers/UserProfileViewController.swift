@@ -13,9 +13,8 @@ import SwiftKeychainWrapper
 import UIKit
 
 class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderDelegate {
-	
     var user: User!
-	var imageAnimationAllowed = false
+    var imageAnimationAllowed = false
     var tableView: UITableView!
     var loadedPreviously = false
     var toolbarDelegate = ToolbarDelegate()
@@ -78,12 +77,12 @@ class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderD
         navigationItem.rightBarButtonItems = rightItems
         // #endif
 
-		tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView?.delegate = self
         tableView?.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
-		tableView.register(UserHeaderViewCell.self, forCellReuseIdentifier: "headerCellUI")
+        tableView.register(UserHeaderViewCell.self, forCellReuseIdentifier: "headerCellUI")
 
         view.addSubview(tableView)
 
@@ -115,7 +114,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderD
             if signedInUsername == user.username {
                 if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                     if let sidebar = globalSideBarController {
-                        //navigationController?.viewControllers = [self]
+                        // navigationController?.viewControllers = [self]
                         if let collectionView = sidebar.collectionView {
                             collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
                         }
@@ -209,12 +208,11 @@ class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderD
     }
 
     @objc func loadUser() {
-		
-		self.imageAnimationAllowed = false
-		tableView.beginUpdates()
-		tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-		tableView.endUpdates()
-		
+        imageAnimationAllowed = false
+        tableView.beginUpdates()
+        tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+        tableView.endUpdates()
+
         if user == nil || userPosts.isEmpty {
             loadingHud.show(in: view)
         }
@@ -266,20 +264,20 @@ class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderD
                 default: break
                 }
             } receiveValue: { [unowned self] in
-				self.imageAnimationAllowed = true
+                self.imageAnimationAllowed = true
                 self.userPosts = $0
                 if self.refreshControl.isRefreshing {
                     self.refreshControl.endRefreshing()
                 }
                 self.loadingHud.dismiss()
                 verificationString = randomString(length: 20)
-				/*self.tableView.beginUpdates()
-				self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-				self.tableView.endUpdates()*/
-				
-				//DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 2.0) {
-					self.loadImages()
-				//}
+                /* self.tableView.beginUpdates()
+                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                 self.tableView.endUpdates() */
+
+                // DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 2.0) {
+                self.loadImages()
+                // }
             }
             .store(in: &subscriptions)
     }
@@ -441,10 +439,10 @@ class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderD
                 self.tableView.endUpdates()
             }.store(in: &subscriptions)
     }
-	
-	func followUnfollowUser(uid: String) {
-		followUnfollowUser()
-	}
+
+    func followUnfollowUser(uid _: String) {
+        followUnfollowUser()
+    }
 }
 
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -458,21 +456,21 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-			let cell = tableView.dequeueReusableCell(withIdentifier: "headerCellUI", for: indexPath) as! UserHeaderViewCell
-			cell.selectionStyle = .none
-			cell.headerController.user = user
-			cell.headerController.delegate = self
-			cell.headerController.grow = self.imageAnimationAllowed
-			return cell
-            /*let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCellView
+            let cell = tableView.dequeueReusableCell(withIdentifier: "headerCellUI", for: indexPath) as! UserHeaderViewCell
             cell.selectionStyle = .none
-            cell.user = user
-			cell.profilePictureController.grow = self.imageAnimationAllowed
-            cell.followButton.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
-            if #available(iOS 13.4, *) {
-                cell.followButton.isPointerInteractionEnabled = true
-            }
-            return cell*/
+            cell.headerController.user = user
+            cell.headerController.delegate = self
+            cell.headerController.grow = imageAnimationAllowed
+            return cell
+            /* let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCellView
+             cell.selectionStyle = .none
+             cell.user = user
+             cell.profilePictureController.grow = self.imageAnimationAllowed
+             cell.followButton.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
+             if #available(iOS 13.4, *) {
+             cell.followButton.isPointerInteractionEnabled = true
+             }
+             return cell */
         } else {
             let post = userPosts[indexPath.row]
 
