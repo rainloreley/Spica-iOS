@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 12.07.20.
 //
 
+/*
 import Combine
 import Hero
 import SwiftKeychainWrapper
@@ -279,3 +280,4 @@ class UserHeaderCellView: UITableViewCell {
         // Configure the view for the selected state
     }
 }
+*/

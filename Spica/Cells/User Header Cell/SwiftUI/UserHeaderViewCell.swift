@@ -16,7 +16,11 @@ class UserHeaderViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+		self.backgroundView = nil
+		self.backgroundColor = .clear
+		contentView.backgroundColor = .clear
         headerView = UIHostingController(rootView: UserHeaderView(controller: headerController)).view
+		headerView.backgroundColor = .clear
         contentView.addSubview(headerView)
         headerView.snp.makeConstraints { make in
             make.top.equalTo(contentView.snp.top)

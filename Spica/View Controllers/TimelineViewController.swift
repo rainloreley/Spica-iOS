@@ -72,9 +72,9 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         } else {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
 
-            let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
+            /*let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
 
-            navigationItem.rightBarButtonItems?.append(accountBarButtonItem)
+            navigationItem.rightBarButtonItems?.append(accountBarButtonItem)*/
         }
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
@@ -260,9 +260,38 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                  titleBar.toolbar = toolBar
              }
          #endif */
+		
+		loadVersion()
 
         loadFeed()
     }
+	
+	func loadVersion() {
+		DispatchQueue.global(qos: .utility).async { [self] in
+			SpicAPI.getVersion()
+				.receive(on: RunLoop.main)
+				.sink {
+					switch $0 {
+						case .failure:
+							return
+						default: break
+					}
+				} receiveValue: { (version) in
+					if let currentBuildString = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+						let currentBuild = Int(currentBuildString)!
+						if currentBuild < version.reqBuild {
+							DispatchQueue.main.async {
+								EZAlertController.alert("Outdated app", message: "We detected that you're using an old version of the app. This is usually not a problem but we made some important changes. Please update the app. It will now exit", actions: [UIAlertAction(title: "Ok", style: .default, handler: { (_) in
+									exit(0)
+								})])
+							}
+						}
+					}
+				}
+				.store(in: &subscriptions)
+
+		}
+	}
 
     @objc func loadFeed() {
         verificationString = ""
@@ -310,7 +339,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             blurEffectView.alpha = 1.0
             blurEffectView.tag = 395
-            if let blurTag = sceneRootView!.viewWithTag(395) {
+			if sceneRootView!.viewWithTag(395) != nil {
             } else {
                 sceneRootView!.addSubview(blurEffectView)
                 blurEffectView.snp.makeConstraints { make in

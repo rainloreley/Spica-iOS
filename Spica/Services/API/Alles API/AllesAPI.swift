@@ -1,5 +1,5 @@
 //
-//  Feed.swift
+//  AllesAPI.swift
 //  Spica
 //
 //  Created by Adrian Baumgart on 30.06.20.

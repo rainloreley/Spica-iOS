@@ -14,7 +14,7 @@ protocol UserHeaderDelegate {
 }
 
 class UserHeaderViewController: ObservableObject {
-    @Published var user: User = User(id: "0000", username: "adriann", displayName: "Adrian", nickname: "Adrian", imageURL: URL(string: "https://avatar.alles.cx/u/adrian")!, isPlus: true, rubies: 100, followers: 293, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: true, about: "Hello!", isOnline: true)
+    @Published var user: User = User(id: "0000", username: "user", displayName: "user", nickname: "user", imageURL: URL(string: "https://avatar.alles.cx/u/000000000000000000000000")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
 
     @Published var grow: Bool = false
 

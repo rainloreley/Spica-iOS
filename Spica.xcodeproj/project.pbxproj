@@ -65,6 +65,7 @@
 		3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */; };
 		3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */; };
 		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
+		3AE9C33524D59A500097CFD5 /* SpicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE9C33424D59A500097CFD5 /* SpicAPI.swift */; };
 		3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */; };
 		3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */; };
 		3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1DB1524D57E6A006832A7 /* UserHeaderView.swift */; };
@@ -167,6 +168,7 @@
 		3AE55BE124C44ED1002D539E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
+		3AE9C33424D59A500097CFD5 /* SpicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpicAPI.swift; sourceTree = "<group>"; };
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
 		3AEEE93B24C5C9E4006E4812 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderViewCell.swift; sourceTree = "<group>"; };
@@ -455,8 +457,8 @@
 		3AD689B624ADDAD2001F485E /* API */ = {
 			isa = PBXGroup;
 			children = (
-				3A96F69E24AB3FD100482C5A /* AllesAPI.swift */,
-				3AD689B524ADDACC001F485E /* Error Handling */,
+				3AE9C33324D59A420097CFD5 /* SpicAPI */,
+				3AE9C33224D59A320097CFD5 /* Alles API */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -467,6 +469,23 @@
 				3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */,
 			);
 			path = ReplyButtonCell;
+			sourceTree = "<group>";
+		};
+		3AE9C33224D59A320097CFD5 /* Alles API */ = {
+			isa = PBXGroup;
+			children = (
+				3A96F69E24AB3FD100482C5A /* AllesAPI.swift */,
+				3AD689B524ADDACC001F485E /* Error Handling */,
+			);
+			path = "Alles API";
+			sourceTree = "<group>";
+		};
+		3AE9C33324D59A420097CFD5 /* SpicAPI */ = {
+			isa = PBXGroup;
+			children = (
+				3AE9C33424D59A500097CFD5 /* SpicAPI.swift */,
+			);
+			path = SpicAPI;
 			sourceTree = "<group>";
 		};
 		3AF1DB1224D57E27006832A7 /* SwiftUI */ = {
@@ -864,6 +883,7 @@
 				3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */,
 				3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */,
 				3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */,
+				3AE9C33524D59A500097CFD5 /* SpicAPI.swift in Sources */,
 				3ADDC58124AD162500B58DA9 /* NewPost.swift in Sources */,
 				3AD689BA24ADDB5E001F485E /* AllesAPIErrorAction.swift in Sources */,
 			);

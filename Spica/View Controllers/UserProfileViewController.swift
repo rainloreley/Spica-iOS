@@ -81,7 +81,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderD
         tableView?.delegate = self
         tableView?.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-        tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
+        //tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
         tableView.register(UserHeaderViewCell.self, forCellReuseIdentifier: "headerCellUI")
 
         view.addSubview(tableView)
@@ -156,6 +156,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate, UserHeaderD
         let vc = UserEditViewController()
         vc.user = user
         vc.delegate = self
+		vc.hidesBottomBarWhenPushed = true
         // vc.heroModalAnimationType = .push(direction: .left)
         navigationController?.pushViewController(vc, animated: true)
         // present(vc, animated: true, completion: nil)

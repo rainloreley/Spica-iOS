@@ -19,7 +19,8 @@ struct UserHeaderView: View {
                         .clipped()
                         .frame(width: 120, height: 120, alignment: .center)
                         .clipShape(Circle())
-                        .shadow(radius: 10)
+						.shadow(radius: 10)
+                        
                         .overlay(Circle()
 
                             .trim(from: 0, to: controller.grow ? 1 : 0)
@@ -75,6 +76,7 @@ struct UserHeaderView: View {
             .onAppear {
                 controller.getLoggedInUser()
             }
+		.background(Color.clear)
     }
 }
 
