@@ -7,7 +7,7 @@
 */
 
 "HOME" = "Startseite";
-"NOTIFICATIONS" = "Benachrichtigungen";
+"NOTIFICATIONS" = "Mitteilungen";
 "ACCOUNT" = "Konto";
 "SETTINGS" = "Einstellungen";
 
@@ -106,7 +106,7 @@
 "TIMELINE_EMPTY_TITLE" = "Keine Beiträge";
 "TIMELINE_EMPTY_SUBTITLE" = "Versuche etwas zu posten";
 
-"NOTIFICATIONS_EMPTY_TITLE" = "Keine Benachrichtigungen";
+"NOTIFICATIONS_EMPTY_TITLE" = "Keine Mitteilungen";
 "NOTIFICATIONS_EMPTY_SUBTITLE" = "Wenn Personen dir antworten oder dich erwähnen erscheinen diese Beiträge hier";
 
 "ADD_BOOKMARK" = "Lesezeichen hinzufügen";
