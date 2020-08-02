@@ -262,9 +262,33 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
          #endif */
 		
 		loadVersion()
-
+		loadPrivacyPolicy()
         loadFeed()
     }
+	
+	func loadPrivacyPolicy() {
+		DispatchQueue.global(qos: .utility).async { [self] in
+			SpicAPI.getPrivacyPolicy()
+				.receive(on: RunLoop.main)
+				.sink {
+					switch $0 {
+						case let .failure(err):
+							print("ERRORORORORO: \(err.localizedDescription)")
+							return
+						default: break
+					}
+				} receiveValue: { (privacyPolicy) in
+					if privacyPolicy.markdown != "" {
+						let vc = NewPrivacyPolicyViewController()
+						vc.privacyPolicy = privacyPolicy
+						vc.isModalInPresentation = true
+						present(UINavigationController(rootViewController: vc), animated: true)
+					}
+				}
+				.store(in: &subscriptions)
+
+		}
+	}
 	
 	func loadVersion() {
 		DispatchQueue.global(qos: .utility).async { [self] in

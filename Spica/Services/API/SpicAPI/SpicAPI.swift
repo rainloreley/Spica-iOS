@@ -27,6 +27,32 @@ public class SpicAPI {
 		}
 	}
 	
+	public static func getPrivacyPolicy() -> Future<PrivacyPolicy, Error> {
+		Future<PrivacyPolicy, Error> { promise in
+			AF.request("https://api.spica.fliney.eu/privacy", method: .get).responseJSON { (response) in
+				switch response.result {
+					case .success:
+						let responseJSON = JSON(response.data!)
+						if UserDefaults.standard.bool(forKey: "spica_privacy_\(responseJSON["updated"].int!)") == false {
+							AF.request(responseJSON["url"].string! as URLConvertible, method: .get).responseString { (response2) in
+								switch response2.result {
+									case .success:
+										return promise(.success(PrivacyPolicy(updated: responseJSON["updated"].int!, markdown: String(data: response2.data!, encoding: .utf8)!)))
+									case let .failure(error):
+										return promise(.failure(error.underlyingError!))
+								}
+							}
+						}
+						else {
+							return promise(.success(PrivacyPolicy(updated: responseJSON["updated"].int!, markdown: "")))
+						}
+					case let .failure(error):
+						return promise(.failure(error.underlyingError!))
+				}
+			}
+		}
+	}
+	
 	public struct Version {
 		var reqVersion: String
 		var reqBuild: Int
@@ -36,4 +62,7 @@ public class SpicAPI {
 	}
 }
 
-
+public struct PrivacyPolicy {
+	var updated: Int
+	var markdown: String
+}

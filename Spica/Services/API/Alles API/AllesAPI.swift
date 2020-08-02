@@ -42,7 +42,23 @@ public class AllesAPI {
                                     } receiveValue: { user in
                                         KeychainWrapper.standard.set(user.username, forKey: "dev.abmgrt.spica.user.username")
                                         KeychainWrapper.standard.set(user.id, forKey: "dev.abmgrt.spica.user.id")
-                                        promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
+										
+										SpicAPI.getPrivacyPolicy()
+											.receive(on: RunLoop.main)
+											.sink {
+												switch $0 {
+													case .failure:
+														promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
+														break
+													default: break
+												}
+											} receiveValue: { (privacy) in
+												UserDefaults.standard.set(true, forKey: "spica_privacy_\(privacy.updated)")
+												promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
+											}.store(in: &subscriptions)
+
+										
+                                        
                                     }.store(in: &subscriptions)
 
                             } else {

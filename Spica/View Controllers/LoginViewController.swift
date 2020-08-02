@@ -20,6 +20,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var createAccountButton: UIButton!
 
     var loadingHud: JGProgressHUD!
+	
+	var legalDisclaimer: UILabel!
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -120,6 +122,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             make.height.equalTo(40)
             make.top.equalTo(signInButton.snp.bottom).offset(32)
         }
+		
+		legalDisclaimer = UILabel(frame: .zero)
+		legalDisclaimer.text = "By signing in, you agree that you've read the Spica privacy policy, Alles terms of service and Alles privacy policy. If you don't agree with these, please do not use the app."
+		legalDisclaimer.numberOfLines = 0
+		legalDisclaimer.textColor = .secondaryLabel
+		view.addSubview(legalDisclaimer)
+		
+		legalDisclaimer.snp.makeConstraints { (make) in
+			make.top.equalTo(createAccountButton.snp.bottom).offset(8)
+			make.leading.equalTo(view.snp.leading).offset(8)
+			make.trailing.equalTo(view.snp.trailing).offset(8)
+		}
 
         // Do any additional setup after loading the view.
     }

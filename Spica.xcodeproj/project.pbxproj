@@ -43,6 +43,8 @@
 		3A71461424AA8907000FA3C3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461324AA8907000FA3C3 /* User.swift */; };
 		3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A741A4F24B8BBC70083925A /* CreditsCell.swift */; };
 		3A746A9424BDD975008C9309 /* VotePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A746A9324BDD975008C9309 /* VotePost.swift */; };
+		3A83E9EE24D710E80099F096 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 3A83E9ED24D710E80099F096 /* Down */; };
+		3A83E9F024D710F90099F096 /* NewPrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A83E9EF24D710F90099F096 /* NewPrivacyPolicyViewController.swift */; };
 		3A91971624B89DDB00B7066B /* MainSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A91971524B89DDB00B7066B /* MainSettings.storyboard */; };
 		3A91971824B89E1100B7066B /* MainSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A91971724B89E1100B7066B /* MainSettingsViewController.swift */; };
 		3A95B3B824C0EC0A0066FE7B /* LocalizableKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A95B3B724C0EC0A0066FE7B /* LocalizableKeys.swift */; };
@@ -144,6 +146,7 @@
 		3A71461324AA8907000FA3C3 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		3A741A4F24B8BBC70083925A /* CreditsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsCell.swift; sourceTree = "<group>"; };
 		3A746A9324BDD975008C9309 /* VotePost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotePost.swift; sourceTree = "<group>"; };
+		3A83E9EF24D710F90099F096 /* NewPrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPrivacyPolicyViewController.swift; sourceTree = "<group>"; };
 		3A8FD74C24CDA9B0004B247C /* SpicaRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpicaRelease.entitlements; sourceTree = "<group>"; };
 		3A91971524B89DDB00B7066B /* MainSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainSettings.storyboard; sourceTree = "<group>"; };
 		3A91971724B89E1100B7066B /* MainSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainSettingsViewController.swift; sourceTree = "<group>"; };
@@ -214,6 +217,7 @@
 				3A27608524D5D37D00DEE34A /* SkeletonUI in Frameworks */,
 				3AA108AA24C0CBDF006FCA1A /* Hero in Frameworks */,
 				A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */,
+				3A83E9EE24D710E80099F096 /* Down in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,6 +445,7 @@
 				3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */,
 				3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */,
 				3A27608124D5AE8300DEE34A /* FollowersFollowingViewController.swift */,
+				3A83E9EF24D710F90099F096 /* NewPrivacyPolicyViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -590,6 +595,7 @@
 				3A25FBA824B753D400324136 /* SPAlert */,
 				3AA108A924C0CBDF006FCA1A /* Hero */,
 				3A27608424D5D37D00DEE34A /* SkeletonUI */,
+				3A83E9ED24D710E80099F096 /* Down */,
 			);
 			productName = "Alles App";
 			productReference = 3A7145DB24AA8753000FA3C3 /* Spica.app */;
@@ -677,6 +683,7 @@
 				3A25FBA724B753D400324136 /* XCRemoteSwiftPackageReference "SPAlert" */,
 				3AA108A824C0CBDF006FCA1A /* XCRemoteSwiftPackageReference "Hero" */,
 				3A27608324D5D37D00DEE34A /* XCRemoteSwiftPackageReference "SkeletonUI" */,
+				3A83E9EC24D710E80099F096 /* XCRemoteSwiftPackageReference "Down" */,
 			);
 			productRefGroup = 3A7145DC24AA8753000FA3C3 /* Products */;
 			projectDirPath = "";
@@ -872,6 +879,7 @@
 				3A71461424AA8907000FA3C3 /* User.swift in Sources */,
 				3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */,
 				3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */,
+				3A83E9F024D710F90099F096 /* NewPrivacyPolicyViewController.swift in Sources */,
 				3A746A9424BDD975008C9309 /* VotePost.swift in Sources */,
 				3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */,
 				3A95B3B824C0EC0A0066FE7B /* LocalizableKeys.swift in Sources */,
@@ -1310,6 +1318,14 @@
 				minimumVersion = 5.0.1;
 			};
 		};
+		3A83E9EC24D710E80099F096 /* XCRemoteSwiftPackageReference "Down" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/iwasrobbed/Down";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.3;
+			};
+		};
 		3A96F6A024AB403100482C5A /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -1356,6 +1372,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3A4B92F824AA9176000534FD /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		3A83E9ED24D710E80099F096 /* Down */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A83E9EC24D710E80099F096 /* XCRemoteSwiftPackageReference "Down" */;
+			productName = Down;
 		};
 		3A96F6A124AB403100482C5A /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
