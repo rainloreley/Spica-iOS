@@ -53,7 +53,7 @@ public class AllesAPI {
 													default: break
 												}
 											} receiveValue: { (privacy) in
-												UserDefaults.standard.set(true, forKey: "spica_privacy_\(privacy.updated)")
+												UserDefaults.standard.set(privacy.updated, forKey: "spica_privacy_accepted_version")
 												promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
 											}.store(in: &subscriptions)
 

@@ -33,7 +33,7 @@ public class SpicAPI {
 				switch response.result {
 					case .success:
 						let responseJSON = JSON(response.data!)
-						if UserDefaults.standard.bool(forKey: "spica_privacy_\(responseJSON["updated"].int!)") == false {
+						if UserDefaults.standard.integer(forKey: "spica_privacy_accepted_version") < responseJSON["updated"].int! {
 							AF.request(responseJSON["url"].string! as URLConvertible, method: .get).responseString { (response2) in
 								switch response2.result {
 									case .success:

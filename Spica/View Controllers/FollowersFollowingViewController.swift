@@ -29,7 +29,7 @@ class FollowersFollowingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 		
-		navigationItem.title = "Followers"
+		navigationItem.title = SLocale(.FOLLOWER_PLURAL)
 
 		navigationController?.navigationBar.prefersLargeTitles = true
 		view.backgroundColor = .systemBackground
@@ -40,7 +40,7 @@ class FollowersFollowingViewController: UIViewController {
 		tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 		view.addSubview(tableView)
 		
-		segmentedControl = UISegmentedControl(items: ["Followers", "Following"])
+		segmentedControl = UISegmentedControl(items: [SLocale(.FOLLOWER_PLURAL), SLocale(.FOLLOWING_ACTION)])
 		segmentedControl.selectedSegmentIndex = 0
 		segmentedControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
 		
@@ -80,7 +80,7 @@ class FollowersFollowingViewController: UIViewController {
 	
 	@objc func loadData() {
 		
-		navigationItem.title = segmentedControl.selectedSegmentIndex == 0 ? "Followers" : "Following"
+		navigationItem.title = segmentedControl.selectedSegmentIndex == 0 ? SLocale(.FOLLOWER_PLURAL) : SLocale(.FOLLOWING_ACTION)
 		
 		AllesAPI.loadFollowers()
 			.receive(on: RunLoop.main)

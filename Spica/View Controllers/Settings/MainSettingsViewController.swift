@@ -175,6 +175,7 @@ class MainSettingsViewController: UITableViewController {
         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")
         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+		UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
         let mySceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
         mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
         mySceneDelegate.window?.makeKeyAndVisible()

@@ -22,6 +22,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var loadingHud: JGProgressHUD!
 	
 	var legalDisclaimer: UILabel!
+	var spicaPrivacy: UIButton!
+	var allesPrivacy: UIButton!
+	var allesTerms: UIButton!
 
     private var subscriptions = Set<AnyCancellable>()
 
@@ -124,19 +127,77 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
 		
 		legalDisclaimer = UILabel(frame: .zero)
-		legalDisclaimer.text = "By signing in, you agree that you've read the Spica privacy policy, Alles terms of service and Alles privacy policy. If you don't agree with these, please do not use the app."
+		legalDisclaimer.text = SLocale(.LOGIN_SCREEN_AGREEMENT)
 		legalDisclaimer.numberOfLines = 0
 		legalDisclaimer.textColor = .secondaryLabel
+		legalDisclaimer.font = .systemFont(ofSize: 11)
 		view.addSubview(legalDisclaimer)
 		
 		legalDisclaimer.snp.makeConstraints { (make) in
 			make.top.equalTo(createAccountButton.snp.bottom).offset(8)
-			make.leading.equalTo(view.snp.leading).offset(8)
-			make.trailing.equalTo(view.snp.trailing).offset(8)
+			make.leading.equalTo(view.snp.leading).offset(16)
+			make.centerX.equalTo(view.snp.centerX)
+			make.trailing.equalTo(view.snp.trailing).offset(-16)
+		}
+		
+		/*
+		var spicaPrivacy: UIButton!
+		var allesPrivacy: UIButton!
+		var allesTerms: UIButton!*/
+		
+		spicaPrivacy = UIButton(type: .system)
+		spicaPrivacy.setTitle("Spica: \(SLocale(.PRIVACY_POLICY))", for: .normal)
+		spicaPrivacy.addTarget(self, action: #selector(openLink(_:)), for: .touchUpInside)
+		spicaPrivacy.tag = 0
+		view.addSubview(spicaPrivacy)
+		
+		allesPrivacy = UIButton(type: .system)
+		allesPrivacy.setTitle("Alles: \(SLocale(.PRIVACY_POLICY))", for: .normal)
+		allesPrivacy.addTarget(self, action: #selector(openLink(_:)), for: .touchUpInside)
+		allesPrivacy.tag = 1
+		view.addSubview(allesPrivacy)
+		
+		allesTerms = UIButton(type: .system)
+		allesTerms.setTitle("Alles: \(SLocale(.TERMS_OF_SERVICE))", for: .normal)
+		allesTerms.addTarget(self, action: #selector(openLink(_:)), for: .touchUpInside)
+		allesTerms.tag = 2
+		view.addSubview(allesTerms)
+		
+		spicaPrivacy.snp.makeConstraints { (make) in
+			make.top.equalTo(legalDisclaimer.snp.bottom).offset(8)
+			make.leading.equalTo(view.snp.leading).offset(16)
+		}
+		
+		allesPrivacy.snp.makeConstraints { (make) in
+			make.top.equalTo(spicaPrivacy.snp.bottom).offset(8)
+			make.leading.equalTo(view.snp.leading).offset(16)
+		}
+		
+		allesTerms.snp.makeConstraints { (make) in
+			make.top.equalTo(allesPrivacy.snp.bottom).offset(8)
+			make.leading.equalTo(view.snp.leading).offset(16)
 		}
 
         // Do any additional setup after loading the view.
     }
+	
+	@objc func openLink(_ sender: UIButton) {
+		var url = ""
+		switch sender.tag {
+			case 0:
+				url = "https://spica.fliney.eu/privacy"
+			case 1:
+				url = "https://alles.cx/docs/privacy"
+			case 2:
+				url = "https://alles.cx/docs/terms"
+			default: break
+		}
+		
+		if UIApplication.shared.canOpenURL(URL(string: url)!) {
+			UIApplication.shared.open(URL(string: url)!)
+		}
+		
+	}
 
     override func viewDidAppear(_: Bool) {
         #if targetEnvironment(macCatalyst)

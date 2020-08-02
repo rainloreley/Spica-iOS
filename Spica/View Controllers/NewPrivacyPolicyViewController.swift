@@ -24,7 +24,7 @@ class NewPrivacyPolicyViewController: UIViewController {
 		navigationItem.title = SLocale(.PRIVACY_POLICY)
 		
 		introductionLabel = UILabel(frame: .zero)
-		introductionLabel.text = "We updated our Privacy Policy. Please read it carefully. If you don't agree, please stop using the app."
+		introductionLabel.text = SLocale(.PRIVACY_POLICY_UPDATED)
 		introductionLabel.numberOfLines = 0
 		view.addSubview(introductionLabel)
 		
@@ -36,7 +36,7 @@ class NewPrivacyPolicyViewController: UIViewController {
 		}
 		
 		acceptButton = UIButton(type: .system)
-		acceptButton.setTitle("Agree and continue", for: .normal)
+		acceptButton.setTitle(SLocale(.PRIVACY_POLICY_AGREE_CONTINUE), for: .normal)
 		acceptButton.setTitleColor(.white, for: .normal)
 		acceptButton.titleLabel?.font = .boldSystemFont(ofSize: 18)
 		acceptButton.backgroundColor = .systemBlue
@@ -45,10 +45,10 @@ class NewPrivacyPolicyViewController: UIViewController {
 		view.addSubview(acceptButton)
 		
 		acceptButton.snp.makeConstraints { (make) in
-			make.bottom.equalTo(view.snp.bottom).offset(-8)
-			make.leading.equalTo(view.snp.leading).offset(8)
-			make.trailing.equalTo(view.snp.trailing).offset(-8)
-			make.height.equalTo(40)
+			make.bottom.equalTo(view.snp.bottom).offset(-16)
+			make.leading.equalTo(view.snp.leading).offset(16)
+			make.trailing.equalTo(view.snp.trailing).offset(-16)
+			make.height.equalTo(50)
 		}
 		
 		markdownView = UITextView(frame: .zero)
@@ -56,8 +56,8 @@ class NewPrivacyPolicyViewController: UIViewController {
 		
 		markdownView?.snp.makeConstraints({ (make) in
 			make.top.equalTo(introductionLabel.snp.bottom).offset(16)
-			make.leading.equalTo(view.snp.leading)
-			make.trailing.equalTo(view.snp.trailing)
+			make.leading.equalTo(view.snp.leading).offset(16)
+			make.trailing.equalTo(view.snp.trailing).offset(-16)
 			make.bottom.equalTo(acceptButton.snp.top).offset(-8)
 		})
 		
@@ -66,7 +66,7 @@ class NewPrivacyPolicyViewController: UIViewController {
     }
 	
 	@objc func acceptAndContinue() {
-		UserDefaults.standard.set(true, forKey: "spica_privacy_\(privacyPolicy!.updated)")
+		UserDefaults.standard.set(privacyPolicy!.updated, forKey: "spica_privacy_accepted_version")
 		dismiss(animated: true, completion: nil)
 	}
 	
