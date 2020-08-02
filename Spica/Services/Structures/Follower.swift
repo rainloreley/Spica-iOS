@@ -8,6 +8,6 @@
 import Foundation
 
 public struct Followers {
-	var followers: [FollowUser]
-	var following: [FollowUser]
+    var followers: [FollowUser]
+    var following: [FollowUser]
 }

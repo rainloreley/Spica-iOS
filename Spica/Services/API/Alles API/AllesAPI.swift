@@ -42,23 +42,20 @@ public class AllesAPI {
                                     } receiveValue: { user in
                                         KeychainWrapper.standard.set(user.username, forKey: "dev.abmgrt.spica.user.username")
                                         KeychainWrapper.standard.set(user.id, forKey: "dev.abmgrt.spica.user.id")
-										
-										SpicAPI.getPrivacyPolicy()
-											.receive(on: RunLoop.main)
-											.sink {
-												switch $0 {
-													case .failure:
-														promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
-														break
-													default: break
-												}
-											} receiveValue: { (privacy) in
-												UserDefaults.standard.set(privacy.updated, forKey: "spica_privacy_accepted_version")
-												promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
-											}.store(in: &subscriptions)
 
-										
-                                        
+                                        SpicAPI.getPrivacyPolicy()
+                                            .receive(on: RunLoop.main)
+                                            .sink {
+                                                switch $0 {
+                                                case .failure:
+                                                    promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
+                                                default: break
+                                                }
+                                            } receiveValue: { privacy in
+                                                UserDefaults.standard.set(privacy.updated, forKey: "spica_privacy_accepted_version")
+                                                promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
+                                            }.store(in: &subscriptions)
+
                                     }.store(in: &subscriptions)
 
                             } else {
@@ -224,55 +221,53 @@ public class AllesAPI {
             }
         }
     }
-	
-	public static func loadFollowers() -> Future<Followers, AllesAPIErrorMessage> {
-		Future<Followers, AllesAPIErrorMessage> { promise in
-			guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
-				return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
-			}
-			
-			AF.request("https://alles.cx/api/followers", method: .get, parameters: nil, headers: [
-				"Authorization": authKey,
-			]).responseJSON(queue: .global(qos: .utility)) { response in
-				switch response.result {
-					case .success:
-						let responseJSON = JSON(response.data!)
-						if !responseJSON["err"].exists() {
-							if response.response?.statusCode == 200 {
-								
-								let followers = responseJSON["followers"].map { _, json in
-									FollowUser(json)
-								}
-								
-								let following = responseJSON["following"].map { _, json in
-									FollowUser(json)
-								}
-								
-								promise(.success(Followers(followers: followers, following: following)))
-								
-								
-							} else {
-								if response.response!.statusCode == 401 {
-									promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
-								} else {
-									var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
-									apiError.message.append("\n(Code: \(response.response!.statusCode))")
-									promise(.failure(apiError))
-								}
-							}
 
-						} else {
-							let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
-							promise(.failure(apiError))
-						}
-					case let .failure(err):
-						var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
-						apiError.message.append("\nError: \(err.errorDescription!)")
-						promise(.failure(apiError))
-				}
-			}
-		}
-	}
+    public static func loadFollowers() -> Future<Followers, AllesAPIErrorMessage> {
+        Future<Followers, AllesAPIErrorMessage> { promise in
+            guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
+                return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
+            }
+
+            AF.request("https://alles.cx/api/followers", method: .get, parameters: nil, headers: [
+                "Authorization": authKey,
+            ]).responseJSON(queue: .global(qos: .utility)) { response in
+                switch response.result {
+                case .success:
+                    let responseJSON = JSON(response.data!)
+                    if !responseJSON["err"].exists() {
+                        if response.response?.statusCode == 200 {
+                            let followers = responseJSON["followers"].map { _, json in
+                                FollowUser(json)
+                            }
+
+                            let following = responseJSON["following"].map { _, json in
+                                FollowUser(json)
+                            }
+
+                            promise(.success(Followers(followers: followers, following: following)))
+
+                        } else {
+                            if response.response!.statusCode == 401 {
+                                promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                            } else {
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
+                            }
+                        }
+
+                    } else {
+                        let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                        promise(.failure(apiError))
+                    }
+                case let .failure(err):
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
+                }
+            }
+        }
+    }
 
     public func loadUserPosts(user: User) -> Future<[Post], AllesAPIErrorMessage> {
         Future<[Post], AllesAPIErrorMessage> { promise in

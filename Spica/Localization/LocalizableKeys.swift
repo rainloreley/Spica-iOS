@@ -85,9 +85,9 @@ enum LocalizableKeys: String {
     case REMOVE_BOOKMARK
     case DELETE_ALL_BOOKMARKS
     case DELETE_ALL_BOOKMARKS_CONFIRMATION
-	case LOGIN_SCREEN_AGREEMENT
-	case PRIVACY_POLICY_UPDATED
-	case PRIVACY_POLICY_AGREE_CONTINUE
+    case LOGIN_SCREEN_AGREEMENT
+    case PRIVACY_POLICY_UPDATED
+    case PRIVACY_POLICY_AGREE_CONTINUE
     case error_alreadySet = "error.alreadySet"
     case error_applications_badRedirect = "error.applications.badRedirect"
     case error_applications_firstPartyOnly = "error.applications.firstPartyOnly"

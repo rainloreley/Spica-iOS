@@ -7,10 +7,10 @@
 
 import Cache
 import Combine
+import Hero
 import JGProgressHUD
 import SPAlert
 import UIKit
-import Hero
 
 protocol UserEditDelegate {
     func didSaveUser(user: UpdateUser)

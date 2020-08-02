@@ -13,12 +13,11 @@ import SwiftKeychainWrapper
 import UIKit
 
 class UserProfileViewController: UIViewController, UserEditDelegate {
-	
     var user: User!
     var imageAnimationAllowed = false
     var tableView: UITableView!
     var loadedPreviously = false
-	var userDataLoaded = false
+    var userDataLoaded = false
     var toolbarDelegate = ToolbarDelegate()
     private var createPostSubscriber: AnyCancellable?
     private var editProfileSubscriber: AnyCancellable?
@@ -83,7 +82,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         tableView?.delegate = self
         tableView?.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-        //tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
+        // tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
         tableView.register(UserHeaderViewCell.self, forCellReuseIdentifier: "headerCellUI")
 
         view.addSubview(tableView)
@@ -158,7 +157,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         let vc = UserEditViewController()
         vc.user = user
         vc.delegate = self
-		vc.hidesBottomBarWhenPushed = true
+        vc.hidesBottomBarWhenPushed = true
         // vc.heroModalAnimationType = .push(direction: .left)
         navigationController?.pushViewController(vc, animated: true)
         // present(vc, animated: true, completion: nil)
@@ -291,9 +290,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             dispatchGroup.enter()
 
             self.user.image = ImageLoader.loadImageFromInternet(url: self.user.imageURL)
-			
-			self.userDataLoaded = true
-			self.imageAnimationAllowed = true
+
+            self.userDataLoaded = true
+            self.imageAnimationAllowed = true
 
             DispatchQueue.main.async {
                 self.tableView.beginUpdates()
@@ -447,15 +446,15 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 }
 
 extension UserProfileViewController: UserHeaderDelegate {
-	func followUnfollowUser(uid _: String) {
-		followUnfollowUser()
-	}
-	
-	func clickedOnFollowerCount() {
-		let vc = FollowersFollowingViewController()
-		vc.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(vc, animated: true)
-	}
+    func followUnfollowUser(uid _: String) {
+        followUnfollowUser()
+    }
+
+    func clickedOnFollowerCount() {
+        let vc = FollowersFollowingViewController()
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -472,7 +471,7 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             let cell = tableView.dequeueReusableCell(withIdentifier: "headerCellUI", for: indexPath) as! UserHeaderViewCell
             cell.selectionStyle = .none
             cell.headerController.user = user
-			cell.headerController.userDataLoaded = userDataLoaded
+            cell.headerController.userDataLoaded = userDataLoaded
             cell.headerController.delegate = self
             cell.headerController.grow = imageAnimationAllowed
             return cell

@@ -211,7 +211,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         label.textAlignment = .left
         label.textColor = .label
         label.text = "Display Name"
-		label.numberOfLines = 0
+        label.numberOfLines = 0
         return label
     }()
 
@@ -359,7 +359,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         displaynameLabel.snp.makeConstraints { make in
             make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
             make.top.equalTo(contentView.snp.top).offset(16)
-            //make.height.equalTo(25)
+            // make.height.equalTo(25)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
         }
 
@@ -469,7 +469,7 @@ extension PostCellView: UIContextMenuInteractionDelegate {
 
         actionsArray.append(repost)
 
-		let bookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks") 
+        let bookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
 
         let bookmark = UIAction(title: bookmarks.contains(where: { $0.id == post!.id }) ? SLocale(.REMOVE_BOOKMARK) : SLocale(.ADD_BOOKMARK), image: bookmarks.contains(where: { $0.id == post!.id }) ? UIImage(systemName: "bookmark.slash") : UIImage(systemName: "bookmark")) { _ in
             self.delegate.editBookmark(id: self.post!.id, action: bookmarks.contains(where: { $0.id == self.post!.id }) ? .remove : .add)

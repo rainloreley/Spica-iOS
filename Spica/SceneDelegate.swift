@@ -57,13 +57,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         mentionView.tabBarItem = UITabBarItem(title: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell"), tag: 1)
         let bookmarksView = UINavigationController(rootViewController: BookmarksViewController())
         bookmarksView.tabBarItem = UITabBarItem(title: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark"), tag: 2)
-		
-		let userProfileVC = UserProfileViewController()
-		let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-		userProfileVC.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
-		
-		let accountView = UINavigationController(rootViewController: userProfileVC)
-		accountView.tabBarItem = UITabBarItem(title: SLocale(.ACCOUNT), image: UIImage(systemName: "person"), tag: 3)
+
+        let userProfileVC = UserProfileViewController()
+        let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+        userProfileVC.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+
+        let accountView = UINavigationController(rootViewController: userProfileVC)
+        accountView.tabBarItem = UITabBarItem(title: SLocale(.ACCOUNT), image: UIImage(systemName: "person"), tag: 3)
         tabBar.viewControllers = [homeView, mentionView, bookmarksView, accountView]
         return tabBar
     }

@@ -89,9 +89,10 @@ extension CreditsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, titleForFooterInSection section: Int) -> String? {
         if section == credits.count - 1 {
             return """
+
             Thank you to everyone that is helping developing this app!
 
-            This also includes everyone who reports bugs, submits crash reports, makes suggestions!
+            This also includes everyone who reports bugs, submits crash reports, makes suggestions and tests the app!
 
             Thank you! <3
 
