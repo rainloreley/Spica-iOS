@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0252C224ADE30700A4E4FD /* LoginViewController.swift */; };
 		3A25FBA924B753D400324136 /* SPAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 3A25FBA824B753D400324136 /* SPAlert */; };
+		3A27608224D5AE8300DEE34A /* FollowersFollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A27608124D5AE8300DEE34A /* FollowersFollowingViewController.swift */; };
+		3A27608524D5D37D00DEE34A /* SkeletonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3A27608424D5D37D00DEE34A /* SkeletonUI */; };
 		3A332F3424C3BC8400A91C4E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3A332F3124C3BC8300A91C4E /* Localizable.strings */; };
 		3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 3A34226B24B359BE00B8AFA9 /* JGProgressHUD */; };
 		3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */; };
@@ -66,6 +68,8 @@
 		3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */; };
 		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
 		3AE9C33524D59A500097CFD5 /* SpicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE9C33424D59A500097CFD5 /* SpicAPI.swift */; };
+		3AE9C33724D5ABEF0097CFD5 /* FollowUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE9C33624D5ABEF0097CFD5 /* FollowUser.swift */; };
+		3AE9C33924D5ACFC0097CFD5 /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE9C33824D5ACFC0097CFD5 /* Follower.swift */; };
 		3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */; };
 		3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */; };
 		3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF1DB1524D57E6A006832A7 /* UserHeaderView.swift */; };
@@ -101,6 +105,7 @@
 		1360C14D6EC95C923EBA37A3 /* Pods-Spica-SpicaUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica-SpicaUITests.debug.xcconfig"; path = "Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A0252C224ADE30700A4E4FD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		3A27608124D5AE8300DEE34A /* FollowersFollowingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersFollowingViewController.swift; sourceTree = "<group>"; };
 		3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3A332F3224C3BC8300A91C4E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3A332F3324C3BC8300A91C4E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -169,6 +174,8 @@
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
 		3AE9C33424D59A500097CFD5 /* SpicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpicAPI.swift; sourceTree = "<group>"; };
+		3AE9C33624D5ABEF0097CFD5 /* FollowUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowUser.swift; sourceTree = "<group>"; };
+		3AE9C33824D5ACFC0097CFD5 /* Follower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Follower.swift; sourceTree = "<group>"; };
 		3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
 		3AEEE93B24C5C9E4006E4812 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderViewCell.swift; sourceTree = "<group>"; };
@@ -204,6 +211,7 @@
 				3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */,
 				3A96F6A224AB403100482C5A /* Alamofire in Frameworks */,
 				3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */,
+				3A27608524D5D37D00DEE34A /* SkeletonUI in Frameworks */,
 				3AA108AA24C0CBDF006FCA1A /* Hero in Frameworks */,
 				A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */,
 			);
@@ -397,6 +405,8 @@
 				3A61B27624C8B56900AC1A9C /* CachePolicy.swift */,
 				3A61B27824C8B57600AC1A9C /* FeedObject.swift */,
 				3AF9231B24CC747700DAAE0F /* Bookmark.swift */,
+				3AE9C33624D5ABEF0097CFD5 /* FollowUser.swift */,
+				3AE9C33824D5ACFC0097CFD5 /* Follower.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -424,12 +434,13 @@
 				3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */,
 				3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */,
 				3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */,
-				3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */,
 				3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */,
 				3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */,
 				3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */,
 				3A0252C224ADE30700A4E4FD /* LoginViewController.swift */,
 				3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */,
+				3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */,
+				3A27608124D5AE8300DEE34A /* FollowersFollowingViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -578,6 +589,7 @@
 				3A34226B24B359BE00B8AFA9 /* JGProgressHUD */,
 				3A25FBA824B753D400324136 /* SPAlert */,
 				3AA108A924C0CBDF006FCA1A /* Hero */,
+				3A27608424D5D37D00DEE34A /* SkeletonUI */,
 			);
 			productName = "Alles App";
 			productReference = 3A7145DB24AA8753000FA3C3 /* Spica.app */;
@@ -664,6 +676,7 @@
 				3A34226A24B359BE00B8AFA9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				3A25FBA724B753D400324136 /* XCRemoteSwiftPackageReference "SPAlert" */,
 				3AA108A824C0CBDF006FCA1A /* XCRemoteSwiftPackageReference "Hero" */,
+				3A27608324D5D37D00DEE34A /* XCRemoteSwiftPackageReference "SkeletonUI" */,
 			);
 			productRefGroup = 3A7145DC24AA8753000FA3C3 /* Products */;
 			projectDirPath = "";
@@ -836,18 +849,21 @@
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
 				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
 				3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */,
+				3AE9C33724D5ABEF0097CFD5 /* FollowUser.swift in Sources */,
 				3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */,
 				3A61B27924C8B57600AC1A9C /* FeedObject.swift in Sources */,
 				3A61B27324C8B54800AC1A9C /* Tag.swift in Sources */,
 				3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */,
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
 				3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */,
+				3A27608224D5AE8300DEE34A /* FollowersFollowingViewController.swift in Sources */,
 				3ADDC58324AD182100B58DA9 /* SentPost.swift in Sources */,
 				3A7145E324AA8753000FA3C3 /* TimelineViewController.swift in Sources */,
 				3A61B27124C8B53B00AC1A9C /* UpdateUser.swift in Sources */,
 				3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */,
 				3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */,
 				3AD04A3624C0C50E007F7306 /* UserEditHeaderCell.swift in Sources */,
+				3AE9C33924D5ACFC0097CFD5 /* Follower.swift in Sources */,
 				3AF30CCC24CCABEC005D0CC3 /* ToolbarDelegate.swift in Sources */,
 				3A4DF24B24BF7D1C003C6BF3 /* SidebarViewController.swift in Sources */,
 				3A61B26F24C8B52800AC1A9C /* FollowAction.swift in Sources */,
@@ -1270,6 +1286,14 @@
 				minimumVersion = 2.1.4;
 			};
 		};
+		3A27608324D5D37D00DEE34A /* XCRemoteSwiftPackageReference "SkeletonUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CSolanaM/SkeletonUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
 		3A34226A24B359BE00B8AFA9 /* XCRemoteSwiftPackageReference "JGProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD";
@@ -1317,6 +1341,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3A25FBA724B753D400324136 /* XCRemoteSwiftPackageReference "SPAlert" */;
 			productName = SPAlert;
+		};
+		3A27608424D5D37D00DEE34A /* SkeletonUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A27608324D5D37D00DEE34A /* XCRemoteSwiftPackageReference "SkeletonUI" */;
+			productName = SkeletonUI;
 		};
 		3A34226B24B359BE00B8AFA9 /* JGProgressHUD */ = {
 			isa = XCSwiftPackageProductDependency;
