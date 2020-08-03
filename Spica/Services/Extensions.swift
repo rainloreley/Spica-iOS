@@ -76,7 +76,6 @@ func countString(number: Int, singleText: String, multiText: String, includeNumb
         } else {
             return "\(singleText)"
         }
-        // return "\(number) \(singleText)"
     } else {
         if includeNumber {
             return "\(number) \(multiText)"
@@ -102,7 +101,6 @@ extension String {
     var isValidURL: Bool {
         let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue)
         if let match = detector.firstMatch(in: self, options: [], range: NSRange(location: 0, length: utf16.count)) {
-            // it is a link, if the match covers the whole string
             return match.range.length == utf16.count
         } else {
             return false
@@ -180,7 +178,6 @@ extension UITableView {
             label.textAlignment = .center
             label.font = .boldSystemFont(ofSize: 25)
             return label
-            // label.sizeToFit()
         }()
 
         let subtitleLabel: UILabel = {
@@ -200,20 +197,14 @@ extension UITableView {
 
         messageLabel.snp.makeConstraints { make in
             make.centerX.equalTo(backView.snp.centerX)
-            make.centerY.equalTo(backView.snp.centerY) // .offset(-8)
-            // make.height.equalTo(50)
-            // make.width.equalTo(backView.snp.width)
+            make.centerY.equalTo(backView.snp.centerY)
             make.leading.equalTo(backView.snp.leading)
             make.trailing.equalTo(backView.snp.trailing)
         }
 
         subtitleLabel.snp.makeConstraints { make in
             make.centerX.equalTo(backView.snp.centerX)
-            // make.top.equalTo(messageLabel.snp.bottom).offset(8)
-            make.top.equalTo(messageLabel.snp.bottom) // .offset(8)
-            // make.centerY.equalTo(backView.snp.centerY).offset(16)
-            // make.height.equalTo(50)
-            // make.width.equalTo(backView.snp.width)
+            make.top.equalTo(messageLabel.snp.bottom)
             make.leading.equalTo(backView.snp.leading)
             make.trailing.equalTo(backView.snp.trailing)
         }

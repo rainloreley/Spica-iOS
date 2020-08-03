@@ -9,24 +9,13 @@ import SwiftKeychainWrapper
 import UIKit
 
 @available(iOS 14.0, *)
-class SidebarViewController: UIViewController, UICollectionViewDelegate, UITableViewDelegate {
-    func tableView(_: UITableView, didSelectRowAt _: IndexPath) {
-        // splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
-    }
-
+class SidebarViewController: UIViewController, UICollectionViewDelegate {
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
-        // splitViewController?.showDetailViewController(SidebarSection(rawValue: indexPath.section)!.viewController, sender: nil)
-        // splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
-        // navigationController?.setViewControllers([SidebarSection(rawValue: indexPath.section)!.viewController], animated: true)
     }
 
     var dataSource: UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>!
     var collectionView: UICollectionView!
-
-    /* var tableView: UITableView!
-
-     private lazy var dataSource = makeDataSource() */
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +27,6 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
         navigationItem.title = "Spica"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.setLeftBarButton(nil, animated: false)
-
-        // view.backgroundColor = .systemBackground
 
         let configuration = UICollectionLayoutListConfiguration(appearance: .sidebar)
         let layout = UICollectionViewCompositionalLayout.list(using: configuration)
@@ -62,18 +49,8 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
             var content = cell.defaultContentConfiguration()
 
             content.text = item.name
-            // content.image = UIImage(systemName: "scribble.variable")
-            // content.image = UIImage.circle(diameter: 20, color: hexStringToUIColor(hex: item.color))
             content.image = item.image
-            // content.imageProperties.tintColor = .orange
-
             cell.contentConfiguration = content
-
-            /* let dropInteraction = UIDropInteraction(delegate: self)
-
-             cell.addInteraction(dropInteraction)
-             dropInteraction.view!.tag = Int("9\(index.section)\(index.row)")!
-             self.latestDropID = item.id ?? "" */
         }
 
         dataSource = UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>(collectionView: collectionView) { (collectionView, indexPath, item) -> UICollectionViewCell? in
@@ -101,40 +78,6 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate, UITable
             navigationController?.setNavigationBarHidden(true, animated: animated)
         #endif
     }
-
-    /* func makeDataSource() -> UITableViewDiffableDataSource<Section, SidebarItem> {
-         let source = UITableViewDiffableDataSource<Section, SidebarItem>(tableView: tableView) { (_, _, post) -> UITableViewCell? in
-             let cell = UITableViewCell()
-
-             cell.textLabel?.text = post.name
-             cell.imageView?.image = post.image
-
-             return cell
-         }
-         source.defaultRowAnimation = .fade
-         return source
-     }
-
-     func applyChanges(_ animated: Bool = true) {
-         var snapshot = NSDiffableDataSourceSnapshot<Section, SidebarItem>()
-         snapshot.appendSections(Section.allCases)
-         snapshot.appendItems([Section.home.sidebar], toSection: .home)
-         snapshot.appendItems([Section.mentions.sidebar], toSection: .mentions)
-         snapshot.appendItems([Section.settings.sidebar], toSection: .settings)
-         DispatchQueue.main.async {
-             self.dataSource.apply(snapshot, animatingDifferences: animated)
-         }
-     } */
-
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
 }
 
 struct SidebarItem: Hashable {
@@ -183,14 +126,15 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             let vc = UserProfileViewController()
             vc.navigationItem.hidesBackButton = true
             let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-            vc.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+
+            vc.user = User.empty(username: username!, displayName: username!, nickname: username!)
+
             vc.hidesBottomBarWhenPushed = true
             return vc
         case .settings:
             let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
             let vc = storyboard.instantiateInitialViewController() as! UINavigationController
             vc.navigationItem.hidesBackButton = true
-            // (vc.viewControllers.first as! MainSettingsViewController).delegate = self
             return vc
         }
     }

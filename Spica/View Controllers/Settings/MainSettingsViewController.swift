@@ -24,7 +24,6 @@ class MainSettingsViewController: UITableViewController {
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var versionBuildLabel: UILabel!
 
-    // Outlets for Localization
     @IBOutlet var goToProfileButton: UIButton!
     @IBOutlet var SignOutButton: UIButton!
 
@@ -104,7 +103,7 @@ class MainSettingsViewController: UITableViewController {
     @IBAction func profileMore(_: Any) {
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
             let vc = UserProfileViewController()
-            vc.user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
+            vc.user = User.empty(id: username, username: username, displayName: username, nickname: username)
             vc.hidesBottomBarWhenPushed = true
 
             navigationController?.pushViewController(vc, animated: true)
@@ -123,39 +122,7 @@ class MainSettingsViewController: UITableViewController {
         }
     }
 
-    @IBAction func clearCache(_: Any) {
-        /* let realm = try! Realm()
-
-         try! realm.write {
-             realm.deleteAll()
-         } */
-
-        /* let path = realm.configuration.fileURL?.relativePath
-         let subPaths = try? FileManager.default.contentsOfDirectory(atPath: path!)
-         for i in subPaths ?? [] {
-         	print("SUBPATH: \(i)")
-         	try! FileManager.default.removeItem(atPath: i)
-         }
-         let attributes = try! FileManager.default.attributesOfItem(atPath: path!)
-
-         let fileSize = attributes[.size]
-         let mbFile = ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file)
-         print("MBFIII: \(mbFile)") */
-        // cacheSizeLabel.text = "\(mbFile)"
-        // cacheSizeLabel.text = "\(fileSize)"
-        /* let diskConfig = DiskConfig(name: "SpicaImageCache")
-         let memoryConfig = MemoryConfig(expiry: .never, countLimit: 10, totalCostLimit: 10)
-
-         let storage = try? Storage(
-           diskConfig: diskConfig,
-           memoryConfig: memoryConfig,
-           transformer: TransformerFactory.forCodable(ofType: Data.self) // Storage<User>
-         )
-
-         try? storage?.removeAll() */
-
-        // SPAlert.present(title: SLocale(.CACHE_CLEARED), preset: .done)
-    }
+    @IBAction func clearCache(_: Any) {}
 
     @IBAction func github(_: Any) {
         let url = URL(string: "https://github.com/SpicaApp/Spica-iOS")
@@ -227,32 +194,9 @@ class MainSettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = SLocale(.SETTINGS)
-
-        /* let realm = try! Realm()
-
-         let path = realm.configuration.fileURL!.path
-         let attributes = try! FileManager.default.attributesOfItem(atPath: path)
-         let fileSize = attributes[.size]
-         cacheSizeLabel.text = "\(ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file))" */
-
-        /* if #available(iOS 14.0, *) {
-         translateSymbol.image = UIImage(systemName: "translate")
-         } else { */
         translateSymbol.image = UIImage(named: "translate")
         translateSymbol.image = translateSymbol.image?.withRenderingMode(.alwaysTemplate)
         translateSymbol.tintColor = .link
-        // }
-        /* tableView = UITableView(frame: .zero, style: .insetGrouped)
-         tableView.delegate = self
-         tableView.dataSource = self
-         view.addSubview(tableView)
-         tableView.snp.makeConstraints { (make) in
-         	make.top.equalTo(view.snp.top)
-         	make.leading.equalTo(view.snp.leading)
-         	make.bottom.equalTo(view.snp.bottom)
-         	make.trailing.equalTo(view.snp.trailing)
-         } */
-        // self.tableView.delegate = self
         localizeView()
     }
 
@@ -311,14 +255,6 @@ class MainSettingsViewController: UITableViewController {
             biometricsSwitch.setOn(false, animated: false)
         }
 
-        /* let realm = try! Realm()
-
-         let path = realm.configuration.fileURL?.relativePath
-         let attributes = try! FileManager.default.attributesOfItem(atPath: path!)
-         let fileSize = attributes[.size]
-         cacheSizeLabel.text = "\(ByteCountFormatter.string(fromByteCount: Int64("\(fileSize!)")!, countStyle: .file))" */
-        // cacheSizeLabel.text = "\(fileSize)"
-
         DispatchQueue.global(qos: .background).async {
             self.username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")!
 
@@ -348,19 +284,9 @@ class MainSettingsViewController: UITableViewController {
             navigationController?.setToolbarHidden(true, animated: false)
         #endif
         setSidebar()
-
-        /* #if targetEnvironment(macCatalyst)
-             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                 let toolBar = NSToolbar(identifier: "settingsToolbar")
-
-                 titleBar.toolbar = toolBar
-             }
-         #endif */
     }
 
     override func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
-        // return tableViewData[section].title
         switch section {
         case 0:
             return SLocale(.ACCOUNT)
@@ -379,20 +305,11 @@ class MainSettingsViewController: UITableViewController {
         }
     }
 
-    // MARK: - Table view data source
-
     override func numberOfSections(in _: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        // return tableViewData.count
-
         return 6
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-
-        // return tableViewData[section].cells.count
-
         switch section {
         case 0:
             return 3
@@ -410,24 +327,4 @@ class MainSettingsViewController: UITableViewController {
             return 0
         }
     }
-
-    /* func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-     	let cell = UITableViewCell()
-
-     	return cell
-     }
-
-     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-     	<#code#>
-     }
-
-     struct Section {
-     	var title: String?
-     	var cells: [Cell]
-     }
-
-     struct Cell {
-     	var image: UIImage?
-     	var title: String?
-     } */
 }

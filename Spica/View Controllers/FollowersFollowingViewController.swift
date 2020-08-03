@@ -65,8 +65,6 @@ class FollowersFollowingViewController: UIViewController {
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
-
-        // Do any additional setup after loading the view.
     }
 
     override func viewWillAppear(_: Bool) {
@@ -133,7 +131,7 @@ class FollowersFollowingViewController: UIViewController {
 
     func makeDataSource() -> DataSource {
         let source = DataSource(tableView: tableView) { (tableView, indexPath, user) -> UITableViewCell? in
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) // as! UITableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
             let content = UIHostingController(rootView: FollowerCell(follower: user)).view
             content?.backgroundColor = .secondarySystemGroupedBackground
@@ -144,25 +142,6 @@ class FollowersFollowingViewController: UIViewController {
                 make.bottom.equalTo(cell.contentView.snp.bottom)
                 make.trailing.equalTo(cell.contentView.snp.trailing)
             }
-
-            /* cell.imageView?.image = user.image
-             cell.imageView!.layer.cornerRadius = 122
-
-             if user.isPlus == true {
-             	let font: UIFont? = UIFont.systemFont(ofSize: 18)
-
-             	let fontSuper: UIFont? = UIFont.systemFont(ofSize: 12)
-             	let attrDisplayName = NSMutableAttributedString(string: "\(user.name)+", attributes: [.font: font!])
-             	attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: (user.name.count), length: 1))
-
-             	cell.textLabel?.attributedText = attrDisplayName
-             } else {
-             	cell.textLabel?.text = user.name
-             	cell.textLabel?.font = .systemFont(ofSize: 18)
-             }
-
-             cell.detailTextLabel?.text = "@\(user.username)" */
-
             return cell
         }
         source.defaultRowAnimation = .fade
@@ -191,7 +170,8 @@ extension FollowersFollowingViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let userByTag = segmentedControl.selectedSegmentIndex == 0 ? followersFollowing.followers[indexPath.row] : followersFollowing.following[indexPath.row]
         let vc = UserProfileViewController()
-        vc.user = User(id: userByTag.id, username: userByTag.username, displayName: userByTag.name, nickname: userByTag.name, imageURL: userByTag.imageURL, isPlus: userByTag.isPlus, rubies: 0, followers: 0, image: userByTag.image!, isFollowing: false, followsMe: false, about: "", isOnline: false)
+
+        vc.user = User.empty(id: userByTag.id, username: userByTag.username, displayName: userByTag.name, nickname: userByTag.name, imageURL: userByTag.imageURL, isPlus: userByTag.isPlus, image: userByTag.image!)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

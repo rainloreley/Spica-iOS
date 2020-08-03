@@ -13,23 +13,14 @@ let imageCache = NSCache<NSString, UIImage>()
 
 public class ImageLoader {
     public static func loadImageFromInternet(url: URL) -> UIImage {
-        // let realm = try! Realm()
         if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
             return cachedImage
-        }
-        /* if let cachedImage = realm.objects(CacheImage.self).filter({ $0.id == url.absoluteString }).first {
-             return UIImage(data: cachedImage.image!)!
-         } */ else {
+        } else {
             let tempImg: UIImage?
             let data = try? Data(contentsOf: url)
             if let data = data {
                 tempImg = UIImage(data: data)
                 imageCache.setObject(tempImg!, forKey: url.absoluteString as NSString)
-                /* let cachedImage = CacheImage(id: url.absoluteString, image: data)
-
-                 try! realm.write {
-                     realm.add(cachedImage)
-                 } */
             } else {
                 tempImg = UIImage(systemName: "person.circle")
             }
@@ -37,19 +28,3 @@ public class ImageLoader {
         }
     }
 }
-
-/* struct CacheImage: Realmable {
-     init() {
-         id = ""
-         image = nil
-     }
-
-     var id: String = ""
-     var image: Data?
-
-     init(id: String, image: Data) {
-         self.id = id
-         self.image = image
-     }
- }
- */

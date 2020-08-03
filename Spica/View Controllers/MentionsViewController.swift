@@ -28,8 +28,6 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
     var verificationString = ""
 
-    // MARK: - Setup
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -49,7 +47,6 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             make.bottom.equalTo(view.snp.bottom)
         }
 
-        // refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadMentions), for: .valueChanged)
         tableView.addSubview(refreshControl)
 
@@ -57,8 +54,6 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
     }
-
-    // MARK: - Datasource
 
     typealias DataSource = UITableViewDiffableDataSource<Section, Post>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
@@ -163,14 +158,6 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         #endif
 
         setSidebar()
-        /* #if targetEnvironment(macCatalyst)
-             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                 let toolBar = NSToolbar(identifier: "mentionsToolbar")
-                 toolBar.delegate = self
-                 titleBar.toolbar = toolBar
-             }
-         #endif */
         loadMentions()
     }
 
@@ -215,7 +202,6 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                         mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
                     }
 
-                    // applyChanges()
                     if let url = post.imageURL {
                         if veri != verificationString { return }
                         mentions[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -313,7 +299,6 @@ extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerD
 
     @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
         if let error = error {
-            // we got back an error!
             SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
 
         } else {
@@ -390,9 +375,8 @@ extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerD
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
-        vc.user = user
+        vc.user = User.empty(username: username, displayName: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

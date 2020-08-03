@@ -59,12 +59,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
         signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-        /* #if targetEnvironment(macCatalyst)
-             if traitCollection.userInterfaceIdiom == .mac {
-                 navigationController?.isToolbarHidden = true
-                 navigationController?.setNavigationBarHidden(true, animated: false)
-             }
-         #else */
         navigationItem.title = "\(user.displayName)"
         navigationController?.navigationBar.prefersLargeTitles = false
         var rightItems = [UIBarButtonItem]()
@@ -76,13 +70,11 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         }
 
         navigationItem.rightBarButtonItems = rightItems
-        // #endif
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView?.delegate = self
         tableView?.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
-        // tableView.register(UserHeaderCellView.self, forCellReuseIdentifier: "userHeaderCell")
         tableView.register(UserHeaderViewCell.self, forCellReuseIdentifier: "headerCellUI")
 
         view.addSubview(tableView)
@@ -94,7 +86,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             make.bottom.equalTo(view.snp.bottom)
         }
 
-        // refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadUser), for: .valueChanged)
         tableView.addSubview(refreshControl)
 
@@ -115,7 +106,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             if signedInUsername == user.username {
                 if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                     if let sidebar = globalSideBarController {
-                        // navigationController?.viewControllers = [self]
                         if let collectionView = sidebar.collectionView {
                             collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
                         }
@@ -146,11 +136,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             .sink(receiveValue: { _ in
                 self.openUserSettings()
 			})
-        /* #if targetEnvironment(macCatalyst)
-             navigationController?.setNavigationBarHidden(true, animated: false)
-         #else
-             navigationController?.navigationBar.prefersLargeTitles = false
-         #endif */
     }
 
     @objc func openUserSettings() {
@@ -158,18 +143,13 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         vc.user = user
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
-        // vc.heroModalAnimationType = .push(direction: .left)
         navigationController?.pushViewController(vc, animated: true)
-        // present(vc, animated: true, completion: nil)
     }
 
     override func viewWillDisappear(_: Bool) {
         createPostSubscriber?.cancel()
         navigateBackSubscriber?.cancel()
         editProfileSubscriber?.cancel()
-        /* #if targetEnvironment(macCatalyst)
-             navigationController?.setNavigationBarHidden(false, animated: false)
-         #endif */
     }
 
     override func viewDidAppear(_: Bool) {
@@ -190,14 +170,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         #endif
 
         setSidebar()
-        /* #if targetEnvironment(macCatalyst)
-             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                 let toolBar = NSToolbar(identifier: "userProfileToolbar")
-                 toolBar.delegate = self
-                 titleBar.toolbar = toolBar
-             }
-         #endif */
         loadUser()
     }
 
@@ -235,14 +207,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 } receiveValue: { [unowned self] in
                     self.user = $0
                     self.navigationItem.title = "\(self.user.displayName)"
-                    /* #if targetEnvironment(macCatalyst)
-                         let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-                         if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                             let toolBar = NSToolbar(identifier: "userProfileToolbar")
-                             toolBar.delegate = self
-                             titleBar.toolbar = toolBar
-                         }
-                     #endif */
                     self.loadPfp()
                     self.loadPosts()
                 }
@@ -272,13 +236,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 }
                 self.loadingHud.dismiss()
                 verificationString = randomString(length: 20)
-                /* self.tableView.beginUpdates()
-                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-                 self.tableView.endUpdates() */
-
-                // DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + 2.0) {
                 self.loadImages()
-                // }
             }
             .store(in: &subscriptions)
     }
@@ -316,8 +274,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                         if veri != verificationString { return }
                         userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
                     }
-
-                    // applyChanges()
                     if let url = post.imageURL {
                         if veri != verificationString { return }
                         userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -341,47 +297,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             }
         }
     }
-
-    /* func loadImages() {
-         DispatchQueue.global(qos: .utility).async {
-             let dispatchGroup = DispatchGroup()
-
-             for (index, post) in self.userPosts.enumerated() {
-                 if index > self.userPosts.count - 1 {
-                 } else {
-                     dispatchGroup.enter()
-
-                     DispatchQueue.main.async {
-                         self.userPosts[index].author.image = ImageLoader.loadImageFromInternet(url: post.author.imageURL)
-                     }
-
-                     if index > 10 {
-                         if index % 5 == 0 {}
-                     }
-
-                     if index % 5 == 0 {
-                         DispatchQueue.main.async {
-                             self.tableView.reloadData()
-                         }
-                     }
-
-                     if let url = post.imageURL {
-                         self.userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
-                     } else {
-                         self.userPosts[index].image = UIImage()
-                     }
-
-                     if index % 5 == 0 {
-                         DispatchQueue.main.async {
-                             self.tableView.reloadData()
-                         }
-                     }
-
-                     dispatchGroup.leave()
-                 }
-             }
-         }
-     } */
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
         let userByTag = userPosts[sender.view!.tag].author
@@ -475,15 +390,6 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
             cell.headerController.delegate = self
             cell.headerController.grow = imageAnimationAllowed
             return cell
-            /* let cell = tableView.dequeueReusableCell(withIdentifier: "userHeaderCell", for: indexPath) as! UserHeaderCellView
-             cell.selectionStyle = .none
-             cell.user = user
-             cell.profilePictureController.grow = self.imageAnimationAllowed
-             cell.followButton.addTarget(self, action: #selector(followUnfollowUser), for: .touchUpInside)
-             if #available(iOS 13.4, *) {
-             cell.followButton.isPointerInteractionEnabled = true
-             }
-             return cell */
         } else {
             let post = userPosts[indexPath.row]
 
@@ -554,7 +460,6 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
 
     @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
         if let error = error {
-            // we got back an error!
             SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
 
         } else {
@@ -631,9 +536,8 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
-        vc.user = user
+        vc.user = User.empty(username: username, displayName: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

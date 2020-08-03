@@ -116,7 +116,6 @@ class TagDetailViewController: UIViewController {
                 if index <= tag.posts.count - 1 {
                     if veri != verificationString { return }
                     tag.posts[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
-                    // applyChanges()
                     if veri != verificationString { return }
                     if let url = post.imageURL {
                         tag.posts[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -280,7 +279,6 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
 
     @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
         if let error = error {
-            // we got back an error!
             SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
 
         } else {
@@ -357,9 +355,8 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
-        vc.user = user
+        vc.user = User.empty(username: username, displayName: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

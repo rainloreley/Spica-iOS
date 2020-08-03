@@ -33,21 +33,13 @@ public struct Post: Hashable {
         self.voteStatus = voteStatus
     }
 
+    public static func empty(id: String = "", author: User, date: Date = Date(), repliesCount: Int = 0, score: Int = 0, content: String = "", image: UIImage? = nil, imageURL: URL? = nil, voteStatus: Int = 0) -> Post {
+        return Post(id: id == "" ? randomString(length: 30) : id, author: author, date: date, repliesCount: repliesCount, score: score, content: content, image: image, imageURL: imageURL, voteStatus: voteStatus)
+    }
+
     public init(_ json: JSON) {
         id = json["slug"].string!
         author = User(json["author"], isOnline: false)
-        /* author = User(id: json["author"]["id"].string!,
-         username: json["author"]["username"].string!,
-         displayName: json["author"]["name"].string!,
-         imageURL: URL(string: "https://avatar.alles.cx/u/\(json["author"]["username"])")!,
-         isPlus: json["author"]["plus"].bool ?? false,
-         rubies: 0,
-         followers: 0,
-         image: UIImage(systemName: "person.circle"),
-         isFollowing: false,
-         followsMe: false,
-         about: "",
-         isOnline: false) */
         date = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
         repliesCount = json["replyCount"].intValue
         score = json["score"].int ?? 0
@@ -61,12 +53,5 @@ public struct Post: Hashable {
 }
 
 extension Post {
-    static let deleted = Post(id: "removed",
-                              author: User(id: "---", username: "---", displayName: "---", nickname: "---", imageURL: URL(string: "https://avatar.alles.cx/u/000000000000000000000000000000000000000")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false),
-                              date: Date(),
-                              repliesCount: 0,
-                              score: 0,
-                              content: "Post was deleted",
-                              imageURL: nil,
-                              voteStatus: 0)
+    static let deleted = Post.empty(author: User.empty(username: "---", displayName: "---", nickname: "---"), content: "Post was deleted")
 }

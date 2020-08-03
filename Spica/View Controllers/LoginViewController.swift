@@ -39,8 +39,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         hideKeyboardWhenTappedAround()
 
-        /* NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil) */
         navigationItem.title = SLocale(.ALLES_LOGIN)
         navigationController?.navigationBar.prefersLargeTitles = true
 
@@ -140,11 +138,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             make.trailing.equalTo(view.snp.trailing).offset(-16)
         }
 
-        /*
-         var spicaPrivacy: UIButton!
-         var allesPrivacy: UIButton!
-         var allesTerms: UIButton!*/
-
         spicaPrivacy = UIButton(type: .system)
         spicaPrivacy.setTitle("Spica: \(SLocale(.PRIVACY_POLICY))", for: .normal)
         spicaPrivacy.addTarget(self, action: #selector(openLink(_:)), for: .touchUpInside)
@@ -177,8 +170,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             make.top.equalTo(allesPrivacy.snp.bottom).offset(8)
             make.leading.equalTo(view.snp.leading).offset(16)
         }
-
-        // Do any additional setup after loading the view.
     }
 
     @objc func openLink(_ sender: UIButton) {
@@ -207,18 +198,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
             if let titlebar = view.window!.windowScene!.titlebar {
                 titlebar.toolbar = nil
-                // titlebar.toolbarStyle = .automatic
             }
 
             navigationController?.setNavigationBarHidden(false, animated: false)
             navigationController?.setToolbarHidden(false, animated: false)
         #endif
-        /* #if targetEnvironment(macCatalyst)
-         let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-         if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-         titleBar.toolbar = nil
-         }
-         #endif */
     }
 
     @objc func openCreateAccount() {

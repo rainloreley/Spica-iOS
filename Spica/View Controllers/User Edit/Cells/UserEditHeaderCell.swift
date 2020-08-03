@@ -12,7 +12,6 @@ class UserEditHeaderCell: UITableViewCell {
         didSet {
             pfpImageView.image = user.image!
             if user.isPlus {
-                // let font:UIFont? = UIFont(name: "Helvetica", size:20)
                 let font: UIFont = UIFont.boldSystemFont(ofSize: 18)
 
                 let fontSuper: UIFont = UIFont.boldSystemFont(ofSize: 12)
@@ -67,9 +66,6 @@ class UserEditHeaderCell: UITableViewCell {
         usernameLabel.snp.makeConstraints { make in
             make.centerX.equalTo(contentView.snp.centerX)
             make.bottom.equalTo(contentView.snp.bottom).offset(-16)
-            // make.width.equalTo(120)
-            /* make.leading.equalTo(contentView.snp.leading).offset(16)
-             make.trailing.equalTo(contentView.snp.trailing).offset(-16) */
             make.height.equalTo(22)
         }
 
@@ -96,12 +92,9 @@ class UserEditHeaderCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 }

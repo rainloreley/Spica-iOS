@@ -17,7 +17,6 @@ struct UserHeaderView: View {
                 Group {
                     Image(uiImage: controller.user.image!)
                         .resizable()
-                        // .clipped()
                         .frame(width: 120, height: 120, alignment: .center)
                         .clipShape(Circle())
                         .shadow(radius: 10)
@@ -30,9 +29,6 @@ struct UserHeaderView: View {
                             .animation(.easeInOut(duration: 1))
                             .shadow(radius: 8)
                         )
-                    /* .onAppear {
-                     	self.grow.toggle()
-                     } */
                 }
                 Spacer()
             }
@@ -49,8 +45,6 @@ struct UserHeaderView: View {
                     .appearance(type: .solid(color: Color.red, background: Color("LoadingSkeleton")))
                     .animation(type: .pulse())
                     .multiline(lines: 3, scales: [0: 0.5, 1: 0.5, 2: 0.5])
-
-                // .animation(type: .pulse(opacity: 0...100, duration: 1, delay: 1, speed: 1, autoreverses: true))
                 HStack {
                     Group {
                         if controller.isLoggedInUser {

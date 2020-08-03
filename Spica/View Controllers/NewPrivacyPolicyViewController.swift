@@ -31,7 +31,6 @@ class NewPrivacyPolicyViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(16)
             make.leading.equalTo(view.snp.leading).offset(8)
             make.trailing.equalTo(view.snp.trailing).offset(-8)
-            // make.height.equalTo(40)
         }
 
         acceptButton = UIButton(type: .system)
@@ -59,8 +58,6 @@ class NewPrivacyPolicyViewController: UIViewController {
             make.trailing.equalTo(view.snp.trailing).offset(-16)
             make.bottom.equalTo(acceptButton.snp.top).offset(-8)
         }
-
-        // Do any additional setup after loading the view.
     }
 
     @objc func acceptAndContinue() {
@@ -69,17 +66,6 @@ class NewPrivacyPolicyViewController: UIViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-        // markdownView = try? DownView(frame: .zero, markdownString: (privacyPolicy!.markdown))
         markdownView.attributedText = try? Down(markdownString: privacyPolicy!.markdown).toAttributedString()
     }
-
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
 }

@@ -19,7 +19,6 @@ protocol PostCreateDelegate {
 }
 
 class PostCreateViewController: UIViewController, UITextViewDelegate {
-    // var sendButton: UIButton!
     var userPfp: UIImageView!
     var contentTextView: KMPlaceholderTextView!
     var type: PostType!
@@ -71,20 +70,6 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             navigationItem.rightBarButtonItem = sendButton
         #endif
 
-        /* sendButton = UIButton(type: .system)
-         sendButton.setTitle(type == PostType.post ? "Post" : "Reply", for: .normal)
-         sendButton.setTitleColor(.white, for: .normal)
-         sendButton.backgroundColor = UIColor(named: "PostButtonColor")
-         sendButton.layer.cornerRadius = 12
-         sendButton.titleLabel?.font = .boldSystemFont(ofSize: 17)
-         sendButton.addTarget(self, action: #selector(sendPost), for: .touchUpInside)
-         view.addSubview(sendButton) */
-
-        /* imageButton = UIButton(type: .system)
-         imageButton.setImage(UIImage(systemName: "photo"), for: .normal)
-         imageButton.addTarget(self, action: #selector(self.openImagePicker), for: .touchUpInside)
-         view.addSubview(imageButton) */
-
         userPfp = UIImageView(frame: .zero)
         userPfp.image = UIImage(systemName: "person.circle")
         userPfp.layer.cornerRadius = 20
@@ -131,10 +116,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             make.leading.equalTo(view.snp.leading).offset(72)
             make.trailing.equalTo(view.snp.trailing).offset(-32)
             make.bottom.equalTo(imagePreview.snp.top).offset(-16)
-            // make.bottom.equalTo(view.snp.bottom).offset(-16)
         }
 
-        // progressRing = CircularProgressView()
         let progressRingUI = UIHostingController(rootView: CircularProgressBar(controller: progressBarController))
         view.addSubview(progressRingUI.view)
 
@@ -161,7 +144,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             var dividerCounter = CGFloat(1)
             var height = image!.size.height
 
-            while /* width > self.view.frame.width && */ height > (view.frame.height / 3) {
+            while height > (view.frame.height / 3) {
                 height = view.frame.height / dividerCounter
                 width = height * aspectRatio
                 dividerCounter += 1
@@ -192,7 +175,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         dismiss(animated: true, completion: nil)
     }
 
-    func textViewDidChange(_ textView: UITextView) { // Handle the text changes here
+    func textViewDidChange(_ textView: UITextView) {
         let calculation = Double(textView.text.count) / Double(500)
 
         progressBarController.progress = Float(calculation)
@@ -203,11 +186,10 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         return newText.count < 501
     }
 
-    @objc func openImagePicker(sender _: Any? /* UIBarButtonItem */ ) {
+    @objc func openImagePicker(sender _: Any?) {
         if selectedImage != nil {
             EZAlertController.actionSheet(SLocale(.IMAGE), message: "", sourceView: view, actions: [
                 UIAlertAction(title: SLocale(.SELECT_ANOTHER_IMAGE), style: .default, handler: { _ in
-                    // self.imagePicker.present(from: self.view)
                     self.present(self.imagePicker, animated: true)
 				}), UIAlertAction(title: SLocale(.REMOVE), style: .destructive, handler: { _ in
                     self.selectedImage = nil
@@ -269,16 +251,6 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
                 .store(in: &subscriptions)
         }
     }
-
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
 }
 
 extension PostCreateViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {

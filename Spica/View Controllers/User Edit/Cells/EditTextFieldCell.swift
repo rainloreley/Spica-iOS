@@ -35,7 +35,6 @@ class EditTextFieldCell: UITableViewCell, UITextFieldDelegate {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        // textField.delegate = self
         textField.addTarget(self, action: #selector(textViewDidChange(_:)), for: .editingChanged)
 
         contentView.addSubview(textField)
@@ -55,12 +54,9 @@ class EditTextFieldCell: UITableViewCell, UITextFieldDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 }

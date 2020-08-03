@@ -41,11 +41,9 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
     var post: Post? {
         didSet {
-            // ASSIGN VALUES
             pfpImageView.image = post?.author?.image
             contentTextView.isUserInteractionEnabled = true
             contentTextView.delaysContentTouches = false
-            // required for tap to pass through on to superview & for links to work
             contentTextView.isScrollEnabled = false
             contentTextView.isEditable = false
             contentTextView.isUserInteractionEnabled = true
@@ -163,9 +161,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
             LightboxConfig.CloseButton.text = SLocale(.CLOSE_ACTION)
             let controller = LightboxController(images: images)
-
-            /* controller.pageDelegate = self
-             controller.dismissalDelegate = self */
 
             controller.dynamicBackground = true
 
@@ -310,7 +305,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        // ADD SUBVIEWS
         selectionStyle = .none
         contentView.addSubview(pfpImageView)
         contentView.addSubview(displaynameLabel)
@@ -359,13 +353,12 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         displaynameLabel.snp.makeConstraints { make in
             make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
             make.top.equalTo(contentView.snp.top).offset(16)
-            // make.height.equalTo(25)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
         }
 
         usernameLabel.snp.makeConstraints { make in
             make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
-            make.top.equalTo(displaynameLabel.snp.bottom) // .offset(0)
+            make.top.equalTo(displaynameLabel.snp.bottom)
             make.height.equalTo(25)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
         }
@@ -405,7 +398,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
         contentTextView.isEditable = true
         contentTextView.isSelectable = true
         contentTextView.isMultipleTouchEnabled = true
@@ -447,8 +439,6 @@ extension PostCellView: UIContextMenuInteractionDelegate {
     }
 
     func makeContextMenu() -> UIMenu {
-        // Create a UIAction for sharing
-
         var actionsArray = [UIAction]()
 
         let copyID = UIAction(title: SLocale(.COPY_ID), image: UIImage(systemName: "doc.on.doc")) { _ in

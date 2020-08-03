@@ -29,7 +29,6 @@
 		3A61B27324C8B54800AC1A9C /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61B27224C8B54800AC1A9C /* Tag.swift */; };
 		3A61B27524C8B55800AC1A9C /* PostDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61B27424C8B55800AC1A9C /* PostDetail.swift */; };
 		3A61B27724C8B56900AC1A9C /* CachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61B27624C8B56900AC1A9C /* CachePolicy.swift */; };
-		3A61B27924C8B57600AC1A9C /* FeedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61B27824C8B57600AC1A9C /* FeedObject.swift */; };
 		3A61B27B24C8B5E900AC1A9C /* TagDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */; };
 		3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */; };
 		3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */; };
@@ -80,7 +79,6 @@
 		3AF30CCE24CCAF84005D0CC3 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */; };
 		3AF9231A24CC6CC200DAAE0F /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */; };
 		3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231B24CC747700DAAE0F /* Bookmark.swift */; };
-		3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */; };
 		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
 		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
 		B011E23BAC69FBCB992F7BCE /* Pods_Spica_SpicaUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AD6E55241BF74B8FFA2529 /* Pods_Spica_SpicaUITests.framework */; };
@@ -126,7 +124,6 @@
 		3A61B27224C8B54800AC1A9C /* Tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		3A61B27424C8B55800AC1A9C /* PostDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetail.swift; sourceTree = "<group>"; };
 		3A61B27624C8B56900AC1A9C /* CachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePolicy.swift; sourceTree = "<group>"; };
-		3A61B27824C8B57600AC1A9C /* FeedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedObject.swift; sourceTree = "<group>"; };
 		3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; };
 		3A7145DB24AA8753000FA3C3 /* Spica.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spica.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -188,7 +185,6 @@
 		3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
 		3AF9231B24CC747700DAAE0F /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
-		3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.release.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
 		4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpicaTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -407,7 +403,6 @@
 				3A61B27224C8B54800AC1A9C /* Tag.swift */,
 				3A61B27424C8B55800AC1A9C /* PostDetail.swift */,
 				3A61B27624C8B56900AC1A9C /* CachePolicy.swift */,
-				3A61B27824C8B57600AC1A9C /* FeedObject.swift */,
 				3AF9231B24CC747700DAAE0F /* Bookmark.swift */,
 				3AE9C33624D5ABEF0097CFD5 /* FollowUser.swift */,
 				3AE9C33824D5ACFC0097CFD5 /* Follower.swift */,
@@ -526,7 +521,6 @@
 			isa = PBXGroup;
 			children = (
 				3AF1DB1224D57E27006832A7 /* SwiftUI */,
-				3AFAF96224BB4DC7003771B4 /* UserHeaderCellView.swift */,
 			);
 			path = "User Header Cell";
 			sourceTree = "<group>";
@@ -858,7 +852,6 @@
 				3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */,
 				3AE9C33724D5ABEF0097CFD5 /* FollowUser.swift in Sources */,
 				3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */,
-				3A61B27924C8B57600AC1A9C /* FeedObject.swift in Sources */,
 				3A61B27324C8B54800AC1A9C /* Tag.swift in Sources */,
 				3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */,
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
@@ -885,7 +878,6 @@
 				3A95B3B824C0EC0A0066FE7B /* LocalizableKeys.swift in Sources */,
 				3A61B27B24C8B5E900AC1A9C /* TagDetailViewController.swift in Sources */,
 				3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */,
-				3AFAF96324BB4DC7003771B4 /* UserHeaderCellView.swift in Sources */,
 				3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,

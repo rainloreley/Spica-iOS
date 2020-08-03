@@ -10,7 +10,6 @@ import UIKit
 class ReplyButtonCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
 
     var replyBtn: UIButton! = {
@@ -46,7 +45,5 @@ class ReplyButtonCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 }

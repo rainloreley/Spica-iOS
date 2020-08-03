@@ -42,6 +42,10 @@ public struct User: Hashable {
         self.isOnline = isOnline
     }
 
+    public static func empty(id: String = "", username: String = "", displayName: String = "", nickname: String = "", imageURL: URL = URL(string: "https://avatar.alles.cx/u/....")!, isPlus: Bool = false, rubies: Int = 0, followers: Int = 0, image: UIImage = UIImage(systemName: "person.circle")!, isFollowing: Bool = false, followsMe: Bool = false, about: String = "", isOnline: Bool = false) -> User {
+        return User(id: id == "" ? randomString(length: 30) : id, username: username, displayName: displayName, nickname: nickname, imageURL: (username == "" ? imageURL : URL(string: "https://avatar.alles.cx/u/\(username)"))!, isPlus: isPlus, rubies: rubies, followers: followers, image: image, isFollowing: isFollowing, followsMe: followsMe, about: about, isOnline: isOnline)
+    }
+
     init(_ json: JSON, isOnline: Bool) {
         id = json["id"].string!
         username = json["username"].string!
@@ -53,11 +57,6 @@ public struct User: Hashable {
         followers = json["followers"].int ?? 0
 
         image = UIImage(systemName: "person.circle")
-        /* if let cachedImage = try? storage!.entry(forKey: imageURL!) {
-         image = cachedImage.object
-         } else {
-         image = UIImage(systemName: "person.circle")?.pngData()
-         } */
         isFollowing = json["following"].bool ?? false
         followsMe = json["followingUser"].bool ?? false
         about = json["about"].string ?? ""

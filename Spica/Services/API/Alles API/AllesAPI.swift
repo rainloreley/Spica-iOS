@@ -87,9 +87,6 @@ public class AllesAPI {
 
     public static func loadFeed(cache _: CachePolicy = .remote) -> Future<[Post], AllesAPIErrorMessage> {
         Future<[Post], AllesAPIErrorMessage> { promise in
-            // DispatchQueue.main.async {
-            // var cacheOption = cache
-            // let realm = try! Realm()
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
@@ -103,14 +100,8 @@ public class AllesAPI {
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
                             let tempPosts = responseJSON["feed"].map { _, json in
-                                // FeedObject(id: json["slug"].string!, isCached: false, post: Post(json))
                                 Post(json)
                             }
-
-                            /* try! realm.write {
-                                 realm.add(tempPosts)
-                             } */
-
                             promise(.success(tempPosts))
                         } else {
                             if response.response!.statusCode == 401 {
@@ -128,34 +119,11 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-
-                    /* if err.isSessionTaskError, let error = err.underlyingError, (error as! URLError).code == .notConnectedToInternet {
-                     let cachedElements = realm.objects(FeedObject.self).filter { $0.post!.date > Calendar.current.date(byAdding: .day, value: -3, to: Date())! }
-
-                     var cacheArray = [FeedObject]()
-                     for item in cachedElements {
-                     if cacheArray.filter({ $0.id == item.id }).count == 0 {
-                     cacheArray.append(FeedObject(id: item.id, isCached: true, post: Post(id: item.post!.id, author: item.post!.author!, date: item.post!.date, repliesCount: item.post!.repliesCount, score: item.post!.score, content: item.post!.content, image: item.post!.image, imageURL: item.post!.imageURL!, voteStatus: item.post!.voteStatus)))
-                     }
-                     }
-
-                     if !cacheArray.isEmpty {
-                     	promise(.success(cacheArray))
-                     }
-                     else {
-                     	var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
-                     	apiError.message.append("\nError: \(err.localizedDescription)")
-                     	promise(.failure(apiError))
-                     }
-
-                     } else { */
                     var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
                     apiError.message.append("\nError: \(err.localizedDescription)")
                     promise(.failure(apiError))
-                    // }
                 }
             }
-            // }
         }
     }
 
@@ -197,7 +165,6 @@ public class AllesAPI {
                                     promise(.failure(apiError))
                                 }
                             }
-                            // }
                         } else {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
@@ -283,15 +250,11 @@ public class AllesAPI {
                     let responseJSON = JSON(response.data!)
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
-                            // var tempPosts: [Post] = []
-
-                            // DispatchQueue.global(qos: .utility).async {
                             var tempPosts = responseJSON["posts"].map { _, json in
                                 Post(json)
                             }
                             tempPosts.sort(by: { $0.date.compare($1.date) == .orderedDescending })
                             promise(.success(tempPosts))
-                            // }
                         } else {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
@@ -352,7 +315,6 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    // if err == AFError.
                     var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
                     apiError.message.append("\nError: \(err.errorDescription!)")
                     promise(.failure(apiError))
@@ -400,7 +362,6 @@ public class AllesAPI {
                     }
 
                 case let .failure(err):
-                    // if err == AFError.
                     var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
                     apiError.message.append("\nError: \(err.errorDescription!)")
                     promise(.failure(apiError))
@@ -464,7 +425,7 @@ public class AllesAPI {
                     let responseJSON = JSON(response.data!)
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
-                            var tempPostDetail = PostDetail(ancestors: [], post: Post(id: "", author: User(id: "", username: "", displayName: "", nickname: "", imageURL: URL(string: "https://avatar.alles.cx/u/adrian")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person")!, isFollowing: false, followsMe: false, about: "", isOnline: false), date: Date(), repliesCount: 0, score: 0, content: "", image: UIImage(systemName: "person"), voteStatus: 0), replies: [])
+                            var tempPostDetail = PostDetail(ancestors: [], post: Post.empty(author: User.empty()), replies: [])
 
                             tempPostDetail.post = Post(responseJSON)
                             tempPostDetail.post.author = User(responseJSON["author"], isOnline: false)
@@ -508,13 +469,11 @@ public class AllesAPI {
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
-            // TODO: Handle Image Upload
             var newPostConstruct: [String: String] = [
                 "content": newPost.content,
             ]
 
             if let image = newPost.image {
-                // let base64Image = newPost.image!.toBase64()
                 let base64Image = "data:image/jpeg;base64,\((image.jpegData(compressionQuality: 0.5)?.base64EncodedString())!)"
                 newPostConstruct["image"] = "\(base64Image)"
             }
@@ -533,7 +492,6 @@ public class AllesAPI {
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
                             if responseJSON["slug"].exists() {
-                                // promise(.success(SentPost(id: responseJSON["slug"].string!, username: responseJSON["username"].string!)))
                                 promise(.success(SentPost(responseJSON)))
                             }
                         } else {

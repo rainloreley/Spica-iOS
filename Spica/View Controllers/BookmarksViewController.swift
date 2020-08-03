@@ -42,7 +42,6 @@ class BookmarksViewController: UIViewController {
             make.bottom.equalTo(view.snp.bottom)
         }
 
-        // refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadBookmarks), for: .valueChanged)
         tableView.addSubview(refreshControl)
 
@@ -141,8 +140,6 @@ class BookmarksViewController: UIViewController {
                     .sink {
                         switch $0 {
                         case let .failure(err):
-                            /* self.refreshControl.endRefreshing()
-                             self.loadingHud.dismiss() */
                             if err.error == .missingResource {
                                 savedBookmarks.remove(at: savedBookmarks.firstIndex(of: i)!)
                                 UserDefaults.standard.setStructArray(savedBookmarks, forKey: "savedBookmarks")
@@ -183,7 +180,6 @@ class BookmarksViewController: UIViewController {
                 if index <= bookmarks.count - 1 {
                     if veri != verificationString { return }
                     bookmarks[index].post.author?.image = ImageLoader.loadImageFromInternet(url: post.post.author!.imageURL)
-                    // applyChanges()
                     if veri != verificationString { return }
                     if let url = post.post.imageURL {
                         bookmarks[index].post.image = ImageLoader.loadImageFromInternet(url: url)
@@ -204,9 +200,7 @@ class BookmarksViewController: UIViewController {
 
     func applyChanges(_: Bool = true) {
         DispatchQueue.main.async {
-            // self.tableView.beginUpdates()
             self.tableView.reloadData()
-            // self.tableView.endUpdates()
             if self.bookmarks.isEmpty {
                 self.tableView.setEmptyMessage(message: SLocale(.BOOKMARKS_EMPTY_TITLE), subtitle: SLocale(.BOOKMARKS_EMPTY_SUBTITLE))
             } else {
@@ -293,7 +287,6 @@ extension BookmarksViewController: UITableViewDelegate, UITableViewDataSource {
             UserDefaults.standard.setStructArray(mappedBookmakrs, forKey: "savedBookmarks")
             SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
             tableView.beginUpdates()
-            // tableView.reloadRows(at: [IndexPath(row: indexPath.row, section: 0)], with: .automatic)
             tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
             tableView.endUpdates()
             loadBookmarks(loadingIndicator: false)
@@ -331,7 +324,6 @@ extension BookmarksViewController: PostCellViewDelegate {
 
     @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
         if let error = error {
-            // we got back an error!
             SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
 
         } else {
@@ -408,9 +400,8 @@ extension BookmarksViewController: PostCellViewDelegate {
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
-        vc.user = user
+        vc.user = User.empty(username: username, displayName: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

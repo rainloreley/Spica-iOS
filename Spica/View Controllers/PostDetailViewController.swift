@@ -57,15 +57,12 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             make.bottom.equalTo(view.snp.bottom)
         }
 
-        // refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(loadPostDetail), for: .valueChanged)
         tableView.addSubview(refreshControl)
 
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)
         loadingHud.interactionType = .blockNoTouches
-
-        // Do any additional setup after loading the view.
     }
 
     override func viewWillDisappear(_: Bool) {
@@ -94,13 +91,6 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-        /* #if targetEnvironment(macCatalyst)
-             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                 titleBar.toolbar = nil
-             }
-         #endif */
-
         #if targetEnvironment(macCatalyst)
 
             let toolbar = NSToolbar(identifier: "detail")
@@ -132,7 +122,6 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
         AllesAPI.loadPostDetail(id: selectedPostID)
             .receive(on: RunLoop.main)
             .sink {
-                // guard let self = self else { return }
                 switch $0 {
                 case let .failure(err):
 
@@ -437,7 +426,6 @@ extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControlle
 
     @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
         if let error = error {
-            // we got back an error!
             SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
 
         } else {
@@ -495,7 +483,6 @@ extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControlle
                     } receiveValue: { _ in
                         self.navigationController?.popViewController(animated: true)
                         SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
-                        // self.loadPostDetail()
                     }.store(in: &subscriptions)
             }
         }
@@ -515,9 +502,8 @@ extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControlle
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
-        vc.user = user
+        vc.user = User.empty(username: username, displayName: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

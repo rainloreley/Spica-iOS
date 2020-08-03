@@ -63,14 +63,8 @@ class UserEditViewController: UIViewController {
             make.trailing.equalTo(view.snp.trailing)
         }
 
-        /* NotificationCenter.default.addObserver(self, selector: #selector(UserEditViewController.keyboardWillShow), name: NSNotification.Name.UIResponder.keyboardWillShowNotification, object: nil)
-
-         NotificationCenter.default.addObserver(self, selector: #selector(UserEditViewController.keyboardWillHide), name: NSNotification.Name.UIResponder.keyboardWillHideNotification, object: nil) */
-
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-
-        // Do any additional setup after loading the view.
     }
 
     override func viewWillDisappear(_: Bool) {
@@ -135,19 +129,6 @@ class UserEditViewController: UIViewController {
         tableView.contentInset = .zero
     }
 
-    /*@objc func keyboardWillShow(_ notification:Notification) {
-
-     	if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-     		tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-     	}
-     }
-     @objc func keyboardWillHide(_ notification:Notification) {
-
-     	if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-     		tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-     	}
-     }*/
-
     override func viewDidAppear(_: Bool) {
         #if targetEnvironment(macCatalyst)
 
@@ -176,11 +157,6 @@ extension UserEditViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         return 1
-        /* switch section {
-         	case 0: return 1
-         	case 1: return 1
-         	default: return 0
-         } */
     }
 
     func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -195,9 +171,6 @@ extension UserEditViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "editTextField", for: indexPath) as! EditTextFieldCell
-            // cell.user = user
-
-            // cell.placeholder = EditHeaders.init(rawValue: indexPath.section)?.title
 
             cell.textChanged { _ in
                 switch EditHeaders(rawValue: indexPath.section) {
@@ -239,7 +212,6 @@ extension UserEditViewController: UITableViewDelegate, UITableViewDataSource {
             case .name: return SLocale(.NAME)
             case .nickname: return SLocale(.NICKNAME)
             case .about: return SLocale(.ABOUT)
-                // default: return ""
             }
         }
     }

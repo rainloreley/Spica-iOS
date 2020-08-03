@@ -9,7 +9,6 @@ import Combine
 import JGProgressHUD
 import Lightbox
 import LocalAuthentication
-// import NotificationBannerSwift
 import SnapKit
 import SPAlert
 import SwiftKeychainWrapper
@@ -19,9 +18,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     var tableView: UITableView!
     var createPostBtn: UIButton!
     var toolbarDelegate = ToolbarDelegate()
-    var posts = [Post]() {
-        didSet { /* applyChanges() */ }
-    }
+    var posts = [Post]()
 
     var refreshControl = UIRefreshControl()
 
@@ -33,14 +30,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     var verificationString = ""
 
-    var containsCachedElements = false {
-        didSet {
-            /* if containsCachedElements {
-                 let banner = NotificationBanner(title: "Cached items", subtitle: "The timeline contains cached information. Please reload to get the most recent data.", style: .warning)
-                 banner.show(queuePosition: .front, bannerPosition: .top, queue: .default, on: self)
-             } */
-        }
-    }
+    var containsCachedElements = false
 
     override func viewWillDisappear(_: Bool) {
         createPostSubscriber?.cancel()
@@ -54,27 +44,12 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
 
-        /* if traitCollection.userInterfaceIdiom == .mac {
-         	navigationController?.setNavigationBarHidden(true, animated: false)
-         } */
-
         let createPostBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
-
-        /* #if targetEnvironment(macCatalyst)
-             navigationController?.navigationBar.prefersLargeTitles = true
-             navigationController?.navigationItem.largeTitleDisplayMode = .always
-         #else */
         navigationItem.rightBarButtonItems = [createPostBarButtonItem]
-        // #endif
 
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-            //
         } else {
             navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
-
-            /* let accountBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .plain, target: self, action: #selector(openOwnProfileView))
-
-             navigationItem.rightBarButtonItems?.append(accountBarButtonItem) */
         }
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
@@ -105,18 +80,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         if #available(iOS 13.4, *) {
             createPostBtn.isPointerInteractionEnabled = true
         }
-
-        /* view.addSubview(createPostBtn)
-
-         createPostBtn.snp.makeConstraints { make in
-             make.width.equalTo(50)
-             make.height.equalTo(50)
-             make.bottom.equalTo(view.snp.bottom).offset(-100)
-             make.trailing.equalTo(view.snp.trailing).offset(-16)
-         } */
     }
-
-    // MARK: - Datasource
 
     typealias DataSource = UITableViewDiffableDataSource<Section, Post>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
@@ -179,7 +143,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         let vc = UserProfileViewController()
         let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-        vc.user = User(id: "", username: username!, displayName: username!, nickname: username!, imageURL: URL(string: "https://avatar.alles.cx/u/\(username!)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username!)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
+        vc.user = User.empty(username: username!, displayName: username!, nickname: username!)
 
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
@@ -252,15 +216,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         requestBiometricAuth()
         setSidebar()
 
-        /* #if targetEnvironment(macCatalyst)
-             let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-             if let titleBar = sceneDelegate.window?.windowScene?.titlebar {
-                 let toolBar = NSToolbar(identifier: "timelineToolbar")
-                 toolBar.delegate = self
-                 titleBar.toolbar = toolBar
-             }
-         #endif */
-
         loadVersion()
         loadPrivacyPolicy()
         loadFeed()
@@ -273,7 +228,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 .sink {
                     switch $0 {
                     case let .failure(err):
-                        print("ERRORORORORO: \(err.localizedDescription)")
                         return
                     default: break
                     }
@@ -318,9 +272,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     @objc func loadFeed() {
         verificationString = ""
         if posts.isEmpty { loadingHud.show(in: view) }
-
-        // DispatchQueue.global(qos: .utility).async {
-
         AllesAPI.loadFeed(cache: .cache)
             .receive(on: RunLoop.main)
             .sink {
@@ -333,19 +284,13 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 default: break
                 }
             } receiveValue: { [self] posts in
-                // DispatchQueue.main.async {
-                /* self.containsCachedElements = posts.filter { $0.isCached == true }.isEmpty ? false : true
-                 self.posts = posts.map { $0.post! } */
                 self.posts = posts
                 self.applyChanges()
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
                 verificationString = randomString(length: 30)
                 self.loadImages()
-                // }
             }.store(in: &subscriptions)
-
-        // }
     }
 
     func requestBiometricAuth() {
@@ -426,7 +371,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                         posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
                     }
 
-                    // applyChanges()
                     if let url = post.imageURL {
                         if veri != verificationString { return }
                         posts[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -500,7 +444,9 @@ extension TimelineViewController: UITableViewDelegate {
 extension TimelineViewController: MainSettingsDelegate {
     func clickedMore(username: String) {
         let vc = UserProfileViewController()
-        vc.user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: UIImage(systemName: "person.circle")!, isFollowing: false, followsMe: false, about: "", isOnline: false)
+
+        vc.user = User.empty(username: username, displayName: username, nickname: username)
+
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -534,7 +480,6 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
 
     @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
         if let error = error {
-            // we got back an error!
             SPAlert.present(title: SLocale(.ERROR), message: error.localizedDescription, preset: .error)
 
         } else {
@@ -611,9 +556,8 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
     }
 
     func selectedUser(username: String, indexPath _: IndexPath) {
-        let user = User(id: username, username: username, displayName: username, nickname: username, imageURL: URL(string: "https://avatar.alles.cx/u/\(username)")!, isPlus: false, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(username)")!), isFollowing: false, followsMe: false, about: "", isOnline: false)
         let vc = UserProfileViewController()
-        vc.user = user
+        vc.user = User.empty(username: username, displayName: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
