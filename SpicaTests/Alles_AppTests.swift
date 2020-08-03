@@ -5,7 +5,7 @@
 //  Created by Adrian Baumgart on 29.06.20.
 //
 
-@testable import Alles_App
+@testable import Spica
 import XCTest
 
 class Alles_AppTests: XCTestCase {

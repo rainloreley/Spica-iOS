@@ -14,12 +14,14 @@ class CreditsViewController: UIViewController {
     var credits = [
         Credit(name: "Adrian Baumgart", role: "iOS Developer", url: "https://twitter.com/adrianbaumgart", imageURL: "https://avatar.alles.cx/u/adrian", image: UIImage(systemName: "person.circle")!),
         Credit(name: "Patrik Svoboda", role: "iOS Developer", url: "https://twitter.com/PatrikTheDev", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
+		Credit(name: "Jason", role: "Android Developer", url: "https://twitter.com/jso_8910", imageURL: "", image: UIImage(named: "jsoPfp")!),
         Credit(name: "Archie Baer", role: "Alles Founder", url: "https://twitter.com/onlytruearchie", imageURL: "https://avatar.alles.cx/u/archie", image: UIImage(systemName: "person.circle")!),
         Credit(name: "David Muñoz", role: "Translator (Spanish)", url: "https://twitter.com/Dmunozv04", imageURL: "https://crowdin-static.downloads.crowdin.com/avatar/13940729/small/bf4ab120766769e9c9deed4b51c2661c.jpg", image: UIImage(systemName: "person.circle")!),
         Credit(name: "James Young", role: "Translator (French, Norwegian)", url: "https://twitter.com/onlytruejames", imageURL: "https://avatar.alles.cx/u/james", image: UIImage(systemName: "person.circle")!),
         Credit(name: "@DaThinkingChair", role: "Translator (Spanish)", url: "https://twitter.com/DaThinkingChair", imageURL: "https://pbs.twimg.com/profile_images/1259314332950769666/UPvu5g-e_400x400.jpg", image: UIImage(systemName: "person.circle")!),
         Credit(name: "Storm", role: "Translator (Norwegian)", url: "https://twitter.com/StormLovesTech", imageURL: "https://avatar.alles.cx/u/storm", image: UIImage(systemName: "person.circle")!),
         Credit(name: "primenate32", role: "Translator (Frensh, Spanish)", url: "http://123computer.net", imageURL: "https://pbs.twimg.com/profile_images/1288993775801565185/3izyvyCV_400x400.jpg", image: UIImage(systemName: "person.circle")!),
+		Credit(name: "grify", role: "Translator (Swedish)", url: "https://twitter.com/GrifyDev", imageURL: "https://avatar.alles.cx/u/grify", image: UIImage(systemName: "person.circle")!)
     ]
 
     override func viewDidLoad() {
