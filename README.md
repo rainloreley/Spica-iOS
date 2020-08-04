@@ -1,5 +1,7 @@
 # Spica
 
+[![Crowdin](https://badges.crowdin.net/spica/localized.svg)](https://crowdin.com/project/spica)
+
 Spica is an iOS Client for [Alles Micro](https://alles.cx). It's privacy focused and easy to use.
 
 ## Build & Install
