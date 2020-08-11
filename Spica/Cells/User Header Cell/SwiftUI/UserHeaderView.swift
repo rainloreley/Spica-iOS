@@ -11,6 +11,8 @@ import SwiftUI
 struct UserHeaderView: View {
     @ObservedObject var controller: UserHeaderViewController
 
+    var xp = XP(total: 60, level: 1, levelXP: 60, levelXPMax: 1000, levelProgress: 0.06)
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -34,7 +36,8 @@ struct UserHeaderView: View {
             }
             Group {
                 Text("\(controller.user.displayName)\(controller.user.isPlus ? String("⁺") : String(""))").font(.title).bold()
-                Text("@\(controller.user.username)").foregroundColor(.secondary)
+                // Text("@\(controller.user.username)").foregroundColor(.secondary)
+                Text("\(controller.user.displayName)#0001").foregroundColor(.secondary)
                 if controller.user.followsMe && !controller.isLoggedInUser {
                     Text(SLocale(.FOLLOWS_YOU)).foregroundColor(.init(UIColor.tertiaryLabel))
                 }
@@ -63,9 +66,8 @@ struct UserHeaderView: View {
                         .appearance(type: .solid(color: Color.red, background: Color("LoadingSkeleton")))
                         .animation(type: .pulse())
                         .multiline(lines: 1, scales: [0: 0.5])
-
                     Group {
-                        Text("\(controller.user.rubies) ").bold() + Text(countString(number: controller.user.rubies, singleText: SLocale(.RUBY_SINGULAR), multiText: SLocale(.RUBY_PLURAL), includeNumber: false))
+                        Text("\(xp.total)").bold() + Text(" XP")
                     }.fixedSize(horizontal: true, vertical: true)
                         .skeleton(with: !controller.userDataLoaded)
                         .shape(type: .capsule)
@@ -73,6 +75,8 @@ struct UserHeaderView: View {
                         .animation(type: .pulse())
                         .multiline(lines: 1, scales: [0: 0.5])
                 }
+
+                XPProgressBarView(xp: xp)
 
                 if !controller.isLoggedInUser {
                     Button(action: {

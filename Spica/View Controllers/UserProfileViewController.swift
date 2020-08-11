@@ -170,7 +170,10 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         #endif
 
         setSidebar()
-        loadUser()
+        user = User.empty(username: "adrian", displayName: "Adrian", nickname: "Adrian", imageURL: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!, isPlus: true, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!), isFollowing: false, followsMe: false, about: "Hi", isOnline: true)
+        userDataLoaded = true
+        imageAnimationAllowed = true
+        // loadUser()
     }
 
     @objc func openPostCreateView() {

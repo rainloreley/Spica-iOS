@@ -28,6 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")
         }
 
+        KeychainWrapper.standard.set("000", forKey: "dev.abmgrt.spica.user.token")
+        KeychainWrapper.standard.set("999", forKey: "dev.abmgrt.spica.user.id")
+        KeychainWrapper.standard.set("adrian", forKey: "dev.abmgrt.spica.user.username")
+
         UserDefaults.standard.set(true, forKey: "hasRunBefore")
 
         // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION

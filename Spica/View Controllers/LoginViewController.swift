@@ -44,7 +44,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
 
         usernameField = UITextField(frame: .zero)
         usernameField.borderStyle = .roundedRect
-        usernameField.placeholder = "jessica"
+        usernameField.placeholder = "Adrian#0001"
         usernameField.autocapitalizationType = .none
         usernameField.autocorrectionType = .no
         view.addSubview(usernameField)
@@ -61,7 +61,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
 
         usernameLabel = UILabel(frame: .zero)
-        usernameLabel.text = "\(SLocale(.USERNAME)):"
+        usernameLabel.text = "\(SLocale(.NAME)):"
         view.addSubview(usernameLabel)
 
         usernameLabel.snp.makeConstraints { make in
@@ -217,31 +217,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         passwordField.layer.borderColor = UIColor.clear.cgColor
         passwordField.layer.borderWidth = 0.0
 
-        if !usernameField.text!.isEmpty && !passwordField.text!.isEmpty {
-            AllesAPI.default.signInUser(username: usernameField.text!, password: passwordField.text!)
-                .receive(on: RunLoop.main)
-                .sink {
-                    switch $0 {
-                    case let .failure(err):
-                        DispatchQueue.main.async {
-                            self.loadingHud.dismiss()
-
-                            AllesAPI.default.errorHandling(error: err, caller: self.view)
-                        }
-                    default: break
-                    }
-                } receiveValue: { _ in
-                    DispatchQueue.main.async {
-                        let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-
-                        let initialView = sceneDelegate.setupInitialView()
-                        sceneDelegate.window?.rootViewController = initialView
-
-                        self.loadingHud.dismiss()
-                        sceneDelegate.window?.makeKeyAndVisible()
-                    }
-                }.store(in: &subscriptions)
-        } else {
+        if usernameField.text!.isEmpty, passwordField.text!.isEmpty {
             loadingHud.dismiss()
             if usernameField.text!.isEmpty {
                 usernameField.layer.borderColor = UIColor.systemRed.cgColor
@@ -250,6 +226,37 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             if passwordField.text!.isEmpty {
                 passwordField.layer.borderColor = UIColor.systemRed.cgColor
                 passwordField.layer.borderWidth = 1.0
+            }
+        } else {
+            let splitUsername = usernameField.text!.split(separator: "#")
+            if splitUsername.count != 2 || Int(splitUsername[1]) == nil || splitUsername[1].count != 4 {
+                loadingHud.dismiss()
+                usernameField.layer.borderColor = UIColor.systemRed.cgColor
+                usernameField.layer.borderWidth = 1.0
+            } else {
+                AllesAPI.default.signInUser(username: usernameField.text!, password: passwordField.text!)
+                    .receive(on: RunLoop.main)
+                    .sink {
+                        switch $0 {
+                        case let .failure(err):
+                            DispatchQueue.main.async {
+                                self.loadingHud.dismiss()
+
+                                AllesAPI.default.errorHandling(error: err, caller: self.view)
+                            }
+                        default: break
+                        }
+                    } receiveValue: { _ in
+                        DispatchQueue.main.async {
+                            let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+
+                            let initialView = sceneDelegate.setupInitialView()
+                            sceneDelegate.window?.rootViewController = initialView
+
+                            self.loadingHud.dismiss()
+                            sceneDelegate.window?.makeKeyAndVisible()
+                        }
+                    }.store(in: &subscriptions)
             }
         }
     }

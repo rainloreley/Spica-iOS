@@ -30,6 +30,7 @@
 		3A61B27524C8B55800AC1A9C /* PostDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61B27424C8B55800AC1A9C /* PostDetail.swift */; };
 		3A61B27724C8B56900AC1A9C /* CachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61B27624C8B56900AC1A9C /* CachePolicy.swift */; };
 		3A61B27B24C8B5E900AC1A9C /* TagDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */; };
+		3A66D2EF24E2D62E0074D223 /* XPProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A66D2EE24E2D62E0074D223 /* XPProgressBarView.swift */; };
 		3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */; };
 		3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */; };
 		3A7145E324AA8753000FA3C3 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */; };
@@ -125,6 +126,7 @@
 		3A61B27424C8B55800AC1A9C /* PostDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetail.swift; sourceTree = "<group>"; };
 		3A61B27624C8B56900AC1A9C /* CachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePolicy.swift; sourceTree = "<group>"; };
 		3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; };
+		3A66D2EE24E2D62E0074D223 /* XPProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPProgressBarView.swift; sourceTree = "<group>"; };
 		3A7145DB24AA8753000FA3C3 /* Spica.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spica.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A7145E024AA8753000FA3C3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -297,6 +299,14 @@
 				3ADF6BC124AD24D600B7C510 /* ReplyButtonCell */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		3A66D2ED24E2D6200074D223 /* Additions */ = {
+			isa = PBXGroup;
+			children = (
+				3A66D2EE24E2D62E0074D223 /* XPProgressBarView.swift */,
+			);
+			path = Additions;
 			sourceTree = "<group>";
 		};
 		3A6AABD124BB5D6300C71BC0 /* Localization */ = {
@@ -502,6 +512,7 @@
 		3AF1DB1224D57E27006832A7 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				3A66D2ED24E2D6200074D223 /* Additions */,
 				3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */,
 				3AF1DB1524D57E6A006832A7 /* UserHeaderView.swift */,
 				3AF1DB1724D57E78006832A7 /* UserHeaderViewController.swift */,
@@ -854,6 +865,7 @@
 				3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */,
 				3A61B27324C8B54800AC1A9C /* Tag.swift in Sources */,
 				3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */,
+				3A66D2EF24E2D62E0074D223 /* XPProgressBarView.swift in Sources */,
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
 				3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */,
 				3A27608224D5AE8300DEE34A /* FollowersFollowingViewController.swift in Sources */,
