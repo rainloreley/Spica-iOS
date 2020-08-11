@@ -63,7 +63,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let userProfileVC = UserProfileViewController()
         let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-        userProfileVC.user = User.empty(username: username!, displayName: username!, nickname: username!)
+        userProfileVC.user = User(name: username!, nickname: username!)
 
         let accountView = UINavigationController(rootViewController: userProfileVC)
         accountView.tabBarItem = UITabBarItem(title: SLocale(.ACCOUNT), image: UIImage(systemName: "person"), tag: 3)

@@ -30,7 +30,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         }
     }
 
-    var signedInUsername: String!
+    var signedInID: String!
 
     var refreshControl = UIRefreshControl()
 
@@ -43,7 +43,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     func didSaveUser(user: UpdateUser) {
         self.user.about = user.about
         self.user.nickname = user.nickname
-        self.user.displayName = user.name
+		self.user.name = user.name
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
         loadUser()
     }
@@ -57,15 +57,15 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
         view.backgroundColor = .systemBackground
 
-        signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+		signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
-        navigationItem.title = "\(user.displayName)"
+		navigationItem.title = "\(user.name)"
         navigationController?.navigationBar.prefersLargeTitles = false
         var rightItems = [UIBarButtonItem]()
 
         rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
 
-        if signedInUsername == user.username {
+		if signedInID == user.id {
             rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
         }
 
@@ -102,8 +102,8 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     func setSidebar() {
         if #available(iOS 14.0, *) {
-            signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
-            if signedInUsername == user.username {
+            signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+			if signedInID == user.id {
                 if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                     if let sidebar = globalSideBarController {
                         if let collectionView = sidebar.collectionView {
@@ -170,7 +170,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         #endif
 
         setSidebar()
-        user = User.empty(username: "adrian", displayName: "Adrian", nickname: "Adrian", imageURL: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!, isPlus: true, rubies: 0, followers: 0, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!), isFollowing: false, followsMe: false, about: "Hi", isOnline: true)
+		user = User(name: "Adrian", tag: "0001", plus: true, alles: true, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!), imgURL: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!, about: "", isOnline: true)
         userDataLoaded = true
         imageAnimationAllowed = true
         // loadUser()
@@ -179,7 +179,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     @objc func openPostCreateView() {
         let vc = PostCreateViewController()
         vc.type = .post
-        vc.preText = "@\(user.username) "
+		vc.preText = "@\(user.name) "
         vc.delegate = self
         present(UINavigationController(rootViewController: vc), animated: true)
     }
@@ -195,7 +195,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         }
         DispatchQueue.main.async { [self] in
 
-            AllesAPI.default.loadUser(username: self.user.username)
+            AllesAPI.default.loadUser(username: self.user.id)
                 .receive(on: RunLoop.current)
                 .sink {
                     switch $0 {
@@ -209,7 +209,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                     }
                 } receiveValue: { [unowned self] in
                     self.user = $0
-                    self.navigationItem.title = "\(self.user.displayName)"
+                    self.navigationItem.title = "\(self.user.name)"
                     self.loadPfp()
                     self.loadPosts()
                 }
@@ -250,7 +250,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
             dispatchGroup.enter()
 
-            self.user.image = ImageLoader.loadImageFromInternet(url: self.user.imageURL)
+			self.user.image = ImageLoader.loadImageFromInternet(url: self.user.imgURL!)
 
             self.userDataLoaded = true
             self.imageAnimationAllowed = true
@@ -275,7 +275,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 if index <= userPosts.count - 1 {
                     if let author = userPosts[index].author {
                         if veri != verificationString { return }
-                        userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
+						userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
                     }
                     if let url = post.imageURL {
                         if veri != verificationString { return }
@@ -339,7 +339,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     @objc func followUnfollowUser() {
-        AllesAPI.default.performFollowAction(username: user.username, action: user.isFollowing ? .unfollow : .follow)
+        AllesAPI.default.performFollowAction(username: user.id, action: user.following ? .unfollow : .follow)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
@@ -350,7 +350,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 default: break
                 }
             } receiveValue: { [unowned self] in
-                self.user.isFollowing = $0 == .follow ? true : false
+                self.user.following = $0 == .follow ? true : false
                 if $0 == .follow {
                     self.user.followers += 1
                 } else {
@@ -540,7 +540,7 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
 
     func selectedUser(username: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User.empty(username: username, displayName: username, nickname: username)
+        vc.user = User(name: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

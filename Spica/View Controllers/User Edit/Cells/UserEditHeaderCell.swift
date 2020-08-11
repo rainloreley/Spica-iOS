@@ -11,19 +11,19 @@ class UserEditHeaderCell: UITableViewCell {
     var user: User! {
         didSet {
             pfpImageView.image = user.image!
-            if user.isPlus {
+            if user.plus {
                 let font: UIFont = UIFont.boldSystemFont(ofSize: 18)
 
                 let fontSuper: UIFont = UIFont.boldSystemFont(ofSize: 12)
-                let attrDisplayName = NSMutableAttributedString(string: "\(user.displayName)+", attributes: [.font: font])
-                attrDisplayName.setAttributes([.font: fontSuper, .baselineOffset: 10], range: NSRange(location: user.displayName.count, length: 1))
+                let attrDisplayName = NSMutableAttributedString(string: "\(user.name)+", attributes: [.font: font])
+                attrDisplayName.setAttributes([.font: fontSuper, .baselineOffset: 10], range: NSRange(location: user.name.count, length: 1))
 
                 displaynameLabel.attributedText = attrDisplayName
             } else {
-                displaynameLabel.text = user.displayName
+                displaynameLabel.text = user.name
             }
 
-            usernameLabel.text = "@\(user.username)"
+            usernameLabel.text = "@\(user.name)"
         }
     }
 

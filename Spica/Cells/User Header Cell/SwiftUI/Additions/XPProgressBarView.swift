@@ -33,14 +33,6 @@ struct XPProgressBarView: View {
     }
 }
 
-struct XP {
-    var total: Int
-    var level: Int
-    var levelXP: Int
-    var levelXPMax: Int
-    var levelProgress: Float
-}
-
 struct XPProgressBarView_Previews: PreviewProvider {
     static var previews: some View {
         XPProgressBarView()

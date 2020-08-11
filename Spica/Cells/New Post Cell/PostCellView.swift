@@ -49,19 +49,19 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             contentTextView.isUserInteractionEnabled = true
             contentTextView.isSelectable = true
 
-            if post?.author?.isPlus == true {
+            if post?.author?.plus == true {
                 let font: UIFont? = UIFont.boldSystemFont(ofSize: 18)
 
                 let fontSuper: UIFont? = UIFont.boldSystemFont(ofSize: 12)
-                let attrDisplayName = NSMutableAttributedString(string: "\(post!.author!.displayName)+", attributes: [.font: font!])
-                attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: (post?.author!.displayName.count)!, length: 1))
+                let attrDisplayName = NSMutableAttributedString(string: "\(post!.author!.name)+", attributes: [.font: font!])
+                attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: (post?.author!.name.count)!, length: 1))
 
                 displaynameLabel.attributedText = attrDisplayName
             } else {
-                displaynameLabel.text = post!.author?.displayName
+                displaynameLabel.text = post!.author?.name
             }
 
-            usernameLabel.text = "@\(post!.author!.username)"
+            usernameLabel.text = "@\(post!.author!.name)"
             voteCountLabel.text = String(post!.score)
             contentTextView.delegate = self
 
@@ -454,7 +454,7 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         actionsArray.append(reply)
 
         let repost = UIAction(title: SLocale(.REPOST), image: UIImage(systemName: "square.and.arrow.up")) { _ in
-            self.delegate.repost(id: self.post!.id, username: self.post!.author!.username)
+            self.delegate.repost(id: self.post!.id, username: self.post!.author!.name)
         }
 
         actionsArray.append(repost)

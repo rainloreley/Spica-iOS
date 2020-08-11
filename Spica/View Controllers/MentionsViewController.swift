@@ -199,7 +199,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                 if index <= mentions.count - 1 {
                     if let author = mentions[index].author {
                         if veri != verificationString { return }
-                        mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
+						mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
                     }
 
                     if let url = post.imageURL {
@@ -376,7 +376,7 @@ extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerD
 
     func selectedUser(username: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User.empty(username: username, displayName: username, nickname: username)
+        vc.user = User(name: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

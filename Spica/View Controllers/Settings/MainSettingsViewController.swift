@@ -103,7 +103,7 @@ class MainSettingsViewController: UITableViewController {
     @IBAction func profileMore(_: Any) {
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
             let vc = UserProfileViewController()
-            vc.user = User.empty(id: username, username: username, displayName: username, nickname: username)
+            vc.user = User(id: username, name: username, nickname: username)
             vc.hidesBottomBarWhenPushed = true
 
             navigationController?.pushViewController(vc, animated: true)

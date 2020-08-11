@@ -2,64 +2,68 @@
 //  User.swift
 //  Spica
 //
-//  Created by Adrian Baumgart on 29.06.20.
+//  Created by Adrian Baumgart on 11.08.20.
 //
 
-import Cache
 import Foundation
 import SwiftyJSON
 import UIKit
 
 public struct User: Hashable {
-    var id: String
-    var username: String
-    var displayName: String
-    var nickname: String
-
-    var isPlus: Bool
-    var rubies: Int
-    var followers: Int
-    var imageURL: URL
-    var image: UIImage?
-    var isFollowing: Bool
-    var followsMe: Bool
-    var about: String
-    var isOnline: Bool
-
-    init(id: String, username: String, displayName: String, nickname: String, imageURL: URL, isPlus: Bool, rubies: Int, followers: Int, image: UIImage, isFollowing: Bool, followsMe: Bool, about: String, isOnline: Bool) {
-        self.id = id
-        self.username = username
-        self.displayName = displayName
-        self.nickname = nickname
-        self.imageURL = imageURL
-        self.isPlus = isPlus
-        self.rubies = rubies
-        self.followers = followers
-        self.image = image
-        self.isFollowing = isFollowing
-        self.followsMe = followsMe
-        self.about = about
-        self.isOnline = isOnline
-    }
-
-    public static func empty(id: String = "", username: String = "", displayName: String = "", nickname: String = "", imageURL: URL = URL(string: "https://avatar.alles.cx/u/....")!, isPlus: Bool = false, rubies: Int = 0, followers: Int = 0, image: UIImage = UIImage(systemName: "person.circle")!, isFollowing: Bool = false, followsMe: Bool = false, about: String = "", isOnline: Bool = false) -> User {
-        return User(id: id == "" ? randomString(length: 30) : id, username: username, displayName: displayName, nickname: nickname, imageURL: (username == "" ? imageURL : URL(string: "https://avatar.alles.cx/u/\(username)"))!, isPlus: isPlus, rubies: rubies, followers: followers, image: image, isFollowing: isFollowing, followsMe: followsMe, about: about, isOnline: isOnline)
-    }
-
-    init(_ json: JSON, isOnline: Bool) {
-        id = json["id"].string!
-        username = json["username"].string!
-        displayName = json["name"].string!
-        nickname = json["nickname"].string ?? json["name"].string!
-        imageURL = URL(string: "https://avatar.alles.cx/u/\(json["username"])")!
-        isPlus = json["plus"].bool ?? false
-        rubies = json["rubies"].int ?? 0
-        followers = json["followers"].int ?? 0
-
-        image = UIImage(systemName: "person.circle")
-        isFollowing = json["following"].bool ?? false
-        followsMe = json["followingUser"].bool ?? false
-        about = json["about"].string ?? ""
-        self.isOnline = isOnline
-    }
+	var id: String
+	var name: String
+	var tag: String
+	var nickname: String
+	var plus: Bool
+	var alles: Bool
+	
+	var image: UIImage?
+	var imgURL: URL?
+	
+	var xp: XP
+	var about: String
+	var following: Bool
+	var followsMe: Bool
+	var isOnline: Bool
+	var followers: Int
+	
+	
+	init(id: String = "", name: String = "", tag: String = "", nickname: String = "", plus: Bool = false, alles: Bool = true, image: UIImage? = nil, imgURL: URL? = nil, xp: XP = XP(total: 0, level: 0, levelXP: 0, levelXPMax: 0, levelProgress: 0), about: String = "", following: Bool = false, followsMe: Bool = false, isOnline: Bool = false, followers: Int = 0) {
+		self.id = id == "" ? randomString(length: 20) : id
+		self.name = name
+		self.tag = tag
+		self.nickname = nickname == "" ? name : nickname
+		self.plus = plus
+		self.alles = alles
+		self.image = image == nil ? UIImage(systemName: "person.cirlce") : image
+		self.imgURL = imgURL == nil ? URL(string: "https://avarar.alles.cc/\(id)") : imgURL
+		self.xp = xp
+		self.about = about
+		self.following = following
+		self.followsMe = followsMe
+		self.isOnline = isOnline
+		self.followers = followers
+	}
+	
+	init(_ json: JSON, isOnline: Bool = false) {
+		self.id = json["id"].string ?? randomString(length: 20)
+		self.name = json["name"].string ?? ""
+		self.tag = json["tag"].string ?? ""
+		self.nickname = json["nickname"].string ?? ""
+		self.plus = json["plus"].bool ?? false
+		self.alles = json["alles"].bool ?? false
+		self.image = UIImage(systemName: "person.cirlce")
+		self.imgURL = URL(string: "https://avatar.alles.cc\(json["id"].string ?? "")")
+		self.xp = XP(total: json["xp"]["total"].int ?? 0, level: json["xp"]["level"].int ?? 0, levelXP: json["xp"]["levelXp"].int ?? 0, levelXPMax: json["xp"]["levelXpMax"].int ?? 0, levelProgress: json["xp"]["levelProgress"].float ?? 0)
+		self.about = json["about"].string ?? ""
+		self.following = json["following"].bool ?? false
+		self.followsMe = json["followingUser"].bool ?? false
+		self.isOnline = isOnline
+		self.followers = json["followers"].int ?? 0
+		
+	}
+	
+	
+	
+	
 }

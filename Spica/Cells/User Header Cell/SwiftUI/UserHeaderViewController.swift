@@ -15,7 +15,7 @@ protocol UserHeaderDelegate {
 }
 
 class UserHeaderViewController: ObservableObject {
-    @Published var user: User = User.empty()
+    @Published var user: User = User()
 
     @Published var userDataLoaded: Bool = false
 
@@ -26,7 +26,7 @@ class UserHeaderViewController: ObservableObject {
     var delegate: UserHeaderDelegate!
 
     func followUnfollowUser() {
-        user.isFollowing.toggle()
+		user.following.toggle()
         delegate.followUnfollowUser(uid: user.id)
     }
 
@@ -35,8 +35,8 @@ class UserHeaderViewController: ObservableObject {
     }
 
     func getLoggedInUser() {
-        let signedInUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+        let signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
-        isLoggedInUser = user.username == signedInUsername
+		isLoggedInUser = user.id == signedInID
     }
 }

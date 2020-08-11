@@ -40,7 +40,7 @@ public class AllesAPI {
                                         default: break
                                         }
                                     } receiveValue: { user in
-                                        KeychainWrapper.standard.set(user.username, forKey: "dev.abmgrt.spica.user.username")
+                                        KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.username")
                                         KeychainWrapper.standard.set(user.id, forKey: "dev.abmgrt.spica.user.id")
 
                                         SpicAPI.getPrivacyPolicy()
@@ -241,7 +241,7 @@ public class AllesAPI {
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
-            AF.request("https://alles.cx/api/users/\(user.username)?posts", method: .get, parameters: nil, headers: [
+            AF.request("https://alles.cx/api/users/\(user.id)?posts", method: .get, parameters: nil, headers: [
                 "Authorization": authKey,
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {
@@ -425,7 +425,7 @@ public class AllesAPI {
                     let responseJSON = JSON(response.data!)
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
-                            var tempPostDetail = PostDetail(ancestors: [], post: Post.empty(author: User.empty()), replies: [])
+                            var tempPostDetail = PostDetail(ancestors: [], post: Post.empty(author: User()), replies: [])
 
                             tempPostDetail.post = Post(responseJSON)
                             tempPostDetail.post.author = User(responseJSON["author"], isOnline: false)

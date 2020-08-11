@@ -127,7 +127,7 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             vc.navigationItem.hidesBackButton = true
             let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-            vc.user = User.empty(username: username!, displayName: username!, nickname: username!)
+			vc.user = User(name: username!)
 
             vc.hidesBottomBarWhenPushed = true
             return vc

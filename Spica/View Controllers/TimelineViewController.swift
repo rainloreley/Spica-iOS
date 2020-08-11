@@ -143,7 +143,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         let vc = UserProfileViewController()
         let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-        vc.user = User.empty(username: username!, displayName: username!, nickname: username!)
+        vc.user = User(name: username!, nickname: username!)
 
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
@@ -368,7 +368,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 if index <= posts.count - 1 {
                     if let author = posts[index].author {
                         if veri != verificationString { return }
-                        posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imageURL)
+                        posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
                     }
 
                     if let url = post.imageURL {
@@ -445,7 +445,7 @@ extension TimelineViewController: MainSettingsDelegate {
     func clickedMore(username: String) {
         let vc = UserProfileViewController()
 
-        vc.user = User.empty(username: username, displayName: username, nickname: username)
+        vc.user = User(name: username, nickname: username)
 
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
@@ -557,7 +557,7 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
 
     func selectedUser(username: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User.empty(username: username, displayName: username, nickname: username)
+        vc.user = User(name: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

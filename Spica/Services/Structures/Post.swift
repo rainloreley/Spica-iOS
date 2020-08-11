@@ -53,5 +53,5 @@ public struct Post: Hashable {
 }
 
 extension Post {
-    static let deleted = Post.empty(author: User.empty(username: "---", displayName: "---", nickname: "---"), content: "Post was deleted")
+    static let deleted = Post.empty(author: User(name: "---", nickname: "---"), content: "Post was deleted")
 }

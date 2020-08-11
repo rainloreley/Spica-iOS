@@ -115,7 +115,7 @@ class TagDetailViewController: UIViewController {
                 dispatchGroup.enter()
                 if index <= tag.posts.count - 1 {
                     if veri != verificationString { return }
-                    tag.posts[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imageURL)
+					tag.posts[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imgURL!)
                     if veri != verificationString { return }
                     if let url = post.imageURL {
                         tag.posts[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -356,7 +356,7 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
 
     func selectedUser(username: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User.empty(username: username, displayName: username, nickname: username)
+        vc.user = User(name: username, nickname: username)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

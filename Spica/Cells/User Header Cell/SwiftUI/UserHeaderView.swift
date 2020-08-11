@@ -35,9 +35,9 @@ struct UserHeaderView: View {
                 Spacer()
             }
             Group {
-                Text("\(controller.user.displayName)\(controller.user.isPlus ? String("⁺") : String(""))").font(.title).bold()
+                Text("\(controller.user.name)\(controller.user.plus ? String("⁺") : String(""))").font(.title).bold()
                 // Text("@\(controller.user.username)").foregroundColor(.secondary)
-                Text("\(controller.user.displayName)#0001").foregroundColor(.secondary)
+				Text("\(controller.user.name)#\(controller.user.tag)").foregroundColor(.secondary)
                 if controller.user.followsMe && !controller.isLoggedInUser {
                     Text(SLocale(.FOLLOWS_YOU)).foregroundColor(.init(UIColor.tertiaryLabel))
                 }
@@ -76,13 +76,13 @@ struct UserHeaderView: View {
                         .multiline(lines: 1, scales: [0: 0.5])
                 }
 
-                XPProgressBarView(xp: xp)
+                //XPProgressBarView(xp: xp)
 
                 if !controller.isLoggedInUser {
                     Button(action: {
                         controller.followUnfollowUser()
                     }, label: {
-                        if controller.user.isFollowing {
+                        if controller.user.following {
                             Group {
                                 Text(SLocale(.FOLLOWING_ACTION)).padding().foregroundColor(.white)
                             }.background(Color.blue).shadow(radius: 10).cornerRadius(12.0)
