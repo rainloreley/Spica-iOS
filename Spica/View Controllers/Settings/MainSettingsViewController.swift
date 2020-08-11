@@ -149,14 +149,14 @@ class MainSettingsViewController: UITableViewController {
     }
 
     @IBAction func spicaPrivacy(_: Any) {
-        let url = URL(string: "https://spica.fliney.eu/privacy")
+        let url = URL(string: "https://spica.li/privacy")
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
         }
     }
 
     @IBAction func spicaWebsite(_: Any) {
-        let url = URL(string: "https://spica.fliney.eu/")
+        let url = URL(string: "https://spica.li/")
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
         }

@@ -14,7 +14,7 @@ import UIKit
 public class SpicAPI {
     public static func getVersion() -> Future<Version, Error> {
         Future<Version, Error> { promise in
-            AF.request("https://api.spica.fliney.eu/apps/ios/version", method: .get).responseJSON { response in
+            AF.request("https://api.spica.li/apps/ios/version", method: .get).responseJSON { response in
                 switch response.result {
                 case .success:
                     let responseJSON = JSON(response.data!)
@@ -28,7 +28,7 @@ public class SpicAPI {
 
     public static func getPrivacyPolicy() -> Future<PrivacyPolicy, Error> {
         Future<PrivacyPolicy, Error> { promise in
-            AF.request("https://api.spica.fliney.eu/privacy", method: .get).responseJSON { response in
+            AF.request("https://api.spica.li/privacy", method: .get).responseJSON { response in
                 switch response.result {
                 case .success:
                     let responseJSON = JSON(response.data!)

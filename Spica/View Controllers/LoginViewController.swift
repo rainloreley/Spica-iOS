@@ -176,7 +176,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         var url = ""
         switch sender.tag {
         case 0:
-            url = "https://spica.fliney.eu/privacy"
+            url = "https://spica.li/privacy"
         case 1:
             url = "https://alles.cx/docs/privacy"
         case 2:
