@@ -26,11 +26,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
+        }
+
+        if !UserDefaults.standard.bool(forKey: "hasRunOnNewAPI") {
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
+            KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
         }
 
         KeychainWrapper.standard.set("000", forKey: "dev.abmgrt.spica.user.token")
         KeychainWrapper.standard.set("999", forKey: "dev.abmgrt.spica.user.id")
-        KeychainWrapper.standard.set("adrian", forKey: "dev.abmgrt.spica.user.username")
+        KeychainWrapper.standard.set("Adrian", forKey: "dev.abmgrt.spica.user.name")
+        KeychainWrapper.standard.set("0001", forKey: "dev.abmgrt.spica.user.tag")
 
         UserDefaults.standard.set(true, forKey: "hasRunBefore")
 
@@ -61,9 +72,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         bookmarksView.tabBarItem = UITabBarItem(title: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark"), tag: 2)
 
         let userProfileVC = UserProfileViewController()
-        let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+        let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+        let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
+        let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
 
-        userProfileVC.user = User(name: username!, nickname: username!)
+		userProfileVC.user = User(id: id!, name: name!, tag: tag!)
 
         let accountView = UINavigationController(rootViewController: userProfileVC)
         accountView.tabBarItem = UITabBarItem(title: SLocale(.ACCOUNT), image: UIImage(systemName: "person"), tag: 3)

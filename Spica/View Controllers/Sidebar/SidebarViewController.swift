@@ -125,9 +125,12 @@ enum SidebarSection: Int, Hashable, CaseIterable {
         case .account:
             let vc = UserProfileViewController()
             vc.navigationItem.hidesBackButton = true
-            let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-			vc.user = User(name: username!)
+            let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+            let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
+            let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
+
+			vc.user = User(id: id!, name: name!, tag: tag!)
 
             vc.hidesBottomBarWhenPushed = true
             return vc

@@ -26,7 +26,7 @@ class UserHeaderViewController: ObservableObject {
     var delegate: UserHeaderDelegate!
 
     func followUnfollowUser() {
-		user.following.toggle()
+        user.isFollowing.toggle()
         delegate.followUnfollowUser(uid: user.id)
     }
 
@@ -37,6 +37,6 @@ class UserHeaderViewController: ObservableObject {
     func getLoggedInUser() {
         let signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
-		isLoggedInUser = user.id == signedInID
+        isLoggedInUser = user.id == signedInID
     }
 }

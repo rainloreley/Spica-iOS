@@ -27,7 +27,7 @@ class UserEditViewController: UIViewController {
     var tableView: UITableView!
     var user: User! {
         didSet {
-			editableUser = UpdateUser(about: user.about, name: user.name, nickname: user.nickname)
+            editableUser = UpdateUser(about: user.about, name: user.name, nickname: user.nickname)
         }
     }
 

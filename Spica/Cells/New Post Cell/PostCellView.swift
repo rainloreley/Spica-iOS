@@ -13,7 +13,7 @@ import UIKit
 // https://github.com/devxoul/UITextView-Placeholder
 
 protocol PostCellViewDelegate {
-    func selectedUser(username: String, indexPath: IndexPath)
+    func selectedUser(id: String, indexPath: IndexPath)
     func selectedURL(url: String, indexPath: IndexPath)
     func selectedPost(post: String, indexPath: IndexPath)
     func selectedTag(tag: String, indexPath: IndexPath)
@@ -23,7 +23,7 @@ protocol PostCellViewDelegate {
 
     func replyToPost(id: String)
 
-    func repost(id: String, username: String)
+    func repost(id: String, uid: String)
 
     func clickedOnImage(controller: LightboxController)
     func saveImage(image: UIImage?)
@@ -61,7 +61,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 displaynameLabel.text = post!.author?.name
             }
 
-            usernameLabel.text = "@\(post!.author!.name)"
+            usernameLabel.text = "\(post!.author!.name)#\(post!.author!.tag)"
             voteCountLabel.text = String(post!.score)
             contentTextView.delegate = self
 
@@ -409,7 +409,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
             if stringURL.hasPrefix("user:@") {
                 let username = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 6) ..< stringURL.endIndex]
-                delegate.selectedUser(username: String(username), indexPath: indexPath)
+				delegate.selectedUser(id: String(username), indexPath: indexPath)
             } else if stringURL.hasPrefix("url:") {
                 var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
                 if !selURL.starts(with: "https://"), !selURL.starts(with: "http://") {
@@ -454,7 +454,7 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         actionsArray.append(reply)
 
         let repost = UIAction(title: SLocale(.REPOST), image: UIImage(systemName: "square.and.arrow.up")) { _ in
-            self.delegate.repost(id: self.post!.id, username: self.post!.author!.name)
+			self.delegate.repost(id: self.post!.id, uid: self.post!.author!.id)
         }
 
         actionsArray.append(repost)

@@ -171,7 +171,7 @@ extension FollowersFollowingViewController: UITableViewDelegate {
         let userByTag = segmentedControl.selectedSegmentIndex == 0 ? followersFollowing.followers[indexPath.row] : followersFollowing.following[indexPath.row]
         let vc = UserProfileViewController()
 
-		vc.user = User(id: userByTag.id, name: userByTag.username, nickname: userByTag.name, plus: userByTag.isPlus, image: userByTag.image!, imgURL: userByTag.imageURL)
+		vc.user = User(id: userByTag.id, name: userByTag.name, nickname: userByTag.nickname, plus: userByTag.isPlus, image: userByTag.image!, imgURL: userByTag.imageURL)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -185,7 +185,7 @@ struct FollowerCell: View {
             Image(uiImage: follower.image!).resizable().frame(width: 40, height: 40, alignment: .leading).cornerRadius(20)
             VStack(alignment: .leading) {
                 Text("\(follower.name)\(follower.isPlus ? String("⁺") : String(""))").bold()
-                Text("@\(follower.username)").foregroundColor(.secondary)
+                Text("\(follower.name)#\(follower.tag)").foregroundColor(.secondary)
             }
             Spacer()
         }.padding()

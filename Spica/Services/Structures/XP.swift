@@ -8,9 +8,9 @@
 import Foundation
 
 struct XP: Hashable {
-	var total: Int
-	var level: Int
-	var levelXP: Int
-	var levelXPMax: Int
-	var levelProgress: Float
+    var total: Int
+    var level: Int
+    var levelXP: Int
+    var levelXPMax: Int
+    var levelProgress: Float
 }

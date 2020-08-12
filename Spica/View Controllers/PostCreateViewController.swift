@@ -205,9 +205,9 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
     override func viewDidAppear(_: Bool) {
         DispatchQueue.global(qos: .utility).async {
-            let userUsername = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
+            let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
-            let pfpImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(userUsername!)")!)
+            let pfpImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cc/\(id)")!)
 
             DispatchQueue.main.async {
                 self.userPfp.image = pfpImage

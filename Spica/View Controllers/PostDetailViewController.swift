@@ -170,7 +170,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             for (index, post) in self.postReplies.enumerated() {
                 dispatchGroup.enter()
                 if veri != verificationString { return }
-				self.postReplies[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imgURL!)
+                self.postReplies[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imgURL!)
                 if veri != verificationString { return }
                 DispatchQueue.main.async {
                     self.tableView.beginUpdates()
@@ -443,11 +443,11 @@ extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControlle
         present(controller, animated: true, completion: nil)
     }
 
-    func repost(id: String, username: String) {
+	func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
-        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        vc.preText = "@\(uid)\n\n\n\n%\(id)"
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -501,9 +501,9 @@ extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControlle
         }
     }
 
-    func selectedUser(username: String, indexPath _: IndexPath) {
+	func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User(name: username, nickname: username)
+		vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

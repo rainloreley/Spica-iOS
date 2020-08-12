@@ -43,7 +43,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     func didSaveUser(user: UpdateUser) {
         self.user.about = user.about
         self.user.nickname = user.nickname
-		self.user.name = user.name
+        self.user.name = user.name
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
         loadUser()
     }
@@ -57,17 +57,17 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
         view.backgroundColor = .systemBackground
 
-		signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+        signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
-		navigationItem.title = "\(user.name)"
+        navigationItem.title = "\(user.name)#\(user.tag)"
         navigationController?.navigationBar.prefersLargeTitles = false
         var rightItems = [UIBarButtonItem]()
 
         rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
 
-		if signedInID == user.id {
-            rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
-        }
+        /* if signedInID == user.id {
+             rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
+         } */
 
         navigationItem.rightBarButtonItems = rightItems
 
@@ -103,7 +103,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     func setSidebar() {
         if #available(iOS 14.0, *) {
             signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-			if signedInID == user.id {
+            if signedInID == user.id {
                 if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                     if let sidebar = globalSideBarController {
                         if let collectionView = sidebar.collectionView {
@@ -170,7 +170,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         #endif
 
         setSidebar()
-		user = User(name: "Adrian", tag: "0001", plus: true, alles: true, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!), imgURL: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!, about: "", isOnline: true)
+        user = User(name: "Adrian", tag: "0001", plus: true, alles: true, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!), imgURL: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!, about: "", isOnline: true)
         userDataLoaded = true
         imageAnimationAllowed = true
         // loadUser()
@@ -179,7 +179,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     @objc func openPostCreateView() {
         let vc = PostCreateViewController()
         vc.type = .post
-		vc.preText = "@\(user.name) "
+        vc.preText = "@\(user.name) " // TODO: @ USER
         vc.delegate = self
         present(UINavigationController(rootViewController: vc), animated: true)
     }
@@ -209,7 +209,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                     }
                 } receiveValue: { [unowned self] in
                     self.user = $0
-                    self.navigationItem.title = "\(self.user.name)"
+                    self.navigationItem.title = "\(self.user.name)#\(self.user.tag)"
                     self.loadPfp()
                     self.loadPosts()
                 }
@@ -250,7 +250,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
             dispatchGroup.enter()
 
-			self.user.image = ImageLoader.loadImageFromInternet(url: self.user.imgURL!)
+            self.user.image = ImageLoader.loadImageFromInternet(url: self.user.imgURL!)
 
             self.userDataLoaded = true
             self.imageAnimationAllowed = true
@@ -275,7 +275,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 if index <= userPosts.count - 1 {
                     if let author = userPosts[index].author {
                         if veri != verificationString { return }
-						userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
+                        userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
                     }
                     if let url = post.imageURL {
                         if veri != verificationString { return }
@@ -339,7 +339,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     @objc func followUnfollowUser() {
-        AllesAPI.default.performFollowAction(username: user.id, action: user.following ? .unfollow : .follow)
+        AllesAPI.default.performFollowAction(username: user.id, action: user.isFollowing ? .unfollow : .follow)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
@@ -350,7 +350,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 default: break
                 }
             } receiveValue: { [unowned self] in
-                self.user.following = $0 == .follow ? true : false
+                self.user.isFollowing = $0 == .follow ? true : false
                 if $0 == .follow {
                     self.user.followers += 1
                 } else {
@@ -480,11 +480,11 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
         present(controller, animated: true, completion: nil)
     }
 
-    func repost(id: String, username: String) {
+	func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
-        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        vc.preText = "@\(uid)\n\n\n\n%\(id)" // TODO: @ User
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -538,9 +538,9 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
         }
     }
 
-    func selectedUser(username: String, indexPath _: IndexPath) {
+	func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User(name: username, nickname: username)
+		vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

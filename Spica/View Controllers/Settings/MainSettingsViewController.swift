@@ -139,7 +139,8 @@ class MainSettingsViewController: UITableViewController {
     }
 
     @IBAction func signOut(_: Any) {
-        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")
+        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
+        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
         UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
@@ -256,9 +257,13 @@ class MainSettingsViewController: UITableViewController {
         }
 
         DispatchQueue.global(qos: .background).async {
-            self.username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")!
+            let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+            let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
+            let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
 
-            let userImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cx/u/\(self.username)")!)
+            self.username = "\(name)#\(tag)"
+
+			let userImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cc/\(id)")!)
 
             DispatchQueue.main.async {
                 self.usernameLabel.text = "@\(self.username)"

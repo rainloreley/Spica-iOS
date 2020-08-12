@@ -179,7 +179,7 @@ class BookmarksViewController: UIViewController {
                 dispatchGroup.enter()
                 if index <= bookmarks.count - 1 {
                     if veri != verificationString { return }
-					bookmarks[index].post.author?.image = ImageLoader.loadImageFromInternet(url: post.post.author!.imgURL!)
+                    bookmarks[index].post.author?.image = ImageLoader.loadImageFromInternet(url: post.post.author!.imgURL!)
                     if veri != verificationString { return }
                     if let url = post.post.imageURL {
                         bookmarks[index].post.image = ImageLoader.loadImageFromInternet(url: url)
@@ -341,11 +341,11 @@ extension BookmarksViewController: PostCellViewDelegate {
         present(controller, animated: true, completion: nil)
     }
 
-    func repost(id: String, username: String) {
+	func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
-        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        vc.preText = "@\(uid)\n\n\n\n%\(id)"
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -399,9 +399,9 @@ extension BookmarksViewController: PostCellViewDelegate {
         }
     }
 
-    func selectedUser(username: String, indexPath _: IndexPath) {
+	func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User(name: username, nickname: username)
+		vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

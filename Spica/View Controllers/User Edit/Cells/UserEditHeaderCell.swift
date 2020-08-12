@@ -23,7 +23,7 @@ class UserEditHeaderCell: UITableViewCell {
                 displaynameLabel.text = user.name
             }
 
-            usernameLabel.text = "@\(user.name)"
+            usernameLabel.text = "\(user.name)#\(user.tag)"
         }
     }
 

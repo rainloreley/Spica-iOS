@@ -199,7 +199,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                 if index <= mentions.count - 1 {
                     if let author = mentions[index].author {
                         if veri != verificationString { return }
-						mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
+                        mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
                     }
 
                     if let url = post.imageURL {
@@ -316,11 +316,11 @@ extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerD
         present(controller, animated: true, completion: nil)
     }
 
-    func repost(id: String, username: String) {
+	func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
-        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        vc.preText = "@\(uid)\n\n\n\n%\(id)"
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -374,9 +374,9 @@ extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerD
         }
     }
 
-    func selectedUser(username: String, indexPath _: IndexPath) {
+	func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User(name: username, nickname: username)
+		vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

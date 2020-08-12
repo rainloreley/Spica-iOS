@@ -26,7 +26,7 @@ struct XPProgressBarView: View {
                 .cornerRadius(45)
                 .shadow(radius: 8)
                 // })
-				Text("Lvl. \(xp.level); \(Int(xp.levelProgress * 100))% (\(xp.levelXP)/\(xp.levelXPMax))").padding(.leading)
+                Text("Lvl. \(xp.level); \(Int(xp.levelProgress * 100))% (\(xp.levelXP)/\(xp.levelXPMax))").padding(.leading)
             }
 
 		})

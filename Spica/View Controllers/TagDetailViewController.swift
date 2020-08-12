@@ -115,7 +115,7 @@ class TagDetailViewController: UIViewController {
                 dispatchGroup.enter()
                 if index <= tag.posts.count - 1 {
                     if veri != verificationString { return }
-					tag.posts[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imgURL!)
+                    tag.posts[index].author?.image = ImageLoader.loadImageFromInternet(url: post.author!.imgURL!)
                     if veri != verificationString { return }
                     if let url = post.imageURL {
                         tag.posts[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -296,11 +296,11 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
         present(controller, animated: true, completion: nil)
     }
 
-    func repost(id: String, username: String) {
+	func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
-        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        vc.preText = "@\(uid)\n\n\n\n%\(id)"
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -354,9 +354,9 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
         }
     }
 
-    func selectedUser(username: String, indexPath _: IndexPath) {
+	func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User(name: username, nickname: username)
+		vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

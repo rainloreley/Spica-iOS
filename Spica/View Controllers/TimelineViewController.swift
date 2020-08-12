@@ -141,9 +141,12 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     @objc func openOwnProfileView() {
         let vc = UserProfileViewController()
-        let username = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.username")
 
-        vc.user = User(name: username!, nickname: username!)
+        let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+        let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
+        let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
+
+		vc.user = User(id: id!, name: name!, tag: tag!)
 
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
@@ -497,11 +500,11 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
         present(controller, animated: true, completion: nil)
     }
 
-    func repost(id: String, username: String) {
+	func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
-        vc.preText = "@\(username)\n\n\n\n%\(id)"
+        vc.preText = "@\(uid)\n\n\n\n%\(id)" // TODO: @ USER
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -555,9 +558,14 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
         }
     }
 
-    func selectedUser(username: String, indexPath _: IndexPath) {
+	func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-        vc.user = User(name: username, nickname: username)
+		
+		let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+		let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
+		let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
+		
+		vc.user = User(id: id!, name: name!, tag: tag!)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
