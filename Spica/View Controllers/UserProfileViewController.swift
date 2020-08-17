@@ -59,7 +59,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
         signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
-        navigationItem.title = "\(user.name)#\(user.tag)"
+        navigationItem.title = "\(user.nickname)"
         navigationController?.navigationBar.prefersLargeTitles = false
         var rightItems = [UIBarButtonItem]()
 
@@ -170,16 +170,13 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         #endif
 
         setSidebar()
-        user = User(name: "Adrian", tag: "0001", plus: true, alles: true, image: ImageLoader.loadImageFromInternet(url: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!), imgURL: URL(string: "https://pbs.twimg.com/profile_images/1292925137566793738/zYI3tB9P_400x400.jpg")!, about: "", isOnline: true)
-        userDataLoaded = true
-        imageAnimationAllowed = true
-        // loadUser()
+        loadUser()
     }
 
     @objc func openPostCreateView() {
         let vc = PostCreateViewController()
         vc.type = .post
-        vc.preText = "@\(user.name) " // TODO: @ USER
+        vc.preText = "@\(user.id) "
         vc.delegate = self
         present(UINavigationController(rootViewController: vc), animated: true)
     }
@@ -195,7 +192,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         }
         DispatchQueue.main.async { [self] in
 
-            AllesAPI.default.loadUser(username: self.user.id)
+            AllesAPI.default.loadUser(id: self.user.id)
                 .receive(on: RunLoop.current)
                 .sink {
                     switch $0 {
@@ -209,7 +206,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                     }
                 } receiveValue: { [unowned self] in
                     self.user = $0
-                    self.navigationItem.title = "\(self.user.name)#\(self.user.tag)"
+                    self.navigationItem.title = "\(self.user.nickname)"
                     self.loadPfp()
                     self.loadPosts()
                 }
@@ -275,7 +272,10 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 if index <= userPosts.count - 1 {
                     if let author = userPosts[index].author {
                         if veri != verificationString { return }
-                        userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
+                        let image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
+                        DispatchQueue.main.async {
+                            userPosts[index].author?.image = image
+                        }
                     }
                     if let url = post.imageURL {
                         if veri != verificationString { return }
@@ -330,7 +330,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 default: break
                 }
             } receiveValue: { [unowned self] in
-                userPosts[tag].voteStatus = $0.status
+                userPosts[tag].voted = $0.status
                 userPosts[tag].score = $0.score
                 tableView.beginUpdates()
                 tableView.reloadRows(at: [IndexPath(row: tag, section: 1)], with: .automatic)
@@ -381,7 +381,7 @@ extension UserProfileViewController: UITableViewDelegate, UITableViewDataSource 
     }
 
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        section == 0 ? 1 : userPosts.count
+        return section == 0 ? 1 : userPosts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -480,7 +480,7 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
         present(controller, animated: true, completion: nil)
     }
 
-	func repost(id: String, uid: String) {
+    func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
@@ -538,9 +538,9 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
         }
     }
 
-	func selectedUser(id: String, indexPath _: IndexPath) {
+    func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-		vc.user = User(id: id)
+        vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

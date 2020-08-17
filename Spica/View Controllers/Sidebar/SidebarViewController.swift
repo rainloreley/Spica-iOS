@@ -62,6 +62,7 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate {
         snapshot.appendSections(SidebarSection.allCases)
         snapshot.appendItems([SidebarSection.home.sidebar], toSection: .home)
         snapshot.appendItems([SidebarSection.mentions.sidebar], toSection: .mentions)
+        // snapshot.appendItems([SidebarSection.search.sidebar], toSection: .search)
         snapshot.appendItems([SidebarSection.bookmarks.sidebar], toSection: .bookmarks)
         snapshot.appendItems([SidebarSection.account.sidebar], toSection: .account)
         if traitCollection.userInterfaceIdiom != .mac {
@@ -89,6 +90,7 @@ enum SidebarSection: Int, Hashable, CaseIterable {
     case home = 0
     case mentions = 1
     case bookmarks = 2
+    // case search = 3
     case account = 3
     case settings = 4
 
@@ -100,6 +102,8 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             return SidebarItem(name: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell")!)
         case .bookmarks:
             return SidebarItem(name: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark")!)
+        /* case .search:
+         return SidebarItem(name: "Search", image: UIImage(systemName: "magnifyingglass")!) */
         case .account:
             return SidebarItem(name: SLocale(.ACCOUNT), image: UIImage(systemName: "person.circle")!)
         case .settings:
@@ -122,6 +126,11 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             let vc = BookmarksViewController()
             vc.navigationItem.hidesBackButton = true
             return vc
+
+            /* case .search:
+             let vc = SearchViewController()
+             vc.navigationItem.hidesBackButton = true */
+            return vc
         case .account:
             let vc = UserProfileViewController()
             vc.navigationItem.hidesBackButton = true
@@ -130,7 +139,7 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
             let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
 
-			vc.user = User(id: id!, name: name!, tag: tag!)
+            vc.user = User(id: id!, name: name!, tag: tag!)
 
             vc.hidesBottomBarWhenPushed = true
             return vc

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PostDetail {
+public struct PostDetail {
     var ancestors: [Post]
     var post: Post
     var replies: [Post]

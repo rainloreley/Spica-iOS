@@ -41,7 +41,7 @@
 		3A7145EE24AA8755000FA3C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A7145EC24AA8755000FA3C3 /* LaunchScreen.storyboard */; };
 		3A7145F924AA8756000FA3C3 /* Alles_AppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7145F824AA8756000FA3C3 /* Alles_AppTests.swift */; };
 		3A71460424AA8756000FA3C3 /* Alles_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71460324AA8756000FA3C3 /* Alles_AppUITests.swift */; };
-		3A71461224AA88FC000FA3C3 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461124AA88FC000FA3C3 /* Post.swift */; };
+		3A71461224AA88FC000FA3C3 /* OldPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461124AA88FC000FA3C3 /* OldPost.swift */; };
 		3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A741A4F24B8BBC70083925A /* CreditsCell.swift */; };
 		3A746A9424BDD975008C9309 /* VotePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A746A9324BDD975008C9309 /* VotePost.swift */; };
 		3A83E9EE24D710E80099F096 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 3A83E9ED24D710E80099F096 /* Down */; };
@@ -56,6 +56,7 @@
 		3A96F6A524AB404100482C5A /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 3A96F6A424AB404100482C5A /* SwiftyJSON */; };
 		3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F6A624AB410900482C5A /* Extensions.swift */; };
 		3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */; };
+		3A9E0F8824E86F9700AFB1E4 /* PostNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A9E0F8724E86F9700AFB1E4 /* PostNotification.swift */; };
 		3AA108A724C0C622006FCA1A /* EditTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */; };
 		3AA108AA24C0CBDF006FCA1A /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 3AA108A924C0CBDF006FCA1A /* Hero */; };
 		3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA12EF324B0F3CD009C904A /* EZAlertController.swift */; };
@@ -68,6 +69,7 @@
 		3ADDC58124AD162500B58DA9 /* NewPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58024AD162500B58DA9 /* NewPost.swift */; };
 		3ADDC58324AD182100B58DA9 /* SentPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58224AD182100B58DA9 /* SentPost.swift */; };
 		3ADDC58624AD213900B58DA9 /* ReplyButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */; };
+		3AE586C824E4092700251BCE /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE586C724E4092700251BCE /* Post.swift */; };
 		3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */; };
 		3AE6007B24ADC32E00C103F1 /* AllesAPIErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */; };
 		3AE9C33524D59A500097CFD5 /* SpicAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE9C33424D59A500097CFD5 /* SpicAPI.swift */; };
@@ -81,6 +83,7 @@
 		3AF30CCE24CCAF84005D0CC3 /* NotificationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */; };
 		3AF9231A24CC6CC200DAAE0F /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */; };
 		3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231B24CC747700DAAE0F /* Bookmark.swift */; };
+		3AFD81C324EAC51E00AD5E11 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD81C224EAC51E00AD5E11 /* SearchViewController.swift */; };
 		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
 		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
 		B011E23BAC69FBCB992F7BCE /* Pods_Spica_SpicaUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AD6E55241BF74B8FFA2529 /* Pods_Spica_SpicaUITests.framework */; };
@@ -144,7 +147,7 @@
 		3A7145FF24AA8756000FA3C3 /* SpicaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpicaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A71460324AA8756000FA3C3 /* Alles_AppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alles_AppUITests.swift; sourceTree = "<group>"; };
 		3A71460524AA8756000FA3C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3A71461124AA88FC000FA3C3 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		3A71461124AA88FC000FA3C3 /* OldPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldPost.swift; sourceTree = "<group>"; };
 		3A741A4F24B8BBC70083925A /* CreditsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsCell.swift; sourceTree = "<group>"; };
 		3A746A9324BDD975008C9309 /* VotePost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotePost.swift; sourceTree = "<group>"; };
 		3A83E9EF24D710F90099F096 /* NewPrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPrivacyPolicyViewController.swift; sourceTree = "<group>"; };
@@ -158,6 +161,7 @@
 		3A96F6A624AB410900482C5A /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		3A9D965D24BA59AA00703466 /* Spica.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Spica.entitlements; sourceTree = "<group>"; };
+		3A9E0F8724E86F9700AFB1E4 /* PostNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostNotification.swift; sourceTree = "<group>"; };
 		3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextFieldCell.swift; sourceTree = "<group>"; };
 		3AA12EF324B0F3CD009C904A /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
 		3AB0980E24C5BCB0005CCA27 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 		3ADDC58224AD182100B58DA9 /* SentPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentPost.swift; sourceTree = "<group>"; };
 		3ADDC58424AD213900B58DA9 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
 		3AE55BE124C44ED1002D539E /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3AE586C724E4092700251BCE /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		3AE6007824AD5B0600C103F1 /* AllesAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIError.swift; sourceTree = "<group>"; };
 		3AE6007A24ADC32E00C103F1 /* AllesAPIErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllesAPIErrorHandler.swift; sourceTree = "<group>"; };
 		3AE9C33424D59A500097CFD5 /* SpicAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpicAPI.swift; sourceTree = "<group>"; };
@@ -189,6 +194,7 @@
 		3AF30CCD24CCAF84005D0CC3 /* NotificationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationName.swift; sourceTree = "<group>"; };
 		3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
 		3AF9231B24CC747700DAAE0F /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		3AFD81C224EAC51E00AD5E11 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		3B4F3E93E4E5A4503B6F8A28 /* Pods-Alles App-Alles AppUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.release.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.release.xcconfig"; sourceTree = "<group>"; };
 		3E2D3F6F6C681C19CCF7A88A /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
 		4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SpicaTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -406,7 +412,9 @@
 			isa = PBXGroup;
 			children = (
 				3A66D2F024E2F1B40074D223 /* User.swift */,
-				3A71461124AA88FC000FA3C3 /* Post.swift */,
+				3AE586C724E4092700251BCE /* Post.swift */,
+				3A9E0F8724E86F9700AFB1E4 /* PostNotification.swift */,
+				3A71461124AA88FC000FA3C3 /* OldPost.swift */,
 				3A66D2F224E2F2200074D223 /* XP.swift */,
 				3ADDC58024AD162500B58DA9 /* NewPost.swift */,
 				3ADDC58224AD182100B58DA9 /* SentPost.swift */,
@@ -443,6 +451,7 @@
 				3A08677824BF902800C516A9 /* Sidebar */,
 				3A91971424B89DC300B7066B /* Settings */,
 				3A4038B124B1EB54002B18F1 /* ProgressBar */,
+				3AFD81C224EAC51E00AD5E11 /* SearchViewController.swift */,
 				3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */,
 				3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */,
 				3AF9231924CC6CC200DAAE0F /* BookmarksViewController.swift */,
@@ -887,6 +896,7 @@
 				3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */,
 				3A66D2F124E2F1B40074D223 /* User.swift in Sources */,
 				3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */,
+				3A9E0F8824E86F9700AFB1E4 /* PostNotification.swift in Sources */,
 				3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */,
 				3A83E9F024D710F90099F096 /* NewPrivacyPolicyViewController.swift in Sources */,
 				3A746A9424BDD975008C9309 /* VotePost.swift in Sources */,
@@ -896,8 +906,10 @@
 				3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */,
 				3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
+				3AFD81C324EAC51E00AD5E11 /* SearchViewController.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
 				3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */,
+				3AE586C824E4092700251BCE /* Post.swift in Sources */,
 				3AF30CCE24CCAF84005D0CC3 /* NotificationName.swift in Sources */,
 				3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */,
 				3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */,
@@ -909,7 +921,7 @@
 				3A361FEB24B8A6C600513028 /* UsedLibrariesViewController.swift in Sources */,
 				3A3CBE2F24C0BBE700B00D8D /* UserEditViewController.swift in Sources */,
 				3A7145E924AA8753000FA3C3 /* Alles_App.xcdatamodeld in Sources */,
-				3A71461224AA88FC000FA3C3 /* Post.swift in Sources */,
+				3A71461224AA88FC000FA3C3 /* OldPost.swift in Sources */,
 				3A61B27724C8B56900AC1A9C /* CachePolicy.swift in Sources */,
 				3A96F6A724AB410A00482C5A /* Extensions.swift in Sources */,
 				3A96F6AB24AB447200482C5A /* UserProfileViewController.swift in Sources */,

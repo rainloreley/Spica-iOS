@@ -50,6 +50,7 @@ class NewPrivacyPolicyViewController: UIViewController {
         }
 
         markdownView = UITextView(frame: .zero)
+        markdownView.isEditable = false
         view.addSubview(markdownView!)
 
         markdownView?.snp.makeConstraints { make in
@@ -66,6 +67,8 @@ class NewPrivacyPolicyViewController: UIViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-        markdownView.attributedText = try? Down(markdownString: privacyPolicy!.markdown).toAttributedString()
+        let styleSheet = traitCollection.userInterfaceStyle == .dark ? "* {font-family: Helvetica; color: #ffffff } code, pre { font-family: Menlo }" : "* {font-family: Helvetica; color: #000000 } code, pre { font-family: Menlo }"
+
+        markdownView.attributedText = try? Down(markdownString: privacyPolicy!.markdown).toAttributedString(.normalize, stylesheet: styleSheet)
     }
 }

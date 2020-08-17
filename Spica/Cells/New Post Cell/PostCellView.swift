@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 05.07.20.
 //
 
+import Combine
 import KMPlaceholderTextView
 import Lightbox
 import SwiftKeychainWrapper
@@ -38,6 +39,7 @@ enum BookmarkAction {
 class PostCellView: UITableViewCell, UITextViewDelegate {
     var delegate: PostCellViewDelegate!
     var indexPath: IndexPath!
+    private var subscriptions = Set<AnyCancellable>()
 
     var post: Post? {
         didSet {
@@ -53,15 +55,15 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 let font: UIFont? = UIFont.boldSystemFont(ofSize: 18)
 
                 let fontSuper: UIFont? = UIFont.boldSystemFont(ofSize: 12)
-                let attrDisplayName = NSMutableAttributedString(string: "\(post!.author!.name)+", attributes: [.font: font!])
-                attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: (post?.author!.name.count)!, length: 1))
+                let attrDisplayName = NSMutableAttributedString(string: "\(post!.author!.nickname)+", attributes: [.font: font!])
+                attrDisplayName.setAttributes([.font: fontSuper!, .baselineOffset: 10], range: NSRange(location: (post?.author!.nickname.count)!, length: 1))
 
                 displaynameLabel.attributedText = attrDisplayName
             } else {
-                displaynameLabel.text = post!.author?.name
+                displaynameLabel.text = post!.author?.nickname
             }
 
-            usernameLabel.text = "\(post!.author!.name)#\(post!.author!.tag)"
+            // usernameLabel.text = "\(post!.author!.name)#\(post!.author!.tag)"
             voteCountLabel.text = String(post!.score)
             contentTextView.delegate = self
 
@@ -74,13 +76,23 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             let splitContent = postContent!.split(separator: " ")
             for word in splitContent {
                 if word.hasPrefix("@"), word.count > 1 {
-                    let selectablePart = NSMutableAttributedString(string: String(word) + " ")
+                    var userID = removeSpecialCharsFromString(text: String(word))
+                    userID.remove(at: userID.startIndex)
+                    print("USERNAM: \(userID)")
+                    let foundIndex = post?.mentionedUsers.firstIndex(where: { $0.id == userID })
+                    if let index = foundIndex {
+                        let mention = post?.mentionedUsers[index]
+                        let selectablePart = NSMutableAttributedString(string: String(mention!.name) + " ")
+                        selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
 
-                    let username = removeSpecialCharsFromString(text: String(word))
-                    selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: username.count))
+                        selectablePart.addAttribute(.link, value: "user:\(mention!.id)", range: NSRange(location: 0, length: selectablePart.length - 1))
 
-                    selectablePart.addAttribute(.link, value: "user:\(username)", range: NSRange(location: 0, length: username.count))
-                    attributedText.append(selectablePart)
+                        attributedText.append(selectablePart)
+                    } else {
+                        attributedText.append(NSAttributedString(string: String(word
+						) + " "))
+                    }
+
                 } else if word.hasPrefix("%"), word.count > 1 {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 
@@ -115,9 +127,9 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
             attributedText.addAttributes([.font: normalFont!, .foregroundColor: UIColor.label], range: NSRange(location: 0, length: attributedText.length))
             contentTextView.attributedText = attributedText
-
-            dateLabel.text = globalDateFormatter.string(from: post!.date)
-            replyCountLabel.text = countString(number: post!.repliesCount, singleText: SLocale(.REPLY_SINGULAR), multiText: SLocale(.REPLY_PLURAL), includeNumber: true)
+            dateLabel.text = globalDateFormatter.string(from: post!.created)
+            replyCountLabel.text = countString(number: post!.children_count, singleText: SLocale(.REPLY_SINGULAR), multiText: SLocale(.REPLY_PLURAL), includeNumber: true)
+            interactionsLabel.text = post?.interactions != nil ? countString(number: (post?.interactions!)!, singleText: "Interaction", multiText: "Interactions", includeNumber: true) : ""
             if post?.image != nil {
                 mediaImageView.image = post?.image!
                 mediaImageView.snp.remakeConstraints { make in
@@ -133,10 +145,10 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 mediaImageView.addGestureRecognizer(tap)
             }
 
-            if post!.voteStatus == 1 {
+            if post!.voted == 1 {
                 upvoteButton.setTitleColor(.systemGreen, for: .normal)
                 downvoteButton.setTitleColor(.gray, for: .normal)
-            } else if post!.voteStatus == -1 {
+            } else if post!.voted == -1 {
                 downvoteButton.setTitleColor(.systemRed, for: .normal)
                 upvoteButton.setTitleColor(.gray, for: .normal)
             } else {
@@ -210,14 +222,14 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         return label
     }()
 
-    private var usernameLabel: UILabel = {
-        let label = UILabel(frame: .zero)
-        label.font = .systemFont(ofSize: 17.0)
-        label.textColor = .secondaryLabel
-        label.textAlignment = .left
-        label.text = "username"
-        return label
-    }()
+    /* private var usernameLabel: UILabel = {
+         let label = UILabel(frame: .zero)
+         label.font = .systemFont(ofSize: 15.0)
+         label.textColor = .secondaryLabel
+         label.textAlignment = .left
+         label.text = "username"
+         return label
+     }() */
 
     private var moreImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "ellipsis.circle"))
@@ -303,17 +315,27 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         return label
     }()
 
+    private var interactionsLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.text = "Interactions"
+        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 15)
+        label.textAlignment = .right
+        return label
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         contentView.addSubview(pfpImageView)
         contentView.addSubview(displaynameLabel)
-        contentView.addSubview(usernameLabel)
+        // contentView.addSubview(usernameLabel)
         contentView.addSubview(upvoteButton)
         contentView.addSubview(downvoteButton)
         contentView.addSubview(voteCountLabel)
         contentView.addSubview(contentTextView)
         contentView.addSubview(replyCountLabel)
+        // contentView.addSubview(interactionsLabel)
         contentView.addSubview(dateLabel)
         contentView.addSubview(mediaImageView)
 
@@ -352,16 +374,17 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
         displaynameLabel.snp.makeConstraints { make in
             make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
-            make.top.equalTo(contentView.snp.top).offset(16)
+            // make.top.equalTo(contentView.snp.top).offset(20)
+            make.centerY.equalTo(pfpImageView.snp.centerY).offset(-2)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
         }
 
-        usernameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
-            make.top.equalTo(displaynameLabel.snp.bottom)
-            make.height.equalTo(25)
-            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
-        }
+        /* usernameLabel.snp.makeConstraints { make in
+             make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
+             make.top.equalTo(displaynameLabel.snp.bottom)
+             make.height.equalTo(25)
+             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+         } */
 
         dateLabel.snp.makeConstraints { make in
             make.leading.equalTo(contentView.snp.leading).offset(16)
@@ -377,6 +400,14 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             make.top.equalTo(mediaImageView.snp.bottom)
         }
 
+        /* interactionsLabel.snp.makeConstraints { (make) in
+         	make.trailing.equalTo(replyCountLabel.snp.leading).offset(-16)
+         	make.bottom.equalTo(contentView.snp.bottom).offset(-16)
+         	make.width.equalTo(50)
+         	make.height.equalTo(30)
+         	make.top.equalTo(mediaImageView.snp.bottom)
+         } */
+
         mediaImageView.snp.makeConstraints { make in
             make.bottom.equalTo(replyCountLabel.snp.top).offset(-16)
             make.height.equalTo(32)
@@ -385,7 +416,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         }
 
         contentTextView.snp.makeConstraints { make in
-            make.top.equalTo(usernameLabel.snp.bottom).offset(16)
+            make.top.equalTo(pfpImageView.snp.bottom).offset(16)
             make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.bottom.equalTo(mediaImageView.snp.top).offset(-16)
@@ -407,9 +438,9 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         if interaction == .invokeDefaultAction {
             let stringURL = URL.absoluteString
 
-            if stringURL.hasPrefix("user:@") {
-                let username = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 6) ..< stringURL.endIndex]
-				delegate.selectedUser(id: String(username), indexPath: indexPath)
+            if stringURL.hasPrefix("user:") {
+                let username = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
+                delegate.selectedUser(id: String(username), indexPath: indexPath)
             } else if stringURL.hasPrefix("url:") {
                 var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
                 if !selURL.starts(with: "https://"), !selURL.starts(with: "http://") {
@@ -454,7 +485,7 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         actionsArray.append(reply)
 
         let repost = UIAction(title: SLocale(.REPOST), image: UIImage(systemName: "square.and.arrow.up")) { _ in
-			self.delegate.repost(id: self.post!.id, uid: self.post!.author!.id)
+            self.delegate.repost(id: self.post!.id, uid: self.post!.author!.id)
         }
 
         actionsArray.append(repost)

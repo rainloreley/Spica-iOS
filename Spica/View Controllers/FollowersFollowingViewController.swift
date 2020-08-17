@@ -171,7 +171,7 @@ extension FollowersFollowingViewController: UITableViewDelegate {
         let userByTag = segmentedControl.selectedSegmentIndex == 0 ? followersFollowing.followers[indexPath.row] : followersFollowing.following[indexPath.row]
         let vc = UserProfileViewController()
 
-		vc.user = User(id: userByTag.id, name: userByTag.name, nickname: userByTag.nickname, plus: userByTag.isPlus, image: userByTag.image!, imgURL: userByTag.imageURL)
+        vc.user = User(id: userByTag.id, name: userByTag.name, nickname: userByTag.nickname, plus: userByTag.isPlus, image: userByTag.image!, imgURL: userByTag.imageURL)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

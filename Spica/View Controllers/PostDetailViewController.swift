@@ -119,7 +119,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             }
         }
 
-        AllesAPI.loadPostDetail(id: selectedPostID)
+        AllesAPI.default.loadPostDetail(id: selectedPostID)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
@@ -269,13 +269,13 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                 }
             } receiveValue: { [unowned self] in
                 if section == 0 {
-                    postAncestors[tag].voteStatus = $0.status
+                    postAncestors[tag].voted = $0.status
                     postAncestors[tag].score = $0.score
                     tableView.beginUpdates()
                     tableView.reloadRows(at: [IndexPath(row: updateRow, section: section)], with: .automatic)
                     tableView.endUpdates()
                 } else {
-                    postReplies[tag].voteStatus = $0.status
+                    postReplies[tag].voted = $0.status
                     postReplies[tag].score = $0.score
                     tableView.beginUpdates()
                     tableView.reloadRows(at: [IndexPath(row: updateRow, section: section)], with: .automatic)
@@ -356,6 +356,7 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 
             cell.replyBtn.addTarget(self, action: #selector(openReplyView(_:)), for: .touchUpInside)
             cell.backgroundColor = .clear
+            cell.selectionStyle = .none
             return cell
         } else {
             let post = postReplies[indexPath.row]
@@ -443,7 +444,7 @@ extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControlle
         present(controller, animated: true, completion: nil)
     }
 
-	func repost(id: String, uid: String) {
+    func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
@@ -501,9 +502,9 @@ extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControlle
         }
     }
 
-	func selectedUser(id: String, indexPath _: IndexPath) {
+    func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-		vc.user = User(id: id)
+        vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

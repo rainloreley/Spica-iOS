@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct XPProgressBarView: View {
-    @State var xp: XP = XP(total: 60, level: 1, levelXP: 60, levelXPMax: 1000, levelProgress: 0.06)
+    @Binding var xp: XP /* = XP(total: 300_120, level: 69, levelXP: 4320, levelXPMax: 7800, levelProgress: 0.5538461538461539) */
     var body: some View {
         GeometryReader(content: { geometry in
             VStack(alignment: .leading) {
@@ -19,14 +19,19 @@ struct XPProgressBarView: View {
                             .opacity(0.3)
                             .foregroundColor(Color(UIColor.systemGreen))
 
-                        Rectangle().frame(width: min(CGFloat(self.xp.levelProgress) * geometry.size.width, geometry.size.width), height: geometry.size.height)
+                        Rectangle().frame(width: min(CGFloat(self.xp.levelProgress) * geometry.size.width / 2, geometry.size.width / 2), height: geometry.size.height)
                             .foregroundColor(Color(UIColor.systemGreen))
                     }.frame(width: geometry.size.width / 2, height: 20, alignment: .leading)
                 }
                 .cornerRadius(45)
                 .shadow(radius: 8)
                 // })
-                Text("Lvl. \(xp.level); \(Int(xp.levelProgress * 100))% (\(xp.levelXP)/\(xp.levelXPMax))").padding(.leading)
+                HStack {
+                    Text("\(xp.total)").bold() + Text(" XP")
+                    Spacer()
+                    Text("Lvl. \(xp.level); \(Int(xp.levelProgress * 100))% (\(xp.levelXP)/\(xp.levelXPMax))").padding(.leading)
+
+                }.frame(width: geometry.size.width / 2, height: 20, alignment: .leading)
             }
 
 		})
@@ -35,6 +40,6 @@ struct XPProgressBarView: View {
 
 struct XPProgressBarView_Previews: PreviewProvider {
     static var previews: some View {
-        XPProgressBarView()
+        XPProgressBarView(xp: .constant(XP(total: 0, level: 0, levelXP: 0, levelXPMax: 0, levelProgress: 0)))
     }
 }

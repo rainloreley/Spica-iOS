@@ -15,7 +15,7 @@ public class VotePost {
 
     public func vote(post: Post, vote: VoteType) -> Future<VoteResult, AllesAPIErrorMessage> {
         return Future<VoteResult, AllesAPIErrorMessage> { [self] promise in
-            let newVoteStatus = post.voteStatus == vote.voteInt ? 0 : vote.voteInt
+            let newVoteStatus = post.voted == vote.voteInt ? 0 : vote.voteInt
             AllesAPI.default.votePost(post: post, value: newVoteStatus)
                 .receive(on: RunLoop.main)
                 .sink {
@@ -27,17 +27,17 @@ public class VotePost {
                     var newScore = post.score
                     switch vote {
                     case .upvote:
-                        if post.voteStatus == 1 {
+                        if post.voted == 1 {
                             newScore -= 1
-                        } else if post.voteStatus == 0 {
+                        } else if post.voted == 0 {
                             newScore += 1
                         } else {
                             newScore += 2
                         }
                     case .downvote:
-                        if post.voteStatus == 1 {
+                        if post.voted == 1 {
                             newScore -= 2
-                        } else if post.voteStatus == 0 {
+                        } else if post.voted == 0 {
                             newScore -= 1
                         } else {
                             newScore += 1

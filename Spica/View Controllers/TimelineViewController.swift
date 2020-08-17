@@ -121,7 +121,13 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     func applyChanges(_ animated: Bool = true) {
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
-        snapshot.appendItems(posts, toSection: .main)
+        var filteredPosts = [Post]()
+        for i in posts {
+            if !filteredPosts.contains(where: { $0.id == i.id }) {
+                filteredPosts.append(i)
+            }
+        }
+        snapshot.appendItems(filteredPosts, toSection: .main)
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
             if self.posts.isEmpty {
@@ -146,7 +152,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
         let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
 
-		vc.user = User(id: id!, name: name!, tag: tag!)
+        vc.user = User(id: id!, name: name!, tag: tag!)
 
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
@@ -225,57 +231,53 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     }
 
     func loadPrivacyPolicy() {
-        DispatchQueue.global(qos: .utility).async { [self] in
-            SpicAPI.getPrivacyPolicy()
-                .receive(on: RunLoop.main)
-                .sink {
-                    switch $0 {
-                    case let .failure(err):
-                        return
-                    default: break
-                    }
-                } receiveValue: { privacyPolicy in
-                    if privacyPolicy.markdown != "" {
-                        let vc = NewPrivacyPolicyViewController()
-                        vc.privacyPolicy = privacyPolicy
-                        vc.isModalInPresentation = true
-                        present(UINavigationController(rootViewController: vc), animated: true)
-                    }
+        SpicAPI.getPrivacyPolicy()
+            .receive(on: RunLoop.current)
+            .sink {
+                switch $0 {
+                case .failure:
+                    return
+                default: break
                 }
-                .store(in: &subscriptions)
-        }
+            } receiveValue: { privacyPolicy in
+                if privacyPolicy.markdown != "" {
+                    let vc = NewPrivacyPolicyViewController()
+                    vc.privacyPolicy = privacyPolicy
+                    vc.isModalInPresentation = true
+                    self.present(UINavigationController(rootViewController: vc), animated: true)
+                }
+            }
+            .store(in: &subscriptions)
     }
 
     func loadVersion() {
-        DispatchQueue.global(qos: .utility).async { [self] in
-            SpicAPI.getVersion()
-                .receive(on: RunLoop.main)
-                .sink {
-                    switch $0 {
-                    case .failure:
-                        return
-                    default: break
-                    }
-                } receiveValue: { version in
-                    if let currentBuildString = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-                        let currentBuild = Int(currentBuildString)!
-                        if currentBuild < version.reqBuild {
-                            DispatchQueue.main.async {
-                                EZAlertController.alert("Outdated app", message: "We detected that you're using an old version of the app. This is usually not a problem but we made some important changes. Please update the app. It will now exit", actions: [UIAlertAction(title: "Ok", style: .default, handler: { _ in
-                                    exit(0)
-								})])
-                            }
+        SpicAPI.getVersion()
+            .receive(on: RunLoop.current)
+            .sink {
+                switch $0 {
+                case .failure:
+                    return
+                default: break
+                }
+            } receiveValue: { version in
+                if let currentBuildString = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
+                    let currentBuild = Int(currentBuildString)!
+                    if currentBuild < version.reqBuild {
+                        DispatchQueue.main.async {
+                            EZAlertController.alert("Outdated app", message: "We detected that you're using an old version of the app. This is usually not a problem but we made some important changes. Please update the app. It will now exit", actions: [UIAlertAction(title: "Ok", style: .default, handler: { _ in
+                                exit(0)
+							})])
                         }
                     }
                 }
-                .store(in: &subscriptions)
-        }
+            }
+            .store(in: &subscriptions)
     }
 
     @objc func loadFeed() {
         verificationString = ""
         if posts.isEmpty { loadingHud.show(in: view) }
-        AllesAPI.loadFeed(cache: .cache)
+        AllesAPI.default.loadFeed(cache: .remote)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
@@ -287,6 +289,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 default: break
                 }
             } receiveValue: { [self] posts in
+                print("RECPOSTS: \(posts)")
                 self.posts = posts
                 self.applyChanges()
                 self.refreshControl.endRefreshing()
@@ -420,7 +423,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 default: break
                 }
             } receiveValue: { [unowned self] in
-                posts[tag].voteStatus = $0.status
+                posts[tag].voted = $0.status
                 posts[tag].score = $0.score
                 applyChanges()
             }.store(in: &subscriptions)
@@ -432,6 +435,34 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
+
+    func loadEvenMorePosts(_ beforeDate: Date) {
+        let timestamp = Int(beforeDate.timeIntervalSince1970 * 1000)
+        print("TIMESTAMPI: \(timestamp)")
+        verificationString = ""
+        if posts.isEmpty { loadingHud.show(in: view) }
+        AllesAPI.default.loadFeed(loadBefore: timestamp)
+            .receive(on: RunLoop.main)
+            .sink {
+                switch $0 {
+                case let .failure(err):
+                    self.refreshControl.endRefreshing()
+                    self.loadingHud.dismiss()
+                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+
+                default: break
+                }
+            } receiveValue: { [self] posts in
+                print("RECPOSTS: \(posts)")
+                self.posts.append(contentsOf: posts)
+                self.posts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
+                self.applyChanges()
+                self.refreshControl.endRefreshing()
+                self.loadingHud.dismiss()
+                verificationString = randomString(length: 30)
+                self.loadImages()
+            }.store(in: &subscriptions)
+    }
 }
 
 extension TimelineViewController: UITableViewDelegate {
@@ -442,13 +473,20 @@ extension TimelineViewController: UITableViewDelegate {
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
+
+    func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == posts.count {
+            print("LAST ROW SEEN")
+            loadEvenMorePosts(posts.last!.created)
+        }
+    }
 }
 
 extension TimelineViewController: MainSettingsDelegate {
-    func clickedMore(username: String) {
+    func clickedMore(uid: String) {
         let vc = UserProfileViewController()
 
-        vc.user = User(name: username, nickname: username)
+        vc.user = User(id: uid)
 
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
@@ -500,7 +538,7 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
         present(controller, animated: true, completion: nil)
     }
 
-	func repost(id: String, uid: String) {
+    func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
@@ -558,14 +596,14 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
         }
     }
 
-	func selectedUser(id: String, indexPath _: IndexPath) {
+    func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-		
-		let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-		let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
-		let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
-		
-		vc.user = User(id: id!, name: name!, tag: tag!)
+
+        /* let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+         let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
+         let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag") */
+
+        vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

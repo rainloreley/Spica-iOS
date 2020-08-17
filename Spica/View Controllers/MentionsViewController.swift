@@ -15,7 +15,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
     var toolbarDelegate = ToolbarDelegate()
 
-    var mentions = [Post]() {
+    var mentions = [PostNotification]() {
         didSet { applyChanges() }
     }
 
@@ -55,8 +55,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         loadingHud.interactionType = .blockNoTouches
     }
 
-    typealias DataSource = UITableViewDiffableDataSource<Section, Post>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
+    typealias DataSource = UITableViewDiffableDataSource<Section, PostNotification>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, PostNotification>
 
     private lazy var dataSource = makeDataSource()
 
@@ -70,7 +70,20 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
             cell.delegate = self
             cell.indexPath = indexPath
-            cell.post = post
+            cell.post = post.post
+
+            if !post.read {
+                let unreadIndicator = UIView()
+                unreadIndicator.backgroundColor = .systemBlue
+                unreadIndicator.layer.cornerRadius = 10
+                cell.addSubview(unreadIndicator)
+                unreadIndicator.snp.makeConstraints { make in
+                    make.top.equalTo(cell.snp.top).offset(8)
+                    make.width.equalTo(20)
+                    make.height.equalTo(20)
+                    make.trailing.equalTo(cell.snp.trailing).offset(-8)
+                }
+            }
 
             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
             cell.pfpImageView.tag = indexPath.row
@@ -184,9 +197,16 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                 self.mentions = $0
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
+
                 self.verificationString = randomString(length: 30)
                 self.loadImages()
+                self.markAsRead()
+
             }.store(in: &subscriptions)
+    }
+
+    func markAsRead() {
+        AllesAPI.default.markNotificationsAsRead()
     }
 
     func loadImages() {
@@ -197,16 +217,16 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                 if veri != verificationString { return }
                 dispatchGroup.enter()
                 if index <= mentions.count - 1 {
-                    if let author = mentions[index].author {
+                    if let author = mentions[index].post.author {
                         if veri != verificationString { return }
-                        mentions[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
+                        mentions[index].post.author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
                     }
 
-                    if let url = post.imageURL {
+                    if let url = post.post.imageURL {
                         if veri != verificationString { return }
-                        mentions[index].image = ImageLoader.loadImageFromInternet(url: url)
+                        mentions[index].post.image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
-                        mentions[index].image = UIImage()
+                        mentions[index].post.image = UIImage()
                     }
                     if index < 5 {
                         if veri != verificationString { return }
@@ -220,7 +240,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     }
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
-        let userByTag = mentions[sender.view!.tag].author
+        let userByTag = mentions[sender.view!.tag].post.author
         let vc = UserProfileViewController()
         vc.user = userByTag
         vc.hidesBottomBarWhenPushed = true
@@ -237,7 +257,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
     func vote(tag: Int, vote: VoteType) {
         let selectedPost = mentions[tag]
-        VotePost.default.vote(post: selectedPost, vote: vote)
+        VotePost.default.vote(post: selectedPost.post, vote: vote)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
@@ -247,8 +267,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                 default: break
                 }
             } receiveValue: { [unowned self] in
-                mentions[tag].voteStatus = $0.status
-                mentions[tag].score = $0.score
+                mentions[tag].post.voted = $0.status
+                mentions[tag].post.score = $0.score
                 applyChanges()
             }.store(in: &subscriptions)
     }
@@ -265,7 +285,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 extension MentionsViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let detailVC = PostDetailViewController()
-        detailVC.selectedPostID = mentions[indexPath.row].id
+        detailVC.selectedPostID = mentions[indexPath.row].post.id
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -316,7 +336,7 @@ extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerD
         present(controller, animated: true, completion: nil)
     }
 
-	func repost(id: String, uid: String) {
+    func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
@@ -374,9 +394,9 @@ extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerD
         }
     }
 
-	func selectedUser(id: String, indexPath _: IndexPath) {
+    func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-		vc.user = User(id: id)
+        vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

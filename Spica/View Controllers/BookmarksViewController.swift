@@ -135,7 +135,7 @@ class BookmarksViewController: UIViewController {
             var savedBookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
             for i in savedBookmarks {
                 myGroup.enter()
-                AllesAPI.loadPost(id: i.id)
+                AllesAPI.default.loadPost(id: i.id)
                     .receive(on: RunLoop.main)
                     .sink {
                         switch $0 {
@@ -237,7 +237,7 @@ class BookmarksViewController: UIViewController {
                 default: break
                 }
             } receiveValue: { [unowned self] in
-                bookmarks[tag].post.voteStatus = $0.status
+                bookmarks[tag].post.voted = $0.status
                 bookmarks[tag].post.score = $0.score
                 applyChanges()
             }.store(in: &subscriptions)
@@ -341,7 +341,7 @@ extension BookmarksViewController: PostCellViewDelegate {
         present(controller, animated: true, completion: nil)
     }
 
-	func repost(id: String, uid: String) {
+    func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
@@ -399,9 +399,9 @@ extension BookmarksViewController: PostCellViewDelegate {
         }
     }
 
-	func selectedUser(id: String, indexPath _: IndexPath) {
+    func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-		vc.user = User(id: id)
+        vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

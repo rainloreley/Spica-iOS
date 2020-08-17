@@ -185,7 +185,7 @@ class TagDetailViewController: UIViewController {
                 default: break
                 }
             } receiveValue: { [unowned self] in
-                self.tag.posts[tag].voteStatus = $0.status
+                self.tag.posts[tag].voted = $0.status
                 self.tag.posts[tag].score = $0.score
                 applyChanges()
             }.store(in: &subscriptions)
@@ -296,7 +296,7 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
         present(controller, animated: true, completion: nil)
     }
 
-	func repost(id: String, uid: String) {
+    func repost(id: String, uid: String) {
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
@@ -354,9 +354,9 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
         }
     }
 
-	func selectedUser(id: String, indexPath _: IndexPath) {
+    func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-		vc.user = User(id: id)
+        vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }

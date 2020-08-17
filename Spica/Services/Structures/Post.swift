@@ -2,10 +2,9 @@
 //  Post.swift
 //  Spica
 //
-//  Created by Adrian Baumgart on 29.06.20.
+//  Created by Adrian Baumgart on 12.08.20.
 //
 
-import Cache
 import Foundation
 import SwiftyJSON
 import UIKit
@@ -13,45 +12,59 @@ import UIKit
 public struct Post: Hashable {
     var id: String
     var author: User?
-    var date: Date
-    var repliesCount: Int
-    var score: Int
+    var author_id: String
+    var parent_id: String?
+    var children_ids: [String]
+    var children_count: Int
     var content: String
-    var image: UIImage?
     var imageURL: URL?
-    var voteStatus: Int
+    var image: UIImage?
+    var score: Int
+    var voted: Int
+    var created: Date
+    var interactions: Int?
 
-    public init(id: String, author: User, date: Date, repliesCount: Int, score: Int, content: String, image: UIImage? = nil, imageURL: URL? = nil, voteStatus: Int) {
-        self.id = id
+    var mentionedUsers: [User]
+
+    init(id: String = "", author: User? = nil, author_id: String = "", parent_id: String? = nil, children_ids: [String] = [], children_count: Int = 0, content: String = "", imageURL: URL? = nil, image: UIImage? = nil, score: Int = 0, voted: Int = 0, created: Date = Date(), mentionedUsers: [User] = [], interactions: Int? = nil) {
+        self.id = id == "" ? randomString(length: 30) : id
         self.author = author
-        self.date = date
-        self.repliesCount = repliesCount
-        self.score = score
+        self.author_id = author_id == "" ? randomString(length: 30) : author_id
+        self.parent_id = parent_id
+        self.children_ids = children_ids
+        self.children_count = children_count
         self.content = content
-        self.image = image
         self.imageURL = imageURL
-        self.voteStatus = voteStatus
+        self.image = image
+        self.score = score
+        self.voted = voted
+        self.created = created
+        self.mentionedUsers = mentionedUsers
+        self.interactions = interactions
     }
 
-    public static func empty(id: String = "", author: User, date: Date = Date(), repliesCount: Int = 0, score: Int = 0, content: String = "", image: UIImage? = nil, imageURL: URL? = nil, voteStatus: Int = 0) -> Post {
-        return Post(id: id == "" ? randomString(length: 30) : id, author: author, date: date, repliesCount: repliesCount, score: score, content: content, image: image, imageURL: imageURL, voteStatus: voteStatus)
-    }
-
-    public init(_ json: JSON) {
-        id = json["slug"].string!
-        author = User(json["author"], isOnline: false)
-        date = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
-        repliesCount = json["replyCount"].intValue
-        score = json["score"].int ?? 0
-        content = json["content"].string!
-        if let imageURLString = json["image"].string {
-            imageURL = URL(string: imageURLString)
+    init(_ json: JSON, mentionedUsers: [User]) {
+        id = json["id"].string ?? randomString(length: 30)
+        author = nil
+        author_id = json["author"].string ?? randomString(length: 30)
+        parent_id = json["parent"].string ?? nil
+        children_ids = json["children"]["list"].arrayValue.map { $0.stringValue }
+        children_count = json["children"]["count"].int ?? 0
+        content = json["content"].string ?? ""
+        if let urlStr = json["image"].string {
+            imageURL = URL(string: "https://fs.alles.cx/\(urlStr)")
+        } else {
+            imageURL = nil
         }
-
-        voteStatus = json["vote"].int ?? 0
+        image = nil
+        score = json["vote"]["score"].int ?? 0
+        voted = json["vote"]["me"].int ?? 0
+        created = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
+        self.mentionedUsers = mentionedUsers
+        interactions = json["interactions"].int ?? nil
     }
 }
 
 extension Post {
-    static let deleted = Post.empty(author: User(name: "---", nickname: "---"), content: "Post was deleted")
+    static let deleted = Post(author: User(name: "---", nickname: "---"), content: "Post was deleted")
 }

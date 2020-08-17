@@ -13,7 +13,7 @@ import SwiftKeychainWrapper
 import UIKit
 
 protocol MainSettingsDelegate {
-    func clickedMore(username: String)
+    func clickedMore(uid: String)
 }
 
 class MainSettingsViewController: UITableViewController {
@@ -47,7 +47,7 @@ class MainSettingsViewController: UITableViewController {
     @IBOutlet var biometricsLabel: UILabel!
     @IBOutlet var biometricsSwitch: UISwitch!
 
-    var username = ""
+    var userID = ""
 
     var delegate: MainSettingsDelegate!
 
@@ -103,14 +103,14 @@ class MainSettingsViewController: UITableViewController {
     @IBAction func profileMore(_: Any) {
         if let splitViewController = splitViewController, !splitViewController.isCollapsed {
             let vc = UserProfileViewController()
-            vc.user = User(id: username, name: username, nickname: username)
+            vc.user = User(id: userID)
             vc.hidesBottomBarWhenPushed = true
 
             navigationController?.pushViewController(vc, animated: true)
         } else {
             dismiss(animated: true)
             if delegate != nil {
-                delegate.clickedMore(username: username)
+                delegate.clickedMore(uid: userID)
             }
         }
     }
@@ -261,12 +261,12 @@ class MainSettingsViewController: UITableViewController {
             let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
             let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
 
-            self.username = "\(name)#\(tag)"
+            self.userID = id!
 
-			let userImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cc/\(id)")!)
+            let userImage = ImageLoader.loadImageFromInternet(url: URL(string: "https://avatar.alles.cc/\(id!)")!)
 
             DispatchQueue.main.async {
-                self.usernameLabel.text = "@\(self.username)"
+                self.usernameLabel.text = "\(name!)#\(tag!)"
                 self.userPfpImageView.image = userImage
             }
         }
