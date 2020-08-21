@@ -4,6 +4,8 @@
 
 Spica is an iOS Client for [Alles Micro](https://alles.cx). It's privacy focused and easy to use.
 
+## DISCLAIMER: THE CURRENT VERSION ON THIS REPO IS A DEVELOPMENT VERSION FOR THE NEW MICRO API.
+
 ## Build & Install
 
 Spica uses Cocoapods. We decided to remove the Pods/ directory from source control so some additional steps are necessary.
