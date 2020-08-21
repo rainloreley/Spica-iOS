@@ -12,6 +12,7 @@ import SwiftyJSON
 import UIKit
 
 public class SpicAPI {
+    static let `default` = SpicAPI()
     public static func getVersion() -> Future<Version, Error> {
         Future<Version, Error> { promise in
             AF.request("https://api.spica.li/apps/ios/version", method: .get).responseJSON { response in
@@ -21,6 +22,30 @@ public class SpicAPI {
                     promise(.success(Version(reqVersion: responseJSON["required"]["version"].string!, reqBuild: responseJSON["required"]["build"].int!, newVersion: responseJSON["newest"]["version"].string!, newBuild: responseJSON["newest"]["build"].int!)))
                 case let .failure(error):
                     promise(.failure(error.underlyingError!))
+                }
+            }
+        }
+    }
+
+    public static func getLabels(_ labels: [String]) -> Future<[Label], AllesAPIErrorMessage> {
+        Future<[Label], AllesAPIErrorMessage> { promise in
+            let body: [String: Any] = [
+                "labels": labels,
+            ]
+            AF.request("https://api.spica.li/label", method: .post, parameters: body, encoding: JSONEncoding.default, headers: ["Content-Type": "application/json; charset=utf-8"]).responseJSON { response in
+                switch response.result {
+                case .success:
+                    if response.response?.statusCode == 200 {
+                        let responseJSON = JSON(response.data!)
+                        let tempLabels = responseJSON["success"].map { _, json in
+                            Label(json)
+                        }
+                        promise(.success(tempLabels))
+                    } else {
+                        promise(.failure(AllesAPIErrorMessage(message: "Invalid status code", error: .unknown, actionParameter: "", action: .none)))
+                    }
+                case let .failure(error):
+                    promise(.failure(AllesAPIErrorMessage(message: error.underlyingError!.localizedDescription, error: .unknown, actionParameter: "", action: .none)))
                 }
             }
         }

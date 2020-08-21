@@ -34,7 +34,6 @@ class ToolbarDelegate: NSObject {
         }
 
         @objc func navigateBack(_: Any?) {
-            print("ALERTED")
             NotificationCenter.default.post(name: .navigateBack, object: self)
         }
     }

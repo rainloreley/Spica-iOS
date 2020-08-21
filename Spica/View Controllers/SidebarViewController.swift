@@ -5,6 +5,7 @@
 //  Created by Adrian Baumgart on 15.07.20.
 //
 
+import Combine
 import SwiftKeychainWrapper
 import UIKit
 
@@ -14,8 +15,10 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate {
         splitViewController?.setViewController(SidebarSection(rawValue: indexPath.section)!.viewController, for: .secondary)
     }
 
+    private var subscriptions = Set<AnyCancellable>()
     var dataSource: UICollectionViewDiffableDataSource<SidebarSection, SidebarItem>!
     var collectionView: UICollectionView!
+    var unreadMentions = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,9 +50,30 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate {
         let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, SidebarItem> { cell, _, item in
 
             var content = cell.defaultContentConfiguration()
-
             content.text = item.name
             content.image = item.image
+
+            if item.section == .mentions, !self.unreadMentions.isEmpty {
+                let dotView = UIView(frame: .zero)
+                dotView.backgroundColor = .systemRed
+                dotView.layer.cornerRadius = 8
+                dotView.tag = 945
+                // cell.addSubview(dotView)
+                content.secondaryText = "\(self.unreadMentions.count)"
+                content.prefersSideBySideTextAndSecondaryText = true
+                content.image = UIImage(systemName: "bell.badge.fill")!
+                /* dotView.snp.makeConstraints { (make) in
+                 	make.width.equalTo(16)
+                 	make.height.equalTo(16)
+                 	make.top.equalTo(cell.snp.top).offset(-8)
+                 	make.leading.equalTo(cell.snp.leading).offset(-8)
+                 } */
+            } else {
+                if let dotView = cell.viewWithTag(945) {
+                    dotView.removeFromSuperview()
+                }
+            }
+
             cell.contentConfiguration = content
         }
 
@@ -57,6 +81,10 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate {
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
 
+        applyChanges()
+    }
+
+    func applyChanges() {
         var snapshot = NSDiffableDataSourceSnapshot<SidebarSection, SidebarItem>()
 
         snapshot.appendSections(SidebarSection.allCases)
@@ -78,12 +106,35 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate {
         #if targetEnvironment(macCatalyst)
             navigationController?.setNavigationBarHidden(true, animated: animated)
         #endif
+        loadNotifications()
+        _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadNotifications), userInfo: nil, repeats: true)
+    }
+
+    @objc func loadNotifications() {
+        DispatchQueue.global(qos: .utility).async {
+            AllesAPI.default.getUnreadMentions()
+                .receive(on: RunLoop.main)
+                .sink {
+                    switch $0 {
+                    case let .failure(err):
+                        return
+                    default: break
+                    }
+                } receiveValue: { values in
+                    // if !arraysAreSame(first: self.unreadMentions, second: values) {
+                    self.unreadMentions = values
+                    self.applyChanges()
+                    // }
+
+                }.store(in: &self.subscriptions)
+        }
     }
 }
 
 struct SidebarItem: Hashable {
     let name: String
     let image: UIImage
+    let section: SidebarSection
 }
 
 enum SidebarSection: Int, Hashable, CaseIterable {
@@ -97,17 +148,17 @@ enum SidebarSection: Int, Hashable, CaseIterable {
     var sidebar: SidebarItem {
         switch self {
         case .home:
-            return SidebarItem(name: SLocale(.HOME), image: UIImage(systemName: "house")!)
+            return SidebarItem(name: SLocale(.HOME), image: UIImage(systemName: "house")!, section: .home)
         case .mentions:
-            return SidebarItem(name: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell")!)
+            return SidebarItem(name: SLocale(.NOTIFICATIONS), image: UIImage(systemName: "bell")!, section: .mentions)
         case .bookmarks:
-            return SidebarItem(name: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark")!)
+            return SidebarItem(name: SLocale(.BOOKMARKS), image: UIImage(systemName: "bookmark")!, section: .bookmarks)
         /* case .search:
          return SidebarItem(name: "Search", image: UIImage(systemName: "magnifyingglass")!) */
         case .account:
-            return SidebarItem(name: SLocale(.ACCOUNT), image: UIImage(systemName: "person.circle")!)
+            return SidebarItem(name: SLocale(.ACCOUNT), image: UIImage(systemName: "person.circle")!, section: .account)
         case .settings:
-            return SidebarItem(name: SLocale(.SETTINGS), image: UIImage(systemName: "gear")!)
+            return SidebarItem(name: SLocale(.SETTINGS), image: UIImage(systemName: "gear")!, section: .settings)
         }
     }
 
@@ -127,10 +178,10 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             vc.navigationItem.hidesBackButton = true
             return vc
 
-            /* case .search:
-             let vc = SearchViewController()
-             vc.navigationItem.hidesBackButton = true */
-            return vc
+        /* case .search:
+          let vc = SearchViewController()
+          vc.navigationItem.hidesBackButton = true
+         return vc*/
         case .account:
             let vc = UserProfileViewController()
             vc.navigationItem.hidesBackButton = true

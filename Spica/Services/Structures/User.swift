@@ -31,8 +31,9 @@ public struct User: Hashable {
     var joined: Date
     var postsCount: Int
     var repliesCount: Int
+    var labels: [Label]
 
-    init(id: String = "", name: String = "", tag: String = "", nickname: String = "", plus: Bool = false, alles: Bool = true, image: UIImage? = nil, imgURL: URL? = nil, xp: XP = XP(total: 0, level: 0, levelXP: 0, levelXPMax: 0, levelProgress: 0), about: String = "", isFollowing: Bool = false, followsMe: Bool = false, isOnline: Bool = false, followers: Int = 0, following: Int = 0, joined: Date = Date(), postsCount: Int = 0, repliesCount: Int = 0) {
+    init(id: String = "", name: String = "", tag: String = "", nickname: String = "", plus: Bool = false, alles: Bool = true, image: UIImage? = nil, imgURL: URL? = nil, xp: XP = XP(total: 0, level: 0, levelXP: 0, levelXPMax: 0, levelProgress: 0), about: String = "", isFollowing: Bool = false, followsMe: Bool = false, isOnline: Bool = false, followers: Int = 0, following: Int = 0, joined: Date = Date(), postsCount: Int = 0, repliesCount: Int = 0, labels: [Label] = []) {
         self.id = id == "" ? randomString(length: 20) : id
         self.name = name
         self.tag = tag
@@ -40,7 +41,7 @@ public struct User: Hashable {
         self.plus = plus
         self.alles = alles
         self.image = image == nil ? UIImage(systemName: "person.cirlce") : image
-        self.imgURL = imgURL == nil ? URL(string: "https://avarar.alles.cc/\(id)") : imgURL
+        self.imgURL = imgURL == nil ? URL(string: "https://avatar.alles.cc/\(id)") : imgURL
         self.xp = xp
         self.about = about
         self.isFollowing = isFollowing
@@ -51,6 +52,7 @@ public struct User: Hashable {
         self.joined = joined
         self.postsCount = postsCount
         self.repliesCount = repliesCount
+        self.labels = labels
     }
 
     init(_ json: JSON, isOnline: Bool = false) {
@@ -73,5 +75,6 @@ public struct User: Hashable {
         joined = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
         postsCount = json["posts"]["count"].int ?? 0
         repliesCount = json["posts"]["replies"].int ?? 0
+        labels = []
     }
 }

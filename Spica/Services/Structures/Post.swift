@@ -23,10 +23,11 @@ public struct Post: Hashable {
     var voted: Int
     var created: Date
     var interactions: Int?
+    var url: String?
 
     var mentionedUsers: [User]
 
-    init(id: String = "", author: User? = nil, author_id: String = "", parent_id: String? = nil, children_ids: [String] = [], children_count: Int = 0, content: String = "", imageURL: URL? = nil, image: UIImage? = nil, score: Int = 0, voted: Int = 0, created: Date = Date(), mentionedUsers: [User] = [], interactions: Int? = nil) {
+    init(id: String = "", author: User? = nil, author_id: String = "", parent_id: String? = nil, children_ids: [String] = [], children_count: Int = 0, content: String = "", imageURL: URL? = nil, image: UIImage? = nil, score: Int = 0, voted: Int = 0, created: Date = Date(), mentionedUsers: [User] = [], interactions: Int? = nil, url: String? = nil) {
         self.id = id == "" ? randomString(length: 30) : id
         self.author = author
         self.author_id = author_id == "" ? randomString(length: 30) : author_id
@@ -41,6 +42,7 @@ public struct Post: Hashable {
         self.created = created
         self.mentionedUsers = mentionedUsers
         self.interactions = interactions
+        self.url = url
     }
 
     init(_ json: JSON, mentionedUsers: [User]) {
@@ -62,6 +64,7 @@ public struct Post: Hashable {
         created = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
         self.mentionedUsers = mentionedUsers
         interactions = json["interactions"].int ?? nil
+        url = json["url"].string ?? nil
     }
 }
 

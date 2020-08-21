@@ -8,6 +8,6 @@
 import Foundation
 
 public struct SignedInUser {
-    var username: String
+    var id: String
     var sessionToken: String
 }

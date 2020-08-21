@@ -40,6 +40,7 @@ class TagDetailViewController: UIViewController {
 
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .systemBackground
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView))
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
@@ -82,10 +83,18 @@ class TagDetailViewController: UIViewController {
         navigateBackSubscriber?.cancel()
     }
 
+    @objc func openPostCreateView() {
+        let vc = PostCreateViewController()
+        vc.type = .post
+        vc.preText = "#\(tag.name) "
+        vc.delegate = self
+        present(UINavigationController(rootViewController: vc), animated: true)
+    }
+
     @objc func loadTag() {
         loadingHud.show(in: view)
         verificationString = ""
-        AllesAPI.loadTag(tag: tag.name)
+        AllesAPI.default.loadTag(tag: tag.name)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {

@@ -10,6 +10,7 @@ import Combine
 import LocalAuthentication
 import SPAlert
 import SwiftKeychainWrapper
+import SwiftUI
 import UIKit
 
 protocol MainSettingsDelegate {

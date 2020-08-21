@@ -117,6 +117,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     override func viewWillAppear(_: Bool) {
         setSidebar()
+        navigationController?.navigationBar.prefersLargeTitles = false
 
         let notificationCenter = NotificationCenter.default
         createPostSubscriber = notificationCenter.publisher(for: .createPost)
@@ -339,7 +340,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     @objc func followUnfollowUser() {
-        AllesAPI.default.performFollowAction(username: user.id, action: user.isFollowing ? .unfollow : .follow)
+        AllesAPI.default.performFollowAction(id: user.id, action: user.isFollowing ? .unfollow : .follow)
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {
@@ -370,6 +371,14 @@ extension UserProfileViewController: UserHeaderDelegate {
 
     func clickedOnFollowerCount() {
         let vc = FollowersFollowingViewController()
+        vc.selectedIndex = 0
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func clickedOnFollowingCount() {
+        let vc = FollowersFollowingViewController()
+        vc.selectedIndex = 1
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -562,7 +571,7 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
                 return item
             } else if itemIdentifier == NSToolbarItem.Identifier("userDisplayname") {
                 let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier("userDisplayname"))
-                item.title = user.displayName
+                item.title = user.name
                 return item
             } else if itemIdentifier == NSToolbarItem.Identifier("reloadData") {
                 let item = NSToolbarItem(itemIdentifier: NSToolbarItem.Identifier("reloadData"), barButtonItem: UIBarButtonItem(image: UIImage(systemName: "arrow.clockwise"), style: .plain, target: self, action: #selector(loadUser)))

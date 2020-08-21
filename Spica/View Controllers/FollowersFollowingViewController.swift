@@ -11,8 +11,8 @@ import SwiftUI
 import UIKit
 
 class FollowersFollowingViewController: UIViewController {
-    typealias DataSource = UITableViewDiffableDataSource<Section, FollowUser>
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, FollowUser>
+    typealias DataSource = UITableViewDiffableDataSource<Section, User>
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, User>
 
     var tableView: UITableView!
     var segmentedControl: UISegmentedControl!
@@ -23,6 +23,7 @@ class FollowersFollowingViewController: UIViewController {
     private lazy var dataSource = makeDataSource()
 
     var verificationString = ""
+    var selectedIndex = 0
 
     var followersFollowing: Followers = Followers(followers: [], following: [])
 
@@ -41,8 +42,10 @@ class FollowersFollowingViewController: UIViewController {
         view.addSubview(tableView)
 
         segmentedControl = UISegmentedControl(items: [SLocale(.FOLLOWER_PLURAL), SLocale(.FOLLOWING_ACTION)])
-        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.selectedSegmentIndex = selectedIndex
         segmentedControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
+
+        navigationItem.title = segmentedControl.selectedSegmentIndex == 0 ? SLocale(.FOLLOWER_PLURAL) : SLocale(.FOLLOWING_ACTION)
 
         view.addSubview(segmentedControl)
 
@@ -114,9 +117,9 @@ class FollowersFollowingViewController: UIViewController {
                     if index <= users.count - 1 {
                         if veri != verificationString { return }
                         if segmentedStatus == 0 {
-                            followersFollowing.followers[index].image = ImageLoader.loadImageFromInternet(url: user.imageURL)
+                            followersFollowing.followers[index].image = ImageLoader.loadImageFromInternet(url: user.imgURL!)
                         } else {
-                            followersFollowing.following[index].image = ImageLoader.loadImageFromInternet(url: user.imageURL)
+                            followersFollowing.following[index].image = ImageLoader.loadImageFromInternet(url: user.imgURL!)
                         }
 
                         if veri != verificationString { return }
@@ -171,20 +174,20 @@ extension FollowersFollowingViewController: UITableViewDelegate {
         let userByTag = segmentedControl.selectedSegmentIndex == 0 ? followersFollowing.followers[indexPath.row] : followersFollowing.following[indexPath.row]
         let vc = UserProfileViewController()
 
-        vc.user = User(id: userByTag.id, name: userByTag.name, nickname: userByTag.nickname, plus: userByTag.isPlus, image: userByTag.image!, imgURL: userByTag.imageURL)
+        vc.user = User(id: userByTag.id, name: userByTag.name, nickname: userByTag.nickname, image: userByTag.image!, imgURL: userByTag.imgURL)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
 }
 
 struct FollowerCell: View {
-    var follower: FollowUser!
+    var follower: User!
 
     var body: some View {
         HStack {
-            Image(uiImage: follower.image!).resizable().frame(width: 40, height: 40, alignment: .leading).cornerRadius(20)
+            Image(uiImage: follower.image ?? UIImage(systemName: "person.circle")).resizable().frame(width: 40, height: 40, alignment: .leading).cornerRadius(20)
             VStack(alignment: .leading) {
-                Text("\(follower.name)\(follower.isPlus ? String("⁺") : String(""))").bold()
+                Text("\(follower.name)").bold()
                 Text("\(follower.name)#\(follower.tag)").foregroundColor(.secondary)
             }
             Spacer()

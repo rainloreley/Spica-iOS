@@ -234,7 +234,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 usernameField.layer.borderColor = UIColor.systemRed.cgColor
                 usernameField.layer.borderWidth = 1.0
             } else {
-                AllesAPI.default.signInUser(username: usernameField.text!, password: passwordField.text!)
+                AllesAPI.default.signInUser(name: String(splitUsername[0]), tag: String(splitUsername[1]), password: passwordField.text!)
                     .receive(on: RunLoop.main)
                     .sink {
                         switch $0 {

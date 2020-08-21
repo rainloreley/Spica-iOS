@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0252C224ADE30700A4E4FD /* LoginViewController.swift */; };
+		3A03D7AA24EC313F0096DA9B /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A03D7A924EC313F0096DA9B /* Label.swift */; };
 		3A25FBA924B753D400324136 /* SPAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 3A25FBA824B753D400324136 /* SPAlert */; };
 		3A27608224D5AE8300DEE34A /* FollowersFollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A27608124D5AE8300DEE34A /* FollowersFollowingViewController.swift */; };
 		3A27608524D5D37D00DEE34A /* SkeletonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 3A27608424D5D37D00DEE34A /* SkeletonUI */; };
@@ -19,6 +20,8 @@
 		3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274324B1E02900425999 /* CircularProgressBar.swift */; };
 		3A41274624B1E1AC00425999 /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A41274524B1E1AC00425999 /* ProgressBarController.swift */; };
 		3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A474AFA24B24EDA003424F5 /* PostCellView.swift */; };
+		3A478C5224ED387B00EE46E1 /* PostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A478C5124ED387B00EE46E1 /* PostView.swift */; };
+		3A478C5424ED388500EE46E1 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A478C5324ED388500EE46E1 /* PostViewController.swift */; };
 		3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A48CD6D24BF1BCD00DD05CA /* AncestorPostDividerCell.swift */; };
 		3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4B92F924AA9176000534FD /* SnapKit */; };
 		3A4DF24B24BF7D1C003C6BF3 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */; };
@@ -44,6 +47,7 @@
 		3A71461224AA88FC000FA3C3 /* OldPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A71461124AA88FC000FA3C3 /* OldPost.swift */; };
 		3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A741A4F24B8BBC70083925A /* CreditsCell.swift */; };
 		3A746A9424BDD975008C9309 /* VotePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A746A9324BDD975008C9309 /* VotePost.swift */; };
+		3A7AA6E824EFC4C800BA397F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7AA6E724EFC4C800BA397F /* LoginView.swift */; };
 		3A83E9EE24D710E80099F096 /* Down in Frameworks */ = {isa = PBXBuildFile; productRef = 3A83E9ED24D710E80099F096 /* Down */; };
 		3A83E9F024D710F90099F096 /* NewPrivacyPolicyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A83E9EF24D710F90099F096 /* NewPrivacyPolicyViewController.swift */; };
 		3A91971624B89DDB00B7066B /* MainSettings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A91971524B89DDB00B7066B /* MainSettings.storyboard */; };
@@ -60,6 +64,7 @@
 		3AA108A724C0C622006FCA1A /* EditTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */; };
 		3AA108AA24C0CBDF006FCA1A /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 3AA108A924C0CBDF006FCA1A /* Hero */; };
 		3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA12EF324B0F3CD009C904A /* EZAlertController.swift */; };
+		3AB21DD224EFBC7800B467FF /* SignInWithAllesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */; };
 		3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */; };
 		3AD04A3624C0C50E007F7306 /* UserEditHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */; };
 		3AD5378924C997AB00FB62C5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3AD5378B24C997AB00FB62C5 /* InfoPlist.strings */; };
@@ -110,6 +115,7 @@
 		1360C14D6EC95C923EBA37A3 /* Pods-Spica-SpicaUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica-SpicaUITests.debug.xcconfig"; path = "Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A0252C224ADE30700A4E4FD /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		3A03D7A924EC313F0096DA9B /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		3A27608124D5AE8300DEE34A /* FollowersFollowingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersFollowingViewController.swift; sourceTree = "<group>"; };
 		3A32137024BB48CA008C62E5 /* UserHeaderCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderCellView.swift; sourceTree = "<group>"; };
 		3A332F3224C3BC8300A91C4E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -120,6 +126,8 @@
 		3A41274324B1E02900425999 /* CircularProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBar.swift; sourceTree = "<group>"; };
 		3A41274524B1E1AC00425999 /* ProgressBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
 		3A474AFA24B24EDA003424F5 /* PostCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellView.swift; sourceTree = "<group>"; };
+		3A478C5124ED387B00EE46E1 /* PostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostView.swift; sourceTree = "<group>"; };
+		3A478C5324ED388500EE46E1 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		3A48CD6D24BF1BCD00DD05CA /* AncestorPostDividerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AncestorPostDividerCell.swift; sourceTree = "<group>"; };
 		3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionsViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +158,7 @@
 		3A71461124AA88FC000FA3C3 /* OldPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OldPost.swift; sourceTree = "<group>"; };
 		3A741A4F24B8BBC70083925A /* CreditsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsCell.swift; sourceTree = "<group>"; };
 		3A746A9324BDD975008C9309 /* VotePost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotePost.swift; sourceTree = "<group>"; };
+		3A7AA6E724EFC4C800BA397F /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		3A83E9EF24D710F90099F096 /* NewPrivacyPolicyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPrivacyPolicyViewController.swift; sourceTree = "<group>"; };
 		3A8FD74C24CDA9B0004B247C /* SpicaRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpicaRelease.entitlements; sourceTree = "<group>"; };
 		3A91971524B89DDB00B7066B /* MainSettings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainSettings.storyboard; sourceTree = "<group>"; };
@@ -165,6 +174,7 @@
 		3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextFieldCell.swift; sourceTree = "<group>"; };
 		3AA12EF324B0F3CD009C904A /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
 		3AB0980E24C5BCB0005CCA27 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAllesButton.swift; sourceTree = "<group>"; };
 		3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEditHeaderCell.swift; sourceTree = "<group>"; };
 		3AD5378A24C997AB00FB62C5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -246,12 +256,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3A08677824BF902800C516A9 /* Sidebar */ = {
+		3A1BE03924F0193A005B1776 /* Custom icons */ = {
 			isa = PBXGroup;
 			children = (
-				3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */,
 			);
-			path = Sidebar;
+			path = "Custom icons";
 			sourceTree = "<group>";
 		};
 		3A332F3024C3BC8300A91C4E /* Files */ = {
@@ -289,6 +298,15 @@
 			path = "New Post Cell";
 			sourceTree = "<group>";
 		};
+		3A478C5024ED385B00EE46E1 /* SwiftUI Post Cell */ = {
+			isa = PBXGroup;
+			children = (
+				3A478C5124ED387B00EE46E1 /* PostView.swift */,
+				3A478C5324ED388500EE46E1 /* PostViewController.swift */,
+			);
+			path = "SwiftUI Post Cell";
+			sourceTree = "<group>";
+		};
 		3A48CD6C24BF1BB500DD05CA /* Ancestor Post Divider */ = {
 			isa = PBXGroup;
 			children = (
@@ -300,6 +318,7 @@
 		3A5CF34B24ACBCC0002A829A /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				3A478C5024ED385B00EE46E1 /* SwiftUI Post Cell */,
 				3A48CD6C24BF1BB500DD05CA /* Ancestor Post Divider */,
 				3AFAF96124BB4DB0003771B4 /* User Header Cell */,
 				3A474AF924B24EC0003424F5 /* New Post Cell */,
@@ -353,10 +372,12 @@
 		3A7145DD24AA8753000FA3C3 /* Spica */ = {
 			isa = PBXGroup;
 			children = (
+				3A1BE03924F0193A005B1776 /* Custom icons */,
 				3A9D965D24BA59AA00703466 /* Spica.entitlements */,
 				3A8FD74C24CDA9B0004B247C /* SpicaRelease.entitlements */,
 				3A6AABD124BB5D6300C71BC0 /* Localization */,
 				3A5CF34B24ACBCC0002A829A /* Cells */,
+				3AB21DD024EFBC6300B467FF /* Views */,
 				3A96F6A924AB445100482C5A /* View Controllers */,
 				3A96F69D24AB3F9C00482C5A /* Services */,
 				3A7145DE24AA8753000FA3C3 /* AppDelegate.swift */,
@@ -413,6 +434,7 @@
 			children = (
 				3A66D2F024E2F1B40074D223 /* User.swift */,
 				3AE586C724E4092700251BCE /* Post.swift */,
+				3A03D7A924EC313F0096DA9B /* Label.swift */,
 				3A9E0F8724E86F9700AFB1E4 /* PostNotification.swift */,
 				3A71461124AA88FC000FA3C3 /* OldPost.swift */,
 				3A66D2F224E2F2200074D223 /* XP.swift */,
@@ -448,9 +470,7 @@
 			isa = PBXGroup;
 			children = (
 				3A3CBE3024C0C0CF00B00D8D /* User Edit */,
-				3A08677824BF902800C516A9 /* Sidebar */,
 				3A91971424B89DC300B7066B /* Settings */,
-				3A4038B124B1EB54002B18F1 /* ProgressBar */,
 				3AFD81C224EAC51E00AD5E11 /* SearchViewController.swift */,
 				3A7145E224AA8753000FA3C3 /* TimelineViewController.swift */,
 				3A4F008624ABDCC900CDCD5E /* MentionsViewController.swift */,
@@ -458,13 +478,24 @@
 				3A96F6AA24AB447200482C5A /* UserProfileViewController.swift */,
 				3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */,
 				3A57CF8224AD0AFE00DCA057 /* PostCreateViewController.swift */,
-				3A0252C224ADE30700A4E4FD /* LoginViewController.swift */,
 				3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */,
+				3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */,
 				3A61B27A24C8B5E900AC1A9C /* TagDetailViewController.swift */,
 				3A27608124D5AE8300DEE34A /* FollowersFollowingViewController.swift */,
 				3A83E9EF24D710F90099F096 /* NewPrivacyPolicyViewController.swift */,
+				3A0252C224ADE30700A4E4FD /* LoginViewController.swift */,
+				3A7AA6E724EFC4C800BA397F /* LoginView.swift */,
 			);
 			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		3AB21DD024EFBC6300B467FF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3A4038B124B1EB54002B18F1 /* ProgressBar */,
+				3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		3AD04A3424C0C4EC007F7306 /* Cells */ = {
@@ -873,11 +904,13 @@
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
 				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
 				3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */,
+				3A03D7AA24EC313F0096DA9B /* Label.swift in Sources */,
 				3AE9C33724D5ABEF0097CFD5 /* FollowUser.swift in Sources */,
 				3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */,
 				3A61B27324C8B54800AC1A9C /* Tag.swift in Sources */,
 				3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */,
 				3A66D2EF24E2D62E0074D223 /* XPProgressBarView.swift in Sources */,
+				3AB21DD224EFBC7800B467FF /* SignInWithAllesButton.swift in Sources */,
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
 				3A474AFB24B24EDA003424F5 /* PostCellView.swift in Sources */,
 				3A27608224D5AE8300DEE34A /* FollowersFollowingViewController.swift in Sources */,
@@ -896,6 +929,7 @@
 				3A7145DF24AA8753000FA3C3 /* AppDelegate.swift in Sources */,
 				3A66D2F124E2F1B40074D223 /* User.swift in Sources */,
 				3AE6007924AD5B0700C103F1 /* AllesAPIError.swift in Sources */,
+				3A478C5424ED388500EE46E1 /* PostViewController.swift in Sources */,
 				3A9E0F8824E86F9700AFB1E4 /* PostNotification.swift in Sources */,
 				3A7145E124AA8753000FA3C3 /* SceneDelegate.swift in Sources */,
 				3A83E9F024D710F90099F096 /* NewPrivacyPolicyViewController.swift in Sources */,
@@ -909,9 +943,11 @@
 				3AFD81C324EAC51E00AD5E11 /* SearchViewController.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
 				3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */,
+				3A478C5224ED387B00EE46E1 /* PostView.swift in Sources */,
 				3AE586C824E4092700251BCE /* Post.swift in Sources */,
 				3AF30CCE24CCAF84005D0CC3 /* NotificationName.swift in Sources */,
 				3AEEBEBE24BFB3CB0011C4A4 /* GlobalSplitViewController.swift in Sources */,
+				3A7AA6E824EFC4C800BA397F /* LoginView.swift in Sources */,
 				3A0252C324ADE30700A4E4FD /* LoginViewController.swift in Sources */,
 				3AF1DB1824D57E78006832A7 /* UserHeaderViewController.swift in Sources */,
 				3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */,
@@ -1126,7 +1162,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1595766755;
+				CURRENT_PROJECT_VERSION = 1598025123;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1135,7 +1171,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.9.0;
+				MARKETING_VERSION = 0.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
@@ -1155,7 +1191,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1595766755;
+				CURRENT_PROJECT_VERSION = 1598025123;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = "$(SRCROOT)/Spica/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1164,7 +1200,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.9.0;
+				MARKETING_VERSION = 0.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;

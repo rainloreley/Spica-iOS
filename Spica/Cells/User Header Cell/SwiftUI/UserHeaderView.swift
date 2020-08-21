@@ -11,7 +11,14 @@ import SwiftUI
 struct UserHeaderView: View {
     @ObservedObject var controller: UserHeaderViewController
 
-    var dateFormatter = globalDateFormatter
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "MM dd, yyyy", options: 0, locale: Locale.current) // "MMM dd, yyyy HH:mm"
+        formatter.timeStyle = .none
+        formatter.dateStyle = .medium
+        formatter.timeZone = TimeZone.current
+        return formatter
+    }()
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -74,9 +81,23 @@ struct UserHeaderView: View {
                     }.padding(.trailing)
                         .foregroundColor(Color(UIColor.label))
 
-                    LoadingSkeleton(loaded: $controller.userDataLoaded) {
-                        Text("\(controller.user.following) ").bold() + Text(SLocale(.FOLLOWING_ACTION))
-                    }
+                    Group {
+                        if controller.isLoggedInUser {
+                            LoadingSkeleton(loaded: $controller.userDataLoaded) {
+                                Button(action: {
+                                    controller.showFollowing()
+                                }, label: {
+                                    Text("\(controller.user.following) ").bold() + Text(SLocale(.FOLLOWING_ACTION))
+
+								})
+                            }
+                        } else {
+                            LoadingSkeleton(loaded: $controller.userDataLoaded) {
+                                Text("\(controller.user.following) ").bold() + Text(SLocale(.FOLLOWING_ACTION))
+                            }
+                        }
+                    }.padding(.trailing)
+                        .foregroundColor(Color(UIColor.label))
                 }
 
                 LoadingSkeleton(loaded: $controller.userDataLoaded) {
@@ -91,7 +112,21 @@ struct UserHeaderView: View {
                 }
 
                 if controller.user.alles {
-                    XPProgressBarView(xp: $controller.user.xp).frame(height: 40).padding(.top)
+                    XPProgressBarView(xp: $controller.user.xp).frame(height: 60).padding(.top)
+                }
+
+                if !controller.user.labels.isEmpty {
+                    HStack {
+                        ForEach(controller.user.labels) { label in
+                            HStack {
+                                Circle().fill(Color(hexStringToUIColor(hex: label.color)))
+                                    .frame(width: 20, height: 20)
+                                Text(label.name)
+                            }.padding(4).padding([.leading, .trailing], 4).overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color(UIColor.secondaryLabel), lineWidth: 1))
+                        }
+                    }.padding(.top)
                 }
 
                 if !controller.isLoggedInUser {
@@ -116,8 +151,8 @@ struct UserHeaderView: View {
 
         }.padding(16)
             .onAppear {
-                dateFormatter.timeStyle = .none
-                dateFormatter.dateStyle = .medium
+                /* dateFormatter.timeStyle = .none
+                 dateFormatter.dateStyle = .medium */
                 controller.getLoggedInUser()
             }
             .background(Color.clear)

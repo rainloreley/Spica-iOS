@@ -6,6 +6,7 @@
 //
 
 import SwiftKeychainWrapper
+import SwiftUI
 import UIKit
 
 @available(iOS 14.0, *)
@@ -28,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
+            UserDefaults.standard.set(true, forKey: "hasRunBefore")
         }
 
         if !UserDefaults.standard.bool(forKey: "hasRunOnNewAPI") {
@@ -36,14 +38,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.username")
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
+            UserDefaults.standard.set(true, forKey: "hasRunOnNewAPI")
         }
-
-        KeychainWrapper.standard.set("sessionToken=[session token]", forKey: "dev.abmgrt.spica.user.token") // NOTE: THE SESSION TOKEN IS ONLY FOR DEVELOPMENT STUFF
-        KeychainWrapper.standard.set("87cd0529-f41b-4075-a002-059bf2311ce7", forKey: "dev.abmgrt.spica.user.id")
-        KeychainWrapper.standard.set("Adrian", forKey: "dev.abmgrt.spica.user.name")
-        KeychainWrapper.standard.set("0001", forKey: "dev.abmgrt.spica.user.tag")
-
-        UserDefaults.standard.set(true, forKey: "hasRunBefore")
 
         // DEBUG: REMOVE KEY TO TEST LOGIN - DO NOT USE IN PRODUCTION
         /* KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")

@@ -78,7 +78,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 if word.hasPrefix("@"), word.count > 1 {
                     var userID = removeSpecialCharsFromString(text: String(word))
                     userID.remove(at: userID.startIndex)
-                    print("USERNAM: \(userID)")
                     let foundIndex = post?.mentionedUsers.firstIndex(where: { $0.id == userID })
                     if let index = foundIndex {
                         let mention = post?.mentionedUsers[index]
@@ -133,7 +132,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             if post?.image != nil {
                 mediaImageView.image = post?.image!
                 mediaImageView.snp.remakeConstraints { make in
-                    make.bottom.equalTo(replyCountLabel.snp.top).offset(-16)
+                    make.bottom.equalTo(linkLabel.snp.top).offset(-16)
                     make.height.equalTo(((post?.image!.size.height)!) / 3)
                     make.trailing.equalTo(self.snp.trailing).offset(-16)
                     make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
@@ -143,6 +142,41 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
                 mediaImageView.isUserInteractionEnabled = true
                 mediaImageView.addGestureRecognizer(tap)
+            }
+
+            if post?.url != nil {
+                linkLabel.setTitle(" \(post!.url!) ", for: .normal)
+                let linkInteraction = UIGestureRecognizer(target: self, action: #selector(openLink))
+                linkBackgroundView.isUserInteractionEnabled = true
+                linkLabel.isUserInteractionEnabled = true
+                linkBackgroundView.addGestureRecognizer(linkInteraction)
+                linkLabel.addTarget(self, action: #selector(openLink), for: .touchUpInside)
+                linkLabel.snp.remakeConstraints { make in
+                    make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+                    make.height.equalTo(32)
+                    make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+                    make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
+                }
+                /* linkBackgroundView.snp.remakeConstraints { (make) in
+                 	make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+                 	make.height.equalTo(32)
+                 	make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+                 	make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
+                 } */
+            } else {
+                linkLabel.setTitle("", for: .normal)
+                linkLabel.snp.remakeConstraints { make in
+                    make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+                    make.height.equalTo(0)
+                    make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+                    make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
+                }
+                /* linkBackgroundView.snp.remakeConstraints { (make) in
+                 	make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+                 	make.height.equalTo(0)
+                 	make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+                 	make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
+                 } */
             }
 
             if post!.voted == 1 {
@@ -159,6 +193,14 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             let contextInteraction = UIContextMenuInteraction(delegate: self)
             contentView.addInteraction(contextInteraction)
             moreImageView.isUserInteractionEnabled = true
+        }
+    }
+
+    @objc func openLink() {
+        if let url = post?.url {
+            if UIApplication.shared.canOpenURL(URL(string: url)!) {
+                UIApplication.shared.open(URL(string: url)!)
+            }
         }
     }
 
@@ -324,9 +366,41 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         return label
     }()
 
+    private var linkBackgroundView: UIView = {
+        let view = UIView(frame: .zero)
+        view.layer.cornerRadius = 8
+        view.backgroundColor = .secondarySystemBackground
+        return view
+    }()
+
+    private var linkLabel: UIButton = {
+        let label = UIButton(type: .system)
+        label.setTitle("Link", for: .normal)
+        label.setTitleColor(.label, for: .normal)
+        label.titleLabel?.font = .italicSystemFont(ofSize: 16)
+        label.contentHorizontalAlignment = .leading
+        label.layer.cornerRadius = 8
+        label.backgroundColor = .tertiarySystemGroupedBackground
+        label.titleLabel?.lineBreakMode = .byTruncatingTail
+        if #available(iOS 13.4, *) {
+            label.isPointerInteractionEnabled = true
+        }
+        return label
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
+
+        /* linkBackgroundView.addSubview(linkLabel)
+         linkLabel.snp.makeConstraints { (make) in
+         	make.center.equalTo(linkBackgroundView.snp.center)
+         	make.top.equalTo(linkBackgroundView.snp.top)
+         	make.bottom.equalTo(linkBackgroundView.snp.bottom)
+         	make.leading.equalTo(linkBackgroundView.snp.leading).offset(16)
+         	make.trailing.equalTo(linkBackgroundView.snp.trailing).offset(-16)
+         } */
+
         contentView.addSubview(pfpImageView)
         contentView.addSubview(displaynameLabel)
         // contentView.addSubview(usernameLabel)
@@ -338,6 +412,8 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         // contentView.addSubview(interactionsLabel)
         contentView.addSubview(dateLabel)
         contentView.addSubview(mediaImageView)
+        // contentView.addSubview(linkBackgroundView)
+        contentView.addSubview(linkLabel)
 
         contentView.isUserInteractionEnabled = true
 
@@ -397,7 +473,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             make.bottom.equalTo(contentView.snp.bottom).offset(-16)
             make.width.equalTo(contentView.frame.width / 2)
             make.height.equalTo(30)
-            make.top.equalTo(mediaImageView.snp.bottom)
+            make.top.equalTo(linkLabel.snp.bottom)
         }
 
         /* interactionsLabel.snp.makeConstraints { (make) in
@@ -408,8 +484,15 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
          	make.top.equalTo(mediaImageView.snp.bottom)
          } */
 
+        linkLabel.snp.makeConstraints { make in
+            make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+            make.height.equalTo(32)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+            make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
+        }
+
         mediaImageView.snp.makeConstraints { make in
-            make.bottom.equalTo(replyCountLabel.snp.top).offset(-16)
+            make.bottom.equalTo(linkLabel.snp.top).offset(-16)
             make.height.equalTo(32)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)

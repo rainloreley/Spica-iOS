@@ -21,19 +21,22 @@ protocol PostCreateDelegate {
 class PostCreateViewController: UIViewController, UITextViewDelegate {
     var userPfp: UIImageView!
     var contentTextView: KMPlaceholderTextView!
+    var linkTextField: UITextField!
+
     var type: PostType!
     var parentID: String?
     var imageButton: UIBarButtonItem!
 
     var selectedImage: UIImage?
     var imagePicker: UIImagePickerController!
+    var linkFieldShown: Bool = false
 
     var delegate: PostCreateDelegate!
 
     var loadingHud: JGProgressHUD!
 
     var sendButton: UIBarButtonItem!
-
+    var linkButton: UIBarButtonItem!
     var imagePreview: UIImageView!
 
     var preText: String!
@@ -59,14 +62,14 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         loadingHud.interactionType = .blockAllTouches
 
         imageButton = UIBarButtonItem(image: UIImage(systemName: "photo"), style: .plain, target: self, action: #selector(openImagePicker))
-
+        linkButton = UIBarButtonItem(image: UIImage(systemName: "link"), style: .plain, target: self, action: #selector(toggleLinkField))
         sendButton = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"), style: .plain, target: self, action: #selector(sendPost))
 
         #if targetEnvironment(macCatalyst)
             navigationItem.rightBarButtonItems = [sendButton, imageButton]
             navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissView))
         #else
-            navigationItem.leftBarButtonItem = imageButton
+            navigationItem.leftBarButtonItems = [imageButton, linkButton]
             navigationItem.rightBarButtonItem = sendButton
         #endif
 
@@ -90,11 +93,29 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
         view.addSubview(contentTextView)
 
+        linkTextField = UITextField(frame: .zero)
+        linkTextField.borderStyle = .roundedRect
+        linkTextField.placeholder = "https://micro.alles.cx"
+        view.addSubview(linkTextField)
+
         userPfp.snp.makeConstraints { make in
             make.height.equalTo(40)
             make.width.equalTo(40)
             make.top.equalTo(view.snp.top).offset(80)
             make.leading.equalTo(view.snp.leading).offset(16)
+        }
+
+        linkTextField.snp.makeConstraints { make in
+            make.top.equalTo(view.snp.top).offset(80)
+            make.leading.equalTo(view.snp.leading).offset(72)
+            make.trailing.equalTo(view.snp.trailing).offset(-32)
+            if linkFieldShown {
+                make.bottom.equalTo(contentTextView.snp.top).offset(-16)
+                make.height.equalTo(32)
+            } else {
+                make.bottom.equalTo(contentTextView.snp.top)
+                make.height.equalTo(0)
+            }
         }
 
         imagePreview = UIImageView(frame: .zero)
@@ -112,7 +133,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         imagePreview.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(openImagePicker)))
 
         contentTextView.snp.makeConstraints { make in
-            make.top.equalTo(view.snp.top).offset(80)
+            // make.top.equalTo(view.snp.top).offset(80)
             make.leading.equalTo(view.snp.leading).offset(72)
             make.trailing.equalTo(view.snp.trailing).offset(-32)
             make.bottom.equalTo(imagePreview.snp.top).offset(-16)
@@ -131,6 +152,37 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         let calculation = Double(contentTextView.text.count) / Double(500)
 
         progressBarController.progress = Float(calculation)
+    }
+
+    @objc func toggleLinkField() {
+        /* linkTextField.snp.remakeConstraints { (make) in
+         	make.top.equalTo(view.snp.top).offset(80)
+         	make.leading.equalTo(view.snp.leading).offset(72)
+         	make.trailing.equalTo(view.snp.trailing).offset(-32)
+         	make.bottom.equalTo(contentTextView.snp.top).offset(-16)
+         	if linkFieldShown {
+         		make.height.equalTo(0)
+         		linkFieldShown = false
+         	}
+         	else {
+         		make.height.equalTo(32)
+         		linkFieldShown = true
+         	}
+         } */
+        UIView.animate(withDuration: 0.3) { [self] in
+            linkTextField.snp.updateConstraints { make in
+                if linkFieldShown {
+                    make.height.equalTo(0)
+                    make.bottom.equalTo(contentTextView.snp.top)
+                    linkFieldShown = false
+                } else {
+                    make.height.equalTo(32)
+                    make.bottom.equalTo(contentTextView.snp.top).offset(-16)
+                    linkFieldShown = true
+                }
+            }
+            linkTextField.superview?.layoutIfNeeded()
+        }
     }
 
     func resizeImagePreview(image: UIImage?) {
@@ -220,7 +272,15 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         sendButton.isEnabled = false
         contentTextView.layer.cornerRadius = 0
         contentTextView.layer.borderWidth = 0
+        linkTextField.borderStyle = .roundedRect
         contentTextView.layer.borderColor = UIColor.clear.cgColor
+        if linkFieldShown, !linkTextField.text!.isValidURL {
+            linkTextField.layer.borderWidth = 1
+            linkTextField.layer.borderColor = UIColor.systemRed.cgColor
+            loadingHud.dismiss()
+            sendButton.isEnabled = true
+            return
+        }
         if contentTextView.text.isEmpty {
             contentTextView.layer.cornerRadius = 12
             contentTextView.layer.borderWidth = 1
@@ -229,7 +289,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             sendButton.isEnabled = true
             return
         } else {
-            AllesAPI.default.sendPost(newPost: NewPost(content: contentTextView.text, image: selectedImage, type: type, parent: parentID))
+            // AllesAPI.default.sendPost(newPost: NewPost(content: contentTextView.text, image: selectedImage, type: type, parent: parentID))
+            AllesAPI.default.sendPost(content: contentTextView.text, image: selectedImage, parent: parentID, url: linkTextField.text)
                 .receive(on: RunLoop.main)
                 .sink {
                     switch $0 {

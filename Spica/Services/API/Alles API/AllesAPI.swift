@@ -9,6 +9,7 @@ import Alamofire
 import Combine
 import Foundation
 import SwiftKeychainWrapper
+import SwiftUI
 import SwiftyJSON
 import UIKit
 
@@ -17,10 +18,11 @@ public class AllesAPI {
 
     private var subscriptions = Set<AnyCancellable>()
 
-    public func signInUser(username: String, password: String) -> Future<SignedInUser, AllesAPIErrorMessage> {
+    public func signInUser(name: String, tag: String, password: String) -> Future<SignedInUser, AllesAPIErrorMessage> {
         Future<SignedInUser, AllesAPIErrorMessage> { promise in
             AF.request("https://alles.cx/api/login", method: .post, parameters: [
-                "username": username,
+                "name": name,
+                "tag": tag,
                 "password": password,
             ], encoding: JSONEncoding.default).responseJSON(queue: .global(qos: .utility)) { [self] response in
                 switch response.result {
@@ -32,7 +34,7 @@ public class AllesAPI {
                             if responseJSON["token"].string != nil {
                                 KeychainWrapper.standard.set(responseJSON["token"].string!, forKey: "dev.abmgrt.spica.user.token")
 
-                                AllesAPI.default.loadUser(id: username)
+                                AllesAPI.default.loadMe()
                                     .receive(on: RunLoop.main)
                                     .sink {
                                         switch $0 {
@@ -40,20 +42,21 @@ public class AllesAPI {
                                         default: break
                                         }
                                     } receiveValue: { user in
-                                        KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.username")
                                         KeychainWrapper.standard.set(user.id, forKey: "dev.abmgrt.spica.user.id")
+                                        KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.name")
+                                        KeychainWrapper.standard.set(user.tag, forKey: "dev.abmgrt.spica.user.tag")
 
                                         SpicAPI.getPrivacyPolicy()
                                             .receive(on: RunLoop.main)
                                             .sink {
                                                 switch $0 {
                                                 case .failure:
-                                                    promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
+                                                    promise(.success(SignedInUser(id: user.id, sessionToken: responseJSON["token"].string!)))
                                                 default: break
                                                 }
                                             } receiveValue: { privacy in
                                                 UserDefaults.standard.set(privacy.updated, forKey: "spica_privacy_accepted_version")
-                                                promise(.success(SignedInUser(username: username, sessionToken: responseJSON["token"].string!)))
+                                                promise(.success(SignedInUser(id: user.id, sessionToken: responseJSON["token"].string!)))
                                             }.store(in: &subscriptions)
 
                                     }.store(in: &subscriptions)
@@ -85,6 +88,44 @@ public class AllesAPI {
         }
     }
 
+    public func loadMe() -> Future<User, AllesAPIErrorMessage> {
+        Future<User, AllesAPIErrorMessage> { promise in
+            guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
+                return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
+            }
+            AF.request("https://micro.alles.cx/api/me", method: .get, parameters: nil, headers: [
+                "Authorization": authKey,
+            ]).responseJSON { response in
+                switch response.result {
+                case .success:
+                    let responseJSON = JSON(response.data!)
+                    if !responseJSON["err"].exists() {
+                        if response.response?.statusCode == 200 {
+                            promise(.success(User(id: responseJSON["id"].string!, name: responseJSON["name"].string!, tag: responseJSON["tag"].string!, nickname: responseJSON["nickname"].string!, plus: responseJSON["plus"].bool!)))
+                        } else {
+                            if response.response!.statusCode == 401 {
+                                promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                            } else {
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
+                            }
+                        }
+
+                    } else {
+                        let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                        promise(.failure(apiError))
+                    }
+
+                case let .failure(err):
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.localizedDescription)")
+                    promise(.failure(apiError))
+                }
+            }
+        }
+    }
+
     public func loadFeed(cache _: CachePolicy = .remote, loadBefore: Int? = nil) -> Future<[Post], AllesAPIErrorMessage> {
         Future<[Post], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -93,7 +134,7 @@ public class AllesAPI {
 
             let url = loadBefore != nil ? "https://micro.alles.cx/api/feed?before=\(loadBefore!)" : "https://micro.alles.cx/api/feed"
             AF.request(url, method: .get, parameters: nil, headers: [
-                "Cookie": authKey,
+                "Authorization": authKey,
             ]).responseJSON { response in
                 switch response.result {
                 case .success:
@@ -104,12 +145,10 @@ public class AllesAPI {
                             var tempPosts = [Post]()
                             for json in responseJSON["posts"].arrayValue {
                                 disGroup.enter()
-                                print(json)
                                 // tempPosts.append(Post(id: json.string!, author: User(id: json.string!, name: json.string!, tag: "0000"), author_id: json.string!))
                                 AllesAPI.default.loadPost(id: json.string!)
                                     .receive(on: RunLoop.main)
                                     .sink {
-                                        print($0)
                                         switch $0 {
                                         case let .failure(err):
                                             promise(.failure(err))
@@ -122,7 +161,6 @@ public class AllesAPI {
                             }
 
                             disGroup.notify(queue: .main) {
-                                print("RETURN POSTS: \(tempPosts)")
                                 tempPosts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
                                 promise(.success(tempPosts))
                             }
@@ -155,7 +193,7 @@ public class AllesAPI {
         guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
             return
         }
-        AF.request("https://online.alles.cx", method: .post, parameters: nil, headers: [
+        AF.request("https://micro.alles.cx/api/online", method: .post, parameters: nil, headers: [
             "Authorization": authKey,
         ]).response(queue: .global(qos: .utility)) { _ in }
     }
@@ -166,11 +204,9 @@ public class AllesAPI {
         }
 
         AF.request("https://micro.alles.cx/api/mentions/read", method: .post, headers: [
-            "Cookie": authKey,
+            "Authorization": authKey,
         ])
-            .responseJSON { response in
-                print(JSON(response.data))
-                return
+            .responseJSON { _ in
             }
     }
 
@@ -180,7 +216,7 @@ public class AllesAPI {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
             AF.request("https://micro.alles.cx/api/users/\(id)", method: .get, parameters: nil, headers: [
-                "Cookie": authKey,
+                "Authorization": authKey,
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {
                 case .success:
@@ -188,9 +224,43 @@ public class AllesAPI {
                     let responseJSON = JSON(response.data!)
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
-                            let newUser = User(responseJSON, isOnline: true)
-                            print("USERNAM_FETCH_COMP: \(id)")
-                            promise(.success(newUser))
+                            var newUser = User(responseJSON, isOnline: false)
+                            var stringLabels = [String]()
+                            for i in responseJSON["labels"].arrayValue {
+                                stringLabels.append(i.string!)
+                            }
+                            SpicAPI.getLabels(stringLabels)
+                                .receive(on: RunLoop.main)
+                                .sink {
+                                    switch $0 {
+                                    case let .failure(error):
+                                        promise(.failure(error))
+                                    default: break
+                                    }
+                                } receiveValue: { labels in
+                                    newUser.labels = labels
+                                    AF.request("https://micro.alles.cx/api/users/\(id)/online", method: .get, parameters: nil, headers: [
+                                        "Authorization": authKey,
+                                    ]).responseJSON { responseOnline in
+                                        switch response.result {
+                                        case .success:
+                                            let onlineJSON = JSON(responseOnline.data!)
+                                            if !responseJSON["err"].exists() {
+                                                if response.response?.statusCode == 200 {
+                                                    newUser.isOnline = onlineJSON["online"].bool ?? false
+                                                    promise(.success(newUser))
+                                                } else {
+                                                    promise(.success(newUser))
+                                                }
+                                            } else {
+                                                promise(.success(newUser))
+                                            }
+                                        case .failure:
+                                            promise(.success(newUser))
+                                        }
+                                    }
+                                }.store(in: &self.subscriptions)
+
                             /* AF.request("https://online.alles.cx/\(responseJSON["id"].string!)", method: .get, parameters: nil, headers: [
                                  "Authorization": authKey,
                              ]).response(queue: .global(qos: .utility)) { onlineResponse in
@@ -236,7 +306,7 @@ public class AllesAPI {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
 
-            AF.request("https://alles.cx/api/followers", method: .get, parameters: nil, headers: [
+            AF.request("https://micro.alles.cx/api/followers", method: .get, parameters: nil, headers: [
                 "Authorization": authKey,
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {
@@ -244,15 +314,58 @@ public class AllesAPI {
                     let responseJSON = JSON(response.data!)
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
-                            let followers = responseJSON["followers"].map { _, json in
-                                FollowUser(json)
+                            var followUsers = [User]()
+                            for i in responseJSON["users"].arrayValue {
+                                let avatarURL = i["avatar"].exists() ? URL(string: "https://fs.alles.cx/\(i["avatar"].string!)") : URL(string: "https://avatar.alles.cc/\(i["id"].string!)")
+                                followUsers.append(User(id: i["id"].string!, name: i["name"].string ?? "", tag: i["tag"].string ?? "", alles: i["alles"].bool ?? false, imgURL: avatarURL))
                             }
 
-                            let following = responseJSON["following"].map { _, json in
-                                FollowUser(json)
+                            followUsers.sort(by: { $0.name.lowercased() < $1.name.lowercased() })
+
+                            AF.request("https://micro.alles.cx/api/following", method: .get, parameters: nil, headers: [
+                                "Authorization": authKey,
+                            ]).responseJSON { response2 in
+                                switch response2.result {
+                                case .success:
+                                    let response2JSON = JSON(response2.data!)
+                                    if !response2JSON["err"].exists() {
+                                        if response2.response?.statusCode == 200 {
+                                            var followingUsers = [User]()
+                                            for i in response2JSON["users"].arrayValue {
+                                                let avatarURL = i["avatar"].exists() ? URL(string: "https://fs.alles.cx/\(i["avatar"].string!)") : URL(string: "https://avatar.alles.cc/\(i["id"].string!)")
+                                                followingUsers.append(User(id: i["id"].string!, name: i["name"].string ?? "", tag: i["tag"].string ?? "", alles: i["alles"].bool ?? false, imgURL: avatarURL))
+                                            }
+
+                                            followingUsers.sort(by: { $0.name.lowercased() < $1.name.lowercased() })
+
+                                            promise(.success(Followers(followers: followUsers, following: followingUsers)))
+                                        } else {
+                                            if response.response!.statusCode == 401 {
+                                                promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                                            } else {
+                                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                                promise(.failure(apiError))
+                                            }
+                                        }
+                                    } else {
+                                        let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                                        promise(.failure(apiError))
+                                    }
+                                case let .failure(err):
+                                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                                    apiError.message.append("\nError: \(err.errorDescription!)")
+                                    promise(.failure(apiError))
+                                }
                             }
 
-                            promise(.success(Followers(followers: followers, following: following)))
+                            /* let followers = responseJSON["followers"].map { _, json in
+                                 FollowUser(json)
+                             }
+
+                             let following = responseJSON["following"].map { _, json in
+                                 FollowUser(json)
+                             } */
 
                         } else {
                             if response.response!.statusCode == 401 {
@@ -295,12 +408,10 @@ public class AllesAPI {
                             var tempPosts = [Post]()
                             for json in responseJSON["posts"]["recent"].arrayValue {
                                 disGroup.enter()
-                                print(json)
                                 // tempPosts.append(Post(id: json.string!, author: User(id: json.string!, name: json.string!, tag: "0000"), author_id: json.string!))
                                 AllesAPI.default.loadPost(id: json.string!)
                                     .receive(on: RunLoop.main)
                                     .sink {
-                                        print($0)
                                         switch $0 {
                                         case let .failure(err):
                                             promise(.failure(err))
@@ -340,13 +451,56 @@ public class AllesAPI {
         }
     }
 
+    public func getUnreadMentions() -> Future<[String], AllesAPIErrorMessage> {
+        Future<[String], AllesAPIErrorMessage> { promise in
+            guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
+                return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
+            }
+            AF.request("https://micro.alles.cx/api/mentions?unread", method: .get, parameters: nil, headers: [
+                "Authorization": authKey,
+            ]).responseJSON { response in
+                switch response.result {
+                case .success:
+
+                    let responseJSON = JSON(response.data!)
+                    if !responseJSON["err"].exists() {
+                        if response.response?.statusCode == 200 {
+                            var postIDs = [String]()
+                            for i in responseJSON["posts"].arrayValue {
+                                postIDs.append(i["id"].string!)
+                            }
+                            promise(.success(postIDs))
+                        } else {
+                            if response.response!.statusCode == 401 {
+                                promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
+                            } else {
+                                var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_invalidStatusCode")
+                                apiError.message.append("\n(Code: \(response.response!.statusCode))")
+                                promise(.failure(apiError))
+                            }
+                        }
+
+                    } else {
+                        let apiError = AllesAPIErrorHandler.default.returnError(error: responseJSON["err"].string!)
+                        promise(.failure(apiError))
+                    }
+
+                case let .failure(err):
+                    var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
+                    apiError.message.append("\nError: \(err.errorDescription!)")
+                    promise(.failure(apiError))
+                }
+            }
+        }
+    }
+
     public func loadMentions() -> Future<[PostNotification], AllesAPIErrorMessage> {
         Future<[PostNotification], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
             AF.request("https://micro.alles.cx/api/mentions", method: .get, parameters: nil, headers: [
-                "Cookie": authKey,
+                "Authorization": authKey,
             ]).responseJSON { response in
                 switch response.result {
                 case .success:
@@ -359,12 +513,10 @@ public class AllesAPI {
                             for notification in responseJSON["posts"].arrayValue {
                                 disGroup.enter()
                                 let notificationID = notification["id"].string!
-                                print("NOTIFICATION_LOAD: \(notificationID)")
 
                                 AllesAPI.default.loadPost(id: notificationID)
                                     .receive(on: RunLoop.main)
                                     .sink {
-                                        print($0)
                                         switch $0 {
                                         case let .failure(err):
                                             disGroup.leave()
@@ -374,7 +526,6 @@ public class AllesAPI {
                                     } receiveValue: { post in
 
                                         tempPosts.append(PostNotification(post: post, read: notification["read"].bool ?? true))
-                                        print("NOTIFICATION_ASSIGN: \(post)")
                                         disGroup.leave()
                                     }.store(in: &self.subscriptions)
                             }
@@ -407,12 +558,12 @@ public class AllesAPI {
         }
     }
 
-    public static func loadTag(tag: String) -> Future<Tag, AllesAPIErrorMessage> {
+    public func loadTag(tag: String) -> Future<Tag, AllesAPIErrorMessage> {
         Future<Tag, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
-            AF.request("https://alles.cx/api/tag/\(tag)", method: .get, parameters: nil, headers: [
+            AF.request("https://micro.alles.cx/api/tags/\(tag)", method: .get, parameters: nil, headers: [
                 "Authorization": authKey,
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {
@@ -421,15 +572,30 @@ public class AllesAPI {
                     let responseJSON = JSON(response.data!)
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
-                            var tempPosts = responseJSON["posts"].map { _, json in
-                                Post(json, mentionedUsers: [])
+                            let disGroup = DispatchGroup()
+                            var tempPosts = [Post]()
+                            for json in responseJSON["posts"].arrayValue {
+                                disGroup.enter()
+                                // tempPosts.append(Post(id: json.string!, author: User(id: json.string!, name: json.string!, tag: "0000"), author_id: json.string!))
+                                AllesAPI.default.loadPost(id: json.string!)
+                                    .receive(on: RunLoop.main)
+                                    .sink {
+                                        switch $0 {
+                                        case let .failure(err):
+                                            promise(.failure(err))
+                                        default: break
+                                        }
+                                    } receiveValue: { post in
+                                        tempPosts.append(post)
+                                        disGroup.leave()
+                                    }.store(in: &self.subscriptions)
                             }
 
-                            tempPosts.sort { $0.created.compare($1.created) == .orderedDescending }
-
-                            let tag = Tag(name: responseJSON["name"].string!, posts: tempPosts)
-
-                            promise(.success(tag))
+                            disGroup.notify(queue: .main) {
+                                tempPosts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
+                                let tag = Tag(name: tag, posts: tempPosts)
+                                promise(.success(tag))
+                            }
                         } else {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
@@ -461,7 +627,7 @@ public class AllesAPI {
             }
 
             AF.request("https://micro.alles.cx/api/posts/\(id)", method: .get, parameters: nil, headers: [
-                "Cookie": authKey,
+                "Authorization": authKey,
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {
                 case .success:
@@ -471,7 +637,6 @@ public class AllesAPI {
                         var userSubscriptions = Set<AnyCancellable>()
                         if response.response?.statusCode == 200 {
                             var post = Post(responseJSON, mentionedUsers: [])
-                            print("AUTHID:" + post.author_id)
                             let author_id = responseJSON["author"].string!
 
                             var author_img_url = ""
@@ -504,12 +669,10 @@ public class AllesAPI {
                                                     .sink {
                                                         switch $0 {
                                                         case let .failure(error):
-                                                            print("CRITER: \(error)")
                                                             disGroup.leave()
                                                         default: break
                                                         }
                                                     } receiveValue: { mentionedUser in
-                                                        print("MENTION: \(mentionedUser.name)")
                                                         post.mentionedUsers.append(mentionedUser)
                                                         disGroup.leave()
                                                     }
@@ -603,7 +766,6 @@ public class AllesAPI {
                                             didSet {
                                                 if highestAncestor?.parent_id != nil {
                                                     ancDisGroup.enter()
-                                                    print("FETCH ANCESTOR: \(highestAncestor!.content)")
                                                     AllesAPI.default.loadPost(id: highestAncestor!.parent_id!)
                                                         .receive(on: RunLoop.main)
                                                         .sink {
@@ -626,7 +788,6 @@ public class AllesAPI {
                                         highestAncestor = tempPostDetail.post
 
                                         ancDisGroup.notify(queue: .main) {
-                                            print("RETURN DETAIL")
                                             tempPostDetail.ancestors.sort(by: { $0.created.compare($1.created) == .orderedAscending })
                                             tempPostDetail.replies.sort(by: { $0.created.compare($1.created) == .orderedDescending })
                                             promise(.success(tempPostDetail))
@@ -658,26 +819,32 @@ public class AllesAPI {
         }
     }
 
-    public func sendPost(newPost: NewPost) -> Future<SentPost, AllesAPIErrorMessage> {
+    public func sendPost(content: String, image: UIImage? = nil, parent: String? = nil, url: String? = nil) -> Future<SentPost, AllesAPIErrorMessage> {
         Future<SentPost, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
             var newPostConstruct: [String: String] = [
-                "content": newPost.content,
+                "content": content,
             ]
 
-            /* if let image = newPost.image {
-                 let base64Image = "data:image/jpeg;base64,\((image.jpegData(compressionQuality: 0.5)?.base64EncodedString())!)"
-                 newPostConstruct["image"] = "\(base64Image)"
-             } */
+            if let image = image {
+                let base64Image = "data:image/jpeg;base64,\((image.jpegData(compressionQuality: 0.5)?.base64EncodedString())!)"
+                newPostConstruct["image"] = "\(base64Image)"
+            }
 
-            if let parent = newPost.parent {
+            if let parent = parent {
                 newPostConstruct["parent"] = parent
             }
 
+            if let link = url {
+                if link.isValidURL, link != "" {
+                    newPostConstruct["url"] = link
+                }
+            }
+
             AF.request("https://micro.alles.cx/api/posts", method: .post, parameters: newPostConstruct, encoding: JSONEncoding.prettyPrinted, headers: [
-                "Cookie": authKey,
+                "Authorization": authKey,
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {
                 case .success:
@@ -718,7 +885,7 @@ public class AllesAPI {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
 
-            AF.request("https://alles.cx/api/post/\(id)/remove", method: .post, parameters: nil, headers: [
+            AF.request("https://micro.alles.cx/api/posts/\(id)/delete", method: .delete, parameters: nil, headers: [
                 "Authorization": authKey,
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {
@@ -759,7 +926,7 @@ public class AllesAPI {
             }
             if value == -1 || value == 0 || value == 1 {
                 AF.request("https://micro.alles.cx/api/posts/\(post.id)/vote", method: .post, parameters: ["vote": value], encoding: JSONEncoding.default, headers: [
-                    "Cookie": authKey,
+                    "Authorization": authKey,
                 ]).responseJSON(queue: .global(qos: .utility)) { response in
                     switch response.result {
                     case .success:
@@ -795,12 +962,12 @@ public class AllesAPI {
         }
     }
 
-    public func performFollowAction(username: String, action: FollowAction) -> Future<FollowAction, AllesAPIErrorMessage> {
+    public func performFollowAction(id: String, action: FollowAction) -> Future<FollowAction, AllesAPIErrorMessage> {
         Future<FollowAction, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
-            AF.request("https://alles.cx/api/users/\(username)/\(action.actionString)", method: .post, headers: [
+            AF.request("https://micro.alles.cx/api/users/\(id)/\(action.actionString)", method: .post, headers: [
                 "Authorization": authKey,
             ]).responseJSON(queue: .global(qos: .utility)) { response in
                 switch response.result {

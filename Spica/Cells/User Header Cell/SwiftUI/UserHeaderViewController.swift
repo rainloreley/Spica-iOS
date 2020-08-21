@@ -12,6 +12,7 @@ import SwiftUI
 protocol UserHeaderDelegate {
     func followUnfollowUser(uid: String)
     func clickedOnFollowerCount()
+    func clickedOnFollowingCount()
 }
 
 class UserHeaderViewController: ObservableObject {
@@ -32,6 +33,10 @@ class UserHeaderViewController: ObservableObject {
 
     func showFollowers() {
         delegate.clickedOnFollowerCount()
+    }
+
+    func showFollowing() {
+        delegate.clickedOnFollowingCount()
     }
 
     func getLoggedInUser() {

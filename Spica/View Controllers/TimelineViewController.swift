@@ -289,7 +289,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 default: break
                 }
             } receiveValue: { [self] posts in
-                print("RECPOSTS: \(posts)")
                 self.posts = posts
                 self.applyChanges()
                 self.refreshControl.endRefreshing()
@@ -438,7 +437,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     func loadEvenMorePosts(_ beforeDate: Date) {
         let timestamp = Int(beforeDate.timeIntervalSince1970 * 1000)
-        print("TIMESTAMPI: \(timestamp)")
         verificationString = ""
         if posts.isEmpty { loadingHud.show(in: view) }
         AllesAPI.default.loadFeed(loadBefore: timestamp)
@@ -453,7 +451,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 default: break
                 }
             } receiveValue: { [self] posts in
-                print("RECPOSTS: \(posts)")
                 self.posts.append(contentsOf: posts)
                 self.posts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
                 self.applyChanges()
@@ -476,7 +473,6 @@ extension TimelineViewController: UITableViewDelegate {
 
     func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == posts.count {
-            print("LAST ROW SEEN")
             loadEvenMorePosts(posts.last!.created)
         }
     }

@@ -15,23 +15,25 @@ struct XPProgressBarView: View {
                 Group {
                     // GeometryReader(content: { geometry in
                     ZStack(alignment: .leading) {
-                        Rectangle().frame(width: geometry.size.width, height: geometry.size.height)
+                        Rectangle().frame(width: geometry.size.width / 2, height: geometry.size.height)
                             .opacity(0.3)
                             .foregroundColor(Color(UIColor.systemGreen))
 
-                        Rectangle().frame(width: min(CGFloat(self.xp.levelProgress) * geometry.size.width / 2, geometry.size.width / 2), height: geometry.size.height)
+                        /* Rectangle().frame(width: min(CGFloat(self.xp.levelProgress) * geometry.size.width < 1000 ? geometry.size.width : geometry.size.width / 2, geometry.size.width < 1000 ? geometry.size.width : geometry.size.width / 2), height: geometry.size.height) */
+                        Rectangle().frame(width: CGFloat(self.xp.levelProgress) * (geometry.size.width / 2), height: geometry.size.height, alignment: .leading)
                             .foregroundColor(Color(UIColor.systemGreen))
                     }.frame(width: geometry.size.width / 2, height: 20, alignment: .leading)
                 }
                 .cornerRadius(45)
                 .shadow(radius: 8)
                 // })
-                HStack {
-                    Text("\(xp.total)").bold() + Text(" XP")
-                    Spacer()
-                    Text("Lvl. \(xp.level); \(Int(xp.levelProgress * 100))% (\(xp.levelXP)/\(xp.levelXPMax))").padding(.leading)
+                Text("\(xp.total)").bold() + Text(" XP")
+                Text("Lvl. \(xp.level); \(Int(xp.levelProgress * 100))% (\(xp.levelXP)/\(xp.levelXPMax))")
+                /* HStack {
 
-                }.frame(width: geometry.size.width / 2, height: 20, alignment: .leading)
+                     Spacer()
+
+                 }.frame(width: (geometry.size.width / 2), height: 20, alignment: .leading) */
             }
 
 		})
