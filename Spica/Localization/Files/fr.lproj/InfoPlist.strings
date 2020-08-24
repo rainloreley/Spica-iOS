@@ -1,10 +1,12 @@
-/* 
-  InfoPlist.strings
-  Spica
-
-  Created by Adrian Baumgart on 23.07.20.
-  
-*/
+//
+// Spica for iOS (Spica)
+// File created by Adrian Baumgart on 23.07.20.
+//
+// Licensed under the GNU General Public License v3.0
+// Copyright © 2020 Adrian Baumgart. All rights reserved.
+//
+// https://github.com/SpicaApp/Spica-iOS
+//
 
 "NSFaceIDUsageDescription" = "Spica utilise FaceID pour restreindre l'accès à l'application";
 "NSCameraUsageDescription" = "Vous pouvez utiliser votre appareil photo pour faire des photos que vous pouvez partager via Alles";

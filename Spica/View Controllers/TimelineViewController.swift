@@ -1,8 +1,11 @@
 //
-//  ViewController.swift
-//  Spica
+// Spica for iOS (Spica)
+// File created by Adrian Baumgart on 29.06.20.
 //
-//  Created by Adrian Baumgart on 29.06.20.
+// Licensed under the GNU General Public License v3.0
+// Copyright © 2020 Adrian Baumgart. All rights reserved.
+//
+// https://github.com/SpicaApp/Spica-iOS
 //
 
 import Combine
@@ -29,12 +32,15 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     private var navigateBackSubscriber: AnyCancellable?
 
     var verificationString = ""
+	private var contentOffset: CGPoint?
 
     var containsCachedElements = false
 
-    override func viewWillDisappear(_: Bool) {
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
         createPostSubscriber?.cancel()
         navigateBackSubscriber?.cancel()
+		self.contentOffset = self.tableView.contentOffset
     }
 
     override func viewDidLoad() {
@@ -127,6 +133,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 filteredPosts.append(i)
             }
         }
+		filteredPosts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
         snapshot.appendItems(filteredPosts, toSection: .main)
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
@@ -177,10 +184,15 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             }
         }
     }
+	
+	
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+		if let contentOffset = self.contentOffset {
+				self.tableView.setContentOffset(contentOffset, animated: true)
+			}
         setSidebar()
 
         let notificationCenter = NotificationCenter.default
@@ -275,6 +287,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     }
 
     @objc func loadFeed() {
+		print("I'M GONNA LOAD AGAIN")
         verificationString = ""
         if posts.isEmpty { loadingHud.show(in: view) }
         AllesAPI.default.loadFeed(cache: .remote)
@@ -289,8 +302,31 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 default: break
                 }
             } receiveValue: { [self] posts in
-                self.posts = posts
-                self.applyChanges()
+				//self.posts = Array(Set(self.posts + posts))
+				if self.refreshControl.isRefreshing {
+					self.posts = posts
+					contentOffset = nil
+				}
+				else {
+					self.posts.append(contentsOf: posts)
+				}
+				self.posts.sort(by: {$0.created.compare($1.created) == .orderedDescending})
+				applyChanges()
+				/*if self.posts.isEmpty {
+					self.posts = posts
+					self.applyChanges()
+				}
+				else {
+					self.posts = posts
+				}*/
+				
+				
+				
+				if let contentOffset = self.contentOffset {
+						self.tableView.setContentOffset(contentOffset, animated: true)
+					}
+                
+				
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
                 verificationString = randomString(length: 30)
@@ -368,28 +404,33 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         DispatchQueue.global(qos: .background).async { [self] in
             let dispatchGroup = DispatchGroup()
             for (index, post) in posts.enumerated() {
-                if veri != verificationString { return }
-                dispatchGroup.enter()
-                if index <= posts.count - 1 {
-                    if let author = posts[index].author {
-                        if veri != verificationString { return }
-                        posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
-                    }
+					if veri != verificationString { break }
+					dispatchGroup.enter()
+					if index <= posts.count - 1 {
+						if let author = posts[index].author {
+							if veri != verificationString { break }
+							posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
+						}
 
-                    if let url = post.imageURL {
-                        if veri != verificationString { return }
-                        posts[index].image = ImageLoader.loadImageFromInternet(url: url)
-                    } else {
-                        posts[index].image = UIImage()
-                    }
-                    if index < 5 {
-                        if veri != verificationString { return }
-                        applyChanges()
-                    }
-                    dispatchGroup.leave()
-                }
+						if let url = post.imageURL {
+							if veri != verificationString { break }
+							posts[index].image = ImageLoader.loadImageFromInternet(url: url)
+						} else {
+							posts[index].image = UIImage()
+						}
+						if index < 5 {
+							if veri != verificationString { break }
+							applyChanges()
+						}
+						dispatchGroup.leave()
+				}
             }
             applyChanges()
+			DispatchQueue.main.async {
+				if let contentOffset = self.contentOffset {
+						self.tableView.setContentOffset(contentOffset, animated: false)
+					}
+			}
         }
     }
 
@@ -453,6 +494,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             } receiveValue: { [self] posts in
                 self.posts.append(contentsOf: posts)
                 self.posts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
+				//self.posts = Array(Set(self.posts + posts))
                 self.applyChanges()
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
@@ -472,9 +514,13 @@ extension TimelineViewController: UITableViewDelegate {
     }
 
     func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == posts.count {
+		if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
+			//you reached end of the table
+			loadEvenMorePosts(posts.last!.created)
+		}
+		/*if posts[indexPath.row] == posts.last {
             loadEvenMorePosts(posts.last!.created)
-        }
+        }*/
     }
 }
 

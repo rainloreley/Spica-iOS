@@ -1,8 +1,11 @@
 //
-//  UserProfileViewController.swift
-//  Spica
+// Spica for iOS (Spica)
+// File created by Adrian Baumgart on 30.06.20.
 //
-//  Created by Adrian Baumgart on 30.06.20.
+// Licensed under the GNU General Public License v3.0
+// Copyright © 2020 Adrian Baumgart. All rights reserved.
+//
+// https://github.com/SpicaApp/Spica-iOS
 //
 
 import Combine
@@ -22,6 +25,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     private var createPostSubscriber: AnyCancellable?
     private var editProfileSubscriber: AnyCancellable?
     private var navigateBackSubscriber: AnyCancellable?
+	private var contentOffset: CGPoint?
     var userPosts = [Post]() {
         didSet {
             DispatchQueue.main.async {
@@ -118,6 +122,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     override func viewWillAppear(_: Bool) {
         setSidebar()
         navigationController?.navigationBar.prefersLargeTitles = false
+		if let contentOffset = self.contentOffset {
+			self.tableView.setContentOffset(contentOffset, animated: true)
+		}
 
         let notificationCenter = NotificationCenter.default
         createPostSubscriber = notificationCenter.publisher(for: .createPost)
@@ -147,10 +154,12 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    override func viewWillDisappear(_: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
         createPostSubscriber?.cancel()
         navigateBackSubscriber?.cancel()
         editProfileSubscriber?.cancel()
+		self.contentOffset = self.tableView.contentOffset
     }
 
     override func viewDidAppear(_: Bool) {
@@ -232,6 +241,10 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 }
             } receiveValue: { [unowned self] in
                 self.userPosts = $0
+				
+				if let contentOffset = self.contentOffset {
+					self.tableView.setContentOffset(contentOffset, animated: false)
+				}
                 if self.refreshControl.isRefreshing {
                     self.refreshControl.endRefreshing()
                 }
@@ -298,6 +311,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             DispatchQueue.main.async {
                 loadedPreviously = true
                 self.tableView.reloadData()
+				if let contentOffset = self.contentOffset {
+					self.tableView.setContentOffset(contentOffset, animated: false)
+				}
             }
         }
     }
