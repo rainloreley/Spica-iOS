@@ -21,7 +21,6 @@ protocol MainSettingsDelegate {
 }
 
 class MainSettingsViewController: UITableViewController, ColorPickerControllerDelegate {
-	
     var toolbarDelegate = ToolbarDelegate()
     private var navigateBackSubscriber: AnyCancellable?
 
@@ -73,9 +72,9 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
         copyrightLabel.text = SLocale(.SPICA_COPYRIGHT)
         translateAppLabel.setTitle(SLocale(.TRANSLATE_APP), for: .normal)
         contactLabel.setTitle(SLocale(.CONTACT), for: .normal)
-        //changeAccentColor.setTitle(SLocale(.CLEAR_CACHE), for: .normal)
+        // changeAccentColor.setTitle(SLocale(.CLEAR_CACHE), for: .normal)
 
-		biometricsLabel.setTitle(SLocale(.BIOMETRICS), for: .normal)
+        biometricsLabel.setTitle(SLocale(.BIOMETRICS), for: .normal)
     }
 
     @IBAction func toggleBiometrics(_: Any) {
@@ -126,64 +125,64 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
             UIApplication.shared.open(url!)
         }
     }
-	
-	func changedColor(_ color: UIColor) {
-		UserDefaults.standard.setColor(color: color, forKey: "globalTintColor")
-		let sceneDelegate = self.view.window?.windowScene?.delegate as! SceneDelegate
-		translateSymbol.tintColor = color
-		sceneDelegate.window?.tintColor = color
-	}
-	
-	var colorPickerController: ColorPickerController!
-	var changeAccentColorSheet = UIAlertController(title: "Change accent color", message: "", preferredStyle: .actionSheet)
 
-    @IBAction func changeAccentColor(_ sender: UIButton) {
-		changeAccentColorSheet = UIAlertController(title: "Change accent color", message: "", preferredStyle: .actionSheet)
-		
-		let currentAccentColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
-		colorPickerController = ColorPickerController(color: Color(currentAccentColor ?? UIColor.systemBlue))
-		colorPickerController.delegate = self
+    func changedColor(_ color: UIColor) {
+        UserDefaults.standard.setColor(color: color, forKey: "globalTintColor")
+        let sceneDelegate = view.window?.windowScene?.delegate as! SceneDelegate
+        translateSymbol.tintColor = color
+        sceneDelegate.window?.tintColor = color
+    }
 
-		if let popoverController = changeAccentColorSheet.popoverPresentationController {
-			popoverController.sourceView = view
-			popoverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
-		}
-		
-		let height: NSLayoutConstraint = NSLayoutConstraint(item: changeAccentColorSheet.view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 200)
-				/*let width: NSLayoutConstraint = NSLayoutConstraint(item: changeAccentColor.view!, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 350)*/
-				changeAccentColorSheet.view.addConstraint(height)
-		
-		let exitBtn: UIButton! = {
-					let btn = UIButton(type: .close)
-					btn.tintColor = .gray
-					btn.addTarget(self, action: #selector(closeAccentSheet), for: .touchUpInside)
-					return btn
-				}()
-		
-		changeAccentColorSheet.view.addSubview(exitBtn)
-		exitBtn.snp.makeConstraints { make in
-			make.top.equalTo(16)
-			make.trailing.equalTo(-16)
-		}
-		
-		let colorPickerView = UIHostingController(rootView: ColorPickerView(controller: colorPickerController)).view
-		colorPickerView?.backgroundColor = .none
-		
-		changeAccentColorSheet.view.addSubview(colorPickerView!)
-		colorPickerView?.snp.makeConstraints({ (make) in
-			make.center.equalTo(changeAccentColorSheet.view.snp.center)
-			make.top.equalTo(changeAccentColorSheet.view.snp.top).offset(48)
-			make.leading.equalTo(changeAccentColorSheet.view.snp.leading).offset(8)
-			make.trailing.equalTo(changeAccentColorSheet.view.snp.trailing).offset(-8)
-			make.bottom.equalTo(changeAccentColorSheet.view.snp.bottom).offset(-8)
-		})
-		
-		present(changeAccentColorSheet, animated: true, completion: nil)
-	}
-	
-	@objc func closeAccentSheet() {
-		changeAccentColorSheet.dismiss(animated: true, completion: nil)
-	}
+    var colorPickerController: ColorPickerController!
+    var changeAccentColorSheet = UIAlertController(title: "Change accent color", message: "", preferredStyle: .actionSheet)
+
+    @IBAction func changeAccentColor(_: UIButton) {
+        changeAccentColorSheet = UIAlertController(title: "Change accent color", message: "", preferredStyle: .actionSheet)
+
+        let currentAccentColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
+        colorPickerController = ColorPickerController(color: Color(currentAccentColor ?? UIColor.systemBlue))
+        colorPickerController.delegate = self
+
+        if let popoverController = changeAccentColorSheet.popoverPresentationController {
+            popoverController.sourceView = view
+            popoverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+        }
+
+        let height: NSLayoutConstraint = NSLayoutConstraint(item: changeAccentColorSheet.view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 200)
+        /* let width: NSLayoutConstraint = NSLayoutConstraint(item: changeAccentColor.view!, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 350) */
+        changeAccentColorSheet.view.addConstraint(height)
+
+        let exitBtn: UIButton! = {
+            let btn = UIButton(type: .close)
+            btn.tintColor = .gray
+            btn.addTarget(self, action: #selector(closeAccentSheet), for: .touchUpInside)
+            return btn
+        }()
+
+        changeAccentColorSheet.view.addSubview(exitBtn)
+        exitBtn.snp.makeConstraints { make in
+            make.top.equalTo(16)
+            make.trailing.equalTo(-16)
+        }
+
+        let colorPickerView = UIHostingController(rootView: ColorPickerView(controller: colorPickerController)).view
+        colorPickerView?.backgroundColor = .none
+
+        changeAccentColorSheet.view.addSubview(colorPickerView!)
+        colorPickerView?.snp.makeConstraints { make in
+            make.center.equalTo(changeAccentColorSheet.view.snp.center)
+            make.top.equalTo(changeAccentColorSheet.view.snp.top).offset(48)
+            make.leading.equalTo(changeAccentColorSheet.view.snp.leading).offset(8)
+            make.trailing.equalTo(changeAccentColorSheet.view.snp.trailing).offset(-8)
+            make.bottom.equalTo(changeAccentColorSheet.view.snp.bottom).offset(-8)
+        }
+
+        present(changeAccentColorSheet, animated: true, completion: nil)
+    }
+
+    @objc func closeAccentSheet() {
+        changeAccentColorSheet.dismiss(animated: true, completion: nil)
+    }
 
     @IBAction func github(_: Any) {
         let url = URL(string: "https://github.com/SpicaApp/Spica-iOS")
@@ -258,7 +257,7 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
         navigationItem.title = SLocale(.SETTINGS)
         translateSymbol.image = UIImage(named: "translate")
         translateSymbol.image = translateSymbol.image?.withRenderingMode(.alwaysTemplate)
-		translateSymbol.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
+        translateSymbol.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
         localizeView()
     }
 
@@ -380,12 +379,11 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
         case 0:
             return 3
         case 1:
-			if #available(iOS 14, *) {
-				return 2
-			}
-			else {
-				return 1
-			}
+            if #available(iOS 14, *) {
+                return 2
+            } else {
+                return 1
+            }
         case 2:
             return 2
         case 3:

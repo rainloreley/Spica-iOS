@@ -96,15 +96,15 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         contentTextView = KMPlaceholderTextView(frame: .zero)
         contentTextView.font = .systemFont(ofSize: 18)
         // contentTextView.placeholder = SLocale(.NEWPOST_PLACEHOLDER)
-		
-		var filteredQuotes = [String]()
-		filteredQuotes.append(contentsOf: quotes)
-		if let index = filteredQuotes.firstIndex(of: previousPostCreateQuoute) {
-			filteredQuotes.remove(at: index)
-		}
-		
-		let newQuote = filteredQuotes.randomElement()
-		previousPostCreateQuoute = newQuote ?? ""
+
+        var filteredQuotes = [String]()
+        filteredQuotes.append(contentsOf: quotes)
+        if let index = filteredQuotes.firstIndex(of: previousPostCreateQuoute) {
+            filteredQuotes.remove(at: index)
+        }
+
+        let newQuote = filteredQuotes.randomElement()
+        previousPostCreateQuoute = newQuote ?? ""
         contentTextView.placeholder = newQuote ?? SLocale(.NEWPOST_PLACEHOLDER)
         contentTextView.placeholderColor = UIColor.tertiaryLabel
         contentTextView.delegate = self

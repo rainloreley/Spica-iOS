@@ -12,24 +12,23 @@ import Combine
 import SwiftUI
 
 protocol ColorPickerControllerDelegate {
-	func changedColor(_ color: UIColor)
+    func changedColor(_ color: UIColor)
 }
 
 class ColorPickerController: ObservableObject {
-	
-	var delegate: ColorPickerControllerDelegate!
-	
-	@Published var color: Color {
-		didSet {
-			if #available(iOS 14.0, *) {
-				delegate.changedColor(UIColor(color))
-			} else {
-				// Fallback on earlier versions
-			}
-		}
-	}
+    var delegate: ColorPickerControllerDelegate!
 
-	init(color: Color) {
-		self.color = color
-	}
+    @Published var color: Color {
+        didSet {
+            if #available(iOS 14.0, *) {
+                delegate.changedColor(UIColor(color))
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+    }
+
+    init(color: Color) {
+        self.color = color
+    }
 }
