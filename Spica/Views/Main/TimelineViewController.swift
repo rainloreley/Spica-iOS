@@ -287,10 +287,9 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     }
 
     @objc func loadFeed() {
-		print("I'M GONNA LOAD AGAIN")
         verificationString = ""
         if posts.isEmpty { loadingHud.show(in: view) }
-        AllesAPI.default.loadFeed(cache: .remote)
+        AllesAPI.default.loadFeed()
             .receive(on: RunLoop.main)
             .sink {
                 switch $0 {

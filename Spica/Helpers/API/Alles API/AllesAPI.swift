@@ -129,7 +129,7 @@ public class AllesAPI {
         }
     }
 
-    public func loadFeed(cache _: CachePolicy = .remote, loadBefore: Int? = nil) -> Future<[Post], AllesAPIErrorMessage> {
+    public func loadFeed(loadBefore: Int? = nil) -> Future<[Post], AllesAPIErrorMessage> {
         Future<[Post], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
