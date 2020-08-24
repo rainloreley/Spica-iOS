@@ -18,9 +18,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     var tableView: UITableView!
     var toolbarDelegate = ToolbarDelegate()
 
-    var mentions = [PostNotification]() {
-        didSet { applyChanges() }
-    }
+    var mentions = [PostNotification]()
 
     var refreshControl = UIRefreshControl()
 
@@ -39,7 +37,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
-        tableView.dataSource = dataSource
+        tableView.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         view.addSubview(tableView)
 
@@ -58,7 +56,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         loadingHud.interactionType = .blockNoTouches
     }
 
-    typealias DataSource = UITableViewDiffableDataSource<Section, PostNotification>
+    /*typealias DataSource = UITableViewDiffableDataSource<Section, PostNotification>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, PostNotification>
 
     private lazy var dataSource = makeDataSource()
@@ -115,7 +113,7 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
                 self.tableView.restore()
             }
         }
-    }
+    }*/
 
     func setSidebar() {
         if #available(iOS 14.0, *) {
@@ -196,14 +194,22 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
 
                 default: break
                 }
-            } receiveValue: { [unowned self] in
-                self.mentions = $0
-                self.refreshControl.endRefreshing()
-                self.loadingHud.dismiss()
+			} receiveValue: { mentions in
+				DispatchQueue.main.async {
+					self.mentions = mentions
+					self.tableView.reloadData()
+					if self.mentions.isEmpty {
+						self.tableView.setEmptyMessage(message: SLocale(.NOTIFICATIONS_EMPTY_TITLE), subtitle: SLocale(.NOTIFICATIONS_EMPTY_SUBTITLE))
+					} else {
+						self.tableView.restore()
+					}
+					self.refreshControl.endRefreshing()
+					self.loadingHud.dismiss()
 
-                self.verificationString = randomString(length: 30)
-                self.loadImages()
-                self.markAsRead()
+					self.verificationString = randomString(length: 30)
+					self.loadImages()
+					self.markAsRead()
+				}
 
             }.store(in: &subscriptions)
     }
@@ -213,32 +219,25 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
     }
 
     func loadImages() {
-        let veri = verificationString
-        DispatchQueue.global(qos: .background).async { [self] in
-            let dispatchGroup = DispatchGroup()
-            for (index, post) in mentions.enumerated() {
-                if veri != verificationString { return }
-                dispatchGroup.enter()
-                if index <= mentions.count - 1 {
-                    if let author = mentions[index].post.author {
-                        if veri != verificationString { return }
-                        mentions[index].post.author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
-                    }
-
-                    if let url = post.post.imageURL {
-                        if veri != verificationString { return }
-                        mentions[index].post.image = ImageLoader.loadImageFromInternet(url: url)
-                    } else {
-                        mentions[index].post.image = UIImage()
-                    }
-                    if index < 5 {
-                        if veri != verificationString { return }
-                        applyChanges()
-                    }
-                    dispatchGroup.leave()
-                }
+        DispatchQueue.global(qos: .utility).async { [self] in
+            for (index, mention) in mentions.enumerated() {
+				
+				mentions[index].post.author?.image = ImageLoader.loadImageFromInternet(url: (mention.post.author?.imgURL)!)
+				if let url = mention.post.imageURL {
+					mentions[index].post.image = ImageLoader.loadImageFromInternet(url: url)
+				}
+				else {
+					mentions[index].post.image = UIImage()
+				}
             }
-            applyChanges()
+			DispatchQueue.main.async {
+				self.tableView.reloadData()
+				if self.mentions.isEmpty {
+					self.tableView.setEmptyMessage(message: SLocale(.NOTIFICATIONS_EMPTY_TITLE), subtitle: SLocale(.NOTIFICATIONS_EMPTY_SUBTITLE))
+				} else {
+					self.tableView.restore()
+				}
+			}
         }
     }
 
@@ -272,7 +271,8 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
             } receiveValue: { [unowned self] in
                 mentions[tag].post.voted = $0.status
                 mentions[tag].post.score = $0.score
-                applyChanges()
+                //applyChanges()
+				tableView.reloadRows(at: [IndexPath(row: tag, section: 0)], with: .automatic)
             }.store(in: &subscriptions)
     }
 
@@ -292,6 +292,49 @@ extension MentionsViewController: UITableViewDelegate {
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
+}
+
+extension MentionsViewController: UITableViewDataSource {
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return 1
+	}
+	
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return mentions.count
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+		let post = mentions[indexPath.row]
+
+		cell.delegate = self
+		cell.indexPath = indexPath
+		cell.post = post.post
+
+		if !post.read {
+			let unreadIndicator = UIView()
+			unreadIndicator.backgroundColor = .systemBlue
+			unreadIndicator.layer.cornerRadius = 10
+			cell.addSubview(unreadIndicator)
+			unreadIndicator.snp.makeConstraints { make in
+				make.top.equalTo(cell.snp.top).offset(8)
+				make.width.equalTo(20)
+				make.height.equalTo(20)
+				make.trailing.equalTo(cell.snp.trailing).offset(-8)
+			}
+		}
+
+		let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+		cell.pfpImageView.tag = indexPath.row
+		cell.pfpImageView.isUserInteractionEnabled = true
+		cell.pfpImageView.addGestureRecognizer(tap)
+		cell.upvoteButton.tag = indexPath.row
+		cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+		cell.downvoteButton.tag = indexPath.row
+		cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+		return cell
+	}
 }
 
 extension MentionsViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {

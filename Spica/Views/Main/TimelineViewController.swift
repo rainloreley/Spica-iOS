@@ -22,6 +22,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     var createPostBtn: UIButton!
     var toolbarDelegate = ToolbarDelegate()
     var posts = [Post]()
+    var loadedInitialPosts = false
 
     var refreshControl = UIRefreshControl()
 
@@ -32,15 +33,15 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     private var navigateBackSubscriber: AnyCancellable?
 
     var verificationString = ""
-	private var contentOffset: CGPoint?
+    private var contentOffset: CGPoint?
 
     var containsCachedElements = false
 
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         createPostSubscriber?.cancel()
         navigateBackSubscriber?.cancel()
-		self.contentOffset = self.tableView.contentOffset
+        contentOffset = tableView.contentOffset
     }
 
     override func viewDidLoad() {
@@ -60,7 +61,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
         tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView.delegate = self
-        tableView.dataSource = dataSource
+        tableView.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         view.addSubview(tableView)
 
@@ -88,7 +89,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         }
     }
 
-    typealias DataSource = UITableViewDiffableDataSource<Section, Post>
+    /*typealias DataSource = UITableViewDiffableDataSource<Section, Post>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
 
     enum Section: Hashable {
@@ -124,7 +125,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         return source
     }
 
-    func applyChanges(_ animated: Bool = true) {
+    func applyChanges(_ animated: Bool = true, loadImages: Bool = false) {
         var snapshot = Snapshot()
         snapshot.appendSections([.main])
         var filteredPosts = [Post]()
@@ -133,7 +134,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 filteredPosts.append(i)
             }
         }
-		filteredPosts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
+        filteredPosts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
         snapshot.appendItems(filteredPosts, toSection: .main)
         DispatchQueue.main.async {
             self.dataSource.apply(snapshot, animatingDifferences: animated)
@@ -141,9 +142,12 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 self.tableView.setEmptyMessage(message: SLocale(.TIMELINE_EMPTY_TITLE), subtitle: SLocale(.TIMELINE_EMPTY_SUBTITLE))
             } else {
                 self.tableView.restore()
+                if loadImages {
+                    self.loadImages()
+                }
             }
         }
-    }
+    }*/
 
     @objc func openSettings() {
         let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
@@ -184,15 +188,13 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             }
         }
     }
-	
-	
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-		if let contentOffset = self.contentOffset {
-				self.tableView.setContentOffset(contentOffset, animated: true)
-			}
+        /*if let contentOffset = self.contentOffset {
+            tableView.setContentOffset(contentOffset, animated: true)
+        }*/
         setSidebar()
 
         let notificationCenter = NotificationCenter.default
@@ -301,35 +303,47 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 default: break
                 }
             } receiveValue: { [self] posts in
-				//self.posts = Array(Set(self.posts + posts))
-				if self.refreshControl.isRefreshing {
-					self.posts = posts
-					contentOffset = nil
-				}
-				else {
-					self.posts.append(contentsOf: posts)
-				}
-				self.posts.sort(by: {$0.created.compare($1.created) == .orderedDescending})
-				applyChanges()
-				/*if self.posts.isEmpty {
-					self.posts = posts
-					self.applyChanges()
-				}
-				else {
-					self.posts = posts
-				}*/
-				
-				
-				
-				if let contentOffset = self.contentOffset {
-						self.tableView.setContentOffset(contentOffset, animated: true)
+                // self.posts = Array(Set(self.posts + posts))
+                if self.refreshControl.isRefreshing {
+                    self.posts = posts
+                    contentOffset = nil
+                } else {
+					
+					var filteredPosts = [Post]()
+					filteredPosts.append(contentsOf: self.posts)
+					for i in posts {
+						if !filteredPosts.contains(where: { $0.id == i.id }) {
+							filteredPosts.append(i)
+						}
 					}
-                
+					
+					self.posts = filteredPosts
+                }
+                self.posts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
 				
+				self.tableView.reloadData()
+				if self.posts.isEmpty {
+					self.tableView.setEmptyMessage(message: SLocale(.TIMELINE_EMPTY_TITLE), subtitle: SLocale(.TIMELINE_EMPTY_SUBTITLE))
+				} else {
+					self.tableView.restore()
+				}
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
                 verificationString = randomString(length: 30)
-                self.loadImages()
+                //applyChanges(loadImages: true)
+				self.loadImages(posts)
+                /* if self.posts.isEmpty {
+                 	self.posts = posts
+                 	self.applyChanges()
+                 }
+                 else {
+                 	self.posts = posts
+                 } */
+
+                if let contentOffset = self.contentOffset {
+                    self.tableView.setContentOffset(contentOffset, animated: true)
+                }
+
             }.store(in: &subscriptions)
     }
 
@@ -397,42 +411,32 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             }
         }
     }
-
-    func loadImages() {
-        let veri = verificationString
-        DispatchQueue.global(qos: .background).async { [self] in
-            let dispatchGroup = DispatchGroup()
-            for (index, post) in posts.enumerated() {
-					if veri != verificationString { break }
-					dispatchGroup.enter()
-					if index <= posts.count - 1 {
-						if let author = posts[index].author {
-							if veri != verificationString { break }
-							posts[index].author?.image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
-						}
-
-						if let url = post.imageURL {
-							if veri != verificationString { break }
-							posts[index].image = ImageLoader.loadImageFromInternet(url: url)
-						} else {
-							posts[index].image = UIImage()
-						}
-						if index < 5 {
-							if veri != verificationString { break }
-							applyChanges()
-						}
-						dispatchGroup.leave()
-				}
-            }
-            applyChanges()
-			DispatchQueue.main.async {
-				if let contentOffset = self.contentOffset {
-						self.tableView.setContentOffset(contentOffset, animated: false)
+	
+	func loadImages(_ forPosts: [Post]) {
+		DispatchQueue.global(qos: .utility).async { [self] in
+			for post in forPosts {
+				if let index = posts.firstIndex(where: { $0.id == post.id }) {
+					posts[index].author?.image = ImageLoader.loadImageFromInternet(url: (post.author?.imgURL)!)
+					if let url = post.imageURL {
+						posts[index].image = ImageLoader.loadImageFromInternet(url: url)
 					}
+					else {
+						posts[index].image = UIImage()
+					}
+				}
 			}
-        }
-    }
-
+			DispatchQueue.main.async {
+				self.tableView.reloadData()
+				if self.posts.isEmpty {
+					self.tableView.setEmptyMessage(message: SLocale(.TIMELINE_EMPTY_TITLE), subtitle: SLocale(.TIMELINE_EMPTY_SUBTITLE))
+				} else {
+					self.tableView.restore()
+				}
+				loadedInitialPosts = true
+			}
+		}
+	}
+	
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
         let userByTag = posts[sender.view!.tag].author
         let vc = UserProfileViewController()
@@ -464,7 +468,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             } receiveValue: { [unowned self] in
                 posts[tag].voted = $0.status
                 posts[tag].score = $0.score
-                applyChanges()
+				tableView.reloadRows(at: [IndexPath(row: tag, section: 0)], with: .automatic)
             }.store(in: &subscriptions)
     }
 
@@ -476,51 +480,130 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
     }
 
     func loadEvenMorePosts(_ beforeDate: Date) {
-        let timestamp = Int(beforeDate.timeIntervalSince1970 * 1000)
-        verificationString = ""
-        if posts.isEmpty { loadingHud.show(in: view) }
-        AllesAPI.default.loadFeed(loadBefore: timestamp)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    self.refreshControl.endRefreshing()
-                    self.loadingHud.dismiss()
-                    AllesAPI.default.errorHandling(error: err, caller: self.view)
+		if loadedInitialPosts && !posts.isEmpty {
+            let timestamp = Int(beforeDate.timeIntervalSince1970 * 1000)
+            verificationString = ""
+            if posts.isEmpty { loadingHud.show(in: view) }
+            AllesAPI.default.loadFeed(loadBefore: timestamp)
+                .receive(on: RunLoop.main)
+                .sink {
+                    switch $0 {
+                    case let .failure(err):
+                        self.refreshControl.endRefreshing()
+                        self.loadingHud.dismiss()
+                        AllesAPI.default.errorHandling(error: err, caller: self.view)
 
-                default: break
-                }
-            } receiveValue: { [self] posts in
-                self.posts.append(contentsOf: posts)
-                self.posts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
-				//self.posts = Array(Set(self.posts + posts))
-                self.applyChanges()
-                self.refreshControl.endRefreshing()
-                self.loadingHud.dismiss()
-                verificationString = randomString(length: 30)
-                self.loadImages()
-            }.store(in: &subscriptions)
+                    default: break
+                    }
+                } receiveValue: { [self] posts in
+					DispatchQueue.main.async {
+						var filteredPosts = [Post]()
+						filteredPosts.append(contentsOf: self.posts)
+						for i in posts {
+							if !filteredPosts.contains(where: { $0.id == i.id }) {
+								filteredPosts.append(i)
+							}
+						}
+						
+						self.posts = filteredPosts
+						self.posts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
+						self.tableView.reloadData()
+						if self.posts.isEmpty {
+							self.tableView.setEmptyMessage(message: SLocale(.TIMELINE_EMPTY_TITLE), subtitle: SLocale(.TIMELINE_EMPTY_SUBTITLE))
+						} else {
+							self.tableView.restore()
+						}
+						// self.posts = Array(Set(self.posts + posts))
+						self.refreshControl.endRefreshing()
+						self.loadingHud.dismiss()
+						self.loadImages(posts)
+					}
+
+                }.store(in: &subscriptions)
+        }
     }
 }
 
+extension TimelineViewController: UITableViewDataSource {
+	func numberOfSections(in tableView: UITableView) -> Int {
+		return 1
+	}
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return posts.count
+	}
+	
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+		let post = posts[indexPath.row]
+
+		cell.delegate = self
+		cell.indexPath = indexPath
+		cell.post = post
+
+		let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
+
+		cell.pfpImageView.tag = indexPath.row
+
+		cell.pfpImageView.isUserInteractionEnabled = true
+		cell.pfpImageView.addGestureRecognizer(tap)
+
+		cell.upvoteButton.tag = indexPath.row
+		cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
+
+		cell.downvoteButton.tag = indexPath.row
+		cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
+
+		return cell
+	}
+}
+
 extension TimelineViewController: UITableViewDelegate {
+	
+	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+
+		// Use this 'canLoadFromBottom' variable only if you want to load from bottom iff content > table size
+		let contentSize = scrollView.contentSize.height
+		let tableSize = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom
+		let canLoadFromBottom = contentSize > tableSize
+
+		// Offset
+		let currentOffset = scrollView.contentOffset.y
+		let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
+		let difference = maximumOffset - currentOffset
+
+		// Difference threshold as you like. -120.0 means pulling the cell up 120 points
+		if canLoadFromBottom, difference <= -120.0 {
+
+			// Save the current bottom inset
+			let previousScrollViewBottomInset = scrollView.contentInset.bottom
+			// Add 50 points to bottom inset, avoiding it from laying over the refresh control.
+			scrollView.contentInset.bottom = previousScrollViewBottomInset + 50
+
+			// loadMoreData function call
+			loadEvenMorePosts(posts.last!.created)
+			// Reset the bottom inset to its original value
+			scrollView.contentInset.bottom = previousScrollViewBottomInset
+		}
+	}
+	
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let post = dataSource.itemIdentifier(for: indexPath) else { return }
+		let post = posts[indexPath.row]
         let detailVC = PostDetailViewController()
         detailVC.selectedPost = post
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
-		if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height) {
-			//you reached end of the table
-			loadEvenMorePosts(posts.last!.created)
-		}
-		/*if posts[indexPath.row] == posts.last {
-            loadEvenMorePosts(posts.last!.created)
-        }*/
-    }
+    /*func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt _: IndexPath) {
+        if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height), !posts.isEmpty {
+            // you reached end of the table
+            // self.verificationString = randomString(length: 30)
+            //loadEvenMorePosts(posts.last!.created)
+        }
+        /* if posts[indexPath.row] == posts.last {
+             loadEvenMorePosts(posts.last!.created)
+         } */
+    }*/
 }
 
 extension TimelineViewController: MainSettingsDelegate {

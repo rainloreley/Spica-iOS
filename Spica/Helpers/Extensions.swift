@@ -246,3 +246,47 @@ func hexStringToUIColor(hex: String) -> UIColor {
 func arraysAreSame(first aFirstArray: [String], second aSecondArray: [String]) -> Bool {
     return aFirstArray.sorted() == aSecondArray.sorted()
 }
+
+extension UserDefaults {
+ func colorForKey(key: String) -> UIColor? {
+  var color: UIColor?
+  if let colorData = data(forKey: key) {
+   color = NSKeyedUnarchiver.unarchiveObject(with: colorData) as? UIColor
+  }
+  return color
+ }
+
+ func setColor(color: UIColor?, forKey key: String) {
+  var colorData: NSData?
+   if let color = color {
+	colorData = NSKeyedArchiver.archivedData(withRootObject: color) as NSData?
+  }
+  set(colorData, forKey: key)
+ }
+
+}
+
+extension Color {
+
+	func uiColor() -> UIColor {
+
+		let components = self.components()
+		return UIColor(red: components.r, green: components.g, blue: components.b, alpha: components.a)
+	}
+
+	private func components() -> (r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) {
+
+		let scanner = Scanner(string: self.description.trimmingCharacters(in: CharacterSet.alphanumerics.inverted))
+		var hexNumber: UInt64 = 0
+		var r: CGFloat = 0.0, g: CGFloat = 0.0, b: CGFloat = 0.0, a: CGFloat = 0.0
+
+		let result = scanner.scanHexInt64(&hexNumber)
+		if result {
+			r = CGFloat((hexNumber & 0xff000000) >> 24) / 255
+			g = CGFloat((hexNumber & 0x00ff0000) >> 16) / 255
+			b = CGFloat((hexNumber & 0x0000ff00) >> 8) / 255
+			a = CGFloat(hexNumber & 0x000000ff) / 255
+		}
+		return (r, g, b, a)
+	}
+}

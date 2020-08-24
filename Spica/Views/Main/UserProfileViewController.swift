@@ -25,7 +25,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     private var createPostSubscriber: AnyCancellable?
     private var editProfileSubscriber: AnyCancellable?
     private var navigateBackSubscriber: AnyCancellable?
-	private var contentOffset: CGPoint?
+    private var contentOffset: CGPoint?
     var userPosts = [Post]() {
         didSet {
             DispatchQueue.main.async {
@@ -122,9 +122,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     override func viewWillAppear(_: Bool) {
         setSidebar()
         navigationController?.navigationBar.prefersLargeTitles = false
-		if let contentOffset = self.contentOffset {
-			self.tableView.setContentOffset(contentOffset, animated: true)
-		}
+        if let contentOffset = self.contentOffset {
+            tableView.setContentOffset(contentOffset, animated: true)
+        }
 
         let notificationCenter = NotificationCenter.default
         createPostSubscriber = notificationCenter.publisher(for: .createPost)
@@ -155,11 +155,11 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
+        super.viewWillDisappear(animated)
         createPostSubscriber?.cancel()
         navigateBackSubscriber?.cancel()
         editProfileSubscriber?.cancel()
-		self.contentOffset = self.tableView.contentOffset
+        contentOffset = tableView.contentOffset
     }
 
     override func viewDidAppear(_: Bool) {
@@ -241,10 +241,10 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 }
             } receiveValue: { [unowned self] in
                 self.userPosts = $0
-				
-				if let contentOffset = self.contentOffset {
-					self.tableView.setContentOffset(contentOffset, animated: false)
-				}
+
+                if let contentOffset = self.contentOffset {
+                    self.tableView.setContentOffset(contentOffset, animated: false)
+                }
                 if self.refreshControl.isRefreshing {
                     self.refreshControl.endRefreshing()
                 }
@@ -277,46 +277,115 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     func loadImages() {
-        let veri = verificationString
-        DispatchQueue.global(qos: .background).async { [self] in
+        DispatchQueue.global(qos: .utility).async { [self] in
+            let verification = verificationString
             let dispatchGroup = DispatchGroup()
             for (index, post) in userPosts.enumerated() {
-                if veri != verificationString { return }
                 dispatchGroup.enter()
-                if index <= userPosts.count - 1 {
-                    if let author = userPosts[index].author {
-                        if veri != verificationString { return }
-                        let image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
-                        DispatchQueue.main.async {
-                            userPosts[index].author?.image = image
+                // if verification != verificationString || index > posts.count { return }
+                // let profilePicture = ImageLoader.loadImageFromInternet(url: (posts[index].author?.imgURL)!)
+                ImageLoader.loadImageFromInternetNew(url: (userPosts[index].author?.imgURL)!)
+                    .receive(on: RunLoop.main)
+                    .sink {
+                        switch $0 {
+                        case .failure:
+                            dispatchGroup.leave()
+                            return
+                        default: break
+                        }
+                    } receiveValue: { pfpImg in
+                        userPosts[index].author?.image = pfpImg
+
+                        if let postImgURL = post.imageURL {
+                            ImageLoader.loadImageFromInternetNew(url: postImgURL)
+                                .receive(on: RunLoop.main)
+                                .sink {
+                                    switch $0 {
+                                    case .failure:
+                                        userPosts[index].image = UIImage()
+                                        DispatchQueue.main.async {
+                                            self.tableView.beginUpdates()
+                                            self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
+                                            self.tableView.endUpdates()
+                                        }
+                                        dispatchGroup.leave()
+                                        return
+                                    default: break
+                                    }
+                                } receiveValue: { postImg in
+                                    userPosts[index].image = postImg
+                                    DispatchQueue.main.async {
+                                        self.tableView.beginUpdates()
+                                        self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
+                                        self.tableView.endUpdates()
+                                    }
+                                    dispatchGroup.leave()
+                                }.store(in: &subscriptions)
+                        } else {
+                            userPosts[index].image = UIImage()
+                            DispatchQueue.main.async {
+                                self.tableView.beginUpdates()
+                                self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
+                                self.tableView.endUpdates()
+                            }
+                            dispatchGroup.leave()
                         }
                     }
-                    if let url = post.imageURL {
-                        if veri != verificationString { return }
-                        userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
-                    } else {
-                        userPosts[index].image = UIImage()
-                    }
-                    if index < 5 {
-                        if veri != verificationString { return }
-                        DispatchQueue.main.async {
-                            self.tableView.beginUpdates()
-                            self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
-                            self.tableView.endUpdates()
-                        }
-                    }
-                    dispatchGroup.leave()
-                }
+                    .store(in: &subscriptions)
+
+                // if verification != verificationString || index > posts.count { return }
             }
-            DispatchQueue.main.async {
+            dispatchGroup.notify(queue: .main) {
                 loadedPreviously = true
                 self.tableView.reloadData()
-				if let contentOffset = self.contentOffset {
-					self.tableView.setContentOffset(contentOffset, animated: false)
-				}
+                if let contentOffset = self.contentOffset {
+                    self.tableView.setContentOffset(contentOffset, animated: false)
+                }
             }
         }
     }
+
+    /* func loadImages() {
+     let veri = verificationString
+     DispatchQueue.global(qos: .background).async { [self] in
+     let dispatchGroup = DispatchGroup()
+     for (index, post) in userPosts.enumerated() {
+     if veri != verificationString { return }
+     dispatchGroup.enter()
+     if index <= userPosts.count - 1 {
+     if let author = userPosts[index].author {
+     if veri != verificationString { return }
+     let image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
+     DispatchQueue.main.async {
+     userPosts[index].author?.image = image
+     }
+     }
+     if let url = post.imageURL {
+     if veri != verificationString { return }
+     userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
+     } else {
+     userPosts[index].image = UIImage()
+     }
+     if index < 5 {
+     if veri != verificationString { return }
+     DispatchQueue.main.async {
+     self.tableView.beginUpdates()
+     self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
+     self.tableView.endUpdates()
+     }
+     }
+     dispatchGroup.leave()
+     }
+     }
+     DispatchQueue.main.async {
+     loadedPreviously = true
+     self.tableView.reloadData()
+     if let contentOffset = self.contentOffset {
+     	self.tableView.setContentOffset(contentOffset, animated: false)
+     }
+     }
+     }
+     } */
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
         let userByTag = userPosts[sender.view!.tag].author

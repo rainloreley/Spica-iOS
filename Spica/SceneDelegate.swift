@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
+		window?.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
 
         if !UserDefaults.standard.bool(forKey: "hasRunBefore") {
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")

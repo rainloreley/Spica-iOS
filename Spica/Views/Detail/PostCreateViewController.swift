@@ -44,6 +44,14 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
     var preText: String!
 
+    var quotes = [
+        "\"The greatest glory in living lies not in never falling, but in rising every time we fall.\" -Nelson Mandela",
+        "\"The way to get started is to quit talking and begin doing.\" -Walt Disney",
+        "\"Your time is limited, so don't waste it living someone else's life. Don't be trapped by dogma – which is living with the results of other people's thinking.\" -Steve Jobs",
+        "\"If life were predictable it would cease to be life, and be without flavor.\" -Eleanor Roosevelt",
+        "\"If you look at what you have in life, you'll always have more. If you look at what you don't have in life, you'll never have enough.\" -Oprah Winfrey",
+    ]
+
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
 
     private var subscriptions = Set<AnyCancellable>()
@@ -85,7 +93,8 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
         contentTextView = KMPlaceholderTextView(frame: .zero)
         contentTextView.font = .systemFont(ofSize: 18)
-        contentTextView.placeholder = SLocale(.NEWPOST_PLACEHOLDER)
+        // contentTextView.placeholder = SLocale(.NEWPOST_PLACEHOLDER)
+        contentTextView.placeholder = quotes.randomElement() ?? SLocale(.NEWPOST_PLACEHOLDER)
         contentTextView.placeholderColor = UIColor.tertiaryLabel
         contentTextView.delegate = self
         let dropInteraction = UIDropInteraction(delegate: self)

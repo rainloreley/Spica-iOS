@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17140" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5hE-Mv-EaZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5hE-Mv-EaZ">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17115"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17124"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -145,22 +145,21 @@
                                                         <action selector="toggleBiometrics:" destination="sv3-Zw-cNs" eventType="valueChanged" id="FHr-g4-94x"/>
                                                     </connections>
                                                 </switch>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Biometrics" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r8c-QW-pKX">
-                                                    <rect key="frame" x="50" y="11" width="245" height="22"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J2Z-tf-nXB">
+                                                    <rect key="frame" x="50" y="6" width="245" height="32"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                    <color key="textColor" systemColor="linkColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
+                                                    <state key="normal" title="Biometrics"/>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="tMo-dP-EBw" firstAttribute="leading" secondItem="Jp4-Zl-fC2" secondAttribute="leadingMargin" id="2DF-ju-N4U"/>
-                                                <constraint firstItem="r8c-QW-pKX" firstAttribute="top" secondItem="Jp4-Zl-fC2" secondAttribute="topMargin" id="5Ho-qX-mzk"/>
                                                 <constraint firstAttribute="bottom" secondItem="Eom-n7-tM0" secondAttribute="bottom" constant="7" id="FnV-eH-1H8"/>
                                                 <constraint firstItem="tMo-dP-EBw" firstAttribute="top" secondItem="Jp4-Zl-fC2" secondAttribute="topMargin" id="Foz-ip-gpJ"/>
+                                                <constraint firstItem="J2Z-tf-nXB" firstAttribute="leading" secondItem="tMo-dP-EBw" secondAttribute="trailing" constant="8" symbolic="YES" id="GA8-lK-juh"/>
                                                 <constraint firstItem="tMo-dP-EBw" firstAttribute="bottom" secondItem="Jp4-Zl-fC2" secondAttribute="bottomMargin" id="Khj-57-YM3"/>
-                                                <constraint firstItem="r8c-QW-pKX" firstAttribute="bottom" secondItem="Jp4-Zl-fC2" secondAttribute="bottomMargin" id="N83-sV-LJN"/>
-                                                <constraint firstItem="Eom-n7-tM0" firstAttribute="leading" secondItem="r8c-QW-pKX" secondAttribute="trailing" constant="8" symbolic="YES" id="XKB-zm-WQq"/>
-                                                <constraint firstItem="r8c-QW-pKX" firstAttribute="leading" secondItem="tMo-dP-EBw" secondAttribute="trailing" constant="8" symbolic="YES" id="fEe-Hv-efc"/>
+                                                <constraint firstAttribute="bottom" secondItem="J2Z-tf-nXB" secondAttribute="bottom" constant="6" id="QMy-OT-832"/>
+                                                <constraint firstItem="Eom-n7-tM0" firstAttribute="leading" secondItem="J2Z-tf-nXB" secondAttribute="trailing" constant="8" symbolic="YES" id="egt-pd-Okg"/>
+                                                <constraint firstItem="J2Z-tf-nXB" firstAttribute="top" secondItem="Jp4-Zl-fC2" secondAttribute="top" constant="6" id="iNG-K4-RDe"/>
                                                 <constraint firstItem="Eom-n7-tM0" firstAttribute="top" secondItem="Jp4-Zl-fC2" secondAttribute="top" constant="7" id="kgz-z9-aD3"/>
                                                 <constraint firstAttribute="trailing" secondItem="Eom-n7-tM0" secondAttribute="trailing" constant="22" id="w4a-Od-5DX"/>
                                             </constraints>
@@ -173,9 +172,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="374" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="trash" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Egy-vL-b87">
-                                                    <rect key="frame" x="20" y="10" width="22" height="22.5"/>
-                                                    <color key="tintColor" systemColor="systemRedColor"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="eyedropper" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Egy-vL-b87">
+                                                    <rect key="frame" x="20" y="11" width="22" height="22"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="IBZ-3Y-XSi"/>
                                                         <constraint firstAttribute="width" constant="22" id="RwP-ci-mgL"/>
@@ -184,11 +182,9 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GyG-ds-xQo">
                                                     <rect key="frame" x="50" y="11" width="304" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
-                                                    <state key="normal" title="Clear Cache">
-                                                        <color key="titleColor" systemColor="systemRedColor"/>
-                                                    </state>
+                                                    <state key="normal" title="Change accent color"/>
                                                     <connections>
-                                                        <action selector="clearCache:" destination="sv3-Zw-cNs" eventType="touchUpInside" id="Ema-nQ-Bjg"/>
+                                                        <action selector="changeAccentColor:" destination="sv3-Zw-cNs" eventType="touchUpInside" id="8s7-vA-QcJ"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -618,9 +614,9 @@
                         <outlet property="allesPrivacyButton" destination="5Yn-4i-ED1" id="H0A-IQ-xD5"/>
                         <outlet property="allesTOSButton" destination="Ppo-hm-iII" id="Jz0-p8-ouz"/>
                         <outlet property="allesWebsiteButton" destination="Iez-I5-iLp" id="QIL-ZO-q2A"/>
-                        <outlet property="biometricsLabel" destination="r8c-QW-pKX" id="LDq-1g-a3m"/>
+                        <outlet property="biometricsLabel" destination="J2Z-tf-nXB" id="7fp-oz-STA"/>
                         <outlet property="biometricsSwitch" destination="Eom-n7-tM0" id="RPo-qm-1ix"/>
-                        <outlet property="clearCacheButton" destination="GyG-ds-xQo" id="8H6-BT-eym"/>
+                        <outlet property="changeAccentColor" destination="GyG-ds-xQo" id="yCF-lQ-rD1"/>
                         <outlet property="contactLabel" destination="70g-gG-vMK" id="qDq-P8-MF5"/>
                         <outlet property="copyrightLabel" destination="OvF-Bn-Tew" id="pff-CS-AJ3"/>
                         <outlet property="creditsButton" destination="j8k-jg-OJ8" id="Ndi-95-yuP"/>
@@ -660,13 +656,13 @@
         <image name="chevron.left.slash.chevron.right" catalog="system" width="128" height="94"/>
         <image name="doc.text" catalog="system" width="115" height="128"/>
         <image name="envelope" catalog="system" width="128" height="93"/>
+        <image name="eyedropper" catalog="system" width="128" height="119"/>
         <image name="faceid" catalog="system" width="128" height="115"/>
         <image name="globe" catalog="system" width="128" height="121"/>
         <image name="lock" catalog="system" width="128" height="128"/>
         <image name="person.circle" catalog="system" width="128" height="121"/>
         <image name="star" catalog="system" width="128" height="116"/>
         <image name="translate" width="60" height="60"/>
-        <image name="trash" catalog="system" width="118" height="128"/>
         <image name="tray" catalog="system" width="128" height="88"/>
         <namedColor name="PostButtonColor">
             <color red="0.17599999904632568" green="0.32499998807907104" blue="0.6029999852180481" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

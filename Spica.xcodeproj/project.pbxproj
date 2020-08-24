@@ -65,6 +65,8 @@
 		3AB21DD224EFBC7800B467FF /* SignInWithAllesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */; };
 		3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */; };
 		3AD04A3624C0C50E007F7306 /* UserEditHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */; };
+		3AD340FC24F41A4D0060B23D /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD340FB24F41A4D0060B23D /* ColorPickerView.swift */; };
+		3AD340FE24F41A550060B23D /* ColorPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD340FD24F41A550060B23D /* ColorPickerController.swift */; };
 		3AD5378924C997AB00FB62C5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3AD5378B24C997AB00FB62C5 /* InfoPlist.strings */; };
 		3AD689B824ADDAE7001F485E /* AllesAPIErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD689B724ADDAE7001F485E /* AllesAPIErrorMessage.swift */; };
 		3AD689BA24ADDB5E001F485E /* AllesAPIErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD689B924ADDB5E001F485E /* AllesAPIErrorAction.swift */; };
@@ -171,6 +173,8 @@
 		3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAllesButton.swift; sourceTree = "<group>"; };
 		3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEditHeaderCell.swift; sourceTree = "<group>"; };
+		3AD340FB24F41A4D0060B23D /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
+		3AD340FD24F41A550060B23D /* ColorPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerController.swift; sourceTree = "<group>"; };
 		3AD5378A24C997AB00FB62C5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3AD5378C24C997AF00FB62C5 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3AD5378D24C997B000FB62C5 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = nb.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -343,6 +347,8 @@
 		3A2A3D5A24F3B74C0053AEAB /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				3AD340FA24F41A3C0060B23D /* Color Picker */,
+				3A66D2EE24E2D62E0074D223 /* XPProgressBarView.swift */,
 				3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */,
 				3A4038B124B1EB54002B18F1 /* Progress Bar */,
 			);
@@ -412,14 +418,6 @@
 				3ADF6BC124AD24D600B7C510 /* ReplyButtonCell */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		3A66D2ED24E2D6200074D223 /* Additions */ = {
-			isa = PBXGroup;
-			children = (
-				3A66D2EE24E2D62E0074D223 /* XPProgressBarView.swift */,
-			);
-			path = Additions;
 			sourceTree = "<group>";
 		};
 		3A6AABD124BB5D6300C71BC0 /* Localization */ = {
@@ -559,6 +557,15 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		3AD340FA24F41A3C0060B23D /* Color Picker */ = {
+			isa = PBXGroup;
+			children = (
+				3AD340FB24F41A4D0060B23D /* ColorPickerView.swift */,
+				3AD340FD24F41A550060B23D /* ColorPickerController.swift */,
+			);
+			path = "Color Picker";
+			sourceTree = "<group>";
+		};
 		3AD689B524ADDACC001F485E /* Error Handling */ = {
 			isa = PBXGroup;
 			children = (
@@ -604,17 +611,6 @@
 			path = SpicAPI;
 			sourceTree = "<group>";
 		};
-		3AF1DB1224D57E27006832A7 /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-				3A66D2ED24E2D6200074D223 /* Additions */,
-				3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */,
-				3AF1DB1524D57E6A006832A7 /* UserHeaderView.swift */,
-				3AF1DB1724D57E78006832A7 /* UserHeaderViewController.swift */,
-			);
-			path = SwiftUI;
-			sourceTree = "<group>";
-		};
 		3AFAF96024BB4D84003771B4 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -626,7 +622,9 @@
 		3AFAF96124BB4DB0003771B4 /* User Header Cell */ = {
 			isa = PBXGroup;
 			children = (
-				3AF1DB1224D57E27006832A7 /* SwiftUI */,
+				3AF1DB1324D57E5D006832A7 /* UserHeaderViewCell.swift */,
+				3AF1DB1524D57E6A006832A7 /* UserHeaderView.swift */,
+				3AF1DB1724D57E78006832A7 /* UserHeaderViewController.swift */,
 			);
 			path = "User Header Cell";
 			sourceTree = "<group>";
@@ -951,6 +949,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AD340FE24F41A550060B23D /* ColorPickerController.swift in Sources */,
 				3AF9231A24CC6CC200DAAE0F /* BookmarksViewController.swift in Sources */,
 				3A61B27524C8B55800AC1A9C /* PostDetail.swift in Sources */,
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
@@ -991,6 +990,7 @@
 				3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */,
 				3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
+				3AD340FC24F41A4D0060B23D /* ColorPickerView.swift in Sources */,
 				3AFD81C324EAC51E00AD5E11 /* SearchViewController.swift in Sources */,
 				3A96F69B24AAAE7B00482C5A /* ImageLoader.swift in Sources */,
 				3A741A5024B8BBC70083925A /* CreditsCell.swift in Sources */,
