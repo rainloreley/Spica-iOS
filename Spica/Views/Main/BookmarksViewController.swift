@@ -22,6 +22,7 @@ class BookmarksViewController: UIViewController {
     var verificationString = ""
     var toolbarDelegate = ToolbarDelegate()
     private var navigateBackSubscriber: AnyCancellable?
+    private var deleteSubscriber: AnyCancellable?
 
     var bookmarks = [AdvancedBookmark]()
 
@@ -68,13 +69,14 @@ class BookmarksViewController: UIViewController {
 
     @objc func deleteAllConfirmation() {
         EZAlertController.alert(SLocale(.DELETE_ALL_BOOKMARKS), message: SLocale(.DELETE_ALL_BOOKMARKS_CONFIRMATION), actions: [
+            UIAlertAction(title: SLocale(.CANCEL), style: .cancel, handler: { _ in
+                //
+			}),
+
             UIAlertAction(title: SLocale(.DELETE_ACTION), style: .destructive, handler: { _ in
                 UserDefaults.standard.setStructArray([Bookmark](), forKey: "savedBookmarks")
                 SPAlert.present(title: SLocale(.DELETED_ACTION), preset: .done)
                 self.loadBookmarks(loadingIndicator: false)
-			}),
-            UIAlertAction(title: SLocale(.CANCEL), style: .cancel, handler: { _ in
-                //
 			}),
         ])
     }
@@ -87,6 +89,7 @@ class BookmarksViewController: UIViewController {
 
     override func viewWillDisappear(_: Bool) {
         navigateBackSubscriber?.cancel()
+        deleteSubscriber?.cancel()
     }
 
     override func viewWillAppear(_: Bool) {
@@ -102,6 +105,12 @@ class BookmarksViewController: UIViewController {
             .sink(receiveValue: { _ in
                 self.navigateBack()
 			})
+
+        deleteSubscriber = notificationCenter.publisher(for: .delete)
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { _ in
+                self.deleteAllConfirmation()
+			})
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -115,6 +124,7 @@ class BookmarksViewController: UIViewController {
             if let titlebar = view.window!.windowScene!.titlebar {
                 titlebar.toolbar = toolbar
                 titlebar.toolbarStyle = .automatic
+                titlebar.titleVisibility = .visible
             }
 
             navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -184,6 +194,9 @@ class BookmarksViewController: UIViewController {
                     if veri != verificationString { return }
                     bookmarks[index].post.author?.image = ImageLoader.loadImageFromInternet(url: post.post.author!.imgURL!)
                     if veri != verificationString { return }
+                    if let mentionedPost = post.post.mentionedPost {
+                        bookmarks[index].post.mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
+                    }
                     if let url = post.post.imageURL {
                         bookmarks[index].post.image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
@@ -298,6 +311,13 @@ extension BookmarksViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension BookmarksViewController: PostCellViewDelegate {
+    func clickedOnMiniPost(id: String, miniPost _: MiniPost) {
+        let detailVC = PostDetailViewController()
+        detailVC.selectedPostID = id
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
     func editBookmark(id: String, action: BookmarkAction) {
         switch action {
         case .add:
@@ -341,6 +361,15 @@ extension BookmarksViewController: PostCellViewDelegate {
     }
 
     func clickedOnImage(controller: LightboxController) {
+        #if targetEnvironment(macCatalyst)
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.titleVisibility = .hidden
+                titlebar.toolbar = nil
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
         present(controller, animated: true, completion: nil)
     }
 

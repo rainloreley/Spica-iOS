@@ -62,8 +62,14 @@
 		3AA108A724C0C622006FCA1A /* EditTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */; };
 		3AA108AA24C0CBDF006FCA1A /* Hero in Frameworks */ = {isa = PBXBuildFile; productRef = 3AA108A924C0CBDF006FCA1A /* Hero */; };
 		3AA12EF424B0F3CD009C904A /* EZAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA12EF324B0F3CD009C904A /* EZAlertController.swift */; };
+		3AA3E9C224FABA1500635F20 /* URLMatcher in Frameworks */ = {isa = PBXBuildFile; productRef = 3AA3E9C124FABA1500635F20 /* URLMatcher */; };
+		3AA3E9C424FABA1500635F20 /* URLNavigator in Frameworks */ = {isa = PBXBuildFile; productRef = 3AA3E9C324FABA1500635F20 /* URLNavigator */; };
+		3AA3E9C724FABA5900635F20 /* URLNavigationMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AA3E9C624FABA5900635F20 /* URLNavigationMap.swift */; };
 		3AB21DD224EFBC7800B467FF /* SignInWithAllesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */; };
 		3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */; };
+		3ACEEBF924FE6AB20094D8E9 /* MiniPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACEEBF824FE6AB20094D8E9 /* MiniPost.swift */; };
+		3ACEEBFC24FE6ED80094D8E9 /* MiniPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACEEBFB24FE6ED80094D8E9 /* MiniPostView.swift */; };
+		3ACEEBFE24FE6FE20094D8E9 /* MiniPostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACEEBFD24FE6FE20094D8E9 /* MiniPostController.swift */; };
 		3AD04A3624C0C50E007F7306 /* UserEditHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */; };
 		3AD340FC24F41A4D0060B23D /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD340FB24F41A4D0060B23D /* ColorPickerView.swift */; };
 		3AD340FE24F41A550060B23D /* ColorPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD340FD24F41A550060B23D /* ColorPickerController.swift */; };
@@ -169,9 +175,13 @@
 		3A9E0F8724E86F9700AFB1E4 /* PostNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostNotification.swift; sourceTree = "<group>"; };
 		3AA108A624C0C622006FCA1A /* EditTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextFieldCell.swift; sourceTree = "<group>"; };
 		3AA12EF324B0F3CD009C904A /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
+		3AA3E9C624FABA5900635F20 /* URLNavigationMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLNavigationMap.swift; sourceTree = "<group>"; };
 		3AB0980E24C5BCB0005CCA27 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithAllesButton.swift; sourceTree = "<group>"; };
 		3AB3F1DD24ABFA7F0040D84A /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
+		3ACEEBF824FE6AB20094D8E9 /* MiniPost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPost.swift; sourceTree = "<group>"; };
+		3ACEEBFB24FE6ED80094D8E9 /* MiniPostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPostView.swift; sourceTree = "<group>"; };
+		3ACEEBFD24FE6FE20094D8E9 /* MiniPostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPostController.swift; sourceTree = "<group>"; };
 		3AD04A3524C0C50E007F7306 /* UserEditHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEditHeaderCell.swift; sourceTree = "<group>"; };
 		3AD340FB24F41A4D0060B23D /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		3AD340FD24F41A550060B23D /* ColorPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerController.swift; sourceTree = "<group>"; };
@@ -222,10 +232,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A25FBA924B753D400324136 /* SPAlert in Frameworks */,
+				3AA3E9C424FABA1500635F20 /* URLNavigator in Frameworks */,
 				3A96F6A524AB404100482C5A /* SwiftyJSON in Frameworks */,
 				3A4B92FA24AA9176000534FD /* SnapKit in Frameworks */,
 				3A96F6A224AB403100482C5A /* Alamofire in Frameworks */,
 				3A34226C24B359BE00B8AFA9 /* JGProgressHUD in Frameworks */,
+				3AA3E9C224FABA1500635F20 /* URLMatcher in Frameworks */,
 				3A27608524D5D37D00DEE34A /* SkeletonUI in Frameworks */,
 				3AA108AA24C0CBDF006FCA1A /* Hero in Frameworks */,
 				A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */,
@@ -331,6 +343,7 @@
 				3ADDC58224AD182100B58DA9 /* SentPost.swift */,
 				3A9E0F8724E86F9700AFB1E4 /* PostNotification.swift */,
 				3AE586C724E4092700251BCE /* Post.swift */,
+				3ACEEBF824FE6AB20094D8E9 /* MiniPost.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -347,6 +360,7 @@
 		3A2A3D5A24F3B74C0053AEAB /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				3ACEEBFA24FE6EC70094D8E9 /* Mini Post View */,
 				3AD340FA24F41A3C0060B23D /* Color Picker */,
 				3A66D2EE24E2D62E0074D223 /* XPProgressBarView.swift */,
 				3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */,
@@ -523,6 +537,7 @@
 		3A96F69D24AB3F9C00482C5A /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				3AA3E9C524FABA4A00635F20 /* URLs */,
 				3A2A3D5924F3B6E40053AEAB /* macOS */,
 				3AD689B624ADDAD2001F485E /* API */,
 				3A96F69C24AB3F9300482C5A /* Structures */,
@@ -532,6 +547,14 @@
 				3AA12EF324B0F3CD009C904A /* EZAlertController.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		3AA3E9C524FABA4A00635F20 /* URLs */ = {
+			isa = PBXGroup;
+			children = (
+				3AA3E9C624FABA5900635F20 /* URLNavigationMap.swift */,
+			);
+			path = URLs;
 			sourceTree = "<group>";
 		};
 		3AB21DD024EFBC6300B467FF /* Views */ = {
@@ -546,6 +569,15 @@
 				3A5CF34B24ACBCC0002A829A /* Cells */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		3ACEEBFA24FE6EC70094D8E9 /* Mini Post View */ = {
+			isa = PBXGroup;
+			children = (
+				3ACEEBFB24FE6ED80094D8E9 /* MiniPostView.swift */,
+				3ACEEBFD24FE6FE20094D8E9 /* MiniPostController.swift */,
+			);
+			path = "Mini Post View";
 			sourceTree = "<group>";
 		};
 		3AD04A3424C0C4EC007F7306 /* Cells */ = {
@@ -694,6 +726,8 @@
 				3AA108A924C0CBDF006FCA1A /* Hero */,
 				3A27608424D5D37D00DEE34A /* SkeletonUI */,
 				3A83E9ED24D710E80099F096 /* Down */,
+				3AA3E9C124FABA1500635F20 /* URLMatcher */,
+				3AA3E9C324FABA1500635F20 /* URLNavigator */,
 			);
 			productName = "Alles App";
 			productReference = 3A7145DB24AA8753000FA3C3 /* Spica.app */;
@@ -782,6 +816,7 @@
 				3AA108A824C0CBDF006FCA1A /* XCRemoteSwiftPackageReference "Hero" */,
 				3A27608324D5D37D00DEE34A /* XCRemoteSwiftPackageReference "SkeletonUI" */,
 				3A83E9EC24D710E80099F096 /* XCRemoteSwiftPackageReference "Down" */,
+				3AA3E9C024FABA1500635F20 /* XCRemoteSwiftPackageReference "URLNavigator" */,
 			);
 			productRefGroup = 3A7145DC24AA8753000FA3C3 /* Products */;
 			projectDirPath = "";
@@ -951,6 +986,7 @@
 			files = (
 				3AD340FE24F41A550060B23D /* ColorPickerController.swift in Sources */,
 				3AF9231A24CC6CC200DAAE0F /* BookmarksViewController.swift in Sources */,
+				3AA3E9C724FABA5900635F20 /* URLNavigationMap.swift in Sources */,
 				3A61B27524C8B55800AC1A9C /* PostDetail.swift in Sources */,
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
 				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
@@ -959,6 +995,8 @@
 				3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */,
 				3A61B27324C8B54800AC1A9C /* Tag.swift in Sources */,
 				3AF1DB1424D57E5D006832A7 /* UserHeaderViewCell.swift in Sources */,
+				3ACEEBFC24FE6ED80094D8E9 /* MiniPostView.swift in Sources */,
+				3ACEEBF924FE6AB20094D8E9 /* MiniPost.swift in Sources */,
 				3A66D2EF24E2D62E0074D223 /* XPProgressBarView.swift in Sources */,
 				3AB21DD224EFBC7800B467FF /* SignInWithAllesButton.swift in Sources */,
 				3A361FED24B8AA2700513028 /* CreditsViewController.swift in Sources */,
@@ -988,6 +1026,7 @@
 				3A95B3B824C0EC0A0066FE7B /* LocalizableKeys.swift in Sources */,
 				3A61B27B24C8B5E900AC1A9C /* TagDetailViewController.swift in Sources */,
 				3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */,
+				3ACEEBFE24FE6FE20094D8E9 /* MiniPostController.swift in Sources */,
 				3A48CD6E24BF1BCD00DD05CA /* AncestorPostDividerCell.swift in Sources */,
 				3ADBFC7D24ADE7FB0064A7A4 /* SignedInUser.swift in Sources */,
 				3AD340FC24F41A4D0060B23D /* ColorPickerView.swift in Sources */,
@@ -1225,7 +1264,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1254,7 +1293,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -1454,6 +1493,14 @@
 				minimumVersion = 1.5.0;
 			};
 		};
+		3AA3E9C024FABA1500635F20 /* XCRemoteSwiftPackageReference "URLNavigator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/URLNavigator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1496,6 +1543,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3AA108A824C0CBDF006FCA1A /* XCRemoteSwiftPackageReference "Hero" */;
 			productName = Hero;
+		};
+		3AA3E9C124FABA1500635F20 /* URLMatcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AA3E9C024FABA1500635F20 /* XCRemoteSwiftPackageReference "URLNavigator" */;
+			productName = URLMatcher;
+		};
+		3AA3E9C324FABA1500635F20 /* URLNavigator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AA3E9C024FABA1500635F20 /* XCRemoteSwiftPackageReference "URLNavigator" */;
+			productName = URLNavigator;
 		};
 /* End XCSwiftPackageProductDependency section */
 

@@ -79,7 +79,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         sendButton = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"), style: .plain, target: self, action: #selector(sendPost))
 
         #if targetEnvironment(macCatalyst)
-            navigationItem.rightBarButtonItems = [sendButton, imageButton]
+            navigationItem.rightBarButtonItems = [sendButton, imageButton, linkButton]
             navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissView))
         #else
             navigationItem.leftBarButtonItems = [imageButton, linkButton]

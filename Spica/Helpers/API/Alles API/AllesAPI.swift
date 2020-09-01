@@ -623,7 +623,7 @@ public class AllesAPI {
         }
     }
 
-    public func loadPost(id: String) -> Future<Post, AllesAPIErrorMessage> {
+    public func loadPost(id: String, includeReferences: Bool = true) -> Future<Post, AllesAPIErrorMessage> { // includeReferences: Mentions, Post links
         Future<Post, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
@@ -637,7 +637,6 @@ public class AllesAPI {
 
                     let responseJSON = JSON(response.data!)
                     if !responseJSON["err"].exists() {
-                        var userSubscriptions = Set<AnyCancellable>()
                         if response.response?.statusCode == 200 {
                             var post = Post(responseJSON, mentionedUsers: [])
                             let author_id = responseJSON["author"].string!
@@ -650,46 +649,66 @@ public class AllesAPI {
                             }
 
                             post.author = User(id: author_id, name: responseJSON["users"][author_id]["name"].string!, nickname: responseJSON["users"][author_id]["nickname"].string!, plus: responseJSON["users"][author_id]["plus"].bool!, alles: responseJSON["users"][author_id]["alles"].bool!, imgURL: URL(string: author_img_url)!)
-                            DispatchQueue.main.async {
-                                let postContent = post.content.replacingOccurrences(of: "\n", with: " \n ")
-                                let splitContent = postContent.split(separator: " ")
-                                let disGroup = DispatchGroup()
-                                if splitContent.count > 0 {
-                                    for word in splitContent {
-                                        disGroup.enter()
-                                        if word.hasPrefix("@"), word.count > 1 {
-                                            var userID = removeSpecialCharsFromString(text: String(word))
-                                            userID.remove(at: userID.startIndex)
-                                            if responseJSON["users"][userID].exists() {
-                                                var mentionedUserData = responseJSON["users"][userID]
-                                                mentionedUserData["id"].stringValue = userID
-                                                post.mentionedUsers.append(User(mentionedUserData))
-                                                /* post.mentionedUsers.append(User(id: userID, name: responseJSON["users"][userID]["name"].string!, nickname: responseJSON["users"][userID]["nickname"].string!, plus: responseJSON["users"][userID]["plus"].bool!, alles: responseJSON["users"][userID]["alles"].bool!)) */
-                                                disGroup.leave()
-                                            } else {
-                                                AllesAPI.default.loadUser(id: userID)
+                            if includeReferences {
+                                DispatchQueue.main.async {
+                                    let postContent = post.content.replacingOccurrences(of: "\n", with: " \n ")
+                                    let splitContent = postContent.split(separator: " ")
+                                    let disGroup = DispatchGroup()
+                                    if splitContent.count > 0 {
+                                        for word in splitContent {
+                                            disGroup.enter()
+                                            if word.hasPrefix("@"), word.count > 1 {
+                                                var userID = removeSpecialCharsFromString(text: String(word))
+                                                userID.remove(at: userID.startIndex)
+                                                if responseJSON["users"][userID].exists() {
+                                                    var mentionedUserData = responseJSON["users"][userID]
+                                                    mentionedUserData["id"].stringValue = userID
+                                                    post.mentionedUsers.append(User(mentionedUserData))
+                                                    /* post.mentionedUsers.append(User(id: userID, name: responseJSON["users"][userID]["name"].string!, nickname: responseJSON["users"][userID]["nickname"].string!, plus: responseJSON["users"][userID]["plus"].bool!, alles: responseJSON["users"][userID]["alles"].bool!)) */
+                                                    disGroup.leave()
+                                                } else {
+                                                    AllesAPI.default.loadUser(id: userID)
+                                                        .receive(on: RunLoop.current)
+                                                        .sink {
+                                                            switch $0 {
+                                                            case .failure:
+                                                                disGroup.leave()
+                                                            default: break
+                                                            }
+                                                        } receiveValue: { mentionedUser in
+                                                            post.mentionedUsers.append(mentionedUser)
+                                                            disGroup.leave()
+                                                        }
+                                                        .store(in: &self.subscriptions)
+                                                }
+                                            } else if word.hasPrefix("%"), word.count > 1, post.mentionedPost == nil {
+                                                var mentionedPostID = removeSpecialCharsFromString(text: String(word))
+                                                mentionedPostID.remove(at: mentionedPostID.startIndex)
+
+                                                AllesAPI.default.loadPost(id: mentionedPostID, includeReferences: false)
                                                     .receive(on: RunLoop.current)
                                                     .sink {
                                                         switch $0 {
-                                                        case let .failure(error):
+                                                        case .failure:
                                                             disGroup.leave()
                                                         default: break
                                                         }
-                                                    } receiveValue: { mentionedUser in
-                                                        post.mentionedUsers.append(mentionedUser)
+                                                    } receiveValue: { mentionedPost in
+                                                        post.mentionedPost = MiniPost(mentionedPost)
                                                         disGroup.leave()
-                                                    }
-                                                    .store(in: &self.subscriptions)
+                                                    }.store(in: &self.subscriptions)
+                                            } else {
+                                                disGroup.leave()
                                             }
-                                        } else {
-                                            disGroup.leave()
+                                        }
+
+                                        disGroup.notify(queue: .main) {
+                                            promise(.success(post))
                                         }
                                     }
-
-                                    disGroup.notify(queue: .main) {
-                                        promise(.success(post))
-                                    }
                                 }
+                            } else {
+                                promise(.success(post))
                             }
 
                         } else {

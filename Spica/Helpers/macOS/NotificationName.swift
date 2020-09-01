@@ -15,4 +15,5 @@ extension Notification.Name {
     static let editProfile = Notification.Name("editProfile")
     static let saveProfile = Notification.Name("saveProfile")
     static let navigateBack = Notification.Name("navigateBack")
+    static let delete = Notification.Name("delete")
 }

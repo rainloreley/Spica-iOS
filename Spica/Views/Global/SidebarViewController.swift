@@ -119,7 +119,7 @@ class SidebarViewController: UIViewController, UICollectionViewDelegate {
                 .receive(on: RunLoop.main)
                 .sink {
                     switch $0 {
-                    case let .failure(err):
+                    case .failure:
                         return
                     default: break
                     }
@@ -194,6 +194,7 @@ enum SidebarSection: Int, Hashable, CaseIterable {
             let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag")
 
             vc.user = User(id: id!, name: name!, tag: tag!)
+            vc.navigatedFromSidebar = true
 
             vc.hidesBottomBarWhenPushed = true
             return vc

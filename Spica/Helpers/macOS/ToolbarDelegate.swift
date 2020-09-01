@@ -21,6 +21,7 @@ class ToolbarDelegate: NSObject {
         static let editAccount = NSToolbarItem.Identifier("dev.abmgrt.spica.editAccount")
         static let saveAccount = NSToolbarItem.Identifier("dev.abmgrt.spica.saveAccount")
         static let navigateBack = NSToolbarItem.Identifier("dev.abmgrt.spica.navigateBack")
+        static let delete = NSToolbarItem.Identifier("dev.abmgrt.spica.delete")
     }
 
     extension ToolbarDelegate {
@@ -38,6 +39,10 @@ class ToolbarDelegate: NSObject {
 
         @objc func navigateBack(_: Any?) {
             NotificationCenter.default.post(name: .navigateBack, object: self)
+        }
+
+        @objc func delete(_: Any?) {
+            NotificationCenter.default.post(name: .delete, object: self)
         }
     }
 
@@ -62,6 +67,8 @@ class ToolbarDelegate: NSObject {
                 return [
                     .toggleSidebar,
                     .navigateBack,
+                    .flexibleSpace,
+                    .delete,
                 ]
             case .init("tagdetail"):
                 return [
@@ -73,7 +80,7 @@ class ToolbarDelegate: NSObject {
                     .toggleSidebar,
                     .navigateBack,
                     .flexibleSpace,
-                    .editAccount,
+                    // .editAccount,
                     .createPost,
                 ]
             case .init("editUserProfile"):
@@ -137,6 +144,14 @@ class ToolbarDelegate: NSObject {
                 } else {
                     toolbarItem = nil
                 }
+
+            case .delete:
+                let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+                item.label = SLocale(.DELETE_ACTION)
+                item.image = UIImage(systemName: "trash")
+                item.action = #selector(delete(_:))
+                item.target = self
+                toolbarItem = item
 
             default:
                 toolbarItem = nil

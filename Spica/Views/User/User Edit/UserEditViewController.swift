@@ -143,6 +143,7 @@ class UserEditViewController: UIViewController {
             if let titlebar = view.window!.windowScene!.titlebar {
                 titlebar.toolbar = toolbar
                 titlebar.toolbarStyle = .automatic
+                titlebar.titleVisibility = .visible
             }
 
             navigationController?.setNavigationBarHidden(true, animated: false)

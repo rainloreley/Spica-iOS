@@ -231,6 +231,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             if let titlebar = view.window!.windowScene!.titlebar {
                 titlebar.toolbar = toolbar
                 titlebar.toolbarStyle = .automatic
+                titlebar.titleVisibility = .visible
             }
 
             navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -416,6 +417,9 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
             for post in forPosts {
                 if let index = posts.firstIndex(where: { $0.id == post.id }) {
                     posts[index].author?.image = ImageLoader.loadImageFromInternet(url: (post.author?.imgURL)!)
+                    if let mentionedPost = post.mentionedPost {
+                        posts[index].mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
+                    }
                     if let url = post.imageURL {
                         posts[index].image = ImageLoader.loadImageFromInternet(url: url)
                     } else {
@@ -614,6 +618,13 @@ extension TimelineViewController: MainSettingsDelegate {
 }
 
 extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    func clickedOnMiniPost(id: String, miniPost _: MiniPost) {
+        let detailVC = PostDetailViewController()
+        detailVC.selectedPostID = id
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
     func editBookmark(id: String, action: BookmarkAction) {
         switch action {
         case .add:
@@ -655,6 +666,15 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
     }
 
     func clickedOnImage(controller: LightboxController) {
+        #if targetEnvironment(macCatalyst)
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.titleVisibility = .hidden
+                titlebar.toolbar = nil
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
         present(controller, animated: true, completion: nil)
     }
 

@@ -19,7 +19,7 @@ struct ColorPickerView: View {
             VStack {
                 ColorPicker(selection: $controller.color, label: {
                     Text("Accent color").bold().font(.title)
-				}).background(Color.clear)
+				}).background(Color.clear).frame(maxWidth: .infinity, maxHeight: 50, alignment: .center)
                 Spacer()
                 Button(action: {
                     controller.color = Color(UIColor.systemBlue)

@@ -12,6 +12,7 @@ import Combine
 import KMPlaceholderTextView
 import Lightbox
 import SwiftKeychainWrapper
+import SwiftUI
 import UIKit
 
 // https://github.com/devxoul/UITextView-Placeholder
@@ -33,6 +34,8 @@ protocol PostCellViewDelegate {
     func saveImage(image: UIImage?)
 
     func editBookmark(id: String, action: BookmarkAction)
+
+    func clickedOnMiniPost(id: String, miniPost: MiniPost)
 }
 
 enum BookmarkAction {
@@ -43,6 +46,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
     var delegate: PostCellViewDelegate!
     var indexPath: IndexPath!
     private var subscriptions = Set<AnyCancellable>()
+    private var miniPostController = MiniPostController(post: nil)
 
     var post: Post? {
         didSet {
@@ -66,7 +70,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 displaynameLabel.text = post!.author?.nickname
             }
 
-            // usernameLabel.text = "\(post!.author!.name)#\(post!.author!.tag)"
             voteCountLabel.text = String(post!.score)
             contentTextView.delegate = self
 
@@ -132,6 +135,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             dateLabel.text = globalDateFormatter.string(from: post!.created)
             replyCountLabel.text = countString(number: post!.children_count, singleText: SLocale(.REPLY_SINGULAR), multiText: SLocale(.REPLY_PLURAL), includeNumber: true)
             interactionsLabel.text = post?.interactions != nil ? countString(number: (post?.interactions!)!, singleText: "Interaction", multiText: "Interactions", includeNumber: true) : ""
+
             if post?.image != nil {
                 mediaImageView.image = post?.image!
                 mediaImageView.snp.remakeConstraints { make in
@@ -155,31 +159,49 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                 linkBackgroundView.addGestureRecognizer(linkInteraction)
                 linkLabel.addTarget(self, action: #selector(openLink), for: .touchUpInside)
                 linkLabel.snp.remakeConstraints { make in
-                    make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+                    make.bottom.equalTo(miniPostView.snp.top).offset(-16)
                     make.height.equalTo(32)
                     make.trailing.equalTo(contentView.snp.trailing).offset(-16)
                     make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
                 }
-                /* linkBackgroundView.snp.remakeConstraints { (make) in
-                 	make.bottom.equalTo(dateLabel.snp.top).offset(-16)
-                 	make.height.equalTo(32)
-                 	make.trailing.equalTo(contentView.snp.trailing).offset(-16)
-                 	make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
-                 } */
             } else {
                 linkLabel.setTitle("", for: .normal)
                 linkLabel.snp.remakeConstraints { make in
+                    make.bottom.equalTo(miniPostView.snp.top).offset(-16)
+                    make.height.equalTo(0)
+                    make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+                    make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
+                }
+            }
+
+            let miniPostSwiftUIView = UIHostingController(rootView: MiniPostView(controller: miniPostController)).view
+            let miniPostTapGesture = UITapGestureRecognizer(target: self, action: #selector(clickMiniPost))
+
+            if let mentionedPost = post?.mentionedPost {
+                miniPostSwiftUIView?.tag = 294
+                miniPostView.addSubview(miniPostSwiftUIView!)
+                miniPostView.addGestureRecognizer(miniPostTapGesture)
+                miniPostSwiftUIView?.snp.makeConstraints { make in
+                    make.top.equalTo(miniPostView.snp.top)
+                    make.leading.equalTo(miniPostView.snp.leading)
+                    make.bottom.equalTo(miniPostView.snp.bottom)
+                    make.trailing.equalTo(miniPostView.snp.trailing)
+                }
+                miniPostController.post = mentionedPost
+                miniPostView.snp.remakeConstraints { make in
+                    make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+                    make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+                    make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
+                }
+            } else {
+                miniPostView.removeGestureRecognizer(miniPostTapGesture)
+                miniPostView.snp.remakeConstraints { make in
                     make.bottom.equalTo(dateLabel.snp.top).offset(-16)
                     make.height.equalTo(0)
                     make.trailing.equalTo(contentView.snp.trailing).offset(-16)
                     make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
                 }
-                /* linkBackgroundView.snp.remakeConstraints { (make) in
-                 	make.bottom.equalTo(dateLabel.snp.top).offset(-16)
-                 	make.height.equalTo(0)
-                 	make.trailing.equalTo(contentView.snp.trailing).offset(-16)
-                 	make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
-                 } */
+                miniPostView.viewWithTag(294)?.removeFromSuperview()
             }
 
             if post!.voted == 1 {
@@ -207,12 +229,16 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         }
     }
 
+    @objc func clickMiniPost() {
+        delegate.clickedOnMiniPost(id: post!.mentionedPost!.id, miniPost: (post?.mentionedPost)!)
+    }
+
     @objc func clickImage() {
         if let image = post?.image {
             let images = [
                 LightboxImage(
                     image: image,
-                    text: post!.content
+					text: contentTextView.attributedText.string //post!.content
                 ),
             ]
 
@@ -231,7 +257,8 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
             controller.headerView.addSubview(saveBtn)
             saveBtn.snp.makeConstraints { make in
-                make.top.equalTo(controller.headerView.snp.top).offset(-2)
+                //make.top.equalTo(controller.headerView.snp.top).offset(-2)
+				make.centerY.equalTo(controller.headerView.closeButton.snp.centerY)
                 make.leading.equalTo(controller.headerView.snp.leading).offset(8)
                 make.width.equalTo(50)
                 make.height.equalTo(50)
@@ -257,6 +284,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         return imgView
     }()
 
+    private var miniPostView: UIView = {
+        let view = UIView()
+        return view
+    }()
+
     private var displaynameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.font = .boldSystemFont(ofSize: 17.0)
@@ -266,15 +298,6 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         label.numberOfLines = 0
         return label
     }()
-
-    /* private var usernameLabel: UILabel = {
-         let label = UILabel(frame: .zero)
-         label.font = .systemFont(ofSize: 15.0)
-         label.textColor = .secondaryLabel
-         label.textAlignment = .left
-         label.text = "username"
-         return label
-     }() */
 
     private var moreImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "ellipsis.circle"))
@@ -395,28 +418,17 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
 
-        /* linkBackgroundView.addSubview(linkLabel)
-         linkLabel.snp.makeConstraints { (make) in
-         	make.center.equalTo(linkBackgroundView.snp.center)
-         	make.top.equalTo(linkBackgroundView.snp.top)
-         	make.bottom.equalTo(linkBackgroundView.snp.bottom)
-         	make.leading.equalTo(linkBackgroundView.snp.leading).offset(16)
-         	make.trailing.equalTo(linkBackgroundView.snp.trailing).offset(-16)
-         } */
-
         contentView.addSubview(pfpImageView)
         contentView.addSubview(displaynameLabel)
-        // contentView.addSubview(usernameLabel)
         contentView.addSubview(upvoteButton)
         contentView.addSubview(downvoteButton)
         contentView.addSubview(voteCountLabel)
         contentView.addSubview(contentTextView)
         contentView.addSubview(replyCountLabel)
-        // contentView.addSubview(interactionsLabel)
         contentView.addSubview(dateLabel)
         contentView.addSubview(mediaImageView)
-        // contentView.addSubview(linkBackgroundView)
         contentView.addSubview(linkLabel)
+        contentView.addSubview(miniPostView)
 
         contentView.isUserInteractionEnabled = true
 
@@ -453,17 +465,9 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
         displaynameLabel.snp.makeConstraints { make in
             make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
-            // make.top.equalTo(contentView.snp.top).offset(20)
             make.centerY.equalTo(pfpImageView.snp.centerY).offset(-2)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
         }
-
-        /* usernameLabel.snp.makeConstraints { make in
-             make.leading.equalTo(pfpImageView.snp.trailing).offset(16)
-             make.top.equalTo(displaynameLabel.snp.bottom)
-             make.height.equalTo(25)
-             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
-         } */
 
         dateLabel.snp.makeConstraints { make in
             make.leading.equalTo(contentView.snp.leading).offset(16)
@@ -476,19 +480,18 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             make.bottom.equalTo(contentView.snp.bottom).offset(-16)
             make.width.equalTo(contentView.frame.width / 2)
             make.height.equalTo(30)
-            make.top.equalTo(linkLabel.snp.bottom)
+            make.top.equalTo(miniPostView.snp.bottom)
         }
 
-        /* interactionsLabel.snp.makeConstraints { (make) in
-         	make.trailing.equalTo(replyCountLabel.snp.leading).offset(-16)
-         	make.bottom.equalTo(contentView.snp.bottom).offset(-16)
-         	make.width.equalTo(50)
-         	make.height.equalTo(30)
-         	make.top.equalTo(mediaImageView.snp.bottom)
-         } */
+        miniPostView.snp.makeConstraints { make in
+            make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+            make.height.equalTo(0)
+            make.trailing.equalTo(contentView.snp.trailing).offset(-16)
+            make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)
+        }
 
         linkLabel.snp.makeConstraints { make in
-            make.bottom.equalTo(dateLabel.snp.top).offset(-16)
+            make.bottom.equalTo(miniPostView.snp.top).offset(-16)
             make.height.equalTo(32)
             make.trailing.equalTo(contentView.snp.trailing).offset(-16)
             make.leading.equalTo(voteCountLabel.snp.trailing).offset(16)

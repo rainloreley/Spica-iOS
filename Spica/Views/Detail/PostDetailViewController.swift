@@ -104,6 +104,7 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
             if let titlebar = view.window!.windowScene!.titlebar {
                 titlebar.toolbar = toolbar
                 titlebar.toolbarStyle = .automatic
+                titlebar.titleVisibility = .visible
             }
 
             navigationController?.setNavigationBarHidden(true, animated: false)
@@ -154,6 +155,9 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.tableView.reloadRows(at: [IndexPath(row: 2 * index, section: 0)], with: .automatic)
                     self.tableView.endUpdates()
                 }
+                if let mentionedPost = post.mentionedPost {
+                    self.postAncestors[index].mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
+                }
                 if veri != verificationString { return }
                 if let url = post.imageURL {
                     self.postAncestors[index].image = ImageLoader.loadImageFromInternet(url: url)
@@ -181,6 +185,9 @@ class PostDetailViewController: UIViewController, PostCreateDelegate {
                     self.tableView.endUpdates()
                 }
                 if veri != verificationString { return }
+                if let mentionedPost = post.mentionedPost {
+                    self.postReplies[index].mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
+                }
                 if let url = post.imageURL {
                     self.postReplies[index].image = ImageLoader.loadImageFromInternet(url: url)
                 } else {
@@ -403,6 +410,13 @@ extension PostDetailViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    func clickedOnMiniPost(id: String, miniPost _: MiniPost) {
+        let detailVC = PostDetailViewController()
+        detailVC.selectedPostID = id
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
     func editBookmark(id: String, action: BookmarkAction) {
         switch action {
         case .add:
@@ -444,6 +458,15 @@ extension PostDetailViewController: PostCellViewDelegate, UIImagePickerControlle
     }
 
     func clickedOnImage(controller: LightboxController) {
+        #if targetEnvironment(macCatalyst)
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.titleVisibility = .hidden
+                titlebar.toolbar = nil
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
         present(controller, animated: true, completion: nil)
     }
 

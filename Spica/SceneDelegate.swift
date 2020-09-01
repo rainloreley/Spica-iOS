@@ -27,6 +27,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
 
+        URLNavigationMap.initialize(navigator: navigator, sceneDelegate: self)
+
         if !UserDefaults.standard.bool(forKey: "hasRunBefore") {
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
             KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
@@ -100,6 +102,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let tabBar = setupTabView()
             return tabBar
         }
+    }
+
+    func scene(_: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        // spica://user/af3a1a9e-b0e1-418e-8b4c-76605897eeab
+        guard let url = URLContexts.first else { return }
+        print("CALLED SCHEME PRE: \(url.url.absoluteString)")
+        // navigator.openURL(url.url, context: .none)
+        // navigator.present(url.url)
+        guard let newVC = navigator.viewController(for: url.url) else { return }
+        window?.rootViewController?.showDetailViewController(newVC, sender: nil)
+        /* window?.rootViewController = navigator.viewController(for: url.url)
+         window?.makeKeyAndVisible() */
     }
 
     @objc func sendOnline() {

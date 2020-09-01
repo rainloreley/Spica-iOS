@@ -47,13 +47,14 @@ class CreditsViewController: UIViewController {
     override func viewDidAppear(_: Bool) {
         #if targetEnvironment(macCatalyst)
 
-            let toolbar = NSToolbar(identifier: "other")
+            let toolbar = NSToolbar(identifier: "tagdetail")
             toolbar.delegate = toolbarDelegate
             toolbar.displayMode = .iconOnly
 
             if let titlebar = view.window!.windowScene!.titlebar {
                 titlebar.toolbar = toolbar
                 titlebar.toolbarStyle = .automatic
+                titlebar.titleVisibility = .visible
             }
 
             navigationController?.setNavigationBarHidden(true, animated: false)

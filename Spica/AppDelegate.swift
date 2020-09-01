@@ -10,6 +10,9 @@
 
 import CoreData
 import UIKit
+import URLNavigator
+
+let navigator = Navigator()
 
 let globalDateFormatter: DateFormatter = {
     let formatter = DateFormatter()

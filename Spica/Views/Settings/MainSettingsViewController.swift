@@ -128,7 +128,7 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
 
     func changedColor(_ color: UIColor) {
         UserDefaults.standard.setColor(color: color, forKey: "globalTintColor")
-        let sceneDelegate = view.window?.windowScene?.delegate as! SceneDelegate
+        guard let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate else { return }
         translateSymbol.tintColor = color
         sceneDelegate.window?.tintColor = color
     }
@@ -343,6 +343,7 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
             if let titlebar = view.window!.windowScene!.titlebar {
                 titlebar.toolbar = toolbar
                 titlebar.toolbarStyle = .automatic
+                titlebar.titleVisibility = .visible
             }
 
             navigationController?.setNavigationBarHidden(true, animated: false)

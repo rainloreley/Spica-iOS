@@ -30,7 +30,7 @@ class SearchViewController: UIViewController {
             make.trailing.equalTo(view.snp.trailing)
         }
 
-        let tableViewHeaderView = UIView()
+        // let tableViewHeaderView = UIView()
 
         searchBar.searchBarStyle = .prominent
         searchBar.placeholder = " Search..."

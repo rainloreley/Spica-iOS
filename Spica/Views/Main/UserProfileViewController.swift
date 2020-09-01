@@ -21,6 +21,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     var tableView: UITableView!
     var loadedPreviously = false
     var userDataLoaded = false
+
+    var navigatedFromSidebar = false
+
     var toolbarDelegate = ToolbarDelegate()
     private var createPostSubscriber: AnyCancellable?
     private var editProfileSubscriber: AnyCancellable?
@@ -69,9 +72,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
         rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
 
-        /* if signedInID == user.id {
+        if signedInID == user.id {
              rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
-         } */
+         }
 
         navigationItem.rightBarButtonItems = rightItems
 
@@ -110,6 +113,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             if signedInID == user.id {
                 if let splitViewController = splitViewController, !splitViewController.isCollapsed {
                     if let sidebar = globalSideBarController {
+                        if navigatedFromSidebar {
+                            navigationController?.viewControllers = [self]
+                        }
                         if let collectionView = sidebar.collectionView {
                             collectionView.selectItem(at: IndexPath(row: 0, section: SidebarSection.account.rawValue), animated: true, scrollPosition: .top)
                         }
@@ -147,11 +153,15 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     @objc func openUserSettings() {
-        let vc = UserEditViewController()
+		let url = URL(string: "https://alles.cx/me")!
+		if UIApplication.shared.canOpenURL(url) {
+			UIApplication.shared.open(url)
+		}
+        /*let vc = UserEditViewController()
         vc.user = user
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)*/
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -173,6 +183,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             if let titlebar = view.window!.windowScene!.titlebar {
                 titlebar.toolbar = toolbar
                 titlebar.toolbarStyle = .automatic
+                titlebar.titleVisibility = .visible
             }
 
             navigationController?.setNavigationBarHidden(true, animated: false)
@@ -278,7 +289,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     func loadImages() {
         DispatchQueue.global(qos: .utility).async { [self] in
-            let verification = verificationString
+            // let verification = verificationString
             let dispatchGroup = DispatchGroup()
             for (index, post) in userPosts.enumerated() {
                 dispatchGroup.enter()
@@ -295,6 +306,10 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                         }
                     } receiveValue: { pfpImg in
                         userPosts[index].author?.image = pfpImg
+
+                        if let mentionedPost = post.mentionedPost {
+                            userPosts[index].mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
+                        }
 
                         if let postImgURL = post.imageURL {
                             ImageLoader.loadImageFromInternetNew(url: postImgURL)
@@ -530,6 +545,13 @@ extension UserProfileViewController: PostCreateDelegate {
 }
 
 extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControllerDelegate {
+    func clickedOnMiniPost(id: String, miniPost _: MiniPost) {
+        let detailVC = PostDetailViewController()
+        detailVC.selectedPostID = id
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
     func editBookmark(id: String, action: BookmarkAction) {
         switch action {
         case .add:
@@ -571,6 +593,15 @@ extension UserProfileViewController: PostCellViewDelegate, UIImagePickerControll
     }
 
     func clickedOnImage(controller: LightboxController) {
+        #if targetEnvironment(macCatalyst)
+            if let titlebar = view.window!.windowScene!.titlebar {
+                titlebar.titleVisibility = .hidden
+                titlebar.toolbar = nil
+            }
+
+            navigationController?.setNavigationBarHidden(true, animated: false)
+            navigationController?.setToolbarHidden(true, animated: false)
+        #endif
         present(controller, animated: true, completion: nil)
     }
 
