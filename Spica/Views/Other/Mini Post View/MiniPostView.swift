@@ -22,15 +22,15 @@ struct MiniPostView: View {
                 }
                 Text(controller.post?.content)
             }
-        }.padding().overlay(
+        }.background(Color.clear).padding().overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.gray, lineWidth: 0.5)
+                .stroke(Color.gray, lineWidth: 1)
         ).padding(4)
     }
 }
 
 struct MiniPostView_Previews: PreviewProvider {
     static var previews: some View {
-        MiniPostView(controller: .init(post: MiniPost(id: "lol", author: User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Adrian", tag: "0001", nickname: "Adrian", plus: true, alles: true), content: "Hello World!")))
+        MiniPostView(controller: .init(post: MiniPost(id: "000", author: User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Adrian", tag: "0001", nickname: "Adrian", plus: true, alles: true), content: "Hello World!")))
     }
 }

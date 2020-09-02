@@ -224,14 +224,14 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
     }
 
     @IBAction func allesPrivacy(_: Any) {
-        let url = URL(string: "https://alles.cx/docs/privacy")
+        let url = URL(string: "https://files.alles.cc/Documents/Privacy%20Policy.txt")
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
         }
     }
 
     @IBAction func allesTerms(_: Any) {
-        let url = URL(string: "https://alles.cx/docs/terms")
+        let url = URL(string: "https://files.alles.cc/Documents/Terms%20of%20Service.txt")
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
         }

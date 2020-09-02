@@ -73,8 +73,8 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
 
         if signedInID == user.id {
-             rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
-         }
+            rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))
+        }
 
         navigationItem.rightBarButtonItems = rightItems
 
@@ -153,15 +153,15 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     }
 
     @objc func openUserSettings() {
-		let url = URL(string: "https://alles.cx/me")!
-		if UIApplication.shared.canOpenURL(url) {
-			UIApplication.shared.open(url)
-		}
-        /*let vc = UserEditViewController()
-        vc.user = user
-        vc.delegate = self
-        vc.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(vc, animated: true)*/
+        let url = URL(string: "https://alles.cx/me")!
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+        /* let vc = UserEditViewController()
+         vc.user = user
+         vc.delegate = self
+         vc.hidesBottomBarWhenPushed = true
+         navigationController?.pushViewController(vc, animated: true) */
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -289,76 +289,100 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
     func loadImages() {
         DispatchQueue.global(qos: .utility).async { [self] in
-            // let verification = verificationString
-            let dispatchGroup = DispatchGroup()
             for (index, post) in userPosts.enumerated() {
-                dispatchGroup.enter()
-                // if verification != verificationString || index > posts.count { return }
-                // let profilePicture = ImageLoader.loadImageFromInternet(url: (posts[index].author?.imgURL)!)
-                ImageLoader.loadImageFromInternetNew(url: (userPosts[index].author?.imgURL)!)
-                    .receive(on: RunLoop.main)
-                    .sink {
-                        switch $0 {
-                        case .failure:
-                            dispatchGroup.leave()
-                            return
-                        default: break
-                        }
-                    } receiveValue: { pfpImg in
-                        userPosts[index].author?.image = pfpImg
-
-                        if let mentionedPost = post.mentionedPost {
-                            userPosts[index].mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
-                        }
-
-                        if let postImgURL = post.imageURL {
-                            ImageLoader.loadImageFromInternetNew(url: postImgURL)
-                                .receive(on: RunLoop.main)
-                                .sink {
-                                    switch $0 {
-                                    case .failure:
-                                        userPosts[index].image = UIImage()
-                                        DispatchQueue.main.async {
-                                            self.tableView.beginUpdates()
-                                            self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
-                                            self.tableView.endUpdates()
-                                        }
-                                        dispatchGroup.leave()
-                                        return
-                                    default: break
-                                    }
-                                } receiveValue: { postImg in
-                                    userPosts[index].image = postImg
-                                    DispatchQueue.main.async {
-                                        self.tableView.beginUpdates()
-                                        self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
-                                        self.tableView.endUpdates()
-                                    }
-                                    dispatchGroup.leave()
-                                }.store(in: &subscriptions)
-                        } else {
-                            userPosts[index].image = UIImage()
-                            DispatchQueue.main.async {
-                                self.tableView.beginUpdates()
-                                self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
-                                self.tableView.endUpdates()
-                            }
-                            dispatchGroup.leave()
-                        }
-                    }
-                    .store(in: &subscriptions)
-
-                // if verification != verificationString || index > posts.count { return }
+                userPosts[index].author?.image = ImageLoader.loadImageFromInternet(url: (post.author?.imgURL)!)
+                if let mentionedPost = post.mentionedPost {
+                    userPosts[index].mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
+                }
+                if let url = post.imageURL {
+                    userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
+                } else {
+                    userPosts[index].image = UIImage()
+                }
             }
-            dispatchGroup.notify(queue: .main) {
-                loadedPreviously = true
+            DispatchQueue.main.async {
                 self.tableView.reloadData()
-                if let contentOffset = self.contentOffset {
-                    self.tableView.setContentOffset(contentOffset, animated: false)
+                if self.userPosts.isEmpty {
+                    self.tableView.setEmptyMessage(message: SLocale(.NOTIFICATIONS_EMPTY_TITLE), subtitle: SLocale(.NOTIFICATIONS_EMPTY_SUBTITLE))
+                } else {
+                    self.tableView.restore()
                 }
             }
         }
     }
+
+    /* func loadImages() {
+         DispatchQueue.global(qos: .utility).async { [self] in
+             // let verification = verificationString
+             let dispatchGroup = DispatchGroup()
+             for (index, post) in userPosts.enumerated() {
+                 dispatchGroup.enter()
+                 // if verification != verificationString || index > posts.count { return }
+                 // let profilePicture = ImageLoader.loadImageFromInternet(url: (posts[index].author?.imgURL)!)
+                 ImageLoader.loadImageFromInternetNew(url: (userPosts[index].author?.imgURL)!)
+                     .receive(on: RunLoop.main)
+                     .sink {
+                         switch $0 {
+                         case .failure:
+                             dispatchGroup.leave()
+                             return
+                         default: break
+                         }
+                     } receiveValue: { pfpImg in
+                         userPosts[index].author?.image = pfpImg
+
+                         if let mentionedPost = post.mentionedPost {
+                             userPosts[index].mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
+                         }
+
+                         if let postImgURL = post.imageURL {
+                             ImageLoader.loadImageFromInternetNew(url: postImgURL)
+                                 .receive(on: RunLoop.main)
+                                 .sink {
+                                     switch $0 {
+                                     case .failure:
+                                         userPosts[index].image = UIImage()
+                                         DispatchQueue.main.async {
+                                             self.tableView.beginUpdates()
+                                             self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
+                                             self.tableView.endUpdates()
+                                         }
+                                         dispatchGroup.leave()
+                                         return
+                                     default: break
+                                     }
+                                 } receiveValue: { postImg in
+                                     userPosts[index].image = postImg
+                                     DispatchQueue.main.async {
+                                         self.tableView.beginUpdates()
+                                         self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
+                                         self.tableView.endUpdates()
+                                     }
+                                     dispatchGroup.leave()
+                                 }.store(in: &subscriptions)
+                         } else {
+                             userPosts[index].image = UIImage()
+                             DispatchQueue.main.async {
+                                 self.tableView.beginUpdates()
+                                 self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
+                                 self.tableView.endUpdates()
+                             }
+                             dispatchGroup.leave()
+                         }
+                     }
+                     .store(in: &subscriptions)
+
+                 // if verification != verificationString || index > posts.count { return }
+             }
+             dispatchGroup.notify(queue: .main) {
+                 loadedPreviously = true
+                 self.tableView.reloadData()
+                 if let contentOffset = self.contentOffset {
+                     self.tableView.setContentOffset(contentOffset, animated: false)
+                 }
+             }
+         }
+     } */
 
     /* func loadImages() {
      let veri = verificationString

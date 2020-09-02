@@ -362,9 +362,9 @@
 			children = (
 				3ACEEBFA24FE6EC70094D8E9 /* Mini Post View */,
 				3AD340FA24F41A3C0060B23D /* Color Picker */,
+				3A4038B124B1EB54002B18F1 /* Progress Bar */,
 				3A66D2EE24E2D62E0074D223 /* XPProgressBarView.swift */,
 				3AB21DD124EFBC7800B467FF /* SignInWithAllesButton.swift */,
-				3A4038B124B1EB54002B18F1 /* Progress Bar */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -437,9 +437,9 @@
 		3A6AABD124BB5D6300C71BC0 /* Localization */ = {
 			isa = PBXGroup;
 			children = (
-				3A332F3024C3BC8300A91C4E /* Files */,
 				3A95B3B724C0EC0A0066FE7B /* LocalizableKeys.swift */,
 				3A95B3B924C0EC700066FE7B /* SLocale.swift */,
+				3A332F3024C3BC8300A91C4E /* Files */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -708,7 +708,6 @@
 				83BC64E8F8E61D3A7AD0FF16 /* [CP] Check Pods Manifest.lock */,
 				3A7145D724AA8753000FA3C3 /* Sources */,
 				3A7145D824AA8753000FA3C3 /* Frameworks */,
-				3ADBFC7E24AE00870064A7A4 /* Increment build number */,
 				3A7145D924AA8753000FA3C3 /* Resources */,
 				8A713FC4F24B6F9C7CA07E37 /* [CP] Embed Pods Frameworks */,
 			);
@@ -880,24 +879,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		3ADBFC7E24AE00870064A7A4 /* Increment build number */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Increment build number";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\n#buildNumber=$(($buildNumber + 1))\n#/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
 		};
 		6F1551079CF1564F02D770DA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

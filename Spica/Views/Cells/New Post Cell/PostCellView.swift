@@ -175,10 +175,11 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             }
 
             let miniPostSwiftUIView = UIHostingController(rootView: MiniPostView(controller: miniPostController)).view
+            miniPostSwiftUIView?.backgroundColor = .clear
+            miniPostSwiftUIView?.tag = 294
             let miniPostTapGesture = UITapGestureRecognizer(target: self, action: #selector(clickMiniPost))
 
             if let mentionedPost = post?.mentionedPost {
-                miniPostSwiftUIView?.tag = 294
                 miniPostView.addSubview(miniPostSwiftUIView!)
                 miniPostView.addGestureRecognizer(miniPostTapGesture)
                 miniPostSwiftUIView?.snp.makeConstraints { make in
@@ -238,7 +239,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
             let images = [
                 LightboxImage(
                     image: image,
-					text: contentTextView.attributedText.string //post!.content
+                    text: contentTextView.attributedText.string // post!.content
                 ),
             ]
 
@@ -257,8 +258,8 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
             controller.headerView.addSubview(saveBtn)
             saveBtn.snp.makeConstraints { make in
-                //make.top.equalTo(controller.headerView.snp.top).offset(-2)
-				make.centerY.equalTo(controller.headerView.closeButton.snp.centerY)
+                // make.top.equalTo(controller.headerView.snp.top).offset(-2)
+                make.centerY.equalTo(controller.headerView.closeButton.snp.centerY)
                 make.leading.equalTo(controller.headerView.snp.leading).offset(8)
                 make.width.equalTo(50)
                 make.height.equalTo(50)
@@ -286,6 +287,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
     private var miniPostView: UIView = {
         let view = UIView()
+        view.backgroundColor = .clear
         return view
     }()
 
