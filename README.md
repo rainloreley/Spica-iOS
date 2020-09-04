@@ -2,9 +2,7 @@
 
 [![Crowdin](https://badges.crowdin.net/spica/localized.svg)](https://crowdin.com/project/spica)
 
-Spica is an iOS Client for [Alles Micro](https://alles.cx). It's privacy focused and easy to use.
-
-## DISCLAIMER: THE CURRENT VERSION ON THIS REPO IS A DEVELOPMENT VERSION FOR THE NEW MICRO API.
+Spica is an iOS Client for [Alles Micro](https://micro.alles.cx). It's privacy focused and easy to use.
 
 ## Build & Install
 
@@ -19,10 +17,6 @@ NOTE: You need a mac and Xcode :)
 4. Open Spica.xcworkspace (do not open Spica.xcodeproj, it won't work)
 5. Set a new development team
 6. Run
-
-## Progress
-
-We store most of our ideas on Trello. You can find it [here](https://trello.com/b/EtFFbUoq/spica).
 
 ## Contributing
 
