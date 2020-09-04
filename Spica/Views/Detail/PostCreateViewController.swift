@@ -95,7 +95,6 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
 
         contentTextView = KMPlaceholderTextView(frame: .zero)
         contentTextView.font = .systemFont(ofSize: 18)
-        // contentTextView.placeholder = SLocale(.NEWPOST_PLACEHOLDER)
 
         var filteredQuotes = [String]()
         filteredQuotes.append(contentsOf: quotes)
@@ -156,7 +155,6 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         imagePreview.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(openImagePicker)))
 
         contentTextView.snp.makeConstraints { make in
-            // make.top.equalTo(view.snp.top).offset(80)
             make.leading.equalTo(view.snp.leading).offset(72)
             make.trailing.equalTo(view.snp.trailing).offset(-32)
             make.bottom.equalTo(imagePreview.snp.top).offset(-16)
@@ -178,20 +176,6 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
     }
 
     @objc func toggleLinkField() {
-        /* linkTextField.snp.remakeConstraints { (make) in
-         	make.top.equalTo(view.snp.top).offset(80)
-         	make.leading.equalTo(view.snp.leading).offset(72)
-         	make.trailing.equalTo(view.snp.trailing).offset(-32)
-         	make.bottom.equalTo(contentTextView.snp.top).offset(-16)
-         	if linkFieldShown {
-         		make.height.equalTo(0)
-         		linkFieldShown = false
-         	}
-         	else {
-         		make.height.equalTo(32)
-         		linkFieldShown = true
-         	}
-         } */
         UIView.animate(withDuration: 0.3) { [self] in
             linkTextField.snp.updateConstraints { make in
                 if linkFieldShown {
@@ -312,7 +296,6 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
             sendButton.isEnabled = true
             return
         } else {
-            // AllesAPI.default.sendPost(newPost: NewPost(content: contentTextView.text, image: selectedImage, type: type, parent: parentID))
             AllesAPI.default.sendPost(content: contentTextView.text, image: selectedImage, parent: parentID, url: linkTextField.text)
                 .receive(on: RunLoop.main)
                 .sink {

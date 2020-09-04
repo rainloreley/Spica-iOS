@@ -20,7 +20,14 @@ public class AllesAPI {
     static let `default` = AllesAPI()
 
     private var subscriptions = Set<AnyCancellable>()
-
+	
+	
+	/// Signs in the user using a name, tag and password (old auth system)
+	///- Parameters:
+	///		- name: Name of the user (e.g. "Adrian")
+	///		- tag: User tag (e.g. "0001")
+	///		- password: User password
+	/// - Returns: `SignedInUser` or `AllesAPIErrorMessage`
     public func signInUser(name: String, tag: String, password: String) -> Future<SignedInUser, AllesAPIErrorMessage> {
         Future<SignedInUser, AllesAPIErrorMessage> { promise in
             AF.request("https://alles.cx/api/login", method: .post, parameters: [
@@ -90,7 +97,10 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Loads user data of the signed in user
+	
+	/// - Returns: `User` or `AllesAPIErrorMessage`
     public func loadMe() -> Future<User, AllesAPIErrorMessage> {
         Future<User, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -128,13 +138,15 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Loads the user feed
+	/// - Parameter loadBefore: Timestamp integer of the oldest post (optional)
+	/// - Returns: `[Post]` (Array) or `AllesAPIErrorMessage`
     public func loadFeed(loadBefore: Int? = nil) -> Future<[Post], AllesAPIErrorMessage> {
         Future<[Post], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
                 return promise(.failure(AllesAPIErrorHandler.default.returnError(error: "spica_authTokenMissing")))
             }
-
             let url = loadBefore != nil ? "https://micro.alles.cx/api/feed?before=\(loadBefore!)" : "https://micro.alles.cx/api/feed"
             AF.request(url, method: .get, parameters: nil, headers: [
                 "Authorization": authKey,
@@ -192,6 +204,8 @@ public class AllesAPI {
         }
     }
 
+	
+	/// Notifies Alles API that the user is online
     public func sendOnlineStatus() {
         guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
             return
@@ -200,7 +214,8 @@ public class AllesAPI {
             "Authorization": authKey,
         ]).response(queue: .global(qos: .utility)) { _ in }
     }
-
+	
+	/// Marks all unread notifications as read
     public func markNotificationsAsRead() {
         guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
             return
@@ -213,6 +228,10 @@ public class AllesAPI {
             }
     }
 
+	
+	/// Loads the user with the specified id
+	/// - Parameter id: ID of the user to load
+	/// - Returns: `User` or `AllesAPIErrorMessage`
     public func loadUser(id: String) -> Future<User, AllesAPIErrorMessage> {
         Future<User, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -302,7 +321,9 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Loads the singed in users' followers
+	/// - Returns: `Followers` or `AllesAPIErrorMessage`
     public static func loadFollowers() -> Future<Followers, AllesAPIErrorMessage> {
         Future<Followers, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -392,7 +413,10 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Loads posts by a specific user
+	/// - Parameter user: `User` object (`id` required)
+	/// - Returns: `[Post]` or `AllesAPIErrorMessage`
     public func loadUserPosts(user: User) -> Future<[Post], AllesAPIErrorMessage> {
         Future<[Post], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -454,6 +478,9 @@ public class AllesAPI {
         }
     }
 
+	
+	/// Loads all unread Notifications
+	/// - Returns: `[String]` (post ids) or `AllesAPIErrorMessage`
     public func getUnreadMentions() -> Future<[String], AllesAPIErrorMessage> {
         Future<[String], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -497,6 +524,9 @@ public class AllesAPI {
         }
     }
 
+	
+	/// Loads all notifications
+	/// - Returns: `[PostNotification]` or `AllesAPIErrorMessage`
     public func loadMentions() -> Future<[PostNotification], AllesAPIErrorMessage> {
         Future<[PostNotification], AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -560,7 +590,10 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Loads information for a tag
+	/// - Parameter tag: Tag name (for example "carbon")
+	/// - Returns: `Tag` or `AllesAPIErrorMessage`
     public func loadTag(tag: String) -> Future<Tag, AllesAPIErrorMessage> {
         Future<Tag, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -622,7 +655,12 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Loads a post by its id
+	/// - Parameters:
+	///   - id: Post id
+	///   - includeReferences: Boolean indicating whether the function should load references like Post links ("%") and mentions ("@")
+	/// - Returns: `Post` or `AllesAPIErrorMessage`
     public func loadPost(id: String, includeReferences: Bool = true) -> Future<Post, AllesAPIErrorMessage> { // includeReferences: Mentions, Post links
         Future<Post, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -735,6 +773,10 @@ public class AllesAPI {
         }
     }
 
+	
+	/// Loads a post detail including ancestors, the post and replies
+	/// - Parameter id: Post ID
+	/// - Returns: `PostDetail` or `AllesAPIErrorMessage`
     public func loadPostDetail(id: String) -> Future<PostDetail, AllesAPIErrorMessage> {
         Future<PostDetail, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -840,7 +882,14 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Sends a post
+	/// - Parameters:
+	///   - content: Post content - text (required)
+	///   - image: Attached image (optional)
+	///   - parent: Parent post id (required if it's a reply)
+	///   - url: Attached link (optional)
+	/// - Returns: `SentPost` or `AllesAPIErrorMessage`
     public func sendPost(content: String, image: UIImage? = nil, parent: String? = nil, url: String? = nil) -> Future<SentPost, AllesAPIErrorMessage> {
         Future<SentPost, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -900,7 +949,10 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Deletes a post
+	/// - Parameter id: ID of the post to delete
+	/// - Returns: `EmptyCompletion` or `AllesAPIErrorMessage`
     public func deletePost(id: String) -> Future<EmptyCompletion, AllesAPIErrorMessage> {
         Future<EmptyCompletion, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -941,6 +993,12 @@ public class AllesAPI {
         }
     }
 
+	
+	/// Upvote/downvote/... a post
+	/// - Parameters:
+	///   - post: Post to vote
+	///   - value: Vote value (-1: downvote; 0: neutral; 1: upvote)
+	/// - Returns: `Post` or `AllesAPIErrorMessage`
     public func votePost(post: Post, value: Int) -> Future<Post, AllesAPIErrorMessage> {
         Future<Post, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -983,7 +1041,12 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Follows/unfollows a user
+	/// - Parameters:
+	///   - id: ID of user to follow/unfollow
+	///   - action: `FollowAction` (enum with `follow` or `unfollow`)
+	/// - Returns: `FollowAction` or `AllesAPIErrorMessage`
     public func performFollowAction(id: String, action: FollowAction) -> Future<FollowAction, AllesAPIErrorMessage> {
         Future<FollowAction, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -1021,7 +1084,10 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Update the signed in users' profile (DEPRECATED)
+	/// - Parameter newData: `UpdateUser`
+	/// - Returns: `UpdateUser`or `AllesAPIErrorMessage`
     public func updateProfile(newData: UpdateUser) -> Future<UpdateUser, AllesAPIErrorMessage> {
         Future<UpdateUser, AllesAPIErrorMessage> { promise in
             guard let authKey = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") else {
@@ -1063,7 +1129,11 @@ public class AllesAPI {
             }
         }
     }
-
+	
+	/// Handle API errors
+	/// - Parameters:
+	///   - error: `AllesAPIErrorMessage`
+	///   - caller: `UIView` (called view)
     public func errorHandling(error: AllesAPIErrorMessage, caller: UIView) {
         EZAlertController.alert(SLocale(.ERROR), message: error.message, buttons: ["Ok"]) { _, _ in
 

@@ -89,66 +89,6 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
         }
     }
 
-    /* typealias DataSource = UITableViewDiffableDataSource<Section, Post>
-     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Post>
-
-     enum Section: Hashable {
-         case main
-     }
-
-     private lazy var dataSource = makeDataSource()
-
-     func makeDataSource() -> DataSource {
-         let source = DataSource(tableView: tableView) { [self] (tableView, indexPath, post) -> UITableViewCell? in
-             let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
-
-             cell.delegate = self
-             cell.indexPath = indexPath
-             cell.post = post
-
-             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-
-             cell.pfpImageView.tag = indexPath.row
-
-             cell.pfpImageView.isUserInteractionEnabled = true
-             cell.pfpImageView.addGestureRecognizer(tap)
-
-             cell.upvoteButton.tag = indexPath.row
-             cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-
-             cell.downvoteButton.tag = indexPath.row
-             cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
-
-             return cell
-         }
-         source.defaultRowAnimation = .fade
-         return source
-     }
-
-     func applyChanges(_ animated: Bool = true, loadImages: Bool = false) {
-         var snapshot = Snapshot()
-         snapshot.appendSections([.main])
-         var filteredPosts = [Post]()
-         for i in posts {
-             if !filteredPosts.contains(where: { $0.id == i.id }) {
-                 filteredPosts.append(i)
-             }
-         }
-         filteredPosts.sort(by: { $0.created.compare($1.created) == .orderedDescending })
-         snapshot.appendItems(filteredPosts, toSection: .main)
-         DispatchQueue.main.async {
-             self.dataSource.apply(snapshot, animatingDifferences: animated)
-             if self.posts.isEmpty {
-                 self.tableView.setEmptyMessage(message: SLocale(.TIMELINE_EMPTY_TITLE), subtitle: SLocale(.TIMELINE_EMPTY_SUBTITLE))
-             } else {
-                 self.tableView.restore()
-                 if loadImages {
-                     self.loadImages()
-                 }
-             }
-         }
-     } */
-
     @objc func openSettings() {
         let storyboard = UIStoryboard(name: "MainSettings", bundle: nil)
         let vc = storyboard.instantiateInitialViewController() as! UINavigationController
@@ -191,10 +131,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        /* if let contentOffset = self.contentOffset {
-             tableView.setContentOffset(contentOffset, animated: true)
-         } */
+		
         setSidebar()
 
         let notificationCenter = NotificationCenter.default
@@ -330,15 +267,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
                 self.refreshControl.endRefreshing()
                 self.loadingHud.dismiss()
                 verificationString = randomString(length: 30)
-                // applyChanges(loadImages: true)
                 self.loadImages(posts)
-                /* if self.posts.isEmpty {
-                 	self.posts = posts
-                 	self.applyChanges()
-                 }
-                 else {
-                 	self.posts = posts
-                 } */
 
                 if let contentOffset = self.contentOffset {
                     self.tableView.setContentOffset(contentOffset, animated: true)
@@ -562,26 +491,18 @@ extension TimelineViewController: UITableViewDataSource {
 
 extension TimelineViewController: UITableViewDelegate {
     func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate _: Bool) {
-        // Use this 'canLoadFromBottom' variable only if you want to load from bottom iff content > table size
         let contentSize = scrollView.contentSize.height
         let tableSize = scrollView.frame.size.height - scrollView.contentInset.top - scrollView.contentInset.bottom
         let canLoadFromBottom = contentSize > tableSize
 
-        // Offset
         let currentOffset = scrollView.contentOffset.y
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
         let difference = maximumOffset - currentOffset
-
-        // Difference threshold as you like. -120.0 means pulling the cell up 120 points
+		
         if canLoadFromBottom, difference <= -120.0 {
-            // Save the current bottom inset
             let previousScrollViewBottomInset = scrollView.contentInset.bottom
-            // Add 50 points to bottom inset, avoiding it from laying over the refresh control.
             scrollView.contentInset.bottom = previousScrollViewBottomInset + 50
-
-            // loadMoreData function call
             loadEvenMorePosts(posts.last!.created)
-            // Reset the bottom inset to its original value
             scrollView.contentInset.bottom = previousScrollViewBottomInset
         }
     }
@@ -593,17 +514,6 @@ extension TimelineViewController: UITableViewDelegate {
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
     }
-
-    /* func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt _: IndexPath) {
-         if tableView.contentOffset.y >= (tableView.contentSize.height - tableView.frame.size.height), !posts.isEmpty {
-             // you reached end of the table
-             // self.verificationString = randomString(length: 30)
-             //loadEvenMorePosts(posts.last!.created)
-         }
-         /* if posts[indexPath.row] == posts.last {
-              loadEvenMorePosts(posts.last!.created)
-          } */
-     } */
 }
 
 extension TimelineViewController: MainSettingsDelegate {
@@ -682,7 +592,7 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
         let vc = PostCreateViewController()
         vc.type = .post
         vc.delegate = self
-        vc.preText = "@\(uid)\n\n\n\n%\(id)" // TODO: @ USER
+        vc.preText = "@\(uid)\n\n\n\n%\(id)"
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
