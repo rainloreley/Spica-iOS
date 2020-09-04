@@ -10,6 +10,7 @@
 
 import Foundation
 
+/// Enum for all possible Alles API errors (needs to be updated once the dev panel is available)
 public enum AllesAPIError: Error {
     case alreadySet
     case applications_badRedirect

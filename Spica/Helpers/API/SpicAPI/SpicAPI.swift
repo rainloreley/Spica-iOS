@@ -15,7 +15,9 @@ import SwiftyJSON
 import UIKit
 
 public class SpicAPI {
-    static let `default` = SpicAPI()
+	static let `default` = SpicAPI()
+	/// Get version information for Spica iOS (newest version & required version)
+	/// - Returns: `Version` or `Error`
     public static func getVersion() -> Future<Version, Error> {
         Future<Version, Error> { promise in
             AF.request("https://api.spica.li/apps/ios/version", method: .get).responseJSON { response in
@@ -29,7 +31,10 @@ public class SpicAPI {
             }
         }
     }
-
+	
+	/// Gets label names + colors
+	/// - Parameter labels: Label strings
+	/// - Returns: `[Label]` or `AllesAPIErrorMessage`
     public static func getLabels(_ labels: [String]) -> Future<[Label], AllesAPIErrorMessage> {
         Future<[Label], AllesAPIErrorMessage> { promise in
             let body: [String: Any] = [
@@ -53,7 +58,9 @@ public class SpicAPI {
             }
         }
     }
-
+	
+	/// Get Privacy policy information
+	/// - Returns: `PrivacyPolicy` or `Error`
     public static func getPrivacyPolicy() -> Future<PrivacyPolicy, Error> {
         Future<PrivacyPolicy, Error> { promise in
             AF.request("https://api.spica.li/privacy", method: .get).responseJSON { response in

@@ -10,6 +10,7 @@
 
 import Foundation
 
+/// Alles API error action (used by error handler)
 enum AllesAPIErrorAction {
     case navigate
 }

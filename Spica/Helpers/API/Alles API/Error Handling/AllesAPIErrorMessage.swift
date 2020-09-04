@@ -10,6 +10,7 @@
 
 import Foundation
 
+/// Alles API Error Message with information
 public struct AllesAPIErrorMessage: Error {
     var message: String
     var error: AllesAPIError
