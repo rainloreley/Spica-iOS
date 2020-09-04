@@ -131,7 +131,7 @@ class TimelineViewController: UIViewController, PostCreateDelegate, UITextViewDe
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-		
+
         setSidebar()
 
         let notificationCenter = NotificationCenter.default
@@ -498,7 +498,7 @@ extension TimelineViewController: UITableViewDelegate {
         let currentOffset = scrollView.contentOffset.y
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
         let difference = maximumOffset - currentOffset
-		
+
         if canLoadFromBottom, difference <= -120.0 {
             let previousScrollViewBottomInset = scrollView.contentInset.bottom
             scrollView.contentInset.bottom = previousScrollViewBottomInset + 50

@@ -13,10 +13,10 @@ import Foundation
 /// Alles API Error Handler
 public class AllesAPIErrorHandler {
     static let `default` = AllesAPIErrorHandler()
-	
-	/// Handles errors (and gives instructions)
-	/// - Parameter error: API error string
-	/// - Returns: `AllesAPIErrorMessage`
+
+    /// Handles errors (and gives instructions)
+    /// - Parameter error: API error string
+    /// - Returns: `AllesAPIErrorMessage`
     public func returnError(error: String) -> AllesAPIErrorMessage {
         switch error {
         case "alreadySet":
