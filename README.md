@@ -8,11 +8,12 @@
 Spica for iOS is an iOS/iPadOS client for [Alles Micro](https://micro.alles.cx). It's privacy focused and easy to use.
 </div>
 
-## Build & Install
+## 🔨 Build & Install
 
 Spica uses Cocoapods. We decided to remove the Pods/ directory from source control so some additional steps are necessary.
 
-NOTE: You need a mac and Xcode :)
+**Reqiured**:
+- Xcode 12
 
 1. Make sure you have Cocoapods installed (`pod --version`)
   - If not install it via `sudo gem install cocoapods`
@@ -22,14 +23,14 @@ NOTE: You need a mac and Xcode :)
 5. Set a new development team
 6. Run
 
-## Contributing
+## 💻 Contributing
 
-If you want to contribute please read the [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing](CONTRIBUTING.md).
+If you want to contribute please read the [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing](CONTRIBUTING.md) for more information.
 
-## Disclaimer
+## ⚠️ Disclaimer
 
 If you want to build/install the app, please keep in mind that everything here could be very unstable and/or incomplete. I recommend waiting for the official releases instead.
 
-## License
+## 📄 License
 
 Spica is licensed under the GPLv3 license. More information can be found in the [LICENSE file](LICENSE).
