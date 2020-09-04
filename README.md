@@ -10,10 +10,12 @@ Spica for iOS is an iOS/iPadOS client for [Alles Micro](https://micro.alles.cx).
 
 ## 🔨 Build & Install
 
-Spica uses Cocoapods. We decided to remove the Pods/ directory from source control so some additional steps are necessary.
-
 **Reqiured**:
 - Xcode 12
+
+Spica uses Cocoapods. The `Pods/` directory is not under source control so you need to install the pods first.
+
+
 
 1. Make sure you have Cocoapods installed (`pod --version`)
   - If not install it via `sudo gem install cocoapods`
