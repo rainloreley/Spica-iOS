@@ -1,8 +1,12 @@
-# Spica
+<div align="center">
+<img src="https://i.imgur.com/74V3rnH.png" height="80" length="80" style="border-radius:50%">
+
+# Spica for iOS
 
 [![Crowdin](https://badges.crowdin.net/spica/localized.svg)](https://crowdin.com/project/spica)
 
-Spica is an iOS Client for [Alles Micro](https://micro.alles.cx). It's privacy focused and easy to use.
+Spica for iOS is an iOS/iPadOS client for [Alles Micro](https://micro.alles.cx). It's privacy focused and easy to use.
+</div>
 
 ## Build & Install
 
@@ -14,7 +18,7 @@ NOTE: You need a mac and Xcode :)
   - If not install it via `sudo gem install cocoapods`
 2. Navigate to the projects root directory
 3. Run `pod install`
-4. Open Spica.xcworkspace (do not open Spica.xcodeproj, it won't work)
+4. Open Spica.xcworkspace (**do not open Spica.xcodeproj, it won't work**)
 5. Set a new development team
 6. Run
 
