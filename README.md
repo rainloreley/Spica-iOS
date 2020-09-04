@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://i.imgur.com/74V3rnH.png" height="80" length="80" style="border-radius:50%">
+<img src="https://i.imgur.com/WoSsIG2.png" height="100" length="100" style="border-radius:50%">
 
 # Spica for iOS
 
