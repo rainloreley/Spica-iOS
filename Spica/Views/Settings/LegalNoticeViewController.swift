@@ -13,7 +13,6 @@ import UIKit
 import WebKit
 
 class LegalNoticeViewController: UIViewController {
-	let legalNotice = """
     // var markdownView: UITextView!
     var webView: WKWebView!
     // font-family: -apple-system, "Helvetica Neue", "Lucida Grande";
