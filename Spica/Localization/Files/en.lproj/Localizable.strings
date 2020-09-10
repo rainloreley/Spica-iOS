@@ -126,7 +126,7 @@
 "ACCENT_COLOR" = "Accent color";
 "RESET_ACTION" = "Reset";
 "LEGAL_NOTICE" = "Legal Notice";
-"JOINED_AT": "Joined:";
+"JOINED_AT" = "Joined:";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
