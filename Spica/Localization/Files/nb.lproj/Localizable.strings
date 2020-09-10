@@ -19,6 +19,7 @@
 "LOADING_ACTION" = "Laster";
 
 "POST_NOUN" = "Innlegg";
+"POST_NOUN_PLURAL" = "Posts";
 "NEWPOST_PLACEHOLDER" = "Hva skjer?";
 
 "IMAGE" = "Bilde";
