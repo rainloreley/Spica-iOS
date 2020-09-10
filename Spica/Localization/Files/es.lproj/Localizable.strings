@@ -117,6 +117,17 @@
 "DELETE_ALL_BOOKMARKS" = "Eliminar todos los marcadores";
 "DELETE_ALL_BOOKMARKS_CONFIRMATION" = "¿Estás seguro de que quieres eliminar todos los marcadores?";
 
+"LOGIN_SCREEN_AGREEMENT" = "Al iniciar sesión, aceptas que has leído la política de privacidad de Spica, los términos de uso y l política de privacidad de Alles. Si no estás de acuerdo con esto, por favor no uses la app.";
+
+"PRIVACY_POLICY_UPDATED" = "Hemos actualizado nuestra política de privacidad. Por favor, léela cuidadosamente. Si no estás de acuerdo, por favor deja de usar la aplicación.";
+"PRIVACY_POLICY_AGREE_CONTINUE" = "Aceptar y continuar";
+
+"CHANGE_ACCENT_COLOR" = "Change accent color";
+"ACCENT_COLOR" = "Accent color";
+"RESET_ACTION" = "Reset";
+"LEGAL_NOTICE" = "Legal Notice";
+"JOINED_AT" = "Joined:";
+
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */
