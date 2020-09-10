@@ -1,0 +1,184 @@
+//
+// Spica for iOS (Spica)
+// File created by Lea Baumgart on 12.07.20.
+//
+// Licensed under the GNU General Public License v3.0
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
+//
+// https://github.com/SpicaApp/Spica-iOS
+//
+
+"HOME" = "Hem";
+"NOTIFICATIONS" = "Notiser";
+"ACCOUNT" = "Konto";
+"SETTINGS" = "Inställningar";
+
+"REPLY_SINGULAR" = "Svar";
+"REPLY_PLURAL" = "Svar";
+
+"LOADING_ACTION" = "Vänta jag har en panikattack";
+
+"POST_NOUN" = "Inlägg";
+"NEWPOST_PLACEHOLDER" = "Vad tror du?";
+
+"IMAGE" = "Bild";
+"SELECT_ANOTHER_IMAGE" = "Välj ny bild";
+"REMOVE" = "Radera";
+"CANCEL" = "Avbryt";
+
+"POST_SENT" = "Skickat!";
+
+"REPLY_ACTION" = "Svara";
+
+"FOLLOWER_SINGULAR" = "Följare";
+"FOLLOWER_PLURAL" = "Följare";
+
+"RUBY_SINGULAR" = "Rubin";
+"RUBY_PLURAL" = "Rubin";
+
+"FOLLOW_ACTION" = "Följ";
+"FOLLOWING_ACTION" = "Följer";
+
+"FOLLOWS_YOU" = "Följer dig";
+
+"EDIT_PROFILE" = "Redigera Profil";
+"NAME" = "Namn";
+"NICKNAME" = "Andra namn";
+"ABOUT" = "Om";
+
+"SAVED_ACTION" = "Sparat";
+
+"COPIED_ACTION" = "Kopierad";
+"DELETED_ACTION" = "Raderad";
+
+"DELETE_POST" = "Ta bort inlägg";
+"DELETE_CONFIRMATION" = "Är du säker du vill ta bort det?";
+"DELETE_ACTION" = "Ta bort";
+
+
+"VERSION" = "Versionsnummer";
+"BUILD" = "Bygg";
+
+"GO_TO_PROFILE" = "Visa Profil";
+"SIGN_OUT" = "Logga ut";
+
+"PRIVACY_POLICY" = "Integritetspolicy";
+"TERMS_OF_SERVICE" = "Användarvillkor";
+"WEBSITE" = "Webbplats";
+
+"USED_LIBRARIES" = "Aktiva Bibliotek";
+"CREDITS" = "Krediter";
+
+"OTHER" = "Andra";
+
+"SPICA_COPYRIGHT" = "© 2020, Lea (Adrian) Baumgart. All rights reserved.";
+
+"ALLES_LOGIN" = "Alles Inloggning";
+"USERNAME" = "Användarnamn";
+"PASSWORD" = "Lösenord";
+"SIGN_IN" = "Logga in";
+"NO_ACCOUNT" = "Inget konto? Skapa ett!";
+
+"ERROR" = "Fel";
+
+"REPOST" = "Dela";
+"COPY_ID" = "Kopiera ID";
+"TRANSLATE_APP" = "Översätt appen till andra språk";
+"CONTACT" = "Skriva till dom";
+"SAVE_ACTION" = "Spara";
+"CLEAR_CACHE" = "Rensa cachen";
+"CACHE_CLEARED" = "Cachen har rensats!";
+"CLOSE_ACTION" = "Avsluta";
+
+"UNLOCK_SPICA" = "Öppna Spica";
+"BIOMETRIC_AUTH_FAILED" = "Autentiseringen misslyckades";
+"PLEASE_TRY_AGAIN" = "Förlåt, Försök igen";
+"RETRY_ACTION" = "Försök igen";
+"DEVICE_ERROR" = "Ditt enheten har fel";
+"BIOMETRIC_DEVICE_NOTAVAILABLE" = "Din enhet kan inte göra %@. Se till att %@ är aktiverat i ditt inställningsappen.";
+"BIOMETRICS" = "Biometri";
+
+"BOOKMARKS" = "Bokmärken";
+"BOOKMARKS_EMPTY_TITLE" = "Inga bokmärken";
+"BOOKMARKS_EMPTY_SUBTITLE" = "Tryck länge på ett inlägg för att lägga det inlägg till ett bokmärke";
+
+"ADDED_ACTION" = "Tillagd";
+"REMOVED_ACTION" = "Raderade";
+
+"TIMELINE_EMPTY_TITLE" = "Inga inlägg";
+"TIMELINE_EMPTY_SUBTITLE" = "Försök att lägga upp något";
+
+"NOTIFICATIONS_EMPTY_TITLE" = "Inga notiser";
+"NOTIFICATIONS_EMPTY_SUBTITLE" = "När folk svarar eller nämner dig, visas deras inlägg här";
+
+"ADD_BOOKMARK" = "Lägg till bokmärken";
+"REMOVE_BOOKMARK" = "Ta bort bokmärke";
+
+"DELETE_ALL_BOOKMARKS" = "Ta bort alla bokmärken";
+"DELETE_ALL_BOOKMARKS_CONFIRMATION" = "Är du säker du vill ta bort alla bokmärken?";
+
+"LOGIN_SCREEN_AGREEMENT" = "Genom att logga in godkänner du att du har läst Spica sekretesspolicy, alla användarvillkor och all sekretesspolicy. Om du inte samtycker till dessa, öppna eller använd inte appen, och rader.";
+
+"PRIVACY_POLICY_UPDATED" = "Vi har uppdaterat vår sekretesspolicy. Läs den noggrant. Om du inte samtycker till dessa, öppna eller använd inte appen, och rader.";
+"PRIVACY_POLICY_AGREE_CONTINUE" = "Spara och fortsätt";
+
+"CHANGE_ACCENT_COLOR" = "Change accent color";
+"ACCENT_COLOR" = "Accent color";
+"RESET_ACTION" = "Reset";
+"LEGAL_NOTICE" = "Legal Notice";
+"JOINED_AT" = "Joined:";
+
+/* Error messages
+If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
+*/
+
+"error.alreadySet" = "This action has been performed before";
+"error.applications.badRedirect" = "Omdirigerings-URL är inte tillåten eller felaktigt formaterad";
+"error.applications.firstPartyOnly" = "Bara \"First Party Services\" (Alles-officiella tjänster) kan göra det";
+"error.applications.scopes.invalid" = "En begärd OAuth-funktion finns inte";
+"error.applications.scopes.tooMany" = "För många OAuth-parameter har specificerats";
+"error.badAuthorization" = "Du kan inte göra det åtgärd. Du är nu kommer att omdirigera till inloggningsskärmen";
+"error.badRequest" = "Vissa data saknas";
+"error.billing.invalidPlan" = "Denna Alles-faktureringsplan finns inte";
+"error.billing.unregistered" = "Du måste konfigurera ditt faktureringsplan först";
+"error.bot" = "Vi kan inte verifiera att du är en människa";
+"error.email.inUse" = "Det e-postadressen används redan";
+"error.email.invalid" = "Din e-postadress är ogiltig";
+"error.internalError" = "Ett internt fel uppstod";
+"error.missingResource" = "Resursen du begärde finns inte";
+"error.notFound" = "Denna slutpunkt finns inte";
+"error.plusOnly" = "Bara Alles+ kan göra det";
+"error.post.content.length" = "Innehållslängden är inte rätt (för kort eller lång)";
+"error.post.invalidParent" = "Det första inlägget är ogiltigt";
+"error.primaryOnly" = "Denna åtgärd är bara för primära konton";
+"error.profile.username.chars" = "Du användarnamn har en fel bokstav";
+"error.profile.username.unavailable" = "Detta användarnamn är i användning";
+"error.profile.username.tooShort" = "Ditt användarnamn är för kort";
+"error.profile.username.tooLong" = "Ditt användarnamn är för långt";
+"error.profile.name.tooShort" = "Ditt namn är för kort";
+"error.profile.name.tooLong" = "Ditt namn är för långt";
+"error.profile.nickname.tooShort" = "Ditt användarnamn är för kort";
+"error.profile.nickname.tooLong" = "Ditt användarnamn är för långt";
+"error.profile.about.tooShort" = "Texten är för kort";
+"error.profile.about.tooLong" = "Texten är för lång";
+"error.pulsar.badToken" = "Pulsar-token är inte rätt";
+"error.rateLimited" = "Du behöver väntar för att göra den åtgärd igen";
+"error.restrictedAccess" = "Detta Alles-identifieringsnummer kan inte göra det";
+"error.stableOnly" = "Du kan inte göra det i Alles-betaversion";
+"error.user.follow.limit" = "Antalet personer du kan följa är begränsad";
+"error.user.follow.self" = "Du kan inte följa dig själv (bra attentat)";
+"error.user.password.incorrect" = "Inkorrekt lösenord för det konto";
+"error.user.password.requirements" = "Lösenordet är inte komplex. Mer komplexitet, tack";
+"error.user.password.same" = "Ditt gamla lösenord är ditt nya lösenord. Varför du ändrats";
+"error.user.signIn.credentials" = "Detta användarnamn eller lösenord är inte rätt";
+"error.validation.chars" = "Texten har tecken som inte är tillåtna";
+"error.validation.tooShort" = "Texten är för kort";
+"error.validation.tooLong" = "Texten är för lång";
+
+"error.spica_authTokenMissing" = "Autentisk token saknas";
+"error.spica_noLoginTokenReturned" = "Alles-API returnerade inte en token, tack försök igen";
+"error.spica_invalidStatusCode" = "Alles-API returnerade en ogiltig statuskod";
+"error.spica_unknownError" = "Ett okänt fel har uppstått??? Vi har spöken";
+"error.spica_valueNotAllowed" = "Det text/tal är inte tillåtet";
+
+"error.default" = "Ett okänt fel är har (Vad gjorde du? Vi är skriver datorkod snabbt nu)";
