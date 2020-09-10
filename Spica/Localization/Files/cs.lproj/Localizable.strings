@@ -1,10 +1,12 @@
-/* 
-  Localizable.strings
-  Spica
-
-  Created by Adrian Baumgart on 12.07.20.
-  
-*/
+//
+// Spica for iOS (Spica)
+// File created by Lea Baumgart on 12.07.20.
+//
+// Licensed under the GNU General Public License v3.0
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
+//
+// https://github.com/SpicaApp/Spica-iOS
+//
 
 "HOME" = "Home";
 "NOTIFICATIONS" = "Notifications";
@@ -114,6 +116,17 @@
 
 "DELETE_ALL_BOOKMARKS" = "Delete all bookmarks";
 "DELETE_ALL_BOOKMARKS_CONFIRMATION" = "Are you sure you want to delete all bookmarks?";
+
+"LOGIN_SCREEN_AGREEMENT" = "By signing in, you agree that you've read the Spica Privacy Policy, Alles Terms of Service and Alles Privacy Policy. If you don't agree with these, please do not use the app.";
+
+"PRIVACY_POLICY_UPDATED" = "We updated our Privacy Policy. Please read it carefully. If you don't agree, please stop using the app.";
+"PRIVACY_POLICY_AGREE_CONTINUE" = "Agree and continue";
+
+"CHANGE_ACCENT_COLOR" = "Change accent color";
+"ACCENT_COLOR" = "Accent color";
+"RESET_ACTION" = "Reset";
+"LEGAL_NOTICE" = "Legal Notice";
+"JOINED_AT" = "Joined:";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
