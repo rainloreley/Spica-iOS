@@ -18,13 +18,13 @@ struct ColorPickerView: View {
             // ColorPicker("Accent color", selection: $controller.color)
             VStack {
                 ColorPicker(selection: $controller.color, label: {
-					Text(SLocale(.ACCENT_COLOR)).bold().font(.title)
+                    Text(SLocale(.ACCENT_COLOR)).bold().font(.title)
 				}).background(Color.clear).frame(maxWidth: .infinity, maxHeight: 50, alignment: .center)
                 Spacer()
                 Button(action: {
                     controller.color = Color(UIColor.systemBlue)
 				}) {
-					Text(SLocale(.RESET_ACTION)).foregroundColor(.white)
+                    Text(SLocale(.RESET_ACTION)).foregroundColor(.white)
                 }.frame(maxWidth: .infinity).padding().background(Color.accentColor).cornerRadius(12)
             }.padding()
         } else {

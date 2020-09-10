@@ -17,11 +17,13 @@ var globalSplitViewController: GlobalSplitViewController!
 @available(iOS 14.0, *)
 var globalSideBarController: SidebarViewController!
 
+var globalTabBarController: GlobalTabBarViewController!
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     var toolbarDelegate = ToolbarDelegate()
 
-    func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
+    func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options launchOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
@@ -56,6 +58,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let initialView = setupInitialView()
             window?.rootViewController = initialView
             window?.makeKeyAndVisible()
+            if !launchOptions.urlContexts.isEmpty {
+                guard let url = launchOptions.urlContexts.first else { return }
+                guard let newVC = navigator.viewController(for: url.url) else { return }
+
+                if #available(iOS 14.0, *) {
+                    globalSplitViewController.showVC(newVC)
+                } else {
+                    globalTabBarController.showVC(newVC)
+                }
+            }
         } else {
             window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
             window?.makeKeyAndVisible()
@@ -64,8 +76,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         _ = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(sendOnline), userInfo: nil, repeats: true)
     }
 
-    func setupTabView() -> UITabBarController {
-        let tabBar = UITabBarController()
+    func setupTabView() -> GlobalTabBarViewController {
+        let tabbar = GlobalTabBarViewController()
         let homeView = UINavigationController(rootViewController: TimelineViewController())
         homeView.tabBarItem = UITabBarItem(title: SLocale(.HOME), image: UIImage(systemName: "house"), tag: 0)
         let mentionView = UINavigationController(rootViewController: MentionsViewController())
@@ -82,38 +94,39 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let accountView = UINavigationController(rootViewController: userProfileVC)
         accountView.tabBarItem = UITabBarItem(title: SLocale(.ACCOUNT), image: UIImage(systemName: "person"), tag: 3)
-        tabBar.viewControllers = [homeView, mentionView, bookmarksView, accountView]
-        return tabBar
+        tabbar.viewControllers = [homeView, mentionView, bookmarksView, accountView]
+        return tabbar
     }
 
     func setupInitialView() -> UIViewController? {
         if #available(iOS 14.0, *) {
-            let tabBar = setupTabView()
+            globalTabBarController = setupTabView()
             globalSplitViewController = GlobalSplitViewController(style: .doubleColumn)
             globalSideBarController = SidebarViewController()
             globalSplitViewController.setViewController(globalSideBarController, for: .primary)
             globalSplitViewController.setViewController(TimelineViewController(), for: .secondary)
-            globalSplitViewController.setViewController(tabBar, for: .compact)
+            globalSplitViewController.setViewController(globalTabBarController, for: .compact)
             globalSplitViewController.primaryBackgroundStyle = .sidebar
 
             globalSplitViewController.navigationItem.largeTitleDisplayMode = .always
             return globalSplitViewController
         } else {
-            let tabBar = setupTabView()
-            return tabBar
+            globalTabBarController = setupTabView()
+            return globalTabBarController
         }
     }
 
     func scene(_: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-        // spica://user/af3a1a9e-b0e1-418e-8b4c-76605897eeab
-        guard let url = URLContexts.first else { return }
-        print("CALLED SCHEME PRE: \(url.url.absoluteString)")
-        // navigator.openURL(url.url, context: .none)
-        // navigator.present(url.url)
-        guard let newVC = navigator.viewController(for: url.url) else { return }
-        window?.rootViewController?.showDetailViewController(newVC, sender: nil)
-        /* window?.rootViewController = navigator.viewController(for: url.url)
-         window?.makeKeyAndVisible() */
+        if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
+            guard let url = URLContexts.first else { return }
+            guard let newVC = navigator.viewController(for: url.url) else { return }
+
+            if #available(iOS 14.0, *) {
+                globalSplitViewController.showVC(newVC)
+            } else {
+                globalTabBarController.showVC(newVC)
+            }
+        }
     }
 
     @objc func sendOnline() {

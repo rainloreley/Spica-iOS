@@ -12,40 +12,27 @@ import Foundation
 import SwiftKeychainWrapper
 import URLNavigator
 struct URLNavigationMap {
-    static func initialize(navigator: Navigator, sceneDelegate: SceneDelegate) {
+    static func initialize(navigator: Navigator, sceneDelegate _: SceneDelegate) {
         navigator.register("spica://user/<string:id>") { _, values, _ in
-            print("CALLED SCHEME")
-            if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token"), KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
-                let initialView = sceneDelegate.setupInitialView()
-                if #available(iOS 14.0, *) {
-                    if let view = initialView as? GlobalSplitViewController {
-                        let userDetail = UserProfileViewController()
-                        guard let userID = values["id"] as? String else { return nil }
-                        userDetail.user = User(id: userID)
-                        view.showDetailViewController(userDetail, sender: nil)
-                        print("IMMA RETURN YOU")
-                        return userDetail
-                    }
-                }
-
-                if let view = initialView as? UITabBarController {
-                    let userDetail = UserProfileViewController()
-                    guard let userID = values["id"] as? String else { return nil }
-                    userDetail.user = User(id: userID)
-                    view.showDetailViewController(userDetail, sender: nil)
-                    return view
-                }
-
-                print("f in chat")
-
-                return initialView
-
-            } else {
-                return UINavigationController(rootViewController: LoginViewController())
-            }
+            let userDetail = UserProfileViewController()
+            guard let userID = values["id"] as? String else { return nil }
+            userDetail.user = User(id: userID)
+            return userDetail
         }
-        /* navigator.register("spica://post/<string:id>") { url, values, context in
 
-         } */
+        navigator.register("spica://lol") { _, _, _ in
+            let goURL = URL(string: "https://go.abmgrt.dev/lyWKrc")!
+            if UIApplication.shared.canOpenURL(goURL) {
+                UIApplication.shared.open(goURL)
+            }
+            return nil
+        }
+
+        navigator.register("spica://post/<string:id>") { _, values, _ in
+            let postDetail = PostDetailViewController()
+            guard let postID = values["id"] as? String else { return nil }
+            postDetail.selectedPostID = postID
+            return postDetail
+        }
     }
 }

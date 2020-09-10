@@ -95,6 +95,7 @@
 		3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231B24CC747700DAAE0F /* Bookmark.swift */; };
 		3AFD81C324EAC51E00AD5E11 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD81C224EAC51E00AD5E11 /* SearchViewController.swift */; };
 		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
+		8B1FE6C3250A73240098DBD4 /* GlobalTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1FE6C2250A73240098DBD4 /* GlobalTabBarViewController.swift */; };
 		8BDE77EC250A360A00D52C60 /* LegalNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDE77EB250A360A00D52C60 /* LegalNoticeViewController.swift */; };
 		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
 		B011E23BAC69FBCB992F7BCE /* Pods_Spica_SpicaUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AD6E55241BF74B8FFA2529 /* Pods_Spica_SpicaUITests.framework */; };
@@ -222,6 +223,7 @@
 		80DA433143489FFFA45A5CB9 /* Pods-SpicaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpicaTests.debug.xcconfig"; path = "Target Support Files/Pods-SpicaTests/Pods-SpicaTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8B1FE6C0250A4F790098DBD4 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B1FE6C1250A4F7F0098DBD4 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		8B1FE6C2250A73240098DBD4 /* GlobalTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalTabBarViewController.swift; sourceTree = "<group>"; };
 		8BDE77EB250A360A00D52C60 /* LegalNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalNoticeViewController.swift; sourceTree = "<group>"; };
 		93A13955EBB303004062ACA2 /* Pods-Alles App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App.debug.xcconfig"; path = "Target Support Files/Pods-Alles App/Pods-Alles App.debug.xcconfig"; sourceTree = "<group>"; };
 		998BED3FF0DAF05341F36F09 /* Pods-Alles App-Alles AppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.debug.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -324,6 +326,7 @@
 			children = (
 				3AEEBEBD24BFB3CB0011C4A4 /* GlobalSplitViewController.swift */,
 				3A4DF24A24BF7D1C003C6BF3 /* SidebarViewController.swift */,
+				8B1FE6C2250A73240098DBD4 /* GlobalTabBarViewController.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -1016,6 +1019,7 @@
 				3A746A9424BDD975008C9309 /* VotePost.swift in Sources */,
 				3A4F008724ABDCC900CDCD5E /* MentionsViewController.swift in Sources */,
 				3A95B3B824C0EC0A0066FE7B /* LocalizableKeys.swift in Sources */,
+				8B1FE6C3250A73240098DBD4 /* GlobalTabBarViewController.swift in Sources */,
 				3A61B27B24C8B5E900AC1A9C /* TagDetailViewController.swift in Sources */,
 				3AF1DB1624D57E6A006832A7 /* UserHeaderView.swift in Sources */,
 				3ACEEBFE24FE6FE20094D8E9 /* MiniPostController.swift in Sources */,

@@ -101,13 +101,13 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         if let index = filteredQuotes.firstIndex(of: previousPostCreateQuoute) {
             filteredQuotes.remove(at: index)
         }
-		
-		let newQuote = filteredQuotes.randomElement()
-		previousPostCreateQuoute = newQuote ?? ""
 
-		//contentTextView.placeholder = Int.random(in: 0...1000) == 0 ? "#BringBackBdrian" : newQuote ?? SLocale(.NEWPOST_PLACEHOLDER)
-		
-		contentTextView.placeholder = newQuote ?? SLocale(.NEWPOST_PLACEHOLDER)
+        let newQuote = filteredQuotes.randomElement()
+        previousPostCreateQuoute = newQuote ?? ""
+
+        // contentTextView.placeholder = Int.random(in: 0...1000) == 0 ? "#BringBackBdrian" : newQuote ?? SLocale(.NEWPOST_PLACEHOLDER)
+
+        contentTextView.placeholder = newQuote ?? SLocale(.NEWPOST_PLACEHOLDER)
         contentTextView.placeholderColor = UIColor.tertiaryLabel
         contentTextView.delegate = self
         let dropInteraction = UIDropInteraction(delegate: self)

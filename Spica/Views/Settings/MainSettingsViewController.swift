@@ -33,8 +33,8 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
 
     @IBOutlet var spicaPrivacyButton: UIButton!
     @IBOutlet var spicaWebsiteButton: UIButton!
-	@IBOutlet var spicaLegalNoticeButton: UIButton!
-	
+    @IBOutlet var spicaLegalNoticeButton: UIButton!
+
     @IBOutlet var allesPrivacyButton: UIButton!
     @IBOutlet var allesTOSButton: UIButton!
     @IBOutlet var allesWebsiteButton: UIButton!
@@ -52,9 +52,9 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
     @IBOutlet var biometricsLabel: UIButton!
     @IBOutlet var biometricsSwitch: UISwitch!
 
-	@IBOutlet weak var changeAccentColorButton: UIButton!
-	
-	var userID = ""
+    @IBOutlet var changeAccentColorButton: UIButton!
+
+    var userID = ""
 
     var delegate: MainSettingsDelegate!
 
@@ -78,8 +78,8 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
         // changeAccentColor.setTitle(SLocale(.CLEAR_CACHE), for: .normal)
 
         biometricsLabel.setTitle(SLocale(.BIOMETRICS), for: .normal)
-		changeAccentColorButton.setTitle(SLocale(.CHANGE_ACCENT_COLOR), for: .normal)
-		spicaLegalNoticeButton.setTitle(SLocale(.LEGAL_NOTICE), for: .normal)
+        changeAccentColorButton.setTitle(SLocale(.CHANGE_ACCENT_COLOR), for: .normal)
+        spicaLegalNoticeButton.setTitle(SLocale(.LEGAL_NOTICE), for: .normal)
     }
 
     @IBAction func toggleBiometrics(_: Any) {
@@ -139,10 +139,10 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
     }
 
     var colorPickerController: ColorPickerController!
-	var changeAccentColorSheet = UIAlertController(title: SLocale(.CHANGE_ACCENT_COLOR), message: "", preferredStyle: .actionSheet)
+    var changeAccentColorSheet = UIAlertController(title: SLocale(.CHANGE_ACCENT_COLOR), message: "", preferredStyle: .actionSheet)
 
     @IBAction func changeAccentColor(_: UIButton) {
-		changeAccentColorSheet = UIAlertController(title: SLocale(.CHANGE_ACCENT_COLOR), message: "", preferredStyle: .actionSheet)
+        changeAccentColorSheet = UIAlertController(title: SLocale(.CHANGE_ACCENT_COLOR), message: "", preferredStyle: .actionSheet)
 
         let currentAccentColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
         colorPickerController = ColorPickerController(color: Color(currentAccentColor ?? UIColor.systemBlue))
@@ -202,10 +202,10 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
             UIApplication.shared.open(url!)
         }
     }
-	
-	@IBAction func spicaLegalNotice(_: Any) {
-		navigationController?.pushViewController(LegalNoticeViewController(), animated: true)
-	}
+
+    @IBAction func spicaLegalNotice(_: Any) {
+        navigationController?.pushViewController(LegalNoticeViewController(), animated: true)
+    }
 
     @IBAction func signOut(_: Any) {
         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
