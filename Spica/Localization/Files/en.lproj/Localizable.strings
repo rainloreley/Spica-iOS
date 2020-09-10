@@ -19,6 +19,7 @@
 "LOADING_ACTION" = "Loading";
 
 "POST_NOUN" = "Post";
+"POST_NOUN_PLURAL" = "Posts";
 "NEWPOST_PLACEHOLDER" = "What's on your mind?";
 
 "IMAGE" = "Image";

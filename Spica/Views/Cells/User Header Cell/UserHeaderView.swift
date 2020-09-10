@@ -104,14 +104,14 @@ struct UserHeaderView: View {
                 }
 
                 LoadingSkeleton(loaded: $controller.userDataLoaded) {
-                    Text("\(controller.user.postsCount) ").bold() + Text(countString(number: controller.user.postsCount, singleText: "Post", multiText: "Posts", includeNumber: false))
+					Text("\(controller.user.postsCount) ").bold() + Text(countString(number: controller.user.postsCount, singleText: SLocale(.POST_NOUN), multiText: SLocale(.POST_NOUN_PLURAL), includeNumber: false))
                 }
                 LoadingSkeleton(loaded: $controller.userDataLoaded) {
                     Text("\(controller.user.repliesCount) ").bold() + Text(countString(number: controller.user.repliesCount, singleText: SLocale(.REPLY_SINGULAR), multiText: SLocale(.REPLY_PLURAL), includeNumber: false))
                 }
 
                 LoadingSkeleton(loaded: $controller.userDataLoaded) {
-					Text(SLocale(.JOINED_AT)) + Text(dateFormatter.string(from: controller.user.joined)).bold()
+					Text("\(SLocale(.JOINED_AT))\(String(SLocale(.JOINED_AT)).last == " " ? String("") : String(" "))") + Text(dateFormatter.string(from: controller.user.joined)).bold()
                 }
 
                 if controller.user.alles {

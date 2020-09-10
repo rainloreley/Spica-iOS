@@ -19,6 +19,7 @@ enum LocalizableKeys: String {
     case REPLY_PLURAL
     case LOADING_ACTION
     case POST_NOUN
+	case POST_NOUN_PLURAL
     case NEWPOST_PLACEHOLDER
     case IMAGE
     case SELECT_ANOTHER_IMAGE
