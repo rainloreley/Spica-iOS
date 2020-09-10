@@ -19,6 +19,7 @@
 "LOADING_ACTION" = "Vänta jag har en panikattack";
 
 "POST_NOUN" = "Inlägg";
+"POST_NOUN_PLURAL" = "Posts";
 "NEWPOST_PLACEHOLDER" = "Vad tror du?";
 
 "IMAGE" = "Bild";
