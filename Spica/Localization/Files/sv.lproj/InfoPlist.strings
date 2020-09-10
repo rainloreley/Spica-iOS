@@ -1,0 +1,13 @@
+//
+// Spica for iOS (Spica)
+// File created by Lea Baumgart on 23.07.20.
+//
+// Licensed under the GNU General Public License v3.0
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
+//
+// https://github.com/SpicaApp/Spica-iOS
+//
+
+"NSFaceIDUsageDescription" = "Spica använder FaceID för att öppna till appen";
+"NSCameraUsageDescription" = "Du kan använda kameran för att göra bilder som du kan dela i Alles";
+"NSPhotoLibraryUsageDescription" = "Du kan välja en bild för att dela den med Alles";
