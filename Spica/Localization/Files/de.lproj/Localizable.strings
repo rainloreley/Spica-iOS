@@ -117,6 +117,17 @@
 "DELETE_ALL_BOOKMARKS" = "Alle Lesezeichen löschen";
 "DELETE_ALL_BOOKMARKS_CONFIRMATION" = "Bist du sicher, dass du alle Lesezeichen löschen möchtest?";
 
+"LOGIN_SCREEN_AGREEMENT" = "Indem du dich anmeldest stimmst du zu, dass du die Spica Datenschutzbestimmungen, Alles Nutzungsbedingungen und Alles Datenschutzbestimmungen gelesen hast. Wenn du diesen nicht zustimmst, bitte verwende die App nicht.";
+
+"PRIVACY_POLICY_UPDATED" = "Wir haben unsere Datenschutzbestimmungen aktualisiert. Bitte lies diese aufmerksam. Falls du nicht zustimmst, bitte verwende diese App nicht weiter.";
+"PRIVACY_POLICY_AGREE_CONTINUE" = "Zustimmen und Fortfahren";
+
+"CHANGE_ACCENT_COLOR" = "Akzentfarbe ändern";
+"ACCENT_COLOR" = "Akzentfarbe";
+"RESET_ACTION" = "Zurücksetzen";
+"LEGAL_NOTICE" = "Impressum";
+"JOINED_AT" = "Beigetreten:";
+
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
 */
