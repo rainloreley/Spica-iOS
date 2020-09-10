@@ -95,6 +95,7 @@
 		3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9231B24CC747700DAAE0F /* Bookmark.swift */; };
 		3AFD81C324EAC51E00AD5E11 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFD81C224EAC51E00AD5E11 /* SearchViewController.swift */; };
 		595BA659ED2EF5AB7364C238 /* Pods_SpicaTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4ADBDB957B559CC7405DD099 /* Pods_SpicaTests.framework */; };
+		8BDE77EC250A360A00D52C60 /* LegalNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDE77EB250A360A00D52C60 /* LegalNoticeViewController.swift */; };
 		A050BE6047225A81BFB8EE84 /* Pods_Spica.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B693F2651C6D1291E7AE32 /* Pods_Spica.framework */; };
 		B011E23BAC69FBCB992F7BCE /* Pods_Spica_SpicaUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9AD6E55241BF74B8FFA2529 /* Pods_Spica_SpicaUITests.framework */; };
 /* End PBXBuildFile section */
@@ -219,6 +220,7 @@
 		7C524B582904A24CAE1C8E21 /* Pods-Spica-SpicaUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica-SpicaUITests.release.xcconfig"; path = "Target Support Files/Pods-Spica-SpicaUITests/Pods-Spica-SpicaUITests.release.xcconfig"; sourceTree = "<group>"; };
 		7FECC3EF9CCC0CB2A935F552 /* Pods-Spica.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.debug.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.debug.xcconfig"; sourceTree = "<group>"; };
 		80DA433143489FFFA45A5CB9 /* Pods-SpicaTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SpicaTests.debug.xcconfig"; path = "Target Support Files/Pods-SpicaTests/Pods-SpicaTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8BDE77EB250A360A00D52C60 /* LegalNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalNoticeViewController.swift; sourceTree = "<group>"; };
 		93A13955EBB303004062ACA2 /* Pods-Alles App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App.debug.xcconfig"; path = "Target Support Files/Pods-Alles App/Pods-Alles App.debug.xcconfig"; sourceTree = "<group>"; };
 		998BED3FF0DAF05341F36F09 /* Pods-Alles App-Alles AppUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App-Alles AppUITests.debug.xcconfig"; path = "Target Support Files/Pods-Alles App-Alles AppUITests/Pods-Alles App-Alles AppUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		A5F9A14A11DADF85C50E7B06 /* Pods-Alles App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Alles App.release.xcconfig"; path = "Target Support Files/Pods-Alles App/Pods-Alles App.release.xcconfig"; sourceTree = "<group>"; };
@@ -522,6 +524,7 @@
 				3A91971724B89E1100B7066B /* MainSettingsViewController.swift */,
 				3A361FEC24B8AA2700513028 /* CreditsViewController.swift */,
 				3A361FEA24B8A6C600513028 /* UsedLibrariesViewController.swift */,
+				8BDE77EB250A360A00D52C60 /* LegalNoticeViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -975,6 +978,7 @@
 				3A61B27524C8B55800AC1A9C /* PostDetail.swift in Sources */,
 				3A96F69F24AB3FD100482C5A /* AllesAPI.swift in Sources */,
 				3AB3F1DE24ABFA7F0040D84A /* PostDetailViewController.swift in Sources */,
+				8BDE77EC250A360A00D52C60 /* LegalNoticeViewController.swift in Sources */,
 				3A41274424B1E02900425999 /* CircularProgressBar.swift in Sources */,
 				3A03D7AA24EC313F0096DA9B /* Label.swift in Sources */,
 				3AF9231C24CC747700DAAE0F /* Bookmark.swift in Sources */,

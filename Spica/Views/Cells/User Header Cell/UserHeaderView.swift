@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 01.08.20.
+// File created by Lea Baumgart on 01.08.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //
@@ -111,7 +111,7 @@ struct UserHeaderView: View {
                 }
 
                 LoadingSkeleton(loaded: $controller.userDataLoaded) {
-                    Text("Joined: ") + Text(dateFormatter.string(from: controller.user.joined)).bold()
+					Text(SLocale(.JOINED_AT)) + Text(dateFormatter.string(from: controller.user.joined)).bold()
                 }
 
                 if controller.user.alles {

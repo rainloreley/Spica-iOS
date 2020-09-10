@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 22.07.20.
+// File created by Lea Baumgart on 22.07.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //

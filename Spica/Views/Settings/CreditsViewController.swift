@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 10.07.20.
+// File created by Lea Baumgart on 10.07.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //
@@ -15,7 +15,7 @@ class CreditsViewController: UIViewController {
     var toolbarDelegate = ToolbarDelegate()
 
     var credits = [
-        Credit(name: "Adrian Baumgart", role: "iOS Developer", url: "https://twitter.com/adrianbaumgart", imageURL: "https://avatar.alles.cc/87cd0529-f41b-4075-a002-059bf2311ce7", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Lea Baumgart", role: "iOS Developer", url: "https://twitter.com/leabmgrt", imageURL: "https://avatar.alles.cc/87cd0529-f41b-4075-a002-059bf2311ce7", image: UIImage(systemName: "person.circle")!),
         Credit(name: "Patrik Svoboda", role: "iOS Developer", url: "https://twitter.com/PatrikTheDev", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
         Credit(name: "Jason", role: "Android Developer", url: "https://twitter.com/jso_8910", imageURL: "", image: UIImage(named: "jsoPfp")!),
         Credit(name: "Archie Baer", role: "Alles Founder", url: "https://twitter.com/onlytruearchie", imageURL: "https://avatar.alles.cc/00000000-0000-0000-0000-000000000000", image: UIImage(systemName: "person.circle")!),

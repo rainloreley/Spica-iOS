@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 24.08.20.
+// File created by Lea Baumgart on 24.08.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //
@@ -18,13 +18,13 @@ struct ColorPickerView: View {
             // ColorPicker("Accent color", selection: $controller.color)
             VStack {
                 ColorPicker(selection: $controller.color, label: {
-                    Text("Accent color").bold().font(.title)
+					Text(SLocale(.ACCENT_COLOR)).bold().font(.title)
 				}).background(Color.clear).frame(maxWidth: .infinity, maxHeight: 50, alignment: .center)
                 Spacer()
                 Button(action: {
                     controller.color = Color(UIColor.systemBlue)
 				}) {
-                    Text("Reset").foregroundColor(.white)
+					Text(SLocale(.RESET_ACTION)).foregroundColor(.white)
                 }.frame(maxWidth: .infinity).padding().background(Color.accentColor).cornerRadius(12)
             }.padding()
         } else {

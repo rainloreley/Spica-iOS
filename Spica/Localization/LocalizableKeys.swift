@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 16.07.20.
+// File created by Lea Baumgart on 16.07.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //
@@ -91,6 +91,11 @@ enum LocalizableKeys: String {
     case LOGIN_SCREEN_AGREEMENT
     case PRIVACY_POLICY_UPDATED
     case PRIVACY_POLICY_AGREE_CONTINUE
+    case CHANGE_ACCENT_COLOR
+    case ACCENT_COLOR
+    case RESET_ACTION
+    case LEGAL_NOTICE
+    case JOINED_AT
     case error_alreadySet = "error.alreadySet"
     case error_applications_badRedirect = "error.applications.badRedirect"
     case error_applications_firstPartyOnly = "error.applications.firstPartyOnly"

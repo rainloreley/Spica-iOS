@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 12.07.20.
+// File created by Lea Baumgart on 12.07.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //
@@ -71,7 +71,7 @@
 
 "OTHER" = "Des autres";
 
-"SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. Tous les droits sont réservés.";
+"SPICA_COPYRIGHT" = "© 2020, Lea (Adrian) Baumgart. Tous les droits sont réservés.";
 
 "ALLES_LOGIN" = "Le login pour Alles";
 "USERNAME" = "Nom d'utilisateur";

@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 30.06.20.
+// File created by Lea Baumgart on 30.06.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //
@@ -23,7 +23,7 @@ public class AllesAPI {
 
     /// Signs in the user using a name, tag and password (old auth system)
     /// - Parameters:
-    ///		- name: Name of the user (e.g. "Adrian")
+    ///		- name: Name of the user (e.g. "Lea")
     ///		- tag: User tag (e.g. "0001")
     ///		- password: User password
     /// - Returns: `SignedInUser` or `AllesAPIErrorMessage`

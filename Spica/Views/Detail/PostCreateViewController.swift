@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 01.07.20.
+// File created by Lea Baumgart on 01.07.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //
@@ -101,10 +101,13 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         if let index = filteredQuotes.firstIndex(of: previousPostCreateQuoute) {
             filteredQuotes.remove(at: index)
         }
+		
+		let newQuote = filteredQuotes.randomElement()
+		previousPostCreateQuoute = newQuote ?? ""
 
-        let newQuote = filteredQuotes.randomElement()
-        previousPostCreateQuoute = newQuote ?? ""
-        contentTextView.placeholder = newQuote ?? SLocale(.NEWPOST_PLACEHOLDER)
+		//contentTextView.placeholder = Int.random(in: 0...1000) == 0 ? "#BringBackBdrian" : newQuote ?? SLocale(.NEWPOST_PLACEHOLDER)
+		
+		contentTextView.placeholder = newQuote ?? SLocale(.NEWPOST_PLACEHOLDER)
         contentTextView.placeholderColor = UIColor.tertiaryLabel
         contentTextView.delegate = self
         let dropInteraction = UIDropInteraction(delegate: self)

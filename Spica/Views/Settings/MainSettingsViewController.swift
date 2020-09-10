@@ -1,9 +1,9 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 10.07.20.
+// File created by Lea Baumgart on 10.07.20.
 //
 // Licensed under the GNU General Public License v3.0
-// Copyright © 2020 Adrian Baumgart. All rights reserved.
+// Copyright © 2020 Lea (Adrian) Baumgart. All rights reserved.
 //
 // https://github.com/SpicaApp/Spica-iOS
 //
@@ -33,7 +33,8 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
 
     @IBOutlet var spicaPrivacyButton: UIButton!
     @IBOutlet var spicaWebsiteButton: UIButton!
-
+	@IBOutlet var spicaLegalNoticeButton: UIButton!
+	
     @IBOutlet var allesPrivacyButton: UIButton!
     @IBOutlet var allesTOSButton: UIButton!
     @IBOutlet var allesWebsiteButton: UIButton!
@@ -51,7 +52,9 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
     @IBOutlet var biometricsLabel: UIButton!
     @IBOutlet var biometricsSwitch: UISwitch!
 
-    var userID = ""
+	@IBOutlet weak var changeAccentColorButton: UIButton!
+	
+	var userID = ""
 
     var delegate: MainSettingsDelegate!
 
@@ -75,6 +78,8 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
         // changeAccentColor.setTitle(SLocale(.CLEAR_CACHE), for: .normal)
 
         biometricsLabel.setTitle(SLocale(.BIOMETRICS), for: .normal)
+		changeAccentColorButton.setTitle(SLocale(.CHANGE_ACCENT_COLOR), for: .normal)
+		spicaLegalNoticeButton.setTitle(SLocale(.LEGAL_NOTICE), for: .normal)
     }
 
     @IBAction func toggleBiometrics(_: Any) {
@@ -120,7 +125,7 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
     }
 
     @IBAction func translateApp(_: Any) {
-        let url = URL(string: "https://go.fliney.eu/BWhtmsECgJ49")
+        let url = URL(string: "https://go.abmgrt.dev/V9kB3o")
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
         }
@@ -134,10 +139,10 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
     }
 
     var colorPickerController: ColorPickerController!
-    var changeAccentColorSheet = UIAlertController(title: "Change accent color", message: "", preferredStyle: .actionSheet)
+	var changeAccentColorSheet = UIAlertController(title: SLocale(.CHANGE_ACCENT_COLOR), message: "", preferredStyle: .actionSheet)
 
     @IBAction func changeAccentColor(_: UIButton) {
-        changeAccentColorSheet = UIAlertController(title: "Change accent color", message: "", preferredStyle: .actionSheet)
+		changeAccentColorSheet = UIAlertController(title: SLocale(.CHANGE_ACCENT_COLOR), message: "", preferredStyle: .actionSheet)
 
         let currentAccentColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
         colorPickerController = ColorPickerController(color: Color(currentAccentColor ?? UIColor.systemBlue))
@@ -192,11 +197,15 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
     }
 
     @IBAction func contact(_: Any) {
-        let url = URL(string: "mailto:adrian@abmgrt.dev")
+        let url = URL(string: "mailto:lea@abmgrt.dev")
         if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!)
         }
     }
+	
+	@IBAction func spicaLegalNotice(_: Any) {
+		navigationController?.pushViewController(LegalNoticeViewController(), animated: true)
+	}
 
     @IBAction func signOut(_: Any) {
         KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
@@ -386,7 +395,7 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
                 return 1
             }
         case 2:
-            return 2
+            return 3
         case 3:
             return 3
         case 4:
