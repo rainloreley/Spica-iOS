@@ -21,6 +21,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     var tableView: UITableView!
     var loadedPreviously = false
     var userDataLoaded = false
+	var detailPfp: UIImage?
 
     var navigatedFromSidebar = false
 
@@ -78,7 +79,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 
         navigationItem.rightBarButtonItems = rightItems
 
-        tableView = UITableView(frame: view.bounds, style: .insetGrouped)
+		tableView = UITableView(frame: view.bounds, style: .insetGrouped)
         tableView?.delegate = self
         tableView?.dataSource = self
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
@@ -157,11 +158,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         if UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url)
         }
-        /* let vc = UserEditViewController()
-         vc.user = user
-         vc.delegate = self
-         vc.hidesBottomBarWhenPushed = true
-         navigationController?.pushViewController(vc, animated: true) */
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -228,6 +224,11 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
                 } receiveValue: { [unowned self] in
                     self.user = $0
                     self.navigationItem.title = "\(self.user.nickname)"
+					let signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+					if self.user.id == signedInID {
+						KeychainWrapper.standard.set(self.user.name, forKey: "dev.abmgrt.spica.user.name")
+						KeychainWrapper.standard.set(self.user.tag, forKey: "dev.abmgrt.spica.user.tag")
+					}
                     self.loadPfp()
                     self.loadPosts()
                 }
@@ -302,129 +303,9 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
             }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
-                if self.userPosts.isEmpty {
-                    self.tableView.setEmptyMessage(message: SLocale(.NOTIFICATIONS_EMPTY_TITLE), subtitle: SLocale(.NOTIFICATIONS_EMPTY_SUBTITLE))
-                } else {
-                    self.tableView.restore()
-                }
             }
         }
     }
-
-    /* func loadImages() {
-         DispatchQueue.global(qos: .utility).async { [self] in
-             // let verification = verificationString
-             let dispatchGroup = DispatchGroup()
-             for (index, post) in userPosts.enumerated() {
-                 dispatchGroup.enter()
-                 // if verification != verificationString || index > posts.count { return }
-                 // let profilePicture = ImageLoader.loadImageFromInternet(url: (posts[index].author?.imgURL)!)
-                 ImageLoader.loadImageFromInternetNew(url: (userPosts[index].author?.imgURL)!)
-                     .receive(on: RunLoop.main)
-                     .sink {
-                         switch $0 {
-                         case .failure:
-                             dispatchGroup.leave()
-                             return
-                         default: break
-                         }
-                     } receiveValue: { pfpImg in
-                         userPosts[index].author?.image = pfpImg
-
-                         if let mentionedPost = post.mentionedPost {
-                             userPosts[index].mentionedPost?.author?.image = ImageLoader.loadImageFromInternet(url: (mentionedPost.author?.imgURL)!)
-                         }
-
-                         if let postImgURL = post.imageURL {
-                             ImageLoader.loadImageFromInternetNew(url: postImgURL)
-                                 .receive(on: RunLoop.main)
-                                 .sink {
-                                     switch $0 {
-                                     case .failure:
-                                         userPosts[index].image = UIImage()
-                                         DispatchQueue.main.async {
-                                             self.tableView.beginUpdates()
-                                             self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
-                                             self.tableView.endUpdates()
-                                         }
-                                         dispatchGroup.leave()
-                                         return
-                                     default: break
-                                     }
-                                 } receiveValue: { postImg in
-                                     userPosts[index].image = postImg
-                                     DispatchQueue.main.async {
-                                         self.tableView.beginUpdates()
-                                         self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
-                                         self.tableView.endUpdates()
-                                     }
-                                     dispatchGroup.leave()
-                                 }.store(in: &subscriptions)
-                         } else {
-                             userPosts[index].image = UIImage()
-                             DispatchQueue.main.async {
-                                 self.tableView.beginUpdates()
-                                 self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
-                                 self.tableView.endUpdates()
-                             }
-                             dispatchGroup.leave()
-                         }
-                     }
-                     .store(in: &subscriptions)
-
-                 // if verification != verificationString || index > posts.count { return }
-             }
-             dispatchGroup.notify(queue: .main) {
-                 loadedPreviously = true
-                 self.tableView.reloadData()
-                 if let contentOffset = self.contentOffset {
-                     self.tableView.setContentOffset(contentOffset, animated: false)
-                 }
-             }
-         }
-     } */
-
-    /* func loadImages() {
-     let veri = verificationString
-     DispatchQueue.global(qos: .background).async { [self] in
-     let dispatchGroup = DispatchGroup()
-     for (index, post) in userPosts.enumerated() {
-     if veri != verificationString { return }
-     dispatchGroup.enter()
-     if index <= userPosts.count - 1 {
-     if let author = userPosts[index].author {
-     if veri != verificationString { return }
-     let image = ImageLoader.loadImageFromInternet(url: author.imgURL!)
-     DispatchQueue.main.async {
-     userPosts[index].author?.image = image
-     }
-     }
-     if let url = post.imageURL {
-     if veri != verificationString { return }
-     userPosts[index].image = ImageLoader.loadImageFromInternet(url: url)
-     } else {
-     userPosts[index].image = UIImage()
-     }
-     if index < 5 {
-     if veri != verificationString { return }
-     DispatchQueue.main.async {
-     self.tableView.beginUpdates()
-     self.tableView.reloadRows(at: [IndexPath(row: index, section: 1)], with: .automatic)
-     self.tableView.endUpdates()
-     }
-     }
-     dispatchGroup.leave()
-     }
-     }
-     DispatchQueue.main.async {
-     loadedPreviously = true
-     self.tableView.reloadData()
-     if let contentOffset = self.contentOffset {
-     	self.tableView.setContentOffset(contentOffset, animated: false)
-     }
-     }
-     }
-     } */
 
     @objc func openUserProfile(_ sender: UITapGestureRecognizer) {
         let userByTag = userPosts[sender.view!.tag].author
@@ -489,6 +370,49 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
 }
 
 extension UserProfileViewController: UserHeaderDelegate {
+	
+	@objc func saveDetailPfp() {
+		if let image = detailPfp {
+			UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+		}
+	}
+	
+	func clickedPfp(image: UIImage?) {
+		if image != nil {
+			let images = [
+				LightboxImage(
+					image: image!
+				),
+			]
+
+			LightboxConfig.CloseButton.text = SLocale(.CLOSE_ACTION)
+			let controller = LightboxController(images: images)
+
+			controller.dynamicBackground = true
+			
+			detailPfp = image
+
+			let saveBtn: UIButton = {
+				let btn = UIButton(type: .system)
+				btn.setImage(UIImage(systemName: "square.and.arrow.down"), for: .normal)
+				btn.addTarget(self, action: #selector(saveDetailPfp), for: .touchUpInside)
+				btn.tintColor = .white
+				return btn
+			}()
+
+			controller.headerView.addSubview(saveBtn)
+			saveBtn.snp.makeConstraints { make in
+				// make.top.equalTo(controller.headerView.snp.top).offset(-2)
+				make.centerY.equalTo(controller.headerView.closeButton.snp.centerY)
+				make.leading.equalTo(controller.headerView.snp.leading).offset(8)
+				make.width.equalTo(50)
+				make.height.equalTo(50)
+			}
+
+			present(controller, animated: true, completion: nil)
+		}
+	}
+	
     func followUnfollowUser(uid _: String) {
         followUnfollowUser()
     }

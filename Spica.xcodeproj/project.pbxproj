@@ -405,12 +405,12 @@
 			path = "Progress Bar";
 			sourceTree = "<group>";
 		};
-		3A474AF924B24EC0003424F5 /* New Post Cell */ = {
+		3A474AF924B24EC0003424F5 /* Post Cell */ = {
 			isa = PBXGroup;
 			children = (
 				3A474AFA24B24EDA003424F5 /* PostCellView.swift */,
 			);
-			path = "New Post Cell";
+			path = "Post Cell";
 			sourceTree = "<group>";
 		};
 		3A478C5024ED385B00EE46E1 /* SwiftUI Post Cell */ = {
@@ -436,7 +436,7 @@
 				3A478C5024ED385B00EE46E1 /* SwiftUI Post Cell */,
 				3A48CD6C24BF1BB500DD05CA /* Ancestor Post Divider */,
 				3AFAF96124BB4DB0003771B4 /* User Header Cell */,
-				3A474AF924B24EC0003424F5 /* New Post Cell */,
+				3A474AF924B24EC0003424F5 /* Post Cell */,
 				3AFC695424B8C0F80016FEFA /* Credits Cell */,
 				3ADF6BC124AD24D600B7C510 /* ReplyButtonCell */,
 			);

@@ -47,26 +47,6 @@ struct PostView: View {
                 }
                 Spacer()
             }
-
-            /* VStack {
-             	HStack {
-             		Image(systemName: "person.circle").resizable().frame(width: 40, height: 40, alignment: .leading)
-             		Text("Adrian+").bold()
-             		Spacer()
-             	}.padding()
-
-             	Group {
-             		HStack {
-             			VStack {
-             				Text("+")
-             				Text("20")
-             				Text("-")
-             			}
-             			Spacer()
-             		}.padding()
-             	}
-             	Spacer()
-             } */
         }.frame(maxWidth: .infinity)
             .background(Color(UIColor.secondarySystemBackground))
     }

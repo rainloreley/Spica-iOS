@@ -75,7 +75,6 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
         copyrightLabel.text = SLocale(.SPICA_COPYRIGHT)
         translateAppLabel.setTitle(SLocale(.TRANSLATE_APP), for: .normal)
         contactLabel.setTitle(SLocale(.CONTACT), for: .normal)
-        // changeAccentColor.setTitle(SLocale(.CLEAR_CACHE), for: .normal)
 
         biometricsLabel.setTitle(SLocale(.BIOMETRICS), for: .normal)
         changeAccentColorButton.setTitle(SLocale(.CHANGE_ACCENT_COLOR), for: .normal)
@@ -154,7 +153,6 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
         }
 
         let height: NSLayoutConstraint = NSLayoutConstraint(item: changeAccentColorSheet.view!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 200)
-        /* let width: NSLayoutConstraint = NSLayoutConstraint(item: changeAccentColor.view!, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 350) */
         changeAccentColorSheet.view.addConstraint(height)
 
         let exitBtn: UIButton! = {

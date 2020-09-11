@@ -279,22 +279,6 @@ public class AllesAPI {
                                         }
                                     }
                                 }.store(in: &self.subscriptions)
-
-                            /* AF.request("https://online.alles.cx/\(responseJSON["id"].string!)", method: .get, parameters: nil, headers: [
-                                 "Authorization": authKey,
-                             ]).response(queue: .global(qos: .utility)) { onlineResponse in
-                                 switch onlineResponse.result {
-                                 case .success:
-                                     let data = String(data: onlineResponse.data!, encoding: .utf8)
-                                     let isOnline = data == "🟢"
-                                     let newUser = User(responseJSON, isOnline: isOnline)
-                                     promise(.success(newUser))
-                                 case let .failure(err):
-                                     var apiError = AllesAPIErrorHandler.default.returnError(error: "spica_unknownError")
-                                     apiError.message.append("\nError: \(err.errorDescription!)")
-                                     promise(.failure(apiError))
-                                 }
-                             } */
                         } else {
                             if response.response!.statusCode == 401 {
                                 promise(.failure(AllesAPIErrorHandler.default.returnError(error: "badAuthorization")))
@@ -379,14 +363,6 @@ public class AllesAPI {
                                     promise(.failure(apiError))
                                 }
                             }
-
-                            /* let followers = responseJSON["followers"].map { _, json in
-                                 FollowUser(json)
-                             }
-
-                             let following = responseJSON["following"].map { _, json in
-                                 FollowUser(json)
-                             } */
 
                         } else {
                             if response.response!.statusCode == 401 {
@@ -697,7 +673,6 @@ public class AllesAPI {
                                                     var mentionedUserData = responseJSON["users"][userID]
                                                     mentionedUserData["id"].stringValue = userID
                                                     post.mentionedUsers.append(User(mentionedUserData))
-                                                    /* post.mentionedUsers.append(User(id: userID, name: responseJSON["users"][userID]["name"].string!, nickname: responseJSON["users"][userID]["nickname"].string!, plus: responseJSON["users"][userID]["plus"].bool!, alles: responseJSON["users"][userID]["alles"].bool!)) */
                                                     disGroup.leave()
                                                 } else {
                                                     AllesAPI.default.loadUser(id: userID)

@@ -81,22 +81,5 @@ class LegalNoticeViewController: UIViewController {
             make.trailing.equalTo(view.snp.trailing).offset(-16)
             make.bottom.equalTo(view.snp.bottom).offset(-8)
         }
-
-        /* markdownView = UITextView(frame: .zero)
-         markdownView.isEditable = false
-         view.addSubview(markdownView!)
-
-         markdownView?.snp.makeConstraints { make in
-         	make.top.equalTo(view.snp.top).offset(16)
-         	make.leading.equalTo(view.snp.leading).offset(16)
-         	make.trailing.equalTo(view.snp.trailing).offset(-16)
-         	make.bottom.equalTo(view.snp.bottom).offset(-8)
-         } */
     }
-
-    /* override func viewDidAppear(_ animated: Bool) {
-     	let styleSheet = traitCollection.userInterfaceStyle == .dark ? "* {font-family: Helvetica; color: #ffffff } code, pre { font-family: Menlo }" : "* {font-family: Helvetica; color: #000000 } code, pre { font-family: Menlo }"
-
-     	//markdownView.attributedText = try? Down(markdownString: legalNotice).toAttributedString(.normalize, stylesheet: styleSheet)
-     } */
 }

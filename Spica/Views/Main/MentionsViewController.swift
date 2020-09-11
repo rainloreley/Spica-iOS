@@ -56,65 +56,6 @@ class MentionsViewController: UIViewController, PostCreateDelegate {
         loadingHud.interactionType = .blockNoTouches
     }
 
-    /* typealias DataSource = UITableViewDiffableDataSource<Section, PostNotification>
-     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, PostNotification>
-
-     private lazy var dataSource = makeDataSource()
-
-     enum Section {
-         case main
-     }
-
-     func makeDataSource() -> DataSource {
-         let source = DataSource(tableView: tableView) { [self] (tableView, indexPath, post) -> UITableViewCell? in
-             let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
-
-             cell.delegate = self
-             cell.indexPath = indexPath
-             cell.post = post.post
-
-             if !post.read {
-                 let unreadIndicator = UIView()
-                 unreadIndicator.backgroundColor = .systemBlue
-                 unreadIndicator.layer.cornerRadius = 10
-                 cell.addSubview(unreadIndicator)
-                 unreadIndicator.snp.makeConstraints { make in
-                     make.top.equalTo(cell.snp.top).offset(8)
-                     make.width.equalTo(20)
-                     make.height.equalTo(20)
-                     make.trailing.equalTo(cell.snp.trailing).offset(-8)
-                 }
-             }
-
-             let tap = UITapGestureRecognizer(target: self, action: #selector(openUserProfile(_:)))
-             cell.pfpImageView.tag = indexPath.row
-             cell.pfpImageView.isUserInteractionEnabled = true
-             cell.pfpImageView.addGestureRecognizer(tap)
-             cell.upvoteButton.tag = indexPath.row
-             cell.upvoteButton.addTarget(self, action: #selector(upvotePost(_:)), for: .touchUpInside)
-             cell.downvoteButton.tag = indexPath.row
-             cell.downvoteButton.addTarget(self, action: #selector(downvotePost(_:)), for: .touchUpInside)
-
-             return cell
-         }
-         source.defaultRowAnimation = .fade
-         return source
-     }
-
-     func applyChanges(_ animated: Bool = true) {
-         var snapshot = Snapshot()
-         snapshot.appendSections([.main])
-         snapshot.appendItems(mentions, toSection: .main)
-         DispatchQueue.main.async {
-             self.dataSource.apply(snapshot, animatingDifferences: animated)
-             if self.mentions.isEmpty {
-                 self.tableView.setEmptyMessage(message: SLocale(.NOTIFICATIONS_EMPTY_TITLE), subtitle: SLocale(.NOTIFICATIONS_EMPTY_SUBTITLE))
-             } else {
-                 self.tableView.restore()
-             }
-         }
-     } */
-
     func setSidebar() {
         if #available(iOS 14.0, *) {
             if let splitViewController = splitViewController, !splitViewController.isCollapsed {

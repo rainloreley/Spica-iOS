@@ -16,6 +16,7 @@ protocol UserHeaderDelegate {
     func followUnfollowUser(uid: String)
     func clickedOnFollowerCount()
     func clickedOnFollowingCount()
+	func clickedPfp(image: UIImage?)
 }
 
 class UserHeaderViewController: ObservableObject {

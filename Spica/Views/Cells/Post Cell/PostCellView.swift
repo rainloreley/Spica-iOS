@@ -118,7 +118,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
                     selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
 
-                    let tag = word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]
+					let tag = removeSpecialCharsFromString(text: String(word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]))
                     selectablePart.addAttribute(.link, value: "tag:\(tag)", range: NSRange(location: 0, length: selectablePart.length - 1))
                     attributedText.append(selectablePart)
                 } else {

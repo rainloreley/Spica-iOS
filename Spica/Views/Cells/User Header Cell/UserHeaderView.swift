@@ -10,6 +10,7 @@
 
 import SkeletonUI
 import SwiftUI
+import Lightbox
 
 struct UserHeaderView: View {
     @ObservedObject var controller: UserHeaderViewController
@@ -41,6 +42,11 @@ struct UserHeaderView: View {
                             .animation(.easeInOut(duration: 1))
                             .shadow(radius: 8)
                         )
+						.gesture(
+							TapGesture().onEnded({ (_) in
+								//presentPfpFullscreen = true
+								controller.delegate.clickedPfp(image: controller.user.image)
+							}))
                 }
                 Spacer()
             }
@@ -58,13 +64,7 @@ struct UserHeaderView: View {
                 if controller.user.followsMe && !controller.isLoggedInUser {
                     Text(SLocale(.FOLLOWS_YOU)).foregroundColor(.init(UIColor.tertiaryLabel))
                 }
-
-                /* Text(controller.user.about).padding([.top, .bottom])
-                 .skeleton(with: !controller.userDataLoaded)
-                 .shape(type: .capsule)
-                 .appearance(type: .solid(color: Color.red, background: Color("LoadingSkeleton")))
-                 .animation(type: .pulse())
-                 .multiline(lines: 3, scales: [0: 0.5, 1: 0.5, 2: 0.5]) */
+				
                 HStack {
                     Group {
                         if controller.isLoggedInUser {
@@ -154,12 +154,35 @@ struct UserHeaderView: View {
 
         }.padding(16)
             .onAppear {
-                /* dateFormatter.timeStyle = .none
-                 dateFormatter.dateStyle = .medium */
                 controller.getLoggedInUser()
             }
             .background(Color.clear)
+		
     }
+}
+
+struct FullScreenImageView: UIViewRepresentable {
+	var image: UIImage
+
+	func makeUIView(context: Context) -> UIView {
+		return UIView()
+	}
+
+	func updateUIView(_ uiView: UIView, context: Context) {
+		let images = [
+			LightboxImage(
+				image: image,
+				text: ""
+			),
+		]
+
+		LightboxConfig.CloseButton.text = SLocale(.CLOSE_ACTION)
+		let controller = LightboxController(images: images)
+
+		controller.dynamicBackground = true
+
+		uiView.addSubview(controller.view)
+	}
 }
 
 struct LoadingSkeleton<Content: View>: View {

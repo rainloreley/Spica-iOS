@@ -648,11 +648,6 @@ extension TimelineViewController: PostCellViewDelegate, UIImagePickerControllerD
 
     func selectedUser(id: String, indexPath _: IndexPath) {
         let vc = UserProfileViewController()
-
-        /* let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-         let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name")
-         let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag") */
-
         vc.user = User(id: id)
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
