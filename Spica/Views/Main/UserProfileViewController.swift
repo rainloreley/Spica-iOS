@@ -59,8 +59,6 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        hero.isEnabled = true
-
         loadedPreviously = false
 
         view.backgroundColor = .systemBackground

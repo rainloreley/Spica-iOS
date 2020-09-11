@@ -34,7 +34,6 @@ class UserEditHeaderCell: UITableViewCell {
         let imgView = UIImageView(frame: .zero)
         imgView.contentMode = .scaleAspectFit
         imgView.clipsToBounds = true
-        imgView.hero.id = "userPfpImageView"
         imgView.layer.cornerRadius = 50
         return imgView
     }()
@@ -43,7 +42,6 @@ class UserEditHeaderCell: UITableViewCell {
         let label = UILabel(frame: .zero)
         label.text = "Display Name"
         label.textAlignment = .center
-        label.hero.id = "userDisplaynameLabel"
         label.font = .boldSystemFont(ofSize: 18)
         return label
     }()
@@ -51,7 +49,6 @@ class UserEditHeaderCell: UITableViewCell {
     private var usernameLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.text = "username"
-        label.hero.id = "userUsernameLabel"
         label.textAlignment = .center
         label.textColor = .secondaryLabel
         return label
@@ -59,8 +56,6 @@ class UserEditHeaderCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        hero.isEnabled = true
 
         contentView.addSubview(pfpImageView)
         contentView.addSubview(displaynameLabel)

@@ -34,29 +34,6 @@ class UsedLibrariesViewController: UIViewController {
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
         THE SOFTWARE.
         """),
-        Library(name: "Hero", url: "https://github.com/HeroTransitions/Hero", license: """
-        The MIT License (MIT)
-
-        Copyright (c) 2015 Luke Zhao <me@lkzhao.com>
-
-        Permission is hereby granted, free of charge, to any person obtaining a copy
-        of this software and associated documentation files (the "Software"), to deal
-        in the Software without restriction, including without limitation the rights
-        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-        copies of the Software, and to permit persons to whom the Software is
-        furnished to do so, subject to the following conditions:
-
-        The above copyright notice and this permission notice shall be included in
-        all copies or substantial portions of the Software.
-
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-        THE SOFTWARE.
-        """),
         Library(name: "JGProgressHUD", url: "https://github.com/JonasGessner/JGProgressHUD", license: """
         The MIT License (MIT)
 
@@ -193,16 +170,28 @@ class UsedLibrariesViewController: UIViewController {
         SOFTWARE.
         """),
         Library(name: "Lightbox", url: "https://github.com/hyperoslo/Lightbox", license: """
+        Licensed under the **MIT** license
 
-        Licensed under the MIT license
-
-        Copyright (c) 2015 Hyper Interaktiv AS
-
-        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+        > Copyright (c) 2015 Hyper Interaktiv AS
+        >
+        > Permission is hereby granted, free of charge, to any person obtaining
+        > a copy of this software and associated documentation files (the
+        > "Software"), to deal in the Software without restriction, including
+        > without limitation the rights to use, copy, modify, merge, publish,
+        > distribute, sublicense, and/or sell copies of the Software, and to
+        > permit persons to whom the Software is furnished to do so, subject to
+        > the following conditions:
+        >
+        > The above copyright notice and this permission notice shall be
+        > included in all copies or substantial portions of the Software.
+        >
+        > THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+        > EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+        > MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+        > IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+        > CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+        > TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+        > SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         """),
         Library(name: "SkeletonUI", url: "https://github.com/CSolanaM/SkeletonUI", license: """
         MIT License
@@ -261,13 +250,13 @@ class UsedLibrariesViewController: UIViewController {
         Redistribution and use in source and binary forms, with or without
         modification, are permitted provided that the following conditions are met:
 
-        * Redistributions of source code must retain the above copyright
-          notice, this list of conditions and the following disclaimer.
+        	* Redistributions of source code must retain the above copyright
+        	  notice, this list of conditions and the following disclaimer.
 
-        * Redistributions in binary form must reproduce the above
-          copyright notice, this list of conditions and the following
-          disclaimer in the documentation and/or other materials provided
-          with the distribution.
+        	* Redistributions in binary form must reproduce the above
+        	  copyright notice, this list of conditions and the following
+        	  disclaimer in the documentation and/or other materials provided
+        	  with the distribution.
 
         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
         "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -406,13 +395,13 @@ class UsedLibrariesViewController: UIViewController {
         Redistribution and use in source and binary forms, with or without
         modification, are permitted provided that the following conditions are met:
 
-        * Redistributions of source code must retain the above copyright
-          notice, this list of conditions and the following disclaimer.
+        	* Redistributions of source code must retain the above copyright
+        	  notice, this list of conditions and the following disclaimer.
 
-        * Redistributions in binary form must reproduce the above
-          copyright notice, this list of conditions and the following
-          disclaimer in the documentation and/or other materials provided
-          with the distribution.
+        	* Redistributions in binary form must reproduce the above
+        	  copyright notice, this list of conditions and the following
+        	  disclaimer in the documentation and/or other materials provided
+        	  with the distribution.
 
         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
         "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -447,6 +436,29 @@ class UsedLibrariesViewController: UIViewController {
         OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
         WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         """),
+		Library(name: "URLNavigator", url: "https://github.com/devxoul/URLNavigator", license: """
+		The MIT License (MIT)
+
+		Copyright (c) 2016 Suyeol Jeon (xoul.kr)
+
+		Permission is hereby granted, free of charge, to any person obtaining a copy
+		of this software and associated documentation files (the "Software"), to deal
+		in the Software without restriction, including without limitation the rights
+		to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+		copies of the Software, and to permit persons to whom the Software is
+		furnished to do so, subject to the following conditions:
+
+		The above copyright notice and this permission notice shall be included in all
+		copies or substantial portions of the Software.
+
+		THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+		IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+		FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+		AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+		LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+		OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+		SOFTWARE.
+		""")
     ]
 
     var tableView: UITableView!
@@ -496,7 +508,7 @@ extension UsedLibrariesViewController: UITableViewDelegate, UITableViewDataSourc
     }
 
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+		if section == 0 {
             return libraries.count
         } else {
             return 1
@@ -504,7 +516,7 @@ extension UsedLibrariesViewController: UITableViewDelegate, UITableViewDataSourc
     }
 
     func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
+		if indexPath.section == 0 {
             let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
             cell.textLabel?.text = libraries[indexPath.row].name
             cell.textLabel?.font = .boldSystemFont(ofSize: 20)

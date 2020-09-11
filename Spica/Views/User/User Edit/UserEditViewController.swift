@@ -10,7 +10,6 @@
 
 import Cache
 import Combine
-import Hero
 import JGProgressHUD
 import SPAlert
 import UIKit
@@ -40,8 +39,6 @@ class UserEditViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        hero.isEnabled = true
 
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = SLocale(.LOADING_ACTION)

@@ -109,18 +109,10 @@ class MainSettingsViewController: UITableViewController, ColorPickerControllerDe
     }
 
     @IBAction func profileMore(_: Any) {
-        if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-            let vc = UserProfileViewController()
-            vc.user = User(id: userID)
-            vc.hidesBottomBarWhenPushed = true
-
-            navigationController?.pushViewController(vc, animated: true)
-        } else {
-            dismiss(animated: true)
-            if delegate != nil {
-                delegate.clickedMore(uid: userID)
-            }
-        }
+		let url = URL(string: "spica://user/\(userID)")
+		if UIApplication.shared.canOpenURL(url!) {
+			UIApplication.shared.open(url!)
+		}
     }
 
     @IBAction func translateApp(_: Any) {
