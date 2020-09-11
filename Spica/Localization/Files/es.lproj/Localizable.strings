@@ -19,6 +19,7 @@
 "LOADING_ACTION" = "Cargando";
 
 "POST_NOUN" = "Publicación";
+"POST_NOUN_PLURAL" = "Posts";
 "NEWPOST_PLACEHOLDER" = "¿Qué se te ocurre?";
 
 "IMAGE" = "Imagen";

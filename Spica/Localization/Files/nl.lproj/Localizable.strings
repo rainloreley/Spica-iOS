@@ -19,6 +19,7 @@
 "LOADING_ACTION" = "Loading";
 
 "POST_NOUN" = "Post";
+"POST_NOUN_PLURAL" = "Posts";
 "NEWPOST_PLACEHOLDER" = "What's on your mind?";
 
 "IMAGE" = "Image";
@@ -71,7 +72,7 @@
 
 "OTHER" = "Other";
 
-"SPICA_COPYRIGHT" = "© 2020, Adrian Baumgart. All rights reserved.";
+"SPICA_COPYRIGHT" = "© 2020, Lea (Adrian) Baumgart. All rights reserved.";
 
 "ALLES_LOGIN" = "Alles Login";
 "USERNAME" = "Username";

@@ -19,6 +19,7 @@
 "LOADING_ACTION" = "Chargement";
 
 "POST_NOUN" = "Publier";
+"POST_NOUN_PLURAL" = "Posts";
 "NEWPOST_PLACEHOLDER" = "Comment ça va?";
 
 "IMAGE" = "Image";
