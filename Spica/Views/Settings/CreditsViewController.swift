@@ -15,16 +15,16 @@ class CreditsViewController: UIViewController {
     var toolbarDelegate = ToolbarDelegate()
 
     var credits = [
-        Credit(name: "Lea Baumgart", role: "iOS Developer", url: "https://twitter.com/leabmgrt", imageURL: "https://avatar.alles.cc/87cd0529-f41b-4075-a002-059bf2311ce7", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "Patrik Svoboda", role: "iOS Developer", url: "https://twitter.com/PatrikTheDev", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "Jason", role: "Android Developer", url: "https://twitter.com/jso_8910", imageURL: "", image: UIImage(named: "jsoPfp")!),
-        Credit(name: "Archie Baer", role: "Alles Founder", url: "https://twitter.com/onlytruearchie", imageURL: "https://avatar.alles.cc/00000000-0000-0000-0000-000000000000", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "David Muñoz", role: "Translator (Spanish)", url: "https://twitter.com/Dmunozv04", imageURL: "https://crowdin-static.downloads.crowdin.com/avatar/13940729/small/bf4ab120766769e9c9deed4b51c2661c.jpg", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "James Young", role: "Translator (French, Norwegian)", url: "https://twitter.com/onlytruejames", imageURL: "https://avatar.alles.cc/af3a1a9e-b0e1-418e-8b4c-76605897eeab", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "@DaThinkingChair", role: "Translator (Spanish)", url: "https://twitter.com/DaThinkingChair", imageURL: "https://pbs.twimg.com/profile_images/1259314332950769666/UPvu5g-e_400x400.jpg", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "Storm", role: "Translator (Norwegian)", url: "https://twitter.com/StormLovesTech", imageURL: "https://avatar.alles.cc/43753811-5856-4d98-93a3-ed8763e9176e", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "primenate32", role: "Translator (Frensh, Spanish)", url: "http://123computer.net", imageURL: "https://pbs.twimg.com/profile_images/1288993775801565185/3izyvyCV_400x400.jpg", image: UIImage(systemName: "person.circle")!),
-        Credit(name: "grify", role: "Translator (Swedish)", url: "https://twitter.com/GrifyDev", imageURL: "https://avatar.alles.cc/181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Lea Baumgart", role: "iOS Developer", twitterURL: "https://twitter.com/leabmgrt", allesUID: "87cd0529-f41b-4075-a002-059bf2311ce7", imageURL: "https://avatar.alles.cc/87cd0529-f41b-4075-a002-059bf2311ce7", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Patrik Svoboda", role: "iOS Developer", twitterURL: "https://twitter.com/PatrikTheDev", allesUID: "f2d1821d-6bd6-4e26-959f-885428cf8a9b", imageURL: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Jason", role: "Android Developer", twitterURL: "https://twitter.com/jso_8910", allesUID: "0b528866-df2c-4323-9498-7b4b417b0023", imageURL: "", image: UIImage(named: "jsoPfp")!),
+        Credit(name: "Archie Baer", role: "Alles Founder", twitterURL: "https://twitter.com/onlytruearchie", allesUID: "00000000-0000-0000-0000-000000000000", imageURL: "https://avatar.alles.cc/00000000-0000-0000-0000-000000000000", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "David Muñoz", role: "Translator (Spanish)", twitterURL: "https://twitter.com/Dmunozv04", imageURL: "https://crowdin-static.downloads.crowdin.com/avatar/13940729/small/bf4ab120766769e9c9deed4b51c2661c.jpg", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "James Young", role: "Translator (French, Norwegian)", twitterURL: "https://twitter.com/onlytruejames", allesUID: "af3a1a9e-b0e1-418e-8b4c-76605897eeab", imageURL: "https://avatar.alles.cc/af3a1a9e-b0e1-418e-8b4c-76605897eeab", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "@DaThinkingChair", role: "Translator (Spanish)", twitterURL: "https://twitter.com/DaThinkingChair", imageURL: "https://pbs.twimg.com/profile_images/1259314332950769666/UPvu5g-e_400x400.jpg", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "Storm", role: "Translator (Norwegian)", twitterURL: "https://twitter.com/StormLovesTech", allesUID: "43753811-5856-4d98-93a3-ed8763e9176e", imageURL: "https://avatar.alles.cc/43753811-5856-4d98-93a3-ed8763e9176e", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "primenate32", role: "Translator (Frensh, Spanish)", twitterURL: "http://123computer.net", allesUID: "daf52a37-667a-4434-8dcc-c6fa1f9fa508", imageURL: "https://pbs.twimg.com/profile_images/1288993775801565185/3izyvyCV_400x400.jpg", image: UIImage(systemName: "person.circle")!),
+        Credit(name: "grify", role: "Translator (Swedish)", twitterURL: "https://twitter.com/GrifyDev", allesUID: "181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d", imageURL: "https://avatar.alles.cc/181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d", image: UIImage(systemName: "person.circle")!),
     ]
 
     override func viewDidLoad() {
@@ -111,17 +111,26 @@ extension CreditsViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let url = URL(string: credits[indexPath.section].url)
-        if UIApplication.shared.canOpenURL(url!) {
-            UIApplication.shared.open(url!)
-        }
+		if credits[indexPath.section].allesUID != nil {
+			let url = URL(string: "spica://user/\(credits[indexPath.section].allesUID!)")
+			if UIApplication.shared.canOpenURL(url!) {
+				UIApplication.shared.open(url!)
+			}
+		}
+		else {
+			let url = URL(string: credits[indexPath.section].twitterURL)
+			if UIApplication.shared.canOpenURL(url!) {
+				UIApplication.shared.open(url!)
+			}
+		}
     }
 }
 
 struct Credit {
     var name: String
     var role: String
-    var url: String
+	var twitterURL: String
+	var allesUID: String?
     var imageURL: String
     var image: UIImage
 }

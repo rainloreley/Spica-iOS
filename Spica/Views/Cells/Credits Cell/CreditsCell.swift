@@ -52,6 +52,9 @@ class CreditsCell: UITableViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(roleLabel)
         contentView.addSubview(pfpImageView)
+		
+		let contextInteraction = UIContextMenuInteraction(delegate: self)
+		contentView.addInteraction(contextInteraction)
 
         pfpImageView.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.snp.centerY)
@@ -80,4 +83,38 @@ class CreditsCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
+}
+
+extension CreditsCell: UIContextMenuInteractionDelegate {
+	func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
+		return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+
+			self.makeContextMenu()
+		})
+	}
+
+	func makeContextMenu() -> UIMenu {
+		var actionsArray = [UIAction]()
+
+		let twitter = UIAction(title: "Twitter", image: UIImage(named: "twitter")) { _ in
+			let url = URL(string: self.creditUser.twitterURL)
+			if UIApplication.shared.canOpenURL(url!) {
+				UIApplication.shared.open(url!)
+			}
+		}
+
+		actionsArray.append(twitter)
+		
+		if creditUser.allesUID != nil {
+			let micro = UIAction(title: "Micro", image: UIImage(systemName: "circle")) { _ in
+				let url = URL(string: "spica://user/\(self.creditUser.allesUID!)")
+				if UIApplication.shared.canOpenURL(url!) {
+					UIApplication.shared.open(url!)
+				}
+			}
+			actionsArray.append(micro)
+		}
+
+		return UIMenu(title: "Credit", children: actionsArray)
+	}
 }
