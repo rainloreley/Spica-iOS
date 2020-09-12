@@ -19,7 +19,7 @@
 "LOADING_ACTION" = "Chargement";
 
 "POST_NOUN" = "Publier";
-"POST_NOUN_PLURAL" = "Posts";
+"POST_NOUN_PLURAL" = "Postes";
 "NEWPOST_PLACEHOLDER" = "Comment ça va?";
 
 "IMAGE" = "Image";
@@ -123,11 +123,11 @@
 "PRIVACY_POLICY_UPDATED" = "Nous avons mis à jour notre politique de confidentialité. Veuillez la lire attentivement. Si vous n'êtes pas d'accord, veuillez arrêter d'utiliser l'application.";
 "PRIVACY_POLICY_AGREE_CONTINUE" = "Accepter et continuer";
 
-"CHANGE_ACCENT_COLOR" = "Change accent color";
-"ACCENT_COLOR" = "Accent color";
-"RESET_ACTION" = "Reset";
-"LEGAL_NOTICE" = "Legal Notice";
-"JOINED_AT" = "Joined:";
+"CHANGE_ACCENT_COLOR" = "Changer la couleur d'accent";
+"ACCENT_COLOR" = "Couleur d'accent";
+"RESET_ACTION" = "Réinitialiser";
+"LEGAL_NOTICE" = "Mentions Legales";
+"JOINED_AT" = "Joint:";
 
 /* Error messages
 If you need more context, most errors are from the Alles API: https://erroneous.alles.cx
