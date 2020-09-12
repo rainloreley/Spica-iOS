@@ -34,5 +34,12 @@ struct URLNavigationMap {
             postDetail.selectedPostID = postID
             return postDetail
         }
+		
+		navigator.register("spica://tag/<string:name>") { _, values, _ in
+			let tagDetail = TagDetailViewController()
+			guard let tagName = values["name"] as? String else { return nil }
+			tagDetail.tag = Tag(name: tagName, posts: [])
+			return tagDetail
+		}
     }
 }

@@ -18,11 +18,6 @@ import UIKit
 // https://github.com/devxoul/UITextView-Placeholder
 
 protocol PostCellViewDelegate {
-    func selectedUser(id: String, indexPath: IndexPath)
-    func selectedURL(url: String, indexPath: IndexPath)
-    func selectedPost(post: String, indexPath: IndexPath)
-    func selectedTag(tag: String, indexPath: IndexPath)
-
     func copyPostID(id: String)
     func deletePost(id: String)
 
@@ -90,7 +85,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                         let selectablePart = NSMutableAttributedString(string: String(mention!.name) + " ")
                         selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
 
-                        selectablePart.addAttribute(.link, value: "user:\(mention!.id)", range: NSRange(location: 0, length: selectablePart.length - 1))
+                        selectablePart.addAttribute(.link, value: "spica://user/\(mention!.id)", range: NSRange(location: 0, length: selectablePart.length - 1))
 
                         attributedText.append(selectablePart)
                     } else {
@@ -104,7 +99,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                     selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
 
                     let postID = word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]
-                    selectablePart.addAttribute(.link, value: "post:\(postID)", range: NSRange(location: 0, length: selectablePart.length - 1))
+                    selectablePart.addAttribute(.link, value: "spica://post/\(postID)", range: NSRange(location: 0, length: selectablePart.length - 1))
 
                     attributedText.append(selectablePart)
                 } else if String(word).isValidURL, word.count > 1 {
@@ -119,7 +114,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
                     selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
 
 					let tag = removeSpecialCharsFromString(text: String(word[word.index(word.startIndex, offsetBy: 1) ..< word.endIndex]))
-                    selectablePart.addAttribute(.link, value: "tag:\(tag)", range: NSRange(location: 0, length: selectablePart.length - 1))
+                    selectablePart.addAttribute(.link, value: "spica://tag/\(tag)", range: NSRange(location: 0, length: selectablePart.length - 1))
                     attributedText.append(selectablePart)
                 } else {
                     if word == "\n" {
@@ -525,27 +520,28 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
         contentTextView.isMultipleTouchEnabled = true
     }
 
-    func textView(_: UITextView, shouldInteractWith URL: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
+    func textView(_: UITextView, shouldInteractWith url: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
         if interaction == .invokeDefaultAction {
-            let stringURL = URL.absoluteString
-
-            if stringURL.hasPrefix("user:") {
-                let username = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
-                delegate.selectedUser(id: String(username), indexPath: indexPath)
-            } else if stringURL.hasPrefix("url:") {
+            let stringURL = url.absoluteString
+			
+			if stringURL.hasPrefix("spica://") {
+				if UIApplication.shared.canOpenURL(url) {
+					UIApplication.shared.open(url)
+				}
+			}
+			else if stringURL.hasPrefix("url:") {
                 var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
                 if !selURL.starts(with: "https://"), !selURL.starts(with: "http://") {
                     selURL = "https://" + selURL
                 }
-                delegate.selectedURL(url: String(selURL), indexPath: indexPath)
+				let adaptedURL = URL(string: String(selURL))
+				if UIApplication.shared.canOpenURL(adaptedURL!) {
+					UIApplication.shared.open(adaptedURL!)
+				}
             } else if stringURL.isValidURL {
-                delegate.selectedURL(url: stringURL, indexPath: indexPath)
-            } else if stringURL.hasPrefix("post:") {
-                let postID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
-                delegate.selectedPost(post: String(postID), indexPath: indexPath)
-            } else if stringURL.hasPrefix("tag:") {
-                let tagID = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
-                delegate.selectedTag(tag: String(tagID), indexPath: indexPath)
+				if UIApplication.shared.canOpenURL(url) {
+					UIApplication.shared.open(url)
+				}
             }
         }
         return false

@@ -309,12 +309,6 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
         }
     }
 
-    func selectedTag(tag: String, indexPath _: IndexPath) {
-        let vc = TagDetailViewController()
-        vc.tag = Tag(name: tag, posts: [])
-        navigationController?.pushViewController(vc, animated: true)
-    }
-
     func clickedOnImage(controller: LightboxController) {
         #if targetEnvironment(macCatalyst)
             if let titlebar = view.window!.windowScene!.titlebar {
@@ -371,25 +365,5 @@ extension TagDetailViewController: PostCellViewDelegate, UIImagePickerController
                     self.loadTag()
                 }.store(in: &subscriptions)
         }
-    }
-
-    func selectedPost(post: String, indexPath _: IndexPath) {
-        let detailVC = PostDetailViewController()
-        detailVC.selectedPostID = post
-        detailVC.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(detailVC, animated: true)
-    }
-
-    func selectedURL(url: String, indexPath _: IndexPath) {
-        if let url = URL(string: url), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        }
-    }
-
-    func selectedUser(id: String, indexPath _: IndexPath) {
-        let vc = UserProfileViewController()
-        vc.user = User(id: id)
-        vc.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(vc, animated: true)
     }
 }
