@@ -8,6 +8,8 @@
 Spica for iOS is an iOS/iPadOS client for [Alles Micro](https://micro.alles.cx). It's privacy focused and easy to use.
 </div>
 
+<h4>Spica is broken again. and don't expect a quick update. if you wanna fix it now, feel free to fork, fix it and create a pull request.</h4>
+
 ## 🔨 Build & Install
 
 **Reqiured**:
