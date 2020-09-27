@@ -69,7 +69,7 @@ class UserProfileViewController: UIViewController, UserEditDelegate {
         navigationController?.navigationBar.prefersLargeTitles = false
         var rightItems = [UIBarButtonItem]()
 
-        rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))
+        /*rightItems.append(UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openPostCreateView)))*/
 
         if signedInID == user.id {
             rightItems.append(UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openUserSettings)))

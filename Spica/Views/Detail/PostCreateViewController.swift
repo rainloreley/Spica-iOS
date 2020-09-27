@@ -121,6 +121,7 @@ class PostCreateViewController: UIViewController, UITextViewDelegate {
         linkTextField = UITextField(frame: .zero)
         linkTextField.borderStyle = .roundedRect
         linkTextField.placeholder = "https://micro.alles.cx"
+		linkTextField.autocorrectionType = .no
         view.addSubview(linkTextField)
 
         userPfp.snp.makeConstraints { make in

@@ -53,12 +53,12 @@ struct UserHeaderView: View {
             Group {
                 HStack {
                     Text("\(controller.user.nickname)\(controller.user.plus ? String("⁺") : String(""))").font(.title).bold()
-                    if !controller.user.alles {
+                    /*if !controller.user.alles {
                         Text("Bot").foregroundColor(.white).font(.subheadline)
                             .padding(6)
                             .background(Color("PostButtonColor"))
                             .cornerRadius(12)
-                    }
+                    }*/
                 }
                 Text("\(controller.user.name)#\(controller.user.tag)").foregroundColor(.secondary)
                 if controller.user.followsMe && !controller.isLoggedInUser {
@@ -114,9 +114,7 @@ struct UserHeaderView: View {
                     Text("\(SLocale(.JOINED_AT))\(String(SLocale(.JOINED_AT)).last == " " ? String("") : String(" "))") + Text(dateFormatter.string(from: controller.user.joined)).bold()
                 }
 
-                if controller.user.alles {
-                    XPProgressBarView(xp: $controller.user.xp).frame(height: 60).padding(.top)
-                }
+				XPProgressBarView(xp: $controller.user.xp).frame(height: 60).padding(.top)
 
                 if !controller.user.labels.isEmpty {
                     HStack {

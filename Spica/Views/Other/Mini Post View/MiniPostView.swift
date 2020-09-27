@@ -31,6 +31,6 @@ struct MiniPostView: View {
 
 struct MiniPostView_Previews: PreviewProvider {
     static var previews: some View {
-        MiniPostView(controller: .init(post: MiniPost(id: "000", author: User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", nickname: "Lea", plus: true, alles: true), content: "Hello World!")))
+        MiniPostView(controller: .init(post: MiniPost(id: "000", author: User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", nickname: "Lea", plus: true), content: "Hello World!")))
     }
 }

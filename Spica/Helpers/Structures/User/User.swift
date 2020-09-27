@@ -18,7 +18,6 @@ public struct User: Hashable {
     var tag: String
     var nickname: String
     var plus: Bool
-    var alles: Bool
 
     var image: UIImage?
     var imgURL: URL?
@@ -36,13 +35,12 @@ public struct User: Hashable {
     var repliesCount: Int
     var labels: [Label]
 
-    init(id: String = "", name: String = "", tag: String = "", nickname: String = "", plus: Bool = false, alles: Bool = true, image: UIImage? = nil, imgURL: URL? = nil, xp: XP = XP(total: 0, level: 0, levelXP: 0, levelXPMax: 0, levelProgress: 0), about: String = "", isFollowing: Bool = false, followsMe: Bool = false, isOnline: Bool = false, followers: Int = 0, following: Int = 0, joined: Date = Date(), postsCount: Int = 0, repliesCount: Int = 0, labels: [Label] = []) {
+    init(id: String = "", name: String = "", tag: String = "", nickname: String = "", plus: Bool = false, image: UIImage? = nil, imgURL: URL? = nil, xp: XP = XP(total: 0, level: 0, levelXP: 0, levelXPMax: 0, levelProgress: 0), about: String = "", isFollowing: Bool = false, followsMe: Bool = false, isOnline: Bool = false, followers: Int = 0, following: Int = 0, joined: Date = Date(), postsCount: Int = 0, repliesCount: Int = 0, labels: [Label] = []) {
         self.id = id == "" ? randomString(length: 20) : id
         self.name = name
         self.tag = tag
         self.nickname = nickname == "" ? name : nickname
         self.plus = plus
-        self.alles = alles
         self.image = image == nil ? UIImage(systemName: "person.cirlce") : image
         self.imgURL = imgURL == nil ? URL(string: "https://avatar.alles.cc/\(id)") : imgURL
         self.xp = xp
@@ -64,9 +62,9 @@ public struct User: Hashable {
         tag = json["tag"].string ?? ""
         nickname = json["nickname"].string ?? json["name"].string ?? ""
         plus = json["plus"].bool ?? false
-        alles = json["alles"].bool ?? false
         image = UIImage(systemName: "person.cirlce")
-        imgURL = URL(string: json["avatar"].string != nil ? "https://fs.alles.cx/\(json["avatar"].string!)" : "https://avatar.alles.cc/\(json["id"].string!)")
+		imgURL = URL(string: "https://avatar.alles.cc/\(json["id"].string!)")
+        //imgURL = URL(string: json["avatar"].string != nil ? "https://fs.alles.cx/\(json["avatar"].string!)" : "https://avatar.alles.cc/\(json["id"].string!)")
         // imgURL = URL(string: "https://fs.alles.cx/\(json["avatar"].string)" ?? "https://avatar.alles.cc/\(json["id"].string ?? "")")
         xp = XP(total: json["xp"]["total"].int ?? 020, level: json["xp"]["level"].int ?? 0, levelXP: json["xp"]["levelXp"].int ?? 0, levelXPMax: json["xp"]["levelXpMax"].int ?? 0, levelProgress: json["xp"]["levelProgress"].float ?? 0)
         about = json["about"].string ?? ""

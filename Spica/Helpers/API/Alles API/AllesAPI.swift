@@ -321,8 +321,11 @@ public class AllesAPI {
                         if response.response?.statusCode == 200 {
                             var followUsers = [User]()
                             for i in responseJSON["users"].arrayValue {
-                                let avatarURL = i["avatar"].exists() ? URL(string: "https://fs.alles.cx/\(i["avatar"].string!)") : URL(string: "https://avatar.alles.cc/\(i["id"].string!)")
-                                followUsers.append(User(id: i["id"].string!, name: i["name"].string ?? "", tag: i["tag"].string ?? "", alles: i["alles"].bool ?? false, imgURL: avatarURL))
+								
+								followUsers.append(User(id: i["id"].string!, name: i["name"].string ?? "", tag: i["tag"].string ?? ""))
+								
+                                /*let avatarURL = i["avatar"].exists() ? URL(string: "https://fs.alles.cx/\(i["avatar"].string!)") : URL(string: "https://avatar.alles.cc/\(i["id"].string!)")
+                                followUsers.append(User(id: i["id"].string!, name: i["name"].string ?? "", tag: i["tag"].string ?? "", imgURL: avatarURL))*/
                             }
 
                             followUsers.sort(by: { $0.name.lowercased() < $1.name.lowercased() })
@@ -337,8 +340,9 @@ public class AllesAPI {
                                         if response2.response?.statusCode == 200 {
                                             var followingUsers = [User]()
                                             for i in response2JSON["users"].arrayValue {
-                                                let avatarURL = i["avatar"].exists() ? URL(string: "https://fs.alles.cx/\(i["avatar"].string!)") : URL(string: "https://avatar.alles.cc/\(i["id"].string!)")
-                                                followingUsers.append(User(id: i["id"].string!, name: i["name"].string ?? "", tag: i["tag"].string ?? "", alles: i["alles"].bool ?? false, imgURL: avatarURL))
+												followingUsers.append(User(id: i["id"].string!, name: i["name"].string ?? "", tag: i["tag"].string ?? ""))
+                                                /*let avatarURL = i["avatar"].exists() ? URL(string: "https://fs.alles.cx/\(i["avatar"].string!)") : URL(string: "https://avatar.alles.cc/\(i["id"].string!)")
+                                                followingUsers.append(User(id: i["id"].string!, name: i["name"].string ?? "", tag: i["tag"].string ?? "", imgURL: avatarURL))*/
                                             }
 
                                             followingUsers.sort(by: { $0.name.lowercased() < $1.name.lowercased() })
@@ -648,16 +652,20 @@ public class AllesAPI {
                     if !responseJSON["err"].exists() {
                         if response.response?.statusCode == 200 {
                             var post = Post(responseJSON, mentionedUsers: [])
-                            let author_id = responseJSON["author"].string!
+                            let author_id = responseJSON["author"]["id"].string!
 
-                            var author_img_url = ""
+                            /*var author_img_url = ""
                             if let fsId = responseJSON["users"][author_id]["avatar"].string {
                                 author_img_url = "https://fs.alles.cx/\(fsId)"
                             } else {
                                 author_img_url = "https://avatar.alles.cc/\(author_id)"
-                            }
+                            }*/
+							
+							let authorData = responseJSON["author"]
+							
+							post.author = User(id: authorData["id"].string!, name: authorData["name"].string!, nickname: authorData["nickname"].string!, plus: authorData["plus"].bool!)
 
-                            post.author = User(id: author_id, name: responseJSON["users"][author_id]["name"].string!, nickname: responseJSON["users"][author_id]["nickname"].string!, plus: responseJSON["users"][author_id]["plus"].bool!, alles: responseJSON["users"][author_id]["alles"].bool!, imgURL: URL(string: author_img_url)!)
+                            //post.author = User(id: author_id, name: responseJSON["users"][author_id]["name"].string!, nickname: responseJSON["users"][author_id]["nickname"].string!, plus: responseJSON["users"][author_id]["plus"].bool!, alles: responseJSON["users"][author_id]["alles"].bool!, imgURL: URL(string: author_img_url)!)
                             if includeReferences {
                                 DispatchQueue.main.async {
                                     let postContent = post.content.replacingOccurrences(of: "\n", with: " \n ")
@@ -666,7 +674,7 @@ public class AllesAPI {
                                     if splitContent.count > 0 {
                                         for word in splitContent {
                                             disGroup.enter()
-                                            if word.hasPrefix("@"), word.count > 1 {
+                                            /*if word.hasPrefix("@"), word.count > 1 {
                                                 var userID = removeSpecialCharsFromString(text: String(word))
                                                 userID.remove(at: userID.startIndex)
                                                 if responseJSON["users"][userID].exists() {
@@ -689,7 +697,7 @@ public class AllesAPI {
                                                         }
                                                         .store(in: &self.subscriptions)
                                                 }
-                                            } else if word.hasPrefix("%"), word.count > 1, post.mentionedPost == nil {
+                                            } else*/ if word.hasPrefix("%"), word.count > 1, post.mentionedPost == nil {
                                                 var mentionedPostID = removeSpecialCharsFromString(text: String(word))
                                                 mentionedPostID.remove(at: mentionedPostID.startIndex)
 

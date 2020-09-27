@@ -76,7 +76,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 
             let splitContent = postContent!.split(separator: " ")
             for word in splitContent {
-                if word.hasPrefix("@"), word.count > 1 {
+                /*if word.hasPrefix("@"), word.count > 1 {
                     var userID = removeSpecialCharsFromString(text: String(word))
                     userID.remove(at: userID.startIndex)
                     let foundIndex = post?.mentionedUsers.firstIndex(where: { $0.id == userID })
@@ -93,7 +93,7 @@ class PostCellView: UITableViewCell, UITextViewDelegate {
 						) + " "))
                     }
 
-                } else if word.hasPrefix("%"), word.count > 1 {
+                } else */if word.hasPrefix("%"), word.count > 1 {
                     let selectablePart = NSMutableAttributedString(string: String(word) + " ")
 
                     selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
@@ -571,11 +571,11 @@ extension PostCellView: UIContextMenuInteractionDelegate {
 
         actionsArray.append(reply)
 
-        let repost = UIAction(title: SLocale(.REPOST), image: UIImage(systemName: "square.and.arrow.up")) { _ in
+        /*let repost = UIAction(title: SLocale(.REPOST), image: UIImage(systemName: "square.and.arrow.up")) { _ in
             self.delegate.repost(id: self.post!.id, uid: self.post!.author!.id)
         }
 
-        actionsArray.append(repost)
+        actionsArray.append(repost)*/
 
         let bookmarks = UserDefaults.standard.structArrayData(Bookmark.self, forKey: "savedBookmarks")
 
