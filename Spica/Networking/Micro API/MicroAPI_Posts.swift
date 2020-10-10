@@ -171,4 +171,24 @@ extension MicroAPI {
             }
         }
     }
+
+    func deletePost(_ id: String) -> Future<String, MicroError> {
+        Future<String, MicroError> { [self] promise in
+            AF.request("https://micro.alles.cx/api/posts/\(id)/delete", method: .delete, headers: [
+                "Authorization": loadAuthKey(),
+            ]).responseJSON(queue: .global(qos: .utility)) { response in
+                switch response.result {
+                case .success:
+                    let possibleError = isError(response)
+                    if !possibleError.error.isError {
+                        promise(.success(id))
+                    } else {
+                        return promise(.failure(possibleError))
+                    }
+                case let .failure(err):
+                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+                }
+            }
+        }
+    }
 }

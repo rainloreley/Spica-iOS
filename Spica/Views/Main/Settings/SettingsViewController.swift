@@ -97,18 +97,18 @@ class SettingsViewController: UITableViewController {
         default: break
         }
     }
-	
-	@IBAction func signOut(_ sender: Any) {
-		KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
-		KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
-		KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
-		KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
-		UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
-		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-		sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
-		sceneDelegate.window?.makeKeyAndVisible()
-	}
-	
+
+    @IBAction func signOut(_: Any) {
+        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
+        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
+        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+        UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
+        let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+        sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
+        sceneDelegate.window?.makeKeyAndVisible()
+    }
+
     @IBAction func allesMicroButtons(_ sender: UIButton) {
         switch sender.tag {
         case 0:

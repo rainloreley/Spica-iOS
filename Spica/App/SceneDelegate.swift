@@ -11,21 +11,31 @@
 import SwiftKeychainWrapper
 import UIKit
 
-var spicaAppSplitViewController: UISplitViewController!
+var spicaAppSplitViewController: GlobalSplitViewController!
+var spicaAppSidebarViewController: SidebarViewController!
+var spicaAppTabbarViewController: TabBarController!
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
-    func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options _: UIScene.ConnectionOptions) {
+    func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options launchOptions: UIScene.ConnectionOptions) {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-
             let initialViewController = loadInitialViewController()
-
             window.rootViewController = initialViewController
             self.window = window
-			window.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
+            window.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
+
+            URLNavigationMap.initialize(navigator: navigator, sceneDelegate: self)
             window.makeKeyAndVisible()
+
+            if isUserLoggedIn() {
+                if !launchOptions.urlContexts.isEmpty {
+                    guard let url = launchOptions.urlContexts.first else { return }
+                    guard let navigatorViewController = navigator.viewController(for: url.url) else { return }
+                    showURLContextViewController(navigatorViewController)
+                }
+            }
         }
     }
 
@@ -48,13 +58,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func loadSplitViewController() {
-        spicaAppSplitViewController = UISplitViewController(style: .doubleColumn)
+        spicaAppSplitViewController = GlobalSplitViewController(style: .doubleColumn)
         spicaAppSplitViewController.preferredDisplayMode = .oneBesideSecondary
         spicaAppSplitViewController.presentsWithGesture = false
         spicaAppSplitViewController.preferredSplitBehavior = .tile
 
-        spicaAppSplitViewController.setViewController(SidebarViewController(), for: .primary)
-        spicaAppSplitViewController.setViewController(TabBarController(), for: .compact)
+        spicaAppSidebarViewController = SidebarViewController()
+        spicaAppTabbarViewController = TabBarController()
+
+        spicaAppSplitViewController.setViewController(spicaAppSidebarViewController, for: .primary)
+        spicaAppSplitViewController.setViewController(spicaAppTabbarViewController, for: .compact)
+    }
+
+    func showURLContextViewController(_ controller: UIViewController) {
+        if #available(iOS 14.0, *) {
+            spicaAppSplitViewController.showViewController(controller)
+        } else {
+            spicaAppTabbarViewController.showViewController(controller)
+        }
+    }
+
+    func scene(_: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if isUserLoggedIn() {
+            guard let url = URLContexts.first else { return }
+            guard let navigatorViewController = navigator.viewController(for: url.url) else { return }
+            showURLContextViewController(navigatorViewController)
+        }
     }
 
     func sceneDidDisconnect(_: UIScene) {

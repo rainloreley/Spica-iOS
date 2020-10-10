@@ -40,6 +40,9 @@
 		8BA7B5A1253232E300915113 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5A0253232E300915113 /* ColorPickerView.swift */; };
 		8BA7B5A6253232FF00915113 /* ColorPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5A5253232FF00915113 /* ColorPickerController.swift */; };
 		8BA7B5AB2532335D00915113 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5AA2532335D00915113 /* UserDefaults.swift */; };
+		8BA7B5B12532447600915113 /* URLNavigator in Frameworks */ = {isa = PBXBuildFile; productRef = 8BA7B5B02532447600915113 /* URLNavigator */; };
+		8BA7B5BD253244B800915113 /* URLNavigationMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5BC253244B800915113 /* URLNavigationMap.swift */; };
+		8BA7B5C32532461C00915113 /* GlobalSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5C22532461C00915113 /* GlobalSplitViewController.swift */; };
 		8BBB7F6C2530E328004D49BC /* SkeletonUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BBB7F6B2530E328004D49BC /* SkeletonUI */; };
 		8BBB7F792530E34F004D49BC /* UserHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB7F782530E34F004D49BC /* UserHeaderView.swift */; };
 		8BBB7F7E2530E37A004D49BC /* UserHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB7F7D2530E37A004D49BC /* UserHeaderViewCell.swift */; };
@@ -131,6 +134,8 @@
 		8BA7B5A0253232E300915113 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		8BA7B5A5253232FF00915113 /* ColorPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerController.swift; sourceTree = "<group>"; };
 		8BA7B5AA2532335D00915113 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		8BA7B5BC253244B800915113 /* URLNavigationMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLNavigationMap.swift; sourceTree = "<group>"; };
+		8BA7B5C22532461C00915113 /* GlobalSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSplitViewController.swift; sourceTree = "<group>"; };
 		8BBB7F782530E34F004D49BC /* UserHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderView.swift; sourceTree = "<group>"; };
 		8BBB7F7D2530E37A004D49BC /* UserHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderViewCell.swift; sourceTree = "<group>"; };
 		8BBB7F822530E38D004D49BC /* UserHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderViewController.swift; sourceTree = "<group>"; };
@@ -162,6 +167,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BF514FA252E36520064D95F /* Alamofire in Frameworks */,
+				8BA7B5B12532447600915113 /* URLNavigator in Frameworks */,
 				8BBB7F6C2530E328004D49BC /* SkeletonUI in Frameworks */,
 				8BF514F4252E36380064D95F /* SwiftyJSON in Frameworks */,
 				8B35C4692530C229003809FA /* SPAlert in Frameworks */,
@@ -244,6 +250,7 @@
 		8B199E2C252DFFB90060A3BE /* Spica */ = {
 			isa = PBXGroup;
 			children = (
+				8BA7B5BB253244A300915113 /* URL Navigation */,
 				8BD0C80B25322C57008D432E /* Functions */,
 				8BD712C12530A81400D2533C /* Extensions */,
 				8B6AC5A4252E0BB6003A2CC4 /* Structures */,
@@ -278,8 +285,8 @@
 		8B199E69252E01100060A3BE /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8BE6DE2B252E038100668AB7 /* Cells */,
 				8B0CD2AE2530BB2D004459EC /* Subviews */,
-				8BE6DE2A252E037A00668AB7 /* Table View */,
 				8B199E6A252E01190060A3BE /* Head */,
 				8BE6DE1E252E025B00668AB7 /* Main */,
 			);
@@ -291,6 +298,7 @@
 			children = (
 				8B199E6B252E013C0060A3BE /* SidebarViewController.swift */,
 				8B199E70252E015B0060A3BE /* TabBarController.swift */,
+				8BA7B5C22532461C00915113 /* GlobalSplitViewController.swift */,
 			);
 			path = Head;
 			sourceTree = "<group>";
@@ -332,6 +340,14 @@
 				8BA7B5A5253232FF00915113 /* ColorPickerController.swift */,
 			);
 			path = "Color Picker";
+			sourceTree = "<group>";
+		};
+		8BA7B5BB253244A300915113 /* URL Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				8BA7B5BC253244B800915113 /* URLNavigationMap.swift */,
+			);
+			path = "URL Navigation";
 			sourceTree = "<group>";
 		};
 		8BBB7F702530E332004D49BC /* User Header Cell */ = {
@@ -426,14 +442,6 @@
 			path = "Micro API";
 			sourceTree = "<group>";
 		};
-		8BE6DE2A252E037A00668AB7 /* Table View */ = {
-			isa = PBXGroup;
-			children = (
-				8BE6DE2B252E038100668AB7 /* Cells */,
-			);
-			path = "Table View";
-			sourceTree = "<group>";
-		};
 		8BE6DE2B252E038100668AB7 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -492,6 +500,7 @@
 				8B35C4682530C229003809FA /* SPAlert */,
 				8BBB7F6B2530E328004D49BC /* SkeletonUI */,
 				8BBB7F942530E566004D49BC /* KingfisherSwiftUI */,
+				8BA7B5B02532447600915113 /* URLNavigator */,
 			);
 			productName = Spica;
 			productReference = 8B199E2A252DFFB90060A3BE /* Spica.app */;
@@ -576,6 +585,7 @@
 				8B0CD2B72530BDA7004459EC /* XCRemoteSwiftPackageReference "JGProgressHUD" */,
 				8B35C4672530C229003809FA /* XCRemoteSwiftPackageReference "SPAlert" */,
 				8BBB7F6A2530E328004D49BC /* XCRemoteSwiftPackageReference "SkeletonUI" */,
+				8BA7B5AF2532447600915113 /* XCRemoteSwiftPackageReference "URLNavigator" */,
 			);
 			productRefGroup = 8B199E2B252DFFB90060A3BE /* Products */;
 			projectDirPath = "";
@@ -744,6 +754,7 @@
 				8B3364D8252F712F00D46ABE /* MicroError.swift in Sources */,
 				8BBB7F882530E3DF004D49BC /* countString.swift in Sources */,
 				8B199E71252E015B0060A3BE /* TabBarController.swift in Sources */,
+				8BA7B5BD253244B800915113 /* URLNavigationMap.swift in Sources */,
 				8BD712C32530A81D00D2533C /* Date.swift in Sources */,
 				8BBB7F7E2530E37A004D49BC /* UserHeaderViewCell.swift in Sources */,
 				8B0CD2AA2530B6F8004459EC /* EZAlertController.swift in Sources */,
@@ -757,6 +768,7 @@
 				8B6AC5A6252E0BC5003A2CC4 /* Post.swift in Sources */,
 				8B6ACF1F2530D69F004BDEC8 /* ReplyButtonCell.swift in Sources */,
 				8BD0C7EC25320F95008D432E /* Mention.swift in Sources */,
+				8BA7B5C32532461C00915113 /* GlobalSplitViewController.swift in Sources */,
 				8BE6DE2F252E03C600668AB7 /* PostCell.swift in Sources */,
 				8B35C4632530C07F003809FA /* String.swift in Sources */,
 				8BC1BFC32530E04B001186F3 /* MicroAPI_User.swift in Sources */,
@@ -1118,6 +1130,14 @@
 				minimumVersion = 2.1.4;
 			};
 		};
+		8BA7B5AF2532447600915113 /* XCRemoteSwiftPackageReference "URLNavigator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/URLNavigator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
 		8BBB7F6A2530E328004D49BC /* XCRemoteSwiftPackageReference "SkeletonUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CSolanaM/SkeletonUI";
@@ -1178,6 +1198,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8B35C4672530C229003809FA /* XCRemoteSwiftPackageReference "SPAlert" */;
 			productName = SPAlert;
+		};
+		8BA7B5B02532447600915113 /* URLNavigator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8BA7B5AF2532447600915113 /* XCRemoteSwiftPackageReference "URLNavigator" */;
+			productName = URLNavigator;
 		};
 		8BBB7F6B2530E328004D49BC /* SkeletonUI */ = {
 			isa = XCSwiftPackageProductDependency;

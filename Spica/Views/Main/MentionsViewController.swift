@@ -109,6 +109,18 @@ class MentionsViewController: UITableViewController {
 }
 
 extension MentionsViewController: PostCellDelegate {
+    func replyToPost(_ id: String) {
+        let vc = CreatePostViewController()
+        vc.type = .reply
+        vc.delegate = self
+        vc.parentID = id
+        present(UINavigationController(rootViewController: vc), animated: true)
+    }
+
+    func reloadData() {
+        loadMentions()
+    }
+
     func clickedUser(user: User) {
         let detailVC = UserProfileViewController(style: .insetGrouped)
         detailVC.user = user
@@ -118,6 +130,15 @@ extension MentionsViewController: PostCellDelegate {
 
     func clickedImage(controller: LightboxController) {
         present(controller, animated: true, completion: nil)
+    }
+}
+
+extension MentionsViewController: CreatePostDelegate {
+    func didSendPost(post: Post) {
+        let detailVC = PostDetailViewController(style: .insetGrouped)
+        detailVC.mainpost = post
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 

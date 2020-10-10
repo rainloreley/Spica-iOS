@@ -12,10 +12,13 @@ import Combine
 import Kingfisher
 import Lightbox
 import SPAlert
+import SwiftKeychainWrapper
 import UIKit
 
 protocol PostCellDelegate {
     func clickedImage(controller: LightboxController)
+    func replyToPost(_ id: String)
+    func reloadData()
     func clickedUser(user: User)
 }
 
@@ -40,8 +43,11 @@ class PostCell: UITableViewCell {
                 usernameLabel.text = post?.author.name
             }
 
-			postContentTextView.attributedText = parseStringIntoAttributedString(post!.content)
-			postContentTextView.delegate = self
+            postContentTextView.attributedText = parseStringIntoAttributedString(post!.content)
+            postContentTextView.delegate = self
+            postContentTextView.isUserInteractionEnabled = true
+            postContentTextView.delaysContentTouches = false
+            postContentTextView.isSelectable = true
 
             profilePictureImageView?.kf.setImage(with: post?.author.profilePictureUrl)
             postImageView.kf.setImage(with: post?.imageurl)
@@ -104,36 +110,37 @@ class PostCell: UITableViewCell {
                 interactionCountIcon.isHidden = true
                 interactioncountLabel.text = ""
             }
+
+            let contextInteraction = UIContextMenuInteraction(delegate: self)
+            contentView.addInteraction(contextInteraction)
         }
     }
-	
-	func parseStringIntoAttributedString(_ text: String) -> NSMutableAttributedString {
-		let attributedText = NSMutableAttributedString(string: "")
-		let normalFont: UIFont? = UIFont.systemFont(ofSize: UIFont.systemFontSize)
-		
-		let content = text.replacingOccurrences(of: "\n", with: " \n ")
-		
-		let splittedContent = content.split(separator: " ")
-		
-		for word in splittedContent {
-			if String(word).isValidURL, word.count > 1 {
-				let selectablePart = NSMutableAttributedString(string: String(word) + " ")
-				selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
-				selectablePart.addAttribute(.link, value: "url:\(word)", range: NSRange(location: 0, length: selectablePart.length - 1))
-				attributedText.append(selectablePart)
-			}
-			else {
-				if word == "\n" {
-					attributedText.append(NSAttributedString(string: "\n"))
-				} else {
-					attributedText.append(NSAttributedString(string: word + " "))
-				}
-			}
-		}
-		attributedText.addAttributes([.font: normalFont!, .foregroundColor: UIColor.label], range: NSRange(location: 0, length: attributedText.length))
-		return attributedText
-		
-	}
+
+    func parseStringIntoAttributedString(_ text: String) -> NSMutableAttributedString {
+        let attributedText = NSMutableAttributedString(string: "")
+        let normalFont: UIFont? = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+
+        let content = text.replacingOccurrences(of: "\n", with: " \n ")
+
+        let splittedContent = content.split(separator: " ")
+
+        for word in splittedContent {
+            if String(word).isValidURL, word.count > 1 {
+                let selectablePart = NSMutableAttributedString(string: String(word) + " ")
+                selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
+                selectablePart.addAttribute(.link, value: "url:\(word)", range: NSRange(location: 0, length: selectablePart.length - 1))
+                attributedText.append(selectablePart)
+            } else {
+                if word == "\n" {
+                    attributedText.append(NSAttributedString(string: "\n"))
+                } else {
+                    attributedText.append(NSAttributedString(string: word + " "))
+                }
+            }
+        }
+        attributedText.addAttributes([.font: normalFont!, .foregroundColor: UIColor.label], range: NSRange(location: 0, length: attributedText.length))
+        return attributedText
+    }
 
     @objc func clickedUser() {
         if post != nil {
@@ -265,24 +272,76 @@ extension PostCell: UIImagePickerControllerDelegate {
 }
 
 extension PostCell: UITextViewDelegate {
-	func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
-		if interaction == .invokeDefaultAction {
-			let stringURL = url.absoluteString
-			if stringURL.hasPrefix("url:") {
-				var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
-				if !selURL.starts(with: "https://"), !selURL.starts(with: "http://") {
-					selURL = "https://" + selURL
-				}
-				let adaptedURL = URL(string: String(selURL))
-				if UIApplication.shared.canOpenURL(adaptedURL!) {
-					UIApplication.shared.open(adaptedURL!)
-				}
-			} else if stringURL.isValidURL {
-				if UIApplication.shared.canOpenURL(url) {
-					UIApplication.shared.open(url)
-				}
-			}
-		}
-		return false
-	}
+    func textView(_: UITextView, shouldInteractWith url: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
+        if interaction == .invokeDefaultAction {
+            let stringURL = url.absoluteString
+            if stringURL.hasPrefix("url:") {
+                var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
+                if !selURL.starts(with: "https://"), !selURL.starts(with: "http://") {
+                    selURL = "https://" + selURL
+                }
+                let adaptedURL = URL(string: String(selURL))
+                if UIApplication.shared.canOpenURL(adaptedURL!) {
+                    UIApplication.shared.open(adaptedURL!)
+                }
+            } else if stringURL.isValidURL {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }
+        return false
+    }
+}
+
+extension PostCell: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
+            self.makeContextMenu()
+		})
+    }
+
+    func makeContextMenu() -> UIMenu {
+        var actions = [UIAction]()
+
+        let copyID = UIAction(title: "Copy ID", image: UIImage(systemName: "doc.on.doc")) { [self] _ in
+            let pasteboard = UIPasteboard.general
+            pasteboard.string = post?.id
+            SPAlert.present(title: "Copied", preset: .done)
+        }
+
+        actions.append(copyID)
+
+        let reply = UIAction(title: "Reply", image: UIImage(systemName: "arrowshape.turn.up.left")) { [self] _ in
+            self.delegate?.replyToPost(post!.id)
+        }
+
+        actions.append(reply)
+
+        let userID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+
+        if post?.author.id == userID! {
+            let delete = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+                EZAlertController.alert("Delete post?", message: "Are you sure you want to delete your post? It'll be gone forever (a very long time)", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, index in
+                    guard index == 1 else { return }
+
+                    MicroAPI.default.deletePost(post!.id)
+                        .receive(on: RunLoop.main)
+                        .sink {
+                            switch $0 {
+                            case let .failure(err):
+                                EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.name)")
+                            default: break
+                            }
+                        } receiveValue: { _ in
+                            SPAlert.present(title: "Deleted", preset: .done)
+                            self.delegate?.reloadData()
+                        }.store(in: &subscriptions)
+                }
+            }
+            actions.append(delete)
+        }
+
+        return UIMenu(title: "Post", children: actions)
+    }
 }

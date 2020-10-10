@@ -25,6 +25,14 @@ class TabBarController: UITabBarController {
         super.viewWillAppear(animated)
         selectedIndex = 0
     }
+
+    func showViewController(_ vc: UIViewController) {
+        if let navigationcontroller = viewControllers?[selectedIndex] as? UINavigationController {
+            navigationcontroller.viewControllers.first?.dismiss(animated: true, completion: nil)
+            vc.hidesBottomBarWhenPushed = true
+            navigationcontroller.viewControllers.last?.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
 }
 
 private extension TabBarController {

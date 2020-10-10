@@ -148,6 +148,18 @@ extension FeedViewController {
 }
 
 extension FeedViewController: PostCellDelegate {
+    func replyToPost(_ id: String) {
+        let vc = CreatePostViewController()
+        vc.type = .reply
+        vc.delegate = self
+        vc.parentID = id
+        present(UINavigationController(rootViewController: vc), animated: true)
+    }
+
+    func reloadData() {
+        loadFeed()
+    }
+
     func clickedUser(user: User) {
         let detailVC = UserProfileViewController(style: .insetGrouped)
         detailVC.user = user

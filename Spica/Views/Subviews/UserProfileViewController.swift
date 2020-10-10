@@ -149,6 +149,18 @@ extension UserProfileViewController: UserHeaderDelegate {
 }
 
 extension UserProfileViewController: PostCellDelegate {
+    func replyToPost(_ id: String) {
+        let vc = CreatePostViewController()
+        vc.type = .reply
+        vc.delegate = self
+        vc.parentID = id
+        present(UINavigationController(rootViewController: vc), animated: true)
+    }
+
+    func reloadData() {
+        loadUser()
+    }
+
     func clickedUser(user: User) {
         let detailVC = UserProfileViewController(style: .insetGrouped)
         detailVC.user = user
@@ -158,5 +170,14 @@ extension UserProfileViewController: PostCellDelegate {
 
     func clickedImage(controller: LightboxController) {
         present(controller, animated: true, completion: nil)
+    }
+}
+
+extension UserProfileViewController: CreatePostDelegate {
+    func didSendPost(post: Post) {
+        let detailVC = PostDetailViewController(style: .insetGrouped)
+        detailVC.mainpost = post
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }

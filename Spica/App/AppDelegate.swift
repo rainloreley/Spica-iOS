@@ -9,6 +9,9 @@
 //
 
 import UIKit
+import URLNavigator
+
+let navigator = Navigator()
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
