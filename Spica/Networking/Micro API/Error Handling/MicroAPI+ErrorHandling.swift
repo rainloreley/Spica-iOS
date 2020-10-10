@@ -12,15 +12,16 @@ import Foundation
 import UIKit
 
 extension MicroAPI {
-    public func errorHandling(error: MicroError, caller _: UIView) {
-        EZAlertController.alert("Error", message: "The following error occurred:\n\(error.name)", buttons: ["Ok"]) { _, _ in
+    public func errorHandling(error: MicroError, caller: UIView) {
+        EZAlertController.alert("Error", message: "The following error occurred:\n\(error.error.name)", buttons: ["Ok"]) { _, _ in
 
             if error.action != nil {
                 if error.action!.starts(with: "nav:"), error.action!.components(separatedBy: ":").last == "login" {
                     // NAVIGATE TO LOGIN
-                    /* let mySceneDelegate = caller.window!.windowScene!.delegate as! SceneDelegate
-                     mySceneDelegate.window?.rootViewController = UINavigationController(rootViewController: LoginViewController())
-                     mySceneDelegate.window?.makeKeyAndVisible() */
+                    // return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+                    let mySceneDelegate = caller.window!.windowScene!.delegate as! SceneDelegate
+                    mySceneDelegate.window?.rootViewController = LoginViewController()
+                    mySceneDelegate.window?.makeKeyAndVisible()
                 }
             }
         }

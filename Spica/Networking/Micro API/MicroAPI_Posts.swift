@@ -23,15 +23,14 @@ extension MicroAPI {
                 switch postResponse.result {
                 case .success:
                     let possibleError = isError(postResponse)
-                    if !possibleError.isError {
+                    if !possibleError.error.isError {
                         let postJSON = JSON(postResponse.data!)
                         return promise(.success(.init(postJSON)))
                     } else {
-                        promise(.failure(MicroError(name: possibleError.name, action: nil)))
+                        promise(.failure(possibleError))
                     }
                 case let .failure(err):
-                    // Implement error handling
-                    return promise(.failure(MicroError(name: err.localizedDescription, action: nil)))
+                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
                 }
             }
         }
@@ -135,15 +134,15 @@ extension MicroAPI {
                 switch response.result {
                 case .success:
                     let possibleError = isError(response)
-                    if !possibleError.isError {
+                    if !possibleError.error.isError {
                         let responseJSON = JSON(response.data!)
                         print(responseJSON)
                         return promise(.success(Post(responseJSON)))
                     } else {
-                        promise(.failure(MicroError(name: possibleError.name, action: nil)))
+                        return promise(.failure(possibleError))
                     }
                 case let .failure(err):
-                    return promise(.failure(.init(name: err.localizedDescription, action: nil)))
+                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
                 }
             }
         }
@@ -158,18 +157,17 @@ extension MicroAPI {
                     switch response.result {
                     case .success:
                         let possibleError = isError(response)
-                        if !possibleError.isError {
-                            // post.vote = value
+                        if !possibleError.error.isError {
                             promise(.success(post))
                         } else {
-                            promise(.failure(MicroError(name: possibleError.name, action: nil)))
+                            return promise(.failure(possibleError))
                         }
                     case let .failure(err):
-                        return promise(.failure(MicroError(name: err.localizedDescription, action: nil)))
+                        return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
                     }
                 }
             } else {
-                promise(.failure(MicroError(name: "spica_valueNotAllowed", action: nil)))
+                return promise(.failure(.init(error: .init(isError: true, name: "spica_valueNotAllowed"), action: nil)))
             }
         }
     }

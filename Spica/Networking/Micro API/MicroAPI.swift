@@ -19,17 +19,19 @@ public class MicroAPI {
     var subscriptions = Set<AnyCancellable>()
 
     func loadAuthKey() -> String {
-        // return KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") ?? ""
-        return "add token here, i guess"
+        return KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") ?? ""
     }
 
-    func isError(_ response: AFDataResponse<Any>) -> MicroAnalyzedError {
-        if response.data == nil { return .init(isError: true, name: "spica_nodata") }
-        let json = JSON(response.data!)
-        if json["err"].exists() {
-            return .init(isError: true, name: json["err"].string ?? "unknown error")
+    func isError(_ response: AFDataResponse<Any>) -> MicroError {
+        if response.data == nil {
+            return .init(error: .init(isError: true, name: "spica_noData"), action: nil)
+        } else {
+            let json = JSON(response.data!)
+            if json["err"].exists() {
+                return .init(error: .init(isError: true, name: json["err"].string ?? "unknown"), action: json["err"].string ?? "" == "badAuthorization" ? "nav:login" : "")
+            }
+            return .init(error: .init(isError: false, name: ""), action: nil)
         }
-        return .init(isError: false, name: "")
     }
 }
 

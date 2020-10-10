@@ -8,6 +8,7 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import SwiftKeychainWrapper
 import UIKit
 
 var spicaAppSplitViewController: UISplitViewController!
@@ -23,13 +24,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             window.rootViewController = initialViewController
             self.window = window
+			window.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
             window.makeKeyAndVisible()
         }
     }
 
-    func loadInitialViewController() -> UIViewController {
-        loadSplitViewController()
-        return spicaAppSplitViewController
+    func loadInitialViewController(checkLogin: Bool = true) -> UIViewController {
+        if !isUserLoggedIn(), checkLogin {
+            return LoginViewController()
+        } else {
+            loadSplitViewController()
+            return spicaAppSplitViewController
+        }
+    }
+
+    func isUserLoggedIn() -> Bool {
+        if !UserDefaults.standard.bool(forKey: "hasRunSpicav2") {
+            KeychainWrapper.standard.removeAllKeys()
+            UserDefaults.standard.set(true, forKey: "hasRunSpicav2")
+        }
+
+        return KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token") && KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id")
     }
 
     func loadSplitViewController() {

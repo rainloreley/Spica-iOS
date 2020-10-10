@@ -23,18 +23,22 @@ extension MicroAPI {
                 switch feedResponse.result {
                 case .success:
                     let possibleFeedError = isError(feedResponse)
-                    if !possibleFeedError.isError {
+                    if !possibleFeedError.error.isError {
                         let feedJSON = JSON(feedResponse.data!)
                         var feedPosts = [Post]()
+                        var errorCount = 0
+                        var latestError: MicroError?
                         let dispatchGroup = DispatchGroup()
                         for json in feedJSON["posts"].arrayValue {
                             dispatchGroup.enter()
-                            loadPost(json.string!)
+                            loadPost(json.string ?? "")
                                 .receive(on: RunLoop.main)
                                 .sink {
                                     switch $0 {
                                     case let .failure(err):
-                                        promise(.failure(err))
+                                        errorCount += 1
+                                        latestError = err
+                                        dispatchGroup.leave()
                                     default: break
                                     }
                                 } receiveValue: { post in
@@ -44,14 +48,18 @@ extension MicroAPI {
                         }
                         dispatchGroup.notify(queue: .main) {
                             feedPosts.sort(by: { $0.createdAt.compare($1.createdAt) == .orderedDescending })
-                            promise(.success(feedPosts))
+                            if feedPosts.isEmpty, errorCount > 0 {
+                                promise(.failure(latestError!))
+                            } else {
+                                promise(.success(feedPosts))
+                            }
                         }
                     } else {
-                        promise(.failure(MicroError(name: possibleFeedError.name, action: nil)))
+                        promise(.failure(possibleFeedError))
                     }
                 case let .failure(err):
                     // Implement error handling
-                    return promise(.failure(MicroError(name: err.localizedDescription, action: nil)))
+                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
                 }
             }
         }

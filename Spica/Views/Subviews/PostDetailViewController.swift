@@ -10,8 +10,8 @@
 
 import Combine
 import JGProgressHUD
-import UIKit
 import Lightbox
+import UIKit
 
 class PostDetailViewController: UITableViewController {
     var mainpost: Post!
@@ -40,10 +40,10 @@ class PostDetailViewController: UITableViewController {
         loadingHud.textLabel.text = "Loading..."
         loadingHud.interactionType = .blockNoTouches
     }
-	
-	override func viewWillAppear(_ animated: Bool) {
-		navigationController?.navigationBar.prefersLargeTitles = false
-	}
+
+    override func viewWillAppear(_: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
 
     @objc func loadPostDetail() {
         loadingHud.show(in: view)
@@ -72,16 +72,16 @@ class PostDetailViewController: UITableViewController {
                 }
             }.store(in: &subscriptions)
     }
-	
-	@objc func openReplyView(_: UIButton) {
-		   if mainpost != nil {
-			   let vc = CreatePostViewController()
-			   vc.type = .reply
-			   vc.delegate = self
-			vc.parentID = mainpost.id
-			   present(UINavigationController(rootViewController: vc), animated: true)
-		   }
-	   }
+
+    @objc func openReplyView(_: UIButton) {
+        if mainpost != nil {
+            let vc = CreatePostViewController()
+            vc.type = .reply
+            vc.delegate = self
+            vc.parentID = mainpost.id
+            present(UINavigationController(rootViewController: vc), animated: true)
+        }
+    }
 
     override func viewDidAppear(_: Bool) {
         loadPostDetail()
@@ -111,7 +111,7 @@ class PostDetailViewController: UITableViewController {
 
                 cell.layer.cornerRadius = 50.0
                 cell.post = post
-				cell.delegate = self
+                cell.delegate = self
 
                 return cell
             } else {
@@ -130,36 +130,37 @@ class PostDetailViewController: UITableViewController {
             return cell
         } else {
             let post = postReplies[indexPath.row]
-			
+
             let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
-			
+
             cell.post = post
-			cell.delegate = self
-			
+            cell.delegate = self
+
             return cell
         }
     }
 }
 
 extension PostDetailViewController: PostCellDelegate {
-	func clickedUser(user: User) {
-		let detailVC = UserProfileViewController(style: .insetGrouped)
-		detailVC.user = user
-		detailVC.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(detailVC, animated: true)
-	}
-	func clickedImage(controller: LightboxController) {
-		present(controller, animated: true, completion: nil)
-	}
+    func clickedUser(user: User) {
+        let detailVC = UserProfileViewController(style: .insetGrouped)
+        detailVC.user = user
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    func clickedImage(controller: LightboxController) {
+        present(controller, animated: true, completion: nil)
+    }
 }
 
 extension PostDetailViewController {
     override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section != 1 {
-			let detailVC = PostDetailViewController(style: .insetGrouped)
+            let detailVC = PostDetailViewController(style: .insetGrouped)
             detailVC.hidesBottomBarWhenPushed = true
             if indexPath.section == 0, indexPath.row % 2 == 0 {
-				let detailVC = PostDetailViewController(style: .insetGrouped)
+                let detailVC = PostDetailViewController(style: .insetGrouped)
                 let count = Array(0 ... indexPath.row).filter { !$0.isMultiple(of: 2) }.count
                 detailVC.mainpost = Post(id: postAncestors[indexPath.row - count].id)
                 navigationController?.pushViewController(detailVC, animated: true)
@@ -172,10 +173,10 @@ extension PostDetailViewController {
 }
 
 extension PostDetailViewController: CreatePostDelegate {
-	func didSendPost(post: Post) {
-		let detailVC = PostDetailViewController(style: .insetGrouped)
-		detailVC.mainpost = post
-		 detailVC.hidesBottomBarWhenPushed = true
-		 navigationController?.pushViewController(detailVC, animated: true)
-	}
+    func didSendPost(post: Post) {
+        let detailVC = PostDetailViewController(style: .insetGrouped)
+        detailVC.mainpost = post
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 }

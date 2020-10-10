@@ -47,10 +47,10 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
     private var progressBarController = ProgressBarController(progress: 0, color: .gray)
 
     private var subscriptions = Set<AnyCancellable>()
-	
-	override func viewWillAppear(_ animated: Bool) {
-		navigationController?.navigationBar.prefersLargeTitles = false
-	}
+
+    override func viewWillAppear(_: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = false
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -251,16 +251,8 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
     }
 
     override func viewDidAppear(_: Bool) {
-        userPfp.kf.setImage(with: URL(string: "https://avatar.alles.cc/87cd0529-f41b-4075-a002-059bf2311ce7"))
-        /* DispatchQueue.global(qos: .utility).async {
-         	let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-
-         	let pfpImage = ImageLoader.loadImageFromInternet(url: (URL(string: "https://avatar.alles.cc/\(id!)") ?? URL(string: "https://avatar.alles.cc/_"))!)
-
-         	DispatchQueue.main.async {
-         		self.userPfp.image = pfpImage
-         	}
-         } */
+        let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+        userPfp.kf.setImage(with: URL(string: "https://avatar.alles.cc/\(id!)"))
     }
 
     @objc func sendPost() {

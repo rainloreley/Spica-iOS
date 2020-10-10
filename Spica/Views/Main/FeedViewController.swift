@@ -10,8 +10,8 @@
 
 import Combine
 import JGProgressHUD
-import SnapKit
 import Lightbox
+import SnapKit
 import UIKit
 
 class FeedViewController: UITableViewController {
@@ -21,16 +21,17 @@ class FeedViewController: UITableViewController {
     private var contentOffset: CGPoint?
 
     private var subscriptions = Set<AnyCancellable>()
-	
-	override func viewWillAppear(_ animated: Bool) {
-		navigationController?.navigationBar.prefersLargeTitles = true
-	}
+
+    override func viewWillAppear(_: Bool) {
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Feed"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openNewPostView))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
         tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
 
         refreshControl = UIRefreshControl()
@@ -41,6 +42,12 @@ class FeedViewController: UITableViewController {
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading..."
         loadingHud.interactionType = .blockNoTouches
+    }
+
+    @objc func openSettings() {
+        let storyboard = UIStoryboard(name: "Settings", bundle: nil)
+        let vc = storyboard.instantiateInitialViewController()
+        present(vc!, animated: true)
     }
 
     @objc func openNewPostView() {
@@ -70,22 +77,14 @@ class FeedViewController: UITableViewController {
             } receiveValue: { [self] receivedPosts in
                 posts = receivedPosts
                 contentOffset = nil
-                /* if self.refreshControl!.isRefreshing {
-                 	posts = receivedPosts
-                 	contentOffset = nil
-                 } else {
-                 	var filteredPosts = [Post]()
-                 	filteredPosts.append(contentsOf: self.posts)
-                 	for i in posts {
-                 		if !filteredPosts.contains(where: { $0.id == i.id }) {
-                 			filteredPosts.append(i)
-                 		}
-                 	}
-                 	self.posts = filteredPosts
-                 } */
                 self.posts.sort(by: { $0.createdAt.compare($1.createdAt) == .orderedDescending })
 
                 tableView.reloadData()
+                if posts.isEmpty {
+                    tableView.setEmptyMessage(message: "No posts", subtitle: "When you follow people, their posts should appear here!")
+                } else {
+                    tableView.restore()
+                }
                 latestPostsLoaded = true
                 self.refreshControl!.endRefreshing()
                 self.loadingHud.dismiss()
@@ -117,7 +116,11 @@ class FeedViewController: UITableViewController {
                         self.posts = filteredPosts
                         self.posts.sort(by: { $0.createdAt.compare($1.createdAt) == .orderedDescending })
                         self.tableView.reloadData()
-                        // self.posts = Array(Set(self.posts + posts))
+                        if posts.isEmpty {
+                            tableView.setEmptyMessage(message: "No posts", subtitle: "When you follow people, their posts should appear here!")
+                        } else {
+                            tableView.restore()
+                        }
                         self.refreshControl!.endRefreshing()
                         self.loadingHud.dismiss()
                     }
@@ -138,23 +141,23 @@ extension FeedViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
         cell.post = posts[indexPath.section]
-		cell.delegate = self
+        cell.delegate = self
 
         return cell
     }
 }
 
 extension FeedViewController: PostCellDelegate {
-	func clickedUser(user: User) {
-		let detailVC = UserProfileViewController(style: .insetGrouped)
-		detailVC.user = user
-		detailVC.hidesBottomBarWhenPushed = true
-		navigationController?.pushViewController(detailVC, animated: true)
-	}
-	
-	func clickedImage(controller: LightboxController) {
-		present(controller, animated: true, completion: nil)
-	}
+    func clickedUser(user: User) {
+        let detailVC = UserProfileViewController(style: .insetGrouped)
+        detailVC.user = user
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    func clickedImage(controller: LightboxController) {
+        present(controller, animated: true, completion: nil)
+    }
 }
 
 extension FeedViewController {
@@ -186,9 +189,9 @@ extension FeedViewController {
 
 extension FeedViewController: CreatePostDelegate {
     func didSendPost(post: Post) {
-		let detailVC = PostDetailViewController(style: .insetGrouped)
-		detailVC.mainpost = post
-         detailVC.hidesBottomBarWhenPushed = true
-         navigationController?.pushViewController(detailVC, animated: true)
+        let detailVC = PostDetailViewController(style: .insetGrouped)
+        detailVC.mainpost = post
+        detailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }

@@ -10,18 +10,18 @@
 
 import Combine
 import Kingfisher
-import UIKit
 import Lightbox
 import SPAlert
+import UIKit
 
 protocol PostCellDelegate {
-	func clickedImage(controller: LightboxController)
-	func clickedUser(user: User)
+    func clickedImage(controller: LightboxController)
+    func clickedUser(user: User)
 }
 
 class PostCell: UITableViewCell {
     private var subscriptions = Set<AnyCancellable>()
-	var delegate: PostCellDelegate?
+    var delegate: PostCellDelegate?
 
     var post: Post? {
         didSet {
@@ -40,26 +40,26 @@ class PostCell: UITableViewCell {
                 usernameLabel.text = post?.author.name
             }
 
-            postContentTextView.text = post?.content
+			postContentTextView.attributedText = parseStringIntoAttributedString(post!.content)
+			postContentTextView.delegate = self
 
             profilePictureImageView?.kf.setImage(with: post?.author.profilePictureUrl)
             postImageView.kf.setImage(with: post?.imageurl)
-			
-			let profilePictureTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(clickedUser))
-			
-			profilePictureImageView!.isUserInteractionEnabled = true
-			profilePictureImageView!.addGestureRecognizer(profilePictureTapGestureRecognizer)
-			
-			let postimageViewTapGestureGecognizer = UITapGestureRecognizer(target: self, action: #selector(clickImage))
-			
-			if post?.imageurl != nil {
-				postImageView.isUserInteractionEnabled = true
-				postImageView.addGestureRecognizer(postimageViewTapGestureGecognizer)
-			}
-			else {
-				postImageView.isUserInteractionEnabled = false
-				postImageView.removeGestureRecognizer(postimageViewTapGestureGecognizer)
-			}
+
+            let profilePictureTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(clickedUser))
+
+            profilePictureImageView!.isUserInteractionEnabled = true
+            profilePictureImageView!.addGestureRecognizer(profilePictureTapGestureRecognizer)
+
+            let postimageViewTapGestureGecognizer = UITapGestureRecognizer(target: self, action: #selector(clickImage))
+
+            if post?.imageurl != nil {
+                postImageView.isUserInteractionEnabled = true
+                postImageView.addGestureRecognizer(postimageViewTapGestureGecognizer)
+            } else {
+                postImageView.isUserInteractionEnabled = false
+                postImageView.removeGestureRecognizer(postimageViewTapGestureGecognizer)
+            }
 
             postLinkLabel.text = post?.url?.absoluteString
 
@@ -93,14 +93,6 @@ class PostCell: UITableViewCell {
                 postLinkLabel.isUserInteractionEnabled = false
             }
 
-            /*let postdateFormatter: DateFormatter = {
-                let formatter = DateFormatter()
-                formatter.dateFormat = DateFormatter.dateFormat(fromTemplate: "MM dd, yyyy HH:mm", options: 0, locale: Locale.current) // "MMM dd, yyyy HH:mm"
-                formatter.timeZone = TimeZone.current
-                formatter.doesRelativeDateFormatting = true
-                return formatter
-            }()*/
-
             postdateLabel.text = RelativeDateTimeFormatter().localizedString(for: post!.createdAt, relativeTo: Date()) // postdateFormatter.string(from: post!.createdAt)
             replycountLabel.text = String((post?.children.count)!)
             if post?.interactions != nil {
@@ -115,45 +107,73 @@ class PostCell: UITableViewCell {
         }
     }
 	
-	@objc func clickedUser() {
-		if post != nil {
-			delegate?.clickedUser(user: post!.author)
-		}
-	}
-	
-	@objc func clickImage() {
-		if let image = postImageView.image {
-			let images = [
-				LightboxImage(image: image, text: postContentTextView.attributedText.string)]
-			
-			
-			let controller = LightboxController(images: images)
-			controller.dynamicBackground = true
-			let saveBtn: UIButton = {
-				let btn = UIButton(type: .system)
-				btn.setImage(UIImage(systemName: "square.and.arrow.down"), for: .normal)
-				btn.addTarget(self, action: #selector(saveImage), for: .touchUpInside)
-				btn.tintColor = .white
-				return btn
-			}()
-			
-			controller.headerView.addSubview(saveBtn)
-			saveBtn.snp.makeConstraints { make in
-				// make.top.equalTo(controller.headerView.snp.top).offset(-2)
-				make.centerY.equalTo(controller.headerView.closeButton.snp.centerY)
-				make.leading.equalTo(controller.headerView.snp.leading).offset(8)
-				make.width.equalTo(50)
-				make.height.equalTo(50)
+	func parseStringIntoAttributedString(_ text: String) -> NSMutableAttributedString {
+		let attributedText = NSMutableAttributedString(string: "")
+		let normalFont: UIFont? = UIFont.systemFont(ofSize: UIFont.systemFontSize)
+		
+		let content = text.replacingOccurrences(of: "\n", with: " \n ")
+		
+		let splittedContent = content.split(separator: " ")
+		
+		for word in splittedContent {
+			if String(word).isValidURL, word.count > 1 {
+				let selectablePart = NSMutableAttributedString(string: String(word) + " ")
+				selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
+				selectablePart.addAttribute(.link, value: "url:\(word)", range: NSRange(location: 0, length: selectablePart.length - 1))
+				attributedText.append(selectablePart)
 			}
-			delegate?.clickedImage(controller: controller)
+			else {
+				if word == "\n" {
+					attributedText.append(NSAttributedString(string: "\n"))
+				} else {
+					attributedText.append(NSAttributedString(string: word + " "))
+				}
+			}
 		}
+		attributedText.addAttributes([.font: normalFont!, .foregroundColor: UIColor.label], range: NSRange(location: 0, length: attributedText.length))
+		return attributedText
+		
 	}
-	
-	@objc func saveImage() {
-		if let image = postImageView.image {
-			UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-		}
-	}
+
+    @objc func clickedUser() {
+        if post != nil {
+            delegate?.clickedUser(user: post!.author)
+        }
+    }
+
+    @objc func clickImage() {
+        if let image = postImageView.image {
+            let images = [
+                LightboxImage(image: image, text: postContentTextView.attributedText.string),
+            ]
+
+            let controller = LightboxController(images: images)
+            controller.dynamicBackground = true
+            let saveBtn: UIButton = {
+                let btn = UIButton(type: .system)
+                btn.setImage(UIImage(systemName: "square.and.arrow.down"), for: .normal)
+                btn.addTarget(self, action: #selector(saveImage), for: .touchUpInside)
+                btn.tintColor = .white
+                return btn
+            }()
+
+            controller.headerView.addSubview(saveBtn)
+            saveBtn.snp.makeConstraints { make in
+                // make.top.equalTo(controller.headerView.snp.top).offset(-2)
+                make.centerY.equalTo(controller.headerView.closeButton.snp.centerY)
+                make.leading.equalTo(controller.headerView.snp.leading).offset(8)
+                make.width.equalTo(50)
+                make.height.equalTo(50)
+            }
+            delegate?.clickedImage(controller: controller)
+        }
+    }
+
+    @objc func saveImage() {
+        if let image = postImageView.image {
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
 
     @objc func openLink() {
         if post?.url != nil {
@@ -175,29 +195,6 @@ class PostCell: UITableViewCell {
             upvoteButton.setTitleColor(.systemBlue, for: .normal)
             downvoteButton.setTitleColor(.systemBlue, for: .normal)
         }
-    }
-
-    func remakeImageView() {
-        /* if postImageView.image != nil && post?.imageurl != nil {
-         	//postImageView.image = post?.image
-         	postImageView.snp.remakeConstraints { (make) in
-         		make.height.equalTo(postImageView.image!.size.height)
-         		make.leading.equalTo(contentView.snp.leading).offset(16)
-         		make.trailing.equalTo(contentView.snp.trailing).offset(-16)
-         		make.top.equalTo(postContentTextView.snp.bottom).offset(6)
-         		make.bottom.equalTo(postLinkBackgroundView.snp.top).offset(-6)
-         	}
-         }
-         else {
-         	postImageView.image = UIImage()
-         	postImageView.snp.remakeConstraints { (make) in
-         		make.height.equalTo(0)
-         		make.leading.equalTo(contentView.snp.leading)
-         		make.trailing.equalTo(contentView.snp.trailing)
-         		make.top.equalTo(postContentTextView.snp.bottom).offset(6)
-         		make.bottom.equalTo(postLinkBackgroundView.snp.top).offset(-6)
-         	}
-         } */
     }
 
     // User
@@ -246,7 +243,6 @@ class PostCell: UITableViewCell {
                 switch $0 {
                 case let .failure(err):
                     MicroAPI.default.errorHandling(error: err, caller: self.contentView)
-					// AllesAPI.default.errorHandling(error: err, caller: self.view)
 
                 default: break
                 }
@@ -258,12 +254,35 @@ class PostCell: UITableViewCell {
 }
 
 extension PostCell: UIImagePickerControllerDelegate {
-	@objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
-			if let error = error {
-				SPAlert.present(title: "Error", message: error.localizedDescription, preset: .error)
+    @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
+        if let error = error {
+            SPAlert.present(title: "Error", message: error.localizedDescription, preset: .error)
 
-			} else {
-				SPAlert.present(title: "Photo saved!", preset: .done)
+        } else {
+            SPAlert.present(title: "Photo saved!", preset: .done)
+        }
+    }
+}
+
+extension PostCell: UITextViewDelegate {
+	func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+		if interaction == .invokeDefaultAction {
+			let stringURL = url.absoluteString
+			if stringURL.hasPrefix("url:") {
+				var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
+				if !selURL.starts(with: "https://"), !selURL.starts(with: "http://") {
+					selURL = "https://" + selURL
+				}
+				let adaptedURL = URL(string: String(selURL))
+				if UIApplication.shared.canOpenURL(adaptedURL!) {
+					UIApplication.shared.open(adaptedURL!)
+				}
+			} else if stringURL.isValidURL {
+				if UIApplication.shared.canOpenURL(url) {
+					UIApplication.shared.open(url)
+				}
 			}
 		}
+		return false
+	}
 }

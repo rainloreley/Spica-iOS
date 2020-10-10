@@ -1,6 +1,6 @@
 //
 // Spica for iOS (Spica)
-// File created by Lea Baumgart on 08.10.20.
+// File created by Lea Baumgart on 10.10.20.
 //
 // Licensed under the GNU General Public License v3.0
 // Copyright © 2020 Lea Baumgart. All rights reserved.
@@ -10,7 +10,7 @@
 
 import Foundation
 
-public struct MicroError: Error {
-    var error: MicroAnalyzedError
-    var action: String?
+struct Mention {
+    var read: Bool
+    var post: Post
 }

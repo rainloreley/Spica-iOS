@@ -11,17 +11,17 @@
 import Foundation
 
 func countString(number: Int, singleText: String, multiText: String, includeNumber: Bool) -> String {
-	if number == 1 {
-		if includeNumber {
-			return "\(number) \(singleText)"
-		} else {
-			return "\(singleText)"
-		}
-	} else {
-		if includeNumber {
-			return "\(number) \(multiText)"
-		} else {
-			return "\(multiText)"
-		}
-	}
+    if number == 1 {
+        if includeNumber {
+            return "\(number) \(singleText)"
+        } else {
+            return "\(singleText)"
+        }
+    } else {
+        if includeNumber {
+            return "\(number) \(multiText)"
+        } else {
+            return "\(multiText)"
+        }
+    }
 }
