@@ -7,7 +7,7 @@
 
 Spica for iOS is an iOS/iPadOS client for [Alles Micro](https://micro.alles.cx). It's privacy focused and easy to use.
 
-**NOTE: THIS BRANCH (main) IS UNDER DEVELOPMENT. THIS IS A REWRITE. IF YOU NEED THE WORKING VERSION, PLEASE USE THE [MASTER](https://github.com/SpicaApp/Spica-iOS/tree/master) BRANCH**
+**UPDATE: The rewrite is done, the master branch is now the old version. Please use the main branch from now on :)**
 
 </div>
 
