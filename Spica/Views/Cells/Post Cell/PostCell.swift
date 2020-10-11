@@ -318,6 +318,39 @@ extension PostCell: UIContextMenuInteractionDelegate {
 
         actions.append(reply)
 
+        let bookmarks = UserDefaults.standard.structArrayData(StoredBookmark.self, forKey: "savedBookmarks")
+
+        let isBookmarked = bookmarks.contains(where: { $0.id == post!.id })
+
+        let bookmark = UIAction(title: isBookmarked ? "Remove Bookmark" : "Add Bookmark", image: isBookmarked ? UIImage(systemName: "bookmark.slash") : UIImage(systemName: "bookmark")) { [self] _ in
+
+            if isBookmarked {
+                // Delete bookmark
+
+                var currentBookmarks = UserDefaults.standard.structArrayData(StoredBookmark.self, forKey: "savedBookmarks")
+                if let index = currentBookmarks.firstIndex(where: { $0.id == post?.id }) {
+                    currentBookmarks.remove(at: index)
+                    UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+                    SPAlert.present(title: "Removed!", preset: .done)
+                    self.delegate?.reloadData()
+                } else {
+                    SPAlert.present(title: "An error occurred", preset: .error)
+                }
+            } else {
+                // Add bookmark
+
+                var currentBookmarks = UserDefaults.standard.structArrayData(StoredBookmark.self, forKey: "savedBookmarks")
+                currentBookmarks.append(StoredBookmark(id: post!.id, added: Date()))
+                UserDefaults.standard.setStructArray(currentBookmarks, forKey: "savedBookmarks")
+                SPAlert.present(title: "Added!", preset: .done)
+                self.delegate?.reloadData()
+            }
+
+            // self.delegate.editBookmark(id: self.post!.id, action: bookmarks.contains(where: { $0.id == self.post!.id }) ? .remove : .add)
+        }
+
+        actions.append(bookmark)
+
         let userID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
 
         if post?.author.id == userID! {

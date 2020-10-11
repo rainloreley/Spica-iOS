@@ -8,17 +8,33 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import SwiftKeychainWrapper
 import UIKit
 
+@available(iOS 14.0, *)
 class SidebarViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var collectionView: UICollectionView!
-    private var secondaryViewControllers = [UINavigationController(rootViewController: FeedViewController(style: .insetGrouped))]
+    private var accountViewController: UserProfileViewController!
+    private var secondaryViewControllers = [UINavigationController]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Spica"
         navigationController?.navigationBar.prefersLargeTitles = true
+        accountViewController = UserProfileViewController(style: .insetGrouped)
+        let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+        accountViewController!.user = User(id: id ?? "")
+
+        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
+        let settingsViewController = settingsStoryboard.instantiateInitialViewController() as! UINavigationController
+
+        secondaryViewControllers = [UINavigationController(rootViewController: FeedViewController(style: .insetGrouped)),
+                                    UINavigationController(rootViewController: MentionsViewController(style: .insetGrouped)),
+                                    UINavigationController(rootViewController: BookmarksViewController(style: .insetGrouped)),
+                                    UINavigationController(rootViewController: SearchViewController(style: .insetGrouped)),
+                                    UINavigationController(rootViewController: accountViewController!),
+                                    settingsViewController]
         configureHierarchy()
         configureDataSource()
         setInitialSecondaryView()
@@ -34,6 +50,7 @@ class SidebarViewController: UIViewController {
 
 // MARK: - Layout
 
+@available(iOS 14.0, *)
 extension SidebarViewController {
     private func createLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout { section, layoutEnvironment in
@@ -46,6 +63,7 @@ extension SidebarViewController {
 
 // MARK: - Data
 
+@available(iOS 14.0, *)
 extension SidebarViewController {
     private func configureHierarchy() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
@@ -107,6 +125,7 @@ extension SidebarViewController {
 
 // MARK: - UICollectionViewDelegate
 
+@available(iOS 14.0, *)
 extension SidebarViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard indexPath.section == 0 else { return }
@@ -122,7 +141,7 @@ struct Item: Hashable {
     private let identifier = UUID()
 }
 
-let tabsItems = [Item(title: "Feed", image: UIImage(systemName: "house"))]
+let tabsItems = [Item(title: "Feed", image: UIImage(systemName: "house")), Item(title: "Mentions", image: UIImage(systemName: "at")), Item(title: "Bookmarks", image: UIImage(systemName: "bookmark")), Item(title: "Search", image: UIImage(systemName: "magnifyingglass")), Item(title: "Account", image: UIImage(systemName: "person.circle")), Item(title: "Settings", image: UIImage(systemName: "gear"))]
 
 enum Section: String {
     case tabs

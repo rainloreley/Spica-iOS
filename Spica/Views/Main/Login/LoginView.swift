@@ -67,11 +67,11 @@ struct LoginView: View {
                         .padding(1)
                 }.multilineTextAlignment(.center).font(.footnote).foregroundColor(.secondary)
 
-            }.padding().navigationTitle("Login")
+            }.padding().navigationBarTitle(Text("Login"))
                 .alert(isPresented: $controller.showAlert) {
                     Alert(title: Text("Error"), message: Text("\(controller.alertMessage)"), dismissButton: .default(Text("Ok")))
                 }
-        }
+        }.navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

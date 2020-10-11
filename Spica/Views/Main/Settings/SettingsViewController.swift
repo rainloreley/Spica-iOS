@@ -8,6 +8,8 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import LocalAuthentication
+import SPAlert
 import SwiftKeychainWrapper
 import SwiftUI
 import UIKit
@@ -16,6 +18,7 @@ class SettingsViewController: UITableViewController {
     @IBOutlet var accountProfilePicture: UIImageView!
     @IBOutlet var accountNametag: UILabel!
     @IBOutlet var versionBuildLabel: UILabel!
+    @IBOutlet var biometricSwitch: UISwitch!
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -26,12 +29,55 @@ class SettingsViewController: UITableViewController {
 
         versionBuildLabel.text = "Version \(version) Build \(build)"
 
+        let authContext = LAContext()
+        var authError: NSError?
+        if authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
+            biometricSwitch.isEnabled = true
+        } else {
+            biometricSwitch.isEnabled = false
+        }
+
+        if UserDefaults.standard.bool(forKey: "biometricAuthEnabled") {
+            biometricSwitch.setOn(true, animated: false)
+        } else {
+            biometricSwitch.setOn(false, animated: false)
+        }
+
         let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") ?? "_"
         let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name") ?? ""
         let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag") ?? ""
 
         accountNametag.text = "\(name)#\(tag)"
         accountProfilePicture.kf.setImage(with: URL(string: "https://avatar.alles.cc/\(id)"))
+    }
+
+    @IBAction func biometricAuthChanged(_: Any) {
+        let authContext = LAContext()
+        var authError: NSError?
+        let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+
+        if authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
+            UserDefaults.standard.set(biometricSwitch.isOn, forKey: "biometricAuthEnabled")
+            sceneDelegate.sessionAuthorized = true
+            SPAlert.present(title: "Biometric authentication \(biometricSwitch.isOn ? String("enabled") : String("disabled"))!", preset: .done)
+        } else {
+            sceneDelegate.sessionAuthorized = true
+            biometricSwitch.isEnabled = false
+            biometricSwitch.setOn(false, animated: true)
+            UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
+
+            var type = "FaceID / TouchID"
+            let biometric = biometricType()
+            switch biometric {
+            case .face:
+                type = "FaceID"
+            case .touch:
+                type = "TouchID"
+            case .none:
+                type = "FaceID / TouchID"
+            }
+            EZAlertController.alert("Device error", message: String(format: "\(type) is not enrolled on your device. Please verify it's enabled in your devices' settings"))
+        }
     }
 
     var colorPickerController: ColorPickerController!
@@ -90,7 +136,7 @@ class SettingsViewController: UITableViewController {
             let url = URL(string: "https://spica.li/privacy")!
             if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
         case 1:
-            break
+            navigationController?.pushViewController(LegalNoticeViewController(), animated: true)
         case 2:
             let url = URL(string: "https://spica.li/")!
             if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
@@ -124,6 +170,14 @@ class SettingsViewController: UITableViewController {
         }
     }
 
+    @IBAction func gotoCredits(_: Any) {
+        navigationController?.pushViewController(CreditsViewController(style: .insetGrouped), animated: true)
+    }
+
+    @IBAction func gotoUsedLibraries(_: Any) {
+        navigationController?.pushViewController(UsedLibrariesViewController(style: .insetGrouped), animated: true)
+    }
+
     @IBAction func githubAction(_: Any) {
         let url = URL(string: "https://github.com/SpicaApp/Spica-iOS")!
         if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
@@ -137,7 +191,9 @@ class SettingsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+}
 
+extension SettingsViewController {
     override func numberOfSections(in _: UITableView) -> Int {
         return 6
     }

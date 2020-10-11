@@ -171,6 +171,54 @@ extension MicroAPI {
             }
         }
     }
+
+    func loadFollowers() -> Future<[User], MicroError> {
+        Future<[User], MicroError> { [self] promise in
+            AF.request("https://micro.alles.cx/api/followers", method: .get, headers: [
+                "Authorization": loadAuthKey(),
+            ]).responseJSON(queue: .global(qos: .utility)) { response in
+                switch response.result {
+                case .success:
+                    let possibleError = isError(response)
+                    if !possibleError.error.isError {
+                        let responseJSON = JSON(response.data!)
+                        let users = responseJSON["users"].map {
+                            User($1)
+                        }
+                        promise(.success(users))
+                    } else {
+                        return promise(.failure(possibleError))
+                    }
+                case let .failure(err):
+                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+                }
+            }
+        }
+    }
+
+    func loadFollowing() -> Future<[User], MicroError> {
+        Future<[User], MicroError> { [self] promise in
+            AF.request("https://micro.alles.cx/api/following", method: .get, headers: [
+                "Authorization": loadAuthKey(),
+            ]).responseJSON(queue: .global(qos: .utility)) { response in
+                switch response.result {
+                case .success:
+                    let possibleError = isError(response)
+                    if !possibleError.error.isError {
+                        let responseJSON = JSON(response.data!)
+                        let users = responseJSON["users"].map {
+                            User($1)
+                        }
+                        promise(.success(users))
+                    } else {
+                        return promise(.failure(possibleError))
+                    }
+                case let .failure(err):
+                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+                }
+            }
+        }
+    }
 }
 
 enum FollowUnfollow: String {

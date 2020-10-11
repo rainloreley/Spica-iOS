@@ -31,7 +31,12 @@ class FeedViewController: UITableViewController {
         navigationItem.title = "Feed"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openNewPostView))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+        if let splitViewController = splitViewController, !splitViewController.isCollapsed {
+            //
+        } else {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+        }
+
         tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
 
         refreshControl = UIRefreshControl()

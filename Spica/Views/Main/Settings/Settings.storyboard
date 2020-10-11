@@ -106,6 +106,9 @@
                                                 </imageView>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xV1-cw-V5U">
                                                     <rect key="frame" x="303" y="7" width="51" height="30"/>
+                                                    <connections>
+                                                        <action selector="biometricAuthChanged:" destination="rOT-Ml-Dhj" eventType="valueChanged" id="Laf-ra-Zme"/>
+                                                    </connections>
                                                 </switch>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="87L-yw-upH">
                                                     <rect key="frame" x="50" y="6" width="245" height="32"/>
@@ -395,6 +398,9 @@
                                                     <rect key="frame" x="50" y="6" width="304" height="32"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <state key="normal" title="Used Libraries"/>
+                                                    <connections>
+                                                        <action selector="gotoUsedLibraries:" destination="rOT-Ml-Dhj" eventType="touchUpInside" id="Cdo-1o-fQl"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -426,6 +432,9 @@
                                                     <rect key="frame" x="50" y="6" width="304" height="32"/>
                                                     <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <state key="normal" title="Credits"/>
+                                                    <connections>
+                                                        <action selector="gotoCredits:" destination="rOT-Ml-Dhj" eventType="touchUpInside" id="BPn-sT-lb0"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -567,6 +576,7 @@
                     <connections>
                         <outlet property="accountNametag" destination="1tS-0k-pbo" id="uBh-SQ-TZf"/>
                         <outlet property="accountProfilePicture" destination="Ujx-b3-TDC" id="JNu-GN-MJc"/>
+                        <outlet property="biometricSwitch" destination="xV1-cw-V5U" id="t3y-xH-onF"/>
                         <outlet property="versionBuildLabel" destination="67w-Jf-R2J" id="fwA-Yt-MRS"/>
                     </connections>
                 </tableViewController>

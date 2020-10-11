@@ -140,11 +140,17 @@ extension UserProfileViewController: UserHeaderDelegate {
     }
 
     func clickedOnFollowerCount() {
-        //
+        let vc = FollowersFollowingViewController()
+        vc.selectedIndex = 0
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func clickedOnFollowingCount() {
-        //
+        let vc = FollowersFollowingViewController()
+        vc.selectedIndex = 1
+        vc.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

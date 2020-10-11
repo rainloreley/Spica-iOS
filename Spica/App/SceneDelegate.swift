@@ -8,15 +8,20 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import LocalAuthentication
 import SwiftKeychainWrapper
 import UIKit
 
+@available(iOS 14.0, *)
 var spicaAppSplitViewController: GlobalSplitViewController!
+@available(iOS 14.0, *)
 var spicaAppSidebarViewController: SidebarViewController!
+
 var spicaAppTabbarViewController: TabBarController!
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    var sessionAuthorized: Bool = false
 
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options launchOptions: UIScene.ConnectionOptions) {
         if let windowScene = scene as? UIWindowScene {
@@ -28,6 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
             URLNavigationMap.initialize(navigator: navigator, sceneDelegate: self)
             window.makeKeyAndVisible()
+            verifyBiometricAuthentication()
 
             if isUserLoggedIn() {
                 if !launchOptions.urlContexts.isEmpty {
@@ -43,8 +49,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if !isUserLoggedIn(), checkLogin {
             return LoginViewController()
         } else {
-            loadSplitViewController()
-            return spicaAppSplitViewController
+            if #available(iOS 14.0, *) {
+                loadSplitViewController()
+                return spicaAppSplitViewController
+            } else {
+                loadTabBar()
+                return spicaAppTabbarViewController
+            }
         }
     }
 
@@ -57,6 +68,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         return KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token") && KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id")
     }
 
+    @available(iOS 14.0, *)
     func loadSplitViewController() {
         spicaAppSplitViewController = GlobalSplitViewController(style: .doubleColumn)
         spicaAppSplitViewController.preferredDisplayMode = .oneBesideSecondary
@@ -64,10 +76,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         spicaAppSplitViewController.preferredSplitBehavior = .tile
 
         spicaAppSidebarViewController = SidebarViewController()
-        spicaAppTabbarViewController = TabBarController()
+        loadTabBar()
 
         spicaAppSplitViewController.setViewController(spicaAppSidebarViewController, for: .primary)
         spicaAppSplitViewController.setViewController(spicaAppTabbarViewController, for: .compact)
+    }
+
+    func loadTabBar() {
+        spicaAppTabbarViewController = TabBarController()
     }
 
     func showURLContextViewController(_ controller: UIViewController) {
@@ -75,6 +91,69 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             spicaAppSplitViewController.showViewController(controller)
         } else {
             spicaAppTabbarViewController.showViewController(controller)
+        }
+    }
+
+    func verifyBiometricAuthentication() {
+        if UserDefaults.standard.bool(forKey: "biometricAuthEnabled"), sessionAuthorized == false {
+            let rootView = window?.rootViewController
+            let blurStyle = rootView!.traitCollection.userInterfaceStyle == .dark ? UIBlurEffect.Style.dark : UIBlurEffect.Style.light
+            let blurEffect = UIBlurEffect(style: blurStyle)
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = (rootView?.view.bounds)!
+            blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            blurEffectView.alpha = 1.0
+            blurEffectView.tag = 395
+            if rootView?.view.viewWithTag(395) != nil {
+                //
+            } else {
+                rootView?.view.addSubview(blurEffectView)
+                blurEffectView.snp.makeConstraints { make in
+                    make.top.equalTo(rootView!.view.snp.top)
+                    make.leading.equalTo(rootView!.view.snp.leading)
+                    make.bottom.equalTo(rootView!.view.snp.bottom)
+                    make.trailing.equalTo(rootView!.view.snp.trailing)
+                }
+            }
+
+            let authContext = LAContext()
+            var authError: NSError?
+            if authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
+                authContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Unlock Spica") { success, _ in
+                    if success {
+                        DispatchQueue.main.async { [self] in
+                            sessionAuthorized = true
+                            UIView.animate(withDuration: 0.2, animations: {
+                                blurEffectView.alpha = 0.0
+							}) { _ in
+                                if let blurTag = rootView?.view.viewWithTag(395) {
+                                    blurTag.removeFromSuperview()
+                                }
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            EZAlertController.alert("Biometric authentication failed", message: "Plase try again", acceptMessage: "Retry") {
+                                self.verifyBiometricAuthentication()
+                            }
+                        }
+                    }
+                }
+            } else {
+                var type = "FaceID / TouchID"
+                let biometric = biometricType()
+                switch biometric {
+                case .face:
+                    type = "FaceID"
+                case .touch:
+                    type = "TouchID"
+                case .none:
+                    type = "FaceID / TouchID"
+                }
+                EZAlertController.alert("Device error", message: "\(type) is not enrolled on your device. Please verify it's enabled in your devices' settings", actions: [UIAlertAction(title: "Retry", style: .default, handler: { _ in
+                    self.verifyBiometricAuthentication()
+				})])
+            }
         }
     }
 

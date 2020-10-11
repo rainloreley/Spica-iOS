@@ -31,6 +31,18 @@
 		8B35C46F2530C25B003809FA /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B35C46E2530C25B003809FA /* UIViewController.swift */; };
 		8B35C47F2530D1D4003809FA /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B35C47E2530D1D4003809FA /* PostDetailViewController.swift */; };
 		8B35C4842530D2A1003809FA /* PostDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B35C4832530D2A1003809FA /* PostDetail.swift */; };
+		8B5C428A2532F5F4007B10BD /* biometricType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42892532F5F4007B10BD /* biometricType.swift */; };
+		8B5C42902532FC23007B10BD /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C428F2532FC23007B10BD /* CreditsViewController.swift */; };
+		8B5C42982532FDE6007B10BD /* CreditsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42972532FDE6007B10BD /* CreditsCell.swift */; };
+		8B5C429D25330119007B10BD /* LegalNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C429C25330119007B10BD /* LegalNoticeViewController.swift */; };
+		8B5C42A2253301EA007B10BD /* UsedLibrariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42A1253301EA007B10BD /* UsedLibrariesViewController.swift */; };
+		8B5C42A825331275007B10BD /* FollowersFollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42A725331275007B10BD /* FollowersFollowingViewController.swift */; };
+		8B5C42AD25331724007B10BD /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42AC25331724007B10BD /* BookmarksViewController.swift */; };
+		8B5C42B225331734007B10BD /* SimpleBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42B125331734007B10BD /* SimpleBookmark.swift */; };
+		8B5C42BA253317C9007B10BD /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42B9253317C9007B10BD /* Bookmark.swift */; };
+		8B5C42BF2533187F007B10BD /* MicroAPI_Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42BE2533187F007B10BD /* MicroAPI_Bookmarks.swift */; };
+		8B5C42C725331ED7007B10BD /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42C625331ED7007B10BD /* SearchViewController.swift */; };
+		8B5C42CC25332108007B10BD /* MicroAPI_Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42CB25332108007B10BD /* MicroAPI_Search.swift */; };
 		8B6AC5A6252E0BC5003A2CC4 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6AC5A5252E0BC5003A2CC4 /* Post.swift */; };
 		8B6AC5AB252E0E70003A2CC4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6AC5AA252E0E70003A2CC4 /* User.swift */; };
 		8B6AC5B0252E0F4D003A2CC4 /* XP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6AC5AF252E0F4D003A2CC4 /* XP.swift */; };
@@ -125,6 +137,19 @@
 		8B35C46E2530C25B003809FA /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		8B35C47E2530D1D4003809FA /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
 		8B35C4832530D2A1003809FA /* PostDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetail.swift; sourceTree = "<group>"; };
+		8B5C42892532F5F4007B10BD /* biometricType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = biometricType.swift; sourceTree = "<group>"; };
+		8B5C428F2532FC23007B10BD /* CreditsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
+		8B5C42972532FDE6007B10BD /* CreditsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsCell.swift; sourceTree = "<group>"; };
+		8B5C429C25330119007B10BD /* LegalNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalNoticeViewController.swift; sourceTree = "<group>"; };
+		8B5C42A1253301EA007B10BD /* UsedLibrariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedLibrariesViewController.swift; sourceTree = "<group>"; };
+		8B5C42A725331275007B10BD /* FollowersFollowingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersFollowingViewController.swift; sourceTree = "<group>"; };
+		8B5C42AC25331724007B10BD /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
+		8B5C42B125331734007B10BD /* SimpleBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleBookmark.swift; sourceTree = "<group>"; };
+		8B5C42B9253317C9007B10BD /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		8B5C42BE2533187F007B10BD /* MicroAPI_Bookmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Bookmarks.swift; sourceTree = "<group>"; };
+		8B5C42C625331ED7007B10BD /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		8B5C42CB25332108007B10BD /* MicroAPI_Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Search.swift; sourceTree = "<group>"; };
+		8B5C42D625333060007B10BD /* Spica.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Spica.entitlements; sourceTree = "<group>"; };
 		8B6AC5A5252E0BC5003A2CC4 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		8B6AC5AA252E0E70003A2CC4 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8B6AC5AF252E0F4D003A2CC4 /* XP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XP.swift; sourceTree = "<group>"; };
@@ -221,6 +246,7 @@
 				8B35C47E2530D1D4003809FA /* PostDetailViewController.swift */,
 				8BC1BFBD2530DF85001186F3 /* UserProfileViewController.swift */,
 				8BBB7F8C2530E421004D49BC /* XPProgressBarView.swift */,
+				8B5C42A725331275007B10BD /* FollowersFollowingViewController.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -250,6 +276,7 @@
 		8B199E2C252DFFB90060A3BE /* Spica */ = {
 			isa = PBXGroup;
 			children = (
+				8B5C42D625333060007B10BD /* Spica.entitlements */,
 				8BA7B5BB253244A300915113 /* URL Navigation */,
 				8BD0C80B25322C57008D432E /* Functions */,
 				8BD712C12530A81400D2533C /* Extensions */,
@@ -321,6 +348,16 @@
 			path = Progressbar;
 			sourceTree = "<group>";
 		};
+		8B5C428E2532FBCD007B10BD /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				8B5C428F2532FC23007B10BD /* CreditsViewController.swift */,
+				8B5C429C25330119007B10BD /* LegalNoticeViewController.swift */,
+				8B5C42A1253301EA007B10BD /* UsedLibrariesViewController.swift */,
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
 		8B6AC5A4252E0BB6003A2CC4 /* Structures */ = {
 			isa = PBXGroup;
 			children = (
@@ -329,6 +366,8 @@
 				8B6AC5AF252E0F4D003A2CC4 /* XP.swift */,
 				8B35C4832530D2A1003809FA /* PostDetail.swift */,
 				8BD0C7EB25320F95008D432E /* Mention.swift */,
+				8B5C42B125331734007B10BD /* SimpleBookmark.swift */,
+				8B5C42B9253317C9007B10BD /* Bookmark.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -373,6 +412,7 @@
 		8BD0C80025321BD9008D432E /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				8B5C428E2532FBCD007B10BD /* Subviews */,
 				8BD0C80125321BEA008D432E /* Settings.storyboard */,
 				8BD0C80625321C12008D432E /* SettingsViewController.swift */,
 			);
@@ -384,6 +424,7 @@
 			children = (
 				8BBB7F872530E3DF004D49BC /* countString.swift */,
 				8BD712D72530B19400D2533C /* VotePost.swift */,
+				8B5C42892532F5F4007B10BD /* biometricType.swift */,
 			);
 			path = Functions;
 			sourceTree = "<group>";
@@ -408,6 +449,8 @@
 				8BC9DFF72531C9AC00886C92 /* Login */,
 				8B6AC5B7252E15A6003A2CC4 /* FeedViewController.swift */,
 				8BD0C7E625320F49008D432E /* MentionsViewController.swift */,
+				8B5C42AC25331724007B10BD /* BookmarksViewController.swift */,
+				8B5C42C625331ED7007B10BD /* SearchViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -436,8 +479,10 @@
 				8BF514ED252E35E20064D95F /* MicroAPI.swift */,
 				8BD712CA2530AF1E00D2533C /* MicroAPI_Feed.swift */,
 				8BD0C7F0253210DD008D432E /* MicroAPI_Mentions.swift */,
+				8B5C42BE2533187F007B10BD /* MicroAPI_Bookmarks.swift */,
 				8BC1BFC22530E04B001186F3 /* MicroAPI_User.swift */,
 				8BD712CF2530AF3900D2533C /* MicroAPI_Posts.swift */,
+				8B5C42CB25332108007B10BD /* MicroAPI_Search.swift */,
 			);
 			path = "Micro API";
 			sourceTree = "<group>";
@@ -449,6 +494,7 @@
 				8BE6DE2C252E038600668AB7 /* Post Cell */,
 				8B6ACF192530D667004BDEC8 /* PostDividerCell.swift */,
 				8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */,
+				8B5C42972532FDE6007B10BD /* CreditsCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -739,6 +785,7 @@
 				8BBB7F8D2530E421004D49BC /* XPProgressBarView.swift in Sources */,
 				8B35C47F2530D1D4003809FA /* PostDetailViewController.swift in Sources */,
 				8B6AC5B8252E15A6003A2CC4 /* FeedViewController.swift in Sources */,
+				8B5C42CC25332108007B10BD /* MicroAPI_Search.swift in Sources */,
 				8B35C4842530D2A1003809FA /* PostDetail.swift in Sources */,
 				8B35C4562530BF9A003809FA /* CircularProgressBar.swift in Sources */,
 				8BD0C80725321C12008D432E /* SettingsViewController.swift in Sources */,
@@ -750,9 +797,12 @@
 				8B6AC5B0252E0F4D003A2CC4 /* XP.swift in Sources */,
 				8BC9DFF92531C9B700886C92 /* LoginController.swift in Sources */,
 				8BD0C7F1253210DD008D432E /* MicroAPI_Mentions.swift in Sources */,
+				8B5C429D25330119007B10BD /* LegalNoticeViewController.swift in Sources */,
+				8B5C42982532FDE6007B10BD /* CreditsCell.swift in Sources */,
 				8BD0C7E725320F49008D432E /* MentionsViewController.swift in Sources */,
 				8B3364D8252F712F00D46ABE /* MicroError.swift in Sources */,
 				8BBB7F882530E3DF004D49BC /* countString.swift in Sources */,
+				8B5C42902532FC23007B10BD /* CreditsViewController.swift in Sources */,
 				8B199E71252E015B0060A3BE /* TabBarController.swift in Sources */,
 				8BA7B5BD253244B800915113 /* URLNavigationMap.swift in Sources */,
 				8BD712C32530A81D00D2533C /* Date.swift in Sources */,
@@ -765,6 +815,7 @@
 				8B6AC5AB252E0E70003A2CC4 /* User.swift in Sources */,
 				8B199E6C252E013C0060A3BE /* SidebarViewController.swift in Sources */,
 				8BBB7F832530E38D004D49BC /* UserHeaderViewController.swift in Sources */,
+				8B5C428A2532F5F4007B10BD /* biometricType.swift in Sources */,
 				8B6AC5A6252E0BC5003A2CC4 /* Post.swift in Sources */,
 				8B6ACF1F2530D69F004BDEC8 /* ReplyButtonCell.swift in Sources */,
 				8BD0C7EC25320F95008D432E /* Mention.swift in Sources */,
@@ -772,14 +823,21 @@
 				8BE6DE2F252E03C600668AB7 /* PostCell.swift in Sources */,
 				8B35C4632530C07F003809FA /* String.swift in Sources */,
 				8BC1BFC32530E04B001186F3 /* MicroAPI_User.swift in Sources */,
+				8B5C42C725331ED7007B10BD /* SearchViewController.swift in Sources */,
+				8B5C42A825331275007B10BD /* FollowersFollowingViewController.swift in Sources */,
 				8BA7B5AB2532335D00915113 /* UserDefaults.swift in Sources */,
 				8B0081E92531BAFC006427FE /* LoginViewController.swift in Sources */,
+				8B5C42BA253317C9007B10BD /* Bookmark.swift in Sources */,
 				8B6ACF1A2530D667004BDEC8 /* PostDividerCell.swift in Sources */,
 				8BA7B5A1253232E300915113 /* ColorPickerView.swift in Sources */,
 				8BA7B5A6253232FF00915113 /* ColorPickerController.swift in Sources */,
+				8B5C42AD25331724007B10BD /* BookmarksViewController.swift in Sources */,
 				8BD0C7FC25321A52008D432E /* UITableView.swift in Sources */,
 				8B0CD2B02530BB40004459EC /* CreatePostViewController.swift in Sources */,
 				8BD712D02530AF3900D2533C /* MicroAPI_Posts.swift in Sources */,
+				8B5C42A2253301EA007B10BD /* UsedLibrariesViewController.swift in Sources */,
+				8B5C42B225331734007B10BD /* SimpleBookmark.swift in Sources */,
+				8B5C42BF2533187F007B10BD /* MicroAPI_Bookmarks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -948,9 +1006,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1602418840;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -969,9 +1030,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1602418840;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
