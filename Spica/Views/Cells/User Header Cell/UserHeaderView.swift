@@ -15,6 +15,9 @@ import SwiftUI
 
 struct UserHeaderView: View {
     @ObservedObject var controller: UserHeaderViewController
+	
+	var frameWidth: CGFloat = 0
+	var frameHeight: CGFloat = 0
 
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -95,6 +98,17 @@ struct UserHeaderView: View {
                 LoadingSkeleton(loaded: $controller.userDataLoaded) {
                     Text("Joined: ") + Text(dateFormatter.string(from: controller.user.createdAt)).bold()
                 }
+				
+				if controller.user.status.content != nil, controller.user.status.date != nil {
+					LoadingSkeleton(loaded: $controller.userDataLoaded) {
+						VStack(alignment: .leading) {
+							Text("\"\(controller.user.status.content!)\"").italic().frame(maxWidth: frameWidth - 40).lineLimit(nil)
+								.fixedSize(horizontal: false, vertical: true)
+							
+							Text("\(RelativeDateTimeFormatter().localizedString(for: controller.user.status.date!, relativeTo: Date()))").font(.footnote).foregroundColor(.secondary)
+						}.padding([.top, .bottom])
+					}
+				}
 
                 XPProgressBarView(xp: $controller.user.xp).frame(height: 60).padding(.top)
 
@@ -122,7 +136,8 @@ struct UserHeaderView: View {
             .onAppear {
                 controller.getLoggedInUser()
             }
-            .background(Color.clear)
+		.background(Color.clear)
+		//.frame(width: frameWidth, height: frameHeight)
     }
 }
 

@@ -62,6 +62,7 @@
 		8BBB7F882530E3DF004D49BC /* countString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB7F872530E3DF004D49BC /* countString.swift */; };
 		8BBB7F8D2530E421004D49BC /* XPProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB7F8C2530E421004D49BC /* XPProgressBarView.swift */; };
 		8BBB7F952530E566004D49BC /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BBB7F942530E566004D49BC /* KingfisherSwiftUI */; };
+		8BBEA42D253C68960046A3F9 /* Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBEA42C253C68960046A3F9 /* Status.swift */; };
 		8BC1BFBE2530DF85001186F3 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC1BFBD2530DF85001186F3 /* UserProfileViewController.swift */; };
 		8BC1BFC32530E04B001186F3 /* MicroAPI_User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC1BFC22530E04B001186F3 /* MicroAPI_User.swift */; };
 		8BC9DFF92531C9B700886C92 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC9DFF82531C9B700886C92 /* LoginController.swift */; };
@@ -166,6 +167,7 @@
 		8BBB7F822530E38D004D49BC /* UserHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderViewController.swift; sourceTree = "<group>"; };
 		8BBB7F872530E3DF004D49BC /* countString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = countString.swift; sourceTree = "<group>"; };
 		8BBB7F8C2530E421004D49BC /* XPProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPProgressBarView.swift; sourceTree = "<group>"; };
+		8BBEA42C253C68960046A3F9 /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
 		8BC1BFBD2530DF85001186F3 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BC1BFC22530E04B001186F3 /* MicroAPI_User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_User.swift; sourceTree = "<group>"; };
 		8BC9DFF82531C9B700886C92 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -368,6 +370,7 @@
 				8BD0C7EB25320F95008D432E /* Mention.swift */,
 				8B5C42B125331734007B10BD /* SimpleBookmark.swift */,
 				8B5C42B9253317C9007B10BD /* Bookmark.swift */,
+				8BBEA42C253C68960046A3F9 /* Status.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -794,6 +797,7 @@
 				8B199E30252DFFB90060A3BE /* SceneDelegate.swift in Sources */,
 				8BF514EE252E35E20064D95F /* MicroAPI.swift in Sources */,
 				8B0CD2A52530B6A4004459EC /* MicroAPI+ErrorHandling.swift in Sources */,
+				8BBEA42D253C68960046A3F9 /* Status.swift in Sources */,
 				8B6AC5B0252E0F4D003A2CC4 /* XP.swift in Sources */,
 				8BC9DFF92531C9B700886C92 /* LoginController.swift in Sources */,
 				8BD0C7F1253210DD008D432E /* MicroAPI_Mentions.swift in Sources */,
@@ -1019,6 +1023,7 @@
 				MARKETING_VERSION = 0.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1043,6 +1048,7 @@
 				MARKETING_VERSION = 0.9.1;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

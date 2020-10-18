@@ -31,8 +31,10 @@ struct User {
 
     var postsCount: Int
     var repliesCount: Int
+	
+	var status: Status
 
-    init(id: String = "", name: String = "", tag: String = "", plus: Bool = false, nickname: String = "", profilePicture: UIImage? = nil, profilePictureUrl: URL? = nil, createdAt: Date = Date(), xp: XP = XP(), followercount: Int = 0, iamFollowing: Bool = false, followingcount: Int = 0, isFollowingMe: Bool = false, postsCount: Int = 0, repliesCount: Int = 0) {
+	init(id: String = "", name: String = "", tag: String = "", plus: Bool = false, nickname: String = "", profilePicture: UIImage? = nil, profilePictureUrl: URL? = nil, createdAt: Date = Date(), xp: XP = XP(), followercount: Int = 0, iamFollowing: Bool = false, followingcount: Int = 0, isFollowingMe: Bool = false, postsCount: Int = 0, repliesCount: Int = 0, status: Status = Status()) {
         self.id = id
         self.name = name
         self.tag = tag
@@ -48,6 +50,7 @@ struct User {
         self.isFollowingMe = isFollowingMe
         self.postsCount = postsCount
         self.repliesCount = repliesCount
+		self.status = status
     }
 
     init(_ json: JSON) {
@@ -67,6 +70,7 @@ struct User {
         isFollowingMe = json["following"]["me"].bool ?? false
         postsCount = json["posts"]["count"].int ?? 0
         repliesCount = json["posts"]["replies"].int ?? 0
+		status = Status()
     }
 
     static var sample = User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", plus: true, nickname: "Lea", profilePicture: UIImage(named: "leapfp"), createdAt: Date(), xp: XP(), followercount: 100, iamFollowing: true, followingcount: 69, isFollowingMe: true)

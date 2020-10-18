@@ -38,6 +38,11 @@ class UserProfileViewController: UITableViewController {
         refreshControl!.addTarget(self, action: #selector(loadUser), for: .valueChanged)
         tableView.addSubview(refreshControl!)
         tableView.delegate = self
+		tableView.rowHeight = UITableView.automaticDimension
+		tableView.estimatedRowHeight = 600
+		
+		
+		
 
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading..."
@@ -47,6 +52,23 @@ class UserProfileViewController: UITableViewController {
     override func viewDidAppear(_: Bool) {
         loadUser()
     }
+	
+	func updateUserButtons() {
+		let signedInUID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+		if user.id == signedInUID {
+			//navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openUpdateStatusSheet))
+		}
+		else {
+			navigationItem.rightBarButtonItem = nil
+		}
+	}
+	
+	@objc func openUpdateStatusSheet() {
+		let vc = CreatePostViewController()
+		vc.type = .status
+		vc.delegate = self
+		present(UINavigationController(rootViewController: vc), animated: true)
+	}
 
     @objc func loadUser() {
         if userposts.isEmpty { loadingHud.show(in: view) }
@@ -68,6 +90,7 @@ class UserProfileViewController: UITableViewController {
                     KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.name")
                     KeychainWrapper.standard.set(user.tag, forKey: "dev.abmgrt.spica.user.tag")
                 }
+				updateUserButtons()
                 loadUserPosts()
             }.store(in: &subscriptions)
     }
@@ -180,10 +203,15 @@ extension UserProfileViewController: PostCellDelegate {
 }
 
 extension UserProfileViewController: CreatePostDelegate {
-    func didSendPost(post: Post) {
-        let detailVC = PostDetailViewController(style: .insetGrouped)
-        detailVC.mainpost = post
-        detailVC.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(detailVC, animated: true)
-    }
+	func didSendPost(post: Post?) {
+		if post != nil {
+			let detailVC = PostDetailViewController(style: .insetGrouped)
+			detailVC.mainpost = post!
+			detailVC.hidesBottomBarWhenPushed = true
+			navigationController?.pushViewController(detailVC, animated: true)
+		}
+		else {
+			loadUser()
+		}
+	}
 }

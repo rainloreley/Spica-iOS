@@ -30,7 +30,6 @@ extension MicroAPI {
                         let dispatchGroup = DispatchGroup()
                         for json in mentionJSON["posts"].arrayValue {
                             dispatchGroup.enter()
-                            print(json)
                             loadPost(json["id"].string ?? "")
                                 .receive(on: RunLoop.main)
                                 .sink {

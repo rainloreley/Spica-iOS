@@ -11,6 +11,7 @@
 import LocalAuthentication
 import SwiftKeychainWrapper
 import UIKit
+import Kingfisher
 
 @available(iOS 14.0, *)
 var spicaAppSplitViewController: GlobalSplitViewController!
@@ -72,8 +73,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func loadSplitViewController() {
         spicaAppSplitViewController = GlobalSplitViewController(style: .doubleColumn)
         spicaAppSplitViewController.preferredDisplayMode = .oneBesideSecondary
-        spicaAppSplitViewController.presentsWithGesture = false
+        spicaAppSplitViewController.presentsWithGesture = true
         spicaAppSplitViewController.preferredSplitBehavior = .tile
+		spicaAppSplitViewController.primaryBackgroundStyle = .sidebar
 
         spicaAppSidebarViewController = SidebarViewController()
         loadTabBar()

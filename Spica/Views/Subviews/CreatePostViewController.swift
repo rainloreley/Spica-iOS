@@ -18,7 +18,7 @@ import SwiftUI
 import UIKit
 
 protocol CreatePostDelegate {
-    func didSendPost(post: Post)
+    func didSendPost(post: Post?)
 }
 
 class CreatePostViewController: UIViewController, UITextViewDelegate {
@@ -41,6 +41,8 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
     var sendButton: UIBarButtonItem!
     var linkButton: UIBarButtonItem!
     var imagePreview: UIImageView!
+	
+	var characterLimit = 0
 
     var preText: String!
 
@@ -55,8 +57,17 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+		characterLimit = type != .status ? 500 : 100
         hideKeyboardWhenTappedAround()
-        navigationItem.title = type == PostType.post ? "Post" : "Reply"
+		switch type {
+			case .post:
+				navigationItem.title = "Post"
+			case .reply:
+				navigationItem.title = "Reply"
+			case .status:
+				navigationItem.title = "Update status"
+			default: navigationItem.title = ""
+		}
         navigationController?.navigationBar.prefersLargeTitles = false
 
         imagePicker = UIImagePickerController()
@@ -68,17 +79,20 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
         loadingHud.textLabel.text = "Loading..."
         loadingHud.interactionType = .blockAllTouches
 
-        imageButton = UIBarButtonItem(image: UIImage(systemName: "photo"), style: .plain, target: self, action: #selector(openImagePicker))
-        linkButton = UIBarButtonItem(image: UIImage(systemName: "link"), style: .plain, target: self, action: #selector(toggleLinkField))
-        sendButton = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"), style: .plain, target: self, action: #selector(sendPost))
-
-        #if targetEnvironment(macCatalyst)
-            navigationItem.rightBarButtonItems = [sendButton, imageButton, linkButton]
-            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissView))
-        #else
-            navigationItem.leftBarButtonItems = [imageButton, linkButton]
-            navigationItem.rightBarButtonItem = sendButton
-        #endif
+		
+		sendButton = UIBarButtonItem(image: UIImage(systemName: "paperplane.fill"), style: .plain, target: self, action: #selector(clickedSendButton))
+		if type != .status {
+			imageButton = UIBarButtonItem(image: UIImage(systemName: "photo"), style: .plain, target: self, action: #selector(openImagePicker))
+			linkButton = UIBarButtonItem(image: UIImage(systemName: "link"), style: .plain, target: self, action: #selector(toggleLinkField))
+			
+			#if targetEnvironment(macCatalyst)
+				navigationItem.rightBarButtonItems = [sendButton, imageButton, linkButton]
+				navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(dismissView))
+			#else
+				navigationItem.leftBarButtonItems = [imageButton, linkButton]
+			#endif
+		}
+		navigationItem.rightBarButtonItem = sendButton
 
         userPfp = UIImageView(frame: .zero)
         userPfp.image = UIImage(systemName: "person.circle")
@@ -101,12 +115,27 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
 
         view.addSubview(contentTextView)
 
-        linkTextField = UITextField(frame: .zero)
-        linkTextField.borderStyle = .roundedRect
-        linkTextField.autocapitalizationType = .none
-        linkTextField.placeholder = "https://micro.alles.cx"
-        linkTextField.autocorrectionType = .no
-        view.addSubview(linkTextField)
+		if type != .status {
+			linkTextField = UITextField(frame: .zero)
+			linkTextField.borderStyle = .roundedRect
+			linkTextField.autocapitalizationType = .none
+			linkTextField.placeholder = "https://micro.alles.cx"
+			linkTextField.autocorrectionType = .no
+			view.addSubview(linkTextField)
+			
+			linkTextField.snp.makeConstraints { make in
+				make.top.equalTo(view.snp.top).offset(80)
+				make.leading.equalTo(view.snp.leading).offset(72)
+				make.trailing.equalTo(view.snp.trailing).offset(-32)
+				if linkFieldShown {
+					make.bottom.equalTo(contentTextView.snp.top).offset(-16)
+					make.height.equalTo(32)
+				} else {
+					make.bottom.equalTo(contentTextView.snp.top)
+					make.height.equalTo(0)
+				}
+			}
+		}
 
         userPfp.snp.makeConstraints { make in
             make.height.equalTo(40)
@@ -115,37 +144,32 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
             make.leading.equalTo(view.snp.leading).offset(16)
         }
 
-        linkTextField.snp.makeConstraints { make in
-            make.top.equalTo(view.snp.top).offset(80)
-            make.leading.equalTo(view.snp.leading).offset(72)
-            make.trailing.equalTo(view.snp.trailing).offset(-32)
-            if linkFieldShown {
-                make.bottom.equalTo(contentTextView.snp.top).offset(-16)
-                make.height.equalTo(32)
-            } else {
-                make.bottom.equalTo(contentTextView.snp.top)
-                make.height.equalTo(0)
-            }
-        }
+		if type != .status {
+			imagePreview = UIImageView(frame: .zero)
+			imagePreview.image = nil
+			view.addSubview(imagePreview)
 
-        imagePreview = UIImageView(frame: .zero)
-        imagePreview.image = nil
-        view.addSubview(imagePreview)
+			imagePreview.snp.makeConstraints { make in
+				make.leading.equalTo(view.snp.leading).offset(72)
+				make.trailing.equalTo(view.snp.trailing).offset(-32)
+				make.height.equalTo(0)
+				make.bottom.equalTo(view.snp.bottom).offset(-16)
+			}
 
-        imagePreview.snp.makeConstraints { make in
-            make.leading.equalTo(view.snp.leading).offset(72)
-            make.trailing.equalTo(view.snp.trailing).offset(-32)
-            make.height.equalTo(0)
-            make.bottom.equalTo(view.snp.bottom).offset(-16)
-        }
-
-        imagePreview.isUserInteractionEnabled = true
-        imagePreview.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(openImagePicker)))
+			imagePreview.isUserInteractionEnabled = true
+			imagePreview.addGestureRecognizer(UIGestureRecognizer(target: self, action: #selector(openImagePicker)))
+		}
 
         contentTextView.snp.makeConstraints { make in
             make.leading.equalTo(view.snp.leading).offset(72)
             make.trailing.equalTo(view.snp.trailing).offset(-32)
-            make.bottom.equalTo(imagePreview.snp.top).offset(-16)
+			if type != .status {
+				make.bottom.equalTo(imagePreview.snp.top).offset(-16)
+			}
+			else {
+				make.top.equalTo(view.snp.top).offset(80)
+				make.bottom.equalTo(view.snp.bottom).offset(-16)
+			}
         }
 
         let progressRingUI = UIHostingController(rootView: CircularProgressBar(controller: progressBarController))
@@ -158,7 +182,7 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
             make.leading.equalTo(view.snp.leading).offset(16)
         }
 
-        let calculation = Double(contentTextView.text.count) / Double(500)
+        let calculation = Double(contentTextView.text.count) / Double(characterLimit)
 
         progressBarController.progress = Float(calculation)
     }
@@ -223,14 +247,14 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
     }
 
     func textViewDidChange(_ textView: UITextView) {
-        let calculation = Double(textView.text.count) / Double(500)
+        let calculation = Double(textView.text.count) / Double(characterLimit)
 
         progressBarController.progress = Float(calculation)
     }
 
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        return newText.count < 501
+        return newText.count < characterLimit + 1
     }
 
     @objc func openImagePicker(sender _: Any?) {
@@ -254,8 +278,21 @@ class CreatePostViewController: UIViewController, UITextViewDelegate {
         let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
         userPfp.kf.setImage(with: URL(string: "https://avatar.alles.cc/\(id!)"))
     }
+	
+	@objc func clickedSendButton() {
+		if type != .status {
+			sendPost()
+		}
+		else {
+			updateStatus()
+		}
+	}
+	
+	func updateStatus() {
+		// TODO: UPDATE STATUS
+	}
 
-    @objc func sendPost() {
+    func sendPost() {
         loadingHud.show(in: view)
         sendButton.isEnabled = false
         contentTextView.layer.cornerRadius = 0
@@ -341,4 +378,5 @@ extension CreatePostViewController: UIDropInteractionDelegate {
 enum PostType {
     case post
     case reply
+	case status
 }

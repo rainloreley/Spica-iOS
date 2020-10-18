@@ -15,7 +15,7 @@ import SwiftyJSON
 import UIKit
 
 extension MicroAPI {
-    func loadPost(_ id: String) -> Future<Post, MicroError> {
+	func loadPost(_ id: String, loadMentions: Bool = true) -> Future<Post, MicroError> {
         return Future<Post, MicroError> { [self] promise in
             AF.request("https://micro.alles.cx/api/posts/\(id)", method: .get, headers: [
                 "Authorization": loadAuthKey(),
@@ -25,7 +25,48 @@ extension MicroAPI {
                     let possibleError = isError(postResponse)
                     if !possibleError.error.isError {
                         let postJSON = JSON(postResponse.data!)
-                        return promise(.success(.init(postJSON)))
+						var post: Post = .init(postJSON)
+						if loadMentions {
+							let content = post.content.replacingOccurrences(of: "\n", with: " \n ")
+
+							let splittedContent = content.split(separator: " ")
+							
+							let dispatchGroup = DispatchGroup()
+							
+
+							for word in splittedContent {
+								dispatchGroup.enter()
+								if String(word).starts(with: "@"), word.count > 1 {
+									let filteredWord = String(word).removeSpecialChars
+									//let filteredWordWithoutAtSymbol = String(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])
+									let mentionedUserRaw = filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex]
+									print(mentionedUserRaw)
+									loadUser(String(mentionedUserRaw))
+										.receive(on: RunLoop.main)
+										.sink {
+											switch $0 {
+												case let .failure(err):
+													print(err)
+													dispatchGroup.leave()
+												default: break
+											}
+										} receiveValue: { (user) in
+											post.mentionedUsers.append(user)
+											dispatchGroup.leave()
+										}.store(in: &subscriptions)
+
+								}
+								else {
+									dispatchGroup.leave()
+								}
+							}
+							dispatchGroup.notify(queue: .main) {
+								return promise(.success(post))
+							}
+						}
+						else {
+							return promise(.success(post))
+						}
                     } else {
                         promise(.failure(possibleError))
                     }
@@ -136,7 +177,6 @@ extension MicroAPI {
                     let possibleError = isError(response)
                     if !possibleError.error.isError {
                         let responseJSON = JSON(response.data!)
-                        print(responseJSON)
                         return promise(.success(Post(responseJSON)))
                     } else {
                         return promise(.failure(possibleError))

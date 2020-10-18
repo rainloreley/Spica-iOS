@@ -26,8 +26,9 @@ struct Post {
     var vote: Int
     var interactions: Int?
     var createdAt: Date
+	var mentionedUsers: [User]
 
-    init(id: String = "", author: User = User(), parent: String? = nil, children: [String] = [], content: String = "", imageurl: URL? = nil, image: UIImage? = nil, url: URL? = nil, score: Int = 0, vote: Int = 0, interactions: Int? = nil, createdAt: Date = Date()) {
+	init(id: String = "", author: User = User(), parent: String? = nil, children: [String] = [], content: String = "", imageurl: URL? = nil, image: UIImage? = nil, url: URL? = nil, score: Int = 0, vote: Int = 0, interactions: Int? = nil, createdAt: Date = Date(), mentionedUsers: [User] = []) {
         self.id = id
         self.author = author
         self.parent = parent
@@ -40,6 +41,7 @@ struct Post {
         self.vote = vote
         self.interactions = interactions
         self.createdAt = createdAt
+		self.mentionedUsers = mentionedUsers
     }
 
     init(_ json: JSON) {
@@ -55,7 +57,8 @@ struct Post {
         vote = json["vote"]["me"].int ?? 0
         interactions = json["interactions"].int ?? nil
         createdAt = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
+		mentionedUsers = []
     }
 
-    static var sample = Post(id: "sample", author: User.sample, parent: nil, children: [], content: "Hello world", imageurl: URL(string: "https://avatar.alles.cx/87cd0529-f41b-4075-a002-059bf2311ce7"), image: nil, url: nil, score: 0, vote: 0, interactions: nil, createdAt: Date())
+    static var sample = Post(id: "sample", author: User.sample, parent: nil, children: [], content: "Hello world", imageurl: URL(string: "https://avatar.alles.cx/87cd0529-f41b-4075-a002-059bf2311ce7"), image: nil, url: nil, score: 0, vote: 0, interactions: nil, createdAt: Date(), mentionedUsers: [])
 }

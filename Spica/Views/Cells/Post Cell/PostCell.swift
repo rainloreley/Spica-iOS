@@ -130,7 +130,18 @@ class PostCell: UITableViewCell {
                 selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
                 selectablePart.addAttribute(.link, value: "url:\(word)", range: NSRange(location: 0, length: selectablePart.length - 1))
                 attributedText.append(selectablePart)
-            } else {
+			} else if String(word).starts(with: "@"), word.count > 1 {
+				let filteredWord = String(word).removeSpecialChars
+				let filteredWordWithoutAtSymbol = String(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])
+				var nameToInsert = filteredWordWithoutAtSymbol
+				if let index = post?.mentionedUsers.firstIndex(where: { $0.id == nameToInsert }) {
+					nameToInsert = (post?.mentionedUsers[index].name)!
+				}
+				let selectablePart = NSMutableAttributedString(string: String(word.replacingOccurrences(of: filteredWordWithoutAtSymbol, with: nameToInsert)) + " ")
+				selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
+				selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: selectablePart.length - 1))
+				attributedText.append(selectablePart)
+			} else {
                 if word == "\n" {
                     attributedText.append(NSAttributedString(string: "\n"))
                 } else {
@@ -275,7 +286,14 @@ extension PostCell: UITextViewDelegate {
     func textView(_: UITextView, shouldInteractWith url: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
         if interaction == .invokeDefaultAction {
             let stringURL = url.absoluteString
-            if stringURL.hasPrefix("url:") {
+			if stringURL.hasPrefix("user:") {
+				let selUser = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
+				let spicaUserURL = URL(string: "spica://user/\(selUser)")!
+				if UIApplication.shared.canOpenURL(spicaUserURL) {
+					UIApplication.shared.open(spicaUserURL)
+				}
+			}
+            else if stringURL.hasPrefix("url:") {
                 var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
                 if !selURL.starts(with: "https://"), !selURL.starts(with: "http://") {
                     selURL = "https://" + selURL

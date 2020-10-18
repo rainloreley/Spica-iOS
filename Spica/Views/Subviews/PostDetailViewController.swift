@@ -185,10 +185,12 @@ extension PostDetailViewController {
 }
 
 extension PostDetailViewController: CreatePostDelegate {
-    func didSendPost(post: Post) {
-        let detailVC = PostDetailViewController(style: .insetGrouped)
-        detailVC.mainpost = post
-        detailVC.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(detailVC, animated: true)
-    }
+	func didSendPost(post: Post?) {
+		if post != nil {
+			let detailVC = PostDetailViewController(style: .insetGrouped)
+			detailVC.mainpost = post!
+			detailVC.hidesBottomBarWhenPushed = true
+			navigationController?.pushViewController(detailVC, animated: true)
+		}
+	}
 }

@@ -22,7 +22,7 @@ class UserHeaderViewCell: UITableViewCell {
         backgroundView = nil
         backgroundColor = .clear
         contentView.backgroundColor = .clear
-        headerView = UIHostingController(rootView: UserHeaderView(controller: headerController)).view
+		headerView = UIHostingController(rootView: UserHeaderView(controller: headerController, frameWidth: self.frame.width, frameHeight: self.frame.height)).view
         headerView.backgroundColor = .clear
         contentView.addSubview(headerView)
         headerView.snp.makeConstraints { make in
@@ -30,6 +30,7 @@ class UserHeaderViewCell: UITableViewCell {
             make.leading.equalTo(contentView.snp.leading)
             make.bottom.equalTo(contentView.snp.bottom)
             make.trailing.equalTo(contentView.snp.trailing)
+			make.height.greaterThanOrEqualTo(500)
         }
     }
 
