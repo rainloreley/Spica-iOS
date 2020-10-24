@@ -20,8 +20,6 @@ class FeedViewController: UITableViewController {
     var latestPostsLoaded = false
     private var contentOffset: CGPoint?
 
-    private var subscriptions = Set<AnyCancellable>()
-
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -30,13 +28,8 @@ class FeedViewController: UITableViewController {
         super.viewDidLoad()
         navigationItem.title = "Feed"
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openNewPostView))
-        if let splitViewController = splitViewController, !splitViewController.isCollapsed {
-            //
-        } else {
-            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
-        }
-
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openNewPostView)), UIBarButtonItem(image: UIImage(systemName: "text.bubble"), style: .plain, target: self, action: #selector(openUpdateStatus(sender:)))]
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
         tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
 
         refreshControl = UIRefreshControl()
@@ -47,6 +40,40 @@ class FeedViewController: UITableViewController {
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading..."
         loadingHud.interactionType = .blockNoTouches
+    }
+
+    var updateStatusViewController: UpdateStatusViewController?
+
+    @objc func openUpdateStatus(sender: UIBarButtonItem) {
+        updateStatusViewController = UpdateStatusViewController(title: "Update status", message: "", preferredStyle: .actionSheet)
+		if #available(iOS 14.0, *) {
+			updateStatusViewController!.rootViewHeight = 350
+		}
+		else {
+			updateStatusViewController!.rootViewHeight = 500
+		}
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
+        if let popoverController = updateStatusViewController?.popoverPresentationController {
+            popoverController.barButtonItem = sender
+            /* popoverController.sourceView = view
+             popoverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0) */
+        }
+        present(updateStatusViewController!, animated: true, completion: nil)
+    }
+
+    @objc func keyboardWillAppear() {
+        updateStatusViewController?.rootViewHeight = view.frame.height - 64
+    }
+
+    @objc func keyboardWillDisappear() {
+        // Do something here
+		if #available(iOS 14.0, *) {
+			updateStatusViewController!.rootViewHeight = 350
+		}
+		else {
+			updateStatusViewController!.rootViewHeight = 500
+		}
     }
 
     @objc func openSettings() {
@@ -63,23 +90,24 @@ class FeedViewController: UITableViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-        loadFeed()
+		print("OFFSET: \(tableView.contentOffset.y)")
+		if tableView.contentOffset.y < 200 || posts.isEmpty {
+			loadFeed()
+		}
     }
 
     @objc func loadFeed() {
         if posts.isEmpty { loadingHud.show(in: view) }
 
-        MicroAPI.default.loadFeed()
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+        MicroAPI.default.loadFeed { [self] result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl!.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-                default: break
                 }
-            } receiveValue: { [self] receivedPosts in
+            case let .success(receivedPosts):
                 posts = receivedPosts
                 contentOffset = nil
                 self.posts.sort(by: { $0.createdAt.compare($1.createdAt) == .orderedDescending })
@@ -93,23 +121,24 @@ class FeedViewController: UITableViewController {
                 latestPostsLoaded = true
                 self.refreshControl!.endRefreshing()
                 self.loadingHud.dismiss()
-            }.store(in: &subscriptions)
+            }
+        }
     }
 
     func loadMoreFeed(_ before: Date) {
         if latestPostsLoaded, !posts.isEmpty {
             let timestamp = Int(before.timeIntervalSince1970 * 1000)
             loadingHud.show(in: view)
-            MicroAPI.default.loadFeed(before: timestamp)
-                .receive(on: RunLoop.main)
-                .sink {
-                    switch $0 {
-                    case .failure:
-                        break
-                    default:
-                        break
+
+            MicroAPI.default.loadFeed(before: timestamp) { [self] result in
+                switch result {
+                case let .failure(err):
+                    DispatchQueue.main.async {
+                        self.refreshControl!.endRefreshing()
+                        self.loadingHud.dismiss()
+                        MicroAPI.default.errorHandling(error: err, caller: self.view)
                     }
-                } receiveValue: { [self] posts in
+                case let .success(posts):
                     DispatchQueue.main.async {
                         var filteredPosts = [Post]()
                         filteredPosts.append(contentsOf: self.posts)
@@ -129,7 +158,8 @@ class FeedViewController: UITableViewController {
                         self.refreshControl!.endRefreshing()
                         self.loadingHud.dismiss()
                     }
-                }.store(in: &subscriptions)
+                }
+            }
         }
     }
 }
@@ -153,11 +183,13 @@ extension FeedViewController {
 }
 
 extension FeedViewController: PostCellDelegate {
-    func replyToPost(_ id: String) {
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
-        vc.type = .reply
+        vc.type = type
         vc.delegate = self
-        vc.parentID = id
+        vc.parentID = parentID
+        vc.preText = preText ?? ""
+        vc.preLink = preLink
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -205,12 +237,12 @@ extension FeedViewController {
 }
 
 extension FeedViewController: CreatePostDelegate {
-	func didSendPost(post: Post?) {
-		if post != nil {
-			let detailVC = PostDetailViewController(style: .insetGrouped)
-			detailVC.mainpost = post!
-			detailVC.hidesBottomBarWhenPushed = true
-			navigationController?.pushViewController(detailVC, animated: true)
-		}
-	}
+    func didSendPost(post: Post?) {
+        if post != nil {
+            let detailVC = PostDetailViewController(style: .insetGrouped)
+            detailVC.mainpost = post!
+            detailVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
+    }
 }

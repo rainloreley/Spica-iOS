@@ -25,8 +25,6 @@ class FollowersFollowingViewController: UIViewController {
     var loadingHud: JGProgressHUD!
     var selectedIndex = 0
 
-    private var subscriptions = Set<AnyCancellable>()
-
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
@@ -90,45 +88,47 @@ class FollowersFollowingViewController: UIViewController {
     func loadFollowers() {
         if followers.isEmpty { loadingHud.show(in: view) }
 
-        MicroAPI.default.loadFollowers()
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+        MicroAPI.default.loadFollowers { result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-                default: break
                 }
-            } receiveValue: { [self] users in
-                followers = users
-                followers.sort(by: { $0.name < $1.name })
-                tableView.reloadData()
-                refreshControl.endRefreshing()
-                loadingHud.dismiss()
-            }.store(in: &subscriptions)
+            case let .success(users):
+                DispatchQueue.main.async { [self] in
+                    followers = users
+                    followers.sort(by: { $0.name < $1.name })
+                    tableView.reloadData()
+                    refreshControl.endRefreshing()
+                    loadingHud.dismiss()
+                }
+            }
+        }
     }
 
     func loadFollowing() {
         if following.isEmpty { loadingHud.show(in: view) }
 
-        MicroAPI.default.loadFollowing()
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+        MicroAPI.default.loadFollowing { result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-                default: break
                 }
-            } receiveValue: { [self] users in
-                following = users
-                following.sort(by: { $0.name < $1.name })
-                tableView.reloadData()
-                refreshControl.endRefreshing()
-                loadingHud.dismiss()
-            }.store(in: &subscriptions)
+            case let .success(users):
+                DispatchQueue.main.async { [self] in
+                    following = users
+                    following.sort(by: { $0.name < $1.name })
+                    tableView.reloadData()
+                    refreshControl.endRefreshing()
+                    loadingHud.dismiss()
+                }
+            }
+        }
     }
 }
 

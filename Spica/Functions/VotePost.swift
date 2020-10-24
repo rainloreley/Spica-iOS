@@ -12,42 +12,37 @@ import Combine
 import Foundation
 
 public class VotePost {
-    var subscriptions = Set<AnyCancellable>()
-
     static var `default` = VotePost()
 
-    func vote(post: Post, vote: VoteType) -> Future<VoteResult, MicroError> {
-        return Future<VoteResult, MicroError> { [self] promise in
-            let newVoteStatus = post.vote == vote.voteInt ? 0 : vote.voteInt
-            MicroAPI.default.votePost(post: post, value: newVoteStatus)
-                .receive(on: RunLoop.main)
-                .sink {
-                    switch $0 {
-                    case let .failure(err): promise(.failure(err))
-                    default: break
+    func vote(post: Post, vote: VoteType, promise: @escaping (Result<VoteResult, MicroError>) -> Void) {
+        let newVoteStatus = post.vote == vote.voteInt ? 0 : vote.voteInt
+
+        MicroAPI.default.votePost(post: post, value: newVoteStatus) { result in
+            switch result {
+            case let .failure(err):
+                promise(.failure(err))
+            case .success:
+                var newScore = post.score
+                switch vote {
+                case .upvote:
+                    if post.vote == 1 {
+                        newScore -= 1
+                    } else if post.vote == 0 {
+                        newScore += 1
+                    } else {
+                        newScore += 2
                     }
-                } receiveValue: { _ in
-                    var newScore = post.score
-                    switch vote {
-                    case .upvote:
-                        if post.vote == 1 {
-                            newScore -= 1
-                        } else if post.vote == 0 {
-                            newScore += 1
-                        } else {
-                            newScore += 2
-                        }
-                    case .downvote:
-                        if post.vote == 1 {
-                            newScore -= 2
-                        } else if post.vote == 0 {
-                            newScore -= 1
-                        } else {
-                            newScore += 1
-                        }
+                case .downvote:
+                    if post.vote == 1 {
+                        newScore -= 2
+                    } else if post.vote == 0 {
+                        newScore -= 1
+                    } else {
+                        newScore += 1
                     }
-                    promise(.success(VoteResult(score: newScore, status: newVoteStatus)))
-                }.store(in: &subscriptions)
+                }
+                promise(.success(VoteResult(score: newScore, status: newVoteStatus)))
+            }
         }
     }
 }

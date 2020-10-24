@@ -19,10 +19,10 @@ extension String {
             return false
         }
     }
-	
-	var removeSpecialChars: String {
-		let okayChars: Set<Character> =
-			Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890@-%")
-		return String(self.filter { okayChars.contains($0) })
-	}
+
+    var removeSpecialChars: String {
+        let okayChars: Set<Character> =
+            Set("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890@-%")
+        return String(filter { okayChars.contains($0) })
+    }
 }

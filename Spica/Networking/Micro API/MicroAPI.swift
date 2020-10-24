@@ -16,7 +16,6 @@ import SwiftyJSON
 
 public class MicroAPI {
     static let `default` = MicroAPI()
-    var subscriptions = Set<AnyCancellable>()
 
     func loadAuthKey() -> String {
         return KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") ?? ""

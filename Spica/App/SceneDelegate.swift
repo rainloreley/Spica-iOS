@@ -8,10 +8,10 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import Kingfisher
 import LocalAuthentication
 import SwiftKeychainWrapper
 import UIKit
-import Kingfisher
 
 @available(iOS 14.0, *)
 var spicaAppSplitViewController: GlobalSplitViewController!
@@ -35,6 +35,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             URLNavigationMap.initialize(navigator: navigator, sceneDelegate: self)
             window.makeKeyAndVisible()
             verifyBiometricAuthentication()
+            Kingfisher.ImageCache.default.diskStorage.config.expiration = .days(1)
 
             if isUserLoggedIn() {
                 if !launchOptions.urlContexts.isEmpty {
@@ -75,7 +76,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         spicaAppSplitViewController.preferredDisplayMode = .oneBesideSecondary
         spicaAppSplitViewController.presentsWithGesture = true
         spicaAppSplitViewController.preferredSplitBehavior = .tile
-		spicaAppSplitViewController.primaryBackgroundStyle = .sidebar
+        spicaAppSplitViewController.primaryBackgroundStyle = .sidebar
 
         spicaAppSidebarViewController = SidebarViewController()
         loadTabBar()

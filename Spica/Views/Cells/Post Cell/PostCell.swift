@@ -17,13 +17,13 @@ import UIKit
 
 protocol PostCellDelegate {
     func clickedImage(controller: LightboxController)
-    func replyToPost(_ id: String)
+    // func replyToPost(_ id: String)
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?)
     func reloadData()
     func clickedUser(user: User)
 }
 
 class PostCell: UITableViewCell {
-    private var subscriptions = Set<AnyCancellable>()
     var delegate: PostCellDelegate?
 
     var post: Post? {
@@ -56,6 +56,9 @@ class PostCell: UITableViewCell {
 
             profilePictureImageView!.isUserInteractionEnabled = true
             profilePictureImageView!.addGestureRecognizer(profilePictureTapGestureRecognizer)
+            if #available(iOS 13.4, *) {
+                profilePictureImageView!.addInteraction(UIPointerInteraction())
+            }
 
             let postimageViewTapGestureGecognizer = UITapGestureRecognizer(target: self, action: #selector(clickImage))
 
@@ -82,6 +85,9 @@ class PostCell: UITableViewCell {
                     make.bottom.equalTo(upvoteButton.snp.top).offset(-3)
                 }
                 postLinkBackgroundView.addGestureRecognizer(linkGestureRecognizer)
+                if #available(iOS 13.4, *) {
+                    postLinkBackgroundView.addInteraction(UIPointerInteraction())
+                }
                 postLinkLabel.addGestureRecognizer(linkGestureRecognizer)
                 postLinkBackgroundView.isUserInteractionEnabled = true
                 postLinkLabel.isUserInteractionEnabled = true
@@ -130,18 +136,18 @@ class PostCell: UITableViewCell {
                 selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
                 selectablePart.addAttribute(.link, value: "url:\(word)", range: NSRange(location: 0, length: selectablePart.length - 1))
                 attributedText.append(selectablePart)
-			} else if String(word).starts(with: "@"), word.count > 1 {
-				let filteredWord = String(word).removeSpecialChars
-				let filteredWordWithoutAtSymbol = String(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])
-				var nameToInsert = filteredWordWithoutAtSymbol
-				if let index = post?.mentionedUsers.firstIndex(where: { $0.id == nameToInsert }) {
-					nameToInsert = (post?.mentionedUsers[index].name)!
-				}
-				let selectablePart = NSMutableAttributedString(string: String(word.replacingOccurrences(of: filteredWordWithoutAtSymbol, with: nameToInsert)) + " ")
-				selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
-				selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: selectablePart.length - 1))
-				attributedText.append(selectablePart)
-			} else {
+            } else if String(word).starts(with: "@"), word.count > 1 {
+                let filteredWord = String(word).removeSpecialChars
+                let filteredWordWithoutAtSymbol = String(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])
+                var nameToInsert = filteredWordWithoutAtSymbol
+                if let index = post?.mentionedUsers.firstIndex(where: { $0.id == nameToInsert }) {
+                    nameToInsert = (post?.mentionedUsers[index].name)!
+                }
+                let selectablePart = NSMutableAttributedString(string: String(word.replacingOccurrences(of: filteredWordWithoutAtSymbol, with: nameToInsert)) + " ")
+                selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
+                selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: selectablePart.length - 1))
+                attributedText.append(selectablePart)
+            } else {
                 if word == "\n" {
                     attributedText.append(NSAttributedString(string: "\n"))
                 } else {
@@ -255,19 +261,17 @@ class PostCell: UITableViewCell {
     }
 
     func vote(_ vote: VoteType) {
-        VotePost.default.vote(post: post!, vote: vote)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
-                    MicroAPI.default.errorHandling(error: err, caller: self.contentView)
-
-                default: break
+        VotePost.default.vote(post: post!, vote: vote) { [self] result in
+            switch result {
+            case let .failure(err):
+                MicroAPI.default.errorHandling(error: err, caller: self.contentView)
+            case let .success(votepost):
+                DispatchQueue.main.async {
+                    post?.score = votepost.score
+                    post?.vote = votepost.status
                 }
-            } receiveValue: { [unowned self] in
-                post?.score = $0.score
-                post?.vote = $0.status
-            }.store(in: &subscriptions)
+            }
+        }
     }
 }
 
@@ -286,14 +290,13 @@ extension PostCell: UITextViewDelegate {
     func textView(_: UITextView, shouldInteractWith url: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
         if interaction == .invokeDefaultAction {
             let stringURL = url.absoluteString
-			if stringURL.hasPrefix("user:") {
-				let selUser = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
-				let spicaUserURL = URL(string: "spica://user/\(selUser)")!
-				if UIApplication.shared.canOpenURL(spicaUserURL) {
-					UIApplication.shared.open(spicaUserURL)
-				}
-			}
-            else if stringURL.hasPrefix("url:") {
+            if stringURL.hasPrefix("user:") {
+                let selUser = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 5) ..< stringURL.endIndex]
+                let spicaUserURL = URL(string: "spica://user/\(selUser)")!
+                if UIApplication.shared.canOpenURL(spicaUserURL) {
+                    UIApplication.shared.open(spicaUserURL)
+                }
+            } else if stringURL.hasPrefix("url:") {
                 var selURL = stringURL[stringURL.index(stringURL.startIndex, offsetBy: 4) ..< stringURL.endIndex]
                 if !selURL.starts(with: "https://"), !selURL.starts(with: "http://") {
                     selURL = "https://" + selURL
@@ -331,10 +334,17 @@ extension PostCell: UIContextMenuInteractionDelegate {
         actions.append(copyID)
 
         let reply = UIAction(title: "Reply", image: UIImage(systemName: "arrowshape.turn.up.left")) { [self] _ in
-            self.delegate?.replyToPost(post!.id)
+            // self.delegate?.replyToPost(post!.id)
+            self.delegate?.openPostView(.reply, preText: nil, preLink: nil, parentID: post!.id)
         }
 
         actions.append(reply)
+
+        let repost = UIAction(title: "Repost", image: UIImage(systemName: "arrowshape.turn.up.right")) { [self] _ in
+            self.delegate?.openPostView(.post, preText: nil, preLink: "https://micro.alles.cx/p/\(post!.id)", parentID: nil)
+        }
+
+        actions.append(repost)
 
         let bookmarks = UserDefaults.standard.structArrayData(StoredBookmark.self, forKey: "savedBookmarks")
 
@@ -376,18 +386,17 @@ extension PostCell: UIContextMenuInteractionDelegate {
                 EZAlertController.alert("Delete post?", message: "Are you sure you want to delete your post? It'll be gone forever (a very long time)", buttons: ["Cancel", "Delete"], buttonsPreferredStyle: [.cancel, .destructive]) { [self] _, index in
                     guard index == 1 else { return }
 
-                    MicroAPI.default.deletePost(post!.id)
-                        .receive(on: RunLoop.main)
-                        .sink {
-                            switch $0 {
-                            case let .failure(err):
-                                EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.name)")
-                            default: break
+                    MicroAPI.default.deletePost(post!.id) { result in
+                        switch result {
+                        case let .failure(err):
+                            EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.name)")
+                        case .success:
+                            DispatchQueue.main.async {
+                                SPAlert.present(title: "Deleted", preset: .done)
+                                self.delegate?.reloadData()
                             }
-                        } receiveValue: { _ in
-                            SPAlert.present(title: "Deleted", preset: .done)
-                            self.delegate?.reloadData()
-                        }.store(in: &subscriptions)
+                        }
+                    }
                 }
             }
             actions.append(delete)

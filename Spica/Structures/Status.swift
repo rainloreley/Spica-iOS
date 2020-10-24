@@ -12,32 +12,29 @@ import Foundation
 import SwiftyJSON
 
 struct Status {
-	
-	var id: String?
-	var content: String?
-	var date: Date?
-	var end: Date?
-	
-	init(id: String? = nil, content: String? = nil, date: Date? = nil, end: Date? = nil) {
-		self.id = id
-		self.content = content
-		self.date = date
-		self.end = end
-	}
-	
-	init(_ json: JSON) {
-		if json["status"].type == .null {
-			id = nil
-			content = nil
-			date = nil
-			end = nil
-		}
-		else {
-			id = json["status"]["id"].string ?? ""
-			content = json["status"]["content"].string ?? ""
-			date = Date.dateFromISOString(string: json["status"]["date"].string ?? "") ?? nil
-			end = Date.dateFromISOString(string: json["status"]["end"].string ?? "") ?? nil
-		}
-	}
-	
+    var id: String?
+    var content: String?
+    var date: Date?
+    var end: Date?
+
+    init(id: String? = nil, content: String? = nil, date: Date? = nil, end: Date? = nil) {
+        self.id = id
+        self.content = content
+        self.date = date
+        self.end = end
+    }
+
+    init(_ json: JSON) {
+        if json["status"].type == .null {
+            id = nil
+            content = nil
+            date = nil
+            end = nil
+        } else {
+            id = json["status"]["id"].string ?? ""
+            content = json["status"]["content"].string ?? ""
+            date = Date.dateFromISOString(string: json["status"]["date"].string ?? "") ?? nil
+            end = Date.dateFromISOString(string: json["status"]["end"].string ?? "") ?? nil
+        }
+    }
 }

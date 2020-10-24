@@ -8,6 +8,7 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import Kingfisher
 import LocalAuthentication
 import SPAlert
 import SwiftKeychainWrapper
@@ -49,6 +50,16 @@ class SettingsViewController: UITableViewController {
 
         accountNametag.text = "\(name)#\(tag)"
         accountProfilePicture.kf.setImage(with: URL(string: "https://avatar.alles.cc/\(id)"))
+    }
+
+    @IBAction func clearCache(_: Any) {
+        Kingfisher.ImageCache.default.clearCache {
+            SPAlert.present(title: "Cache cleared!", preset: .done)
+        }
+    }
+
+    @IBAction func changePfpFlag(_: Any) {
+        navigationController?.pushViewController(SelectFlagViewController(style: .insetGrouped), animated: true)
     }
 
     @IBAction func biometricAuthChanged(_: Any) {
@@ -201,7 +212,7 @@ extension SettingsViewController {
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 2 // Account
-        case 1: return 2 // Settings
+        case 1: return 4 // Settings - KEEP CHANGE FLAG AT THE BOTTOM
         case 2: return 3 // Spica
         case 3: return 3 // Alles Micro
         case 4: return 4 // Other

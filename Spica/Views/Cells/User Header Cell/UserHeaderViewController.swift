@@ -25,22 +25,18 @@ class UserHeaderViewController: ObservableObject {
     @Published var isLoggedInUser: Bool = false
 
     var delegate: UserHeaderDelegate!
-    var subscriptions = Set<AnyCancellable>()
 
     func followUnfollowUser() {
         user.iamFollowing.toggle()
         let action: FollowUnfollow = user.iamFollowing ? .follow : .unfollow // Inverted because of previous line
-        MicroAPI.default.followUnfollowUser(action, id: user.id)
-            .receive(on: RunLoop.main)
-            .sink { [self] in
-                switch $0 {
-                case let .failure(err):
-                    user.iamFollowing.toggle()
-                    delegate.showError(title: "Error", message: "The action failed with the following response:\n\n\(err.error.name)")
-                default: break
-                }
-            } receiveValue: { _ in
-            }.store(in: &subscriptions)
+        MicroAPI.default.followUnfollowUser(action, id: user.id) { [self] result in
+            switch result {
+            case let .failure(err):
+                user.iamFollowing.toggle()
+                delegate.showError(title: "Error", message: "The action failed with the following response:\n\n\(err.error.name)")
+            default: break
+            }
+        }
     }
 
     func showFollowers() {

@@ -15,9 +15,9 @@ import SwiftUI
 
 struct UserHeaderView: View {
     @ObservedObject var controller: UserHeaderViewController
-	
-	var frameWidth: CGFloat = 0
-	var frameHeight: CGFloat = 0
+
+    var frameWidth: CGFloat = 0
+    var frameHeight: CGFloat = 0
 
     let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -33,11 +33,32 @@ struct UserHeaderView: View {
             HStack {
                 Group {
                     // Image(uiImage: controller.user.image ?? UIImage(systemName: "person.circle"))
-                    KFImage(controller.user.profilePictureUrl)
-                        .resizable()
-                        .frame(width: 120, height: 120, alignment: .center)
-                        .clipShape(Circle())
-                        .shadow(radius: 10)
+                    switch controller.user.ring {
+                    case .rainbow:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(RainbowFlagCircle())
+                    case .trans:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(TransFlagCircle())
+                    case .bisexual:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(BisexualFlagCircle())
+                    case .pansexual:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(PansexualFlagCircle())
+                    case .lesbian:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(LesbianFlagCircle())
+                    case .asexual:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(AsexualFlagCircle())
+                    case .genderqueer:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(GenderqueerFlagCircle())
+                    case .genderfluid:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(GenderfluidFlagCircle())
+                    case .agender:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(AgenderFlagCircle())
+                    case .nonbinary:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(NonbinaryFlagCircle())
+					case .supporter:
+						ProfilePictureView(url: controller.user.profilePictureUrl).modifier(SpicaSupporterFlagCircle())
+                    default:
+                        ProfilePictureView(url: controller.user.profilePictureUrl)
+                    }
                 }
                 Spacer()
             }
@@ -98,17 +119,17 @@ struct UserHeaderView: View {
                 LoadingSkeleton(loaded: $controller.userDataLoaded) {
                     Text("Joined: ") + Text(dateFormatter.string(from: controller.user.createdAt)).bold()
                 }
-				
-				if controller.user.status.content != nil, controller.user.status.date != nil {
-					LoadingSkeleton(loaded: $controller.userDataLoaded) {
-						VStack(alignment: .leading) {
-							Text("\"\(controller.user.status.content!)\"").italic().frame(maxWidth: frameWidth - 40).lineLimit(nil)
-								.fixedSize(horizontal: false, vertical: true)
-							
-							Text("\(RelativeDateTimeFormatter().localizedString(for: controller.user.status.date!, relativeTo: Date()))").font(.footnote).foregroundColor(.secondary)
-						}.padding([.top, .bottom])
-					}
-				}
+
+                if controller.user.status.content != nil, controller.user.status.date != nil {
+                    LoadingSkeleton(loaded: $controller.userDataLoaded) {
+                        Text("\"\(controller.user.status.content!)\"").italic().frame(maxWidth: frameWidth - 40).lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true).multilineTextAlignment(.leading)
+                            .padding(.top, 4)
+                    }
+                    LoadingSkeleton(loaded: $controller.userDataLoaded) {
+                        Text("\(RelativeDateTimeFormatter().localizedString(for: controller.user.status.date!, relativeTo: Date()))").font(.footnote).foregroundColor(.secondary).padding(.bottom, 4)
+                    }
+                }
 
                 XPProgressBarView(xp: $controller.user.xp).frame(height: 60).padding(.top)
 
@@ -136,8 +157,19 @@ struct UserHeaderView: View {
             .onAppear {
                 controller.getLoggedInUser()
             }
-		.background(Color.clear)
-		//.frame(width: frameWidth, height: frameHeight)
+            .background(Color.clear)
+        // .frame(width: frameWidth, height: frameHeight)
+    }
+}
+
+struct ProfilePictureView: View {
+    var url: URL
+    var body: some View {
+        KFImage(url)
+            .resizable()
+            .frame(width: 120, height: 120, alignment: .center)
+            .clipShape(Circle())
+            .shadow(radius: 10)
     }
 }
 
@@ -168,6 +200,7 @@ struct FullScreenImageView: UIViewRepresentable {
 struct LoadingSkeleton<Content: View>: View {
     @Binding var loaded: Bool
     let viewBuilder: () -> Content
+
     var body: some View {
         Group {
             viewBuilder()

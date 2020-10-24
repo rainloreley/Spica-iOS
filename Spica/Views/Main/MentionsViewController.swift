@@ -17,7 +17,6 @@ class MentionsViewController: UITableViewController {
     var mentions = [Mention]()
 
     var loadingHud: JGProgressHUD!
-    private var subscriptions = Set<AnyCancellable>()
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -46,28 +45,29 @@ class MentionsViewController: UITableViewController {
     @objc func loadMentions() {
         if mentions.isEmpty { loadingHud.show(in: view) }
 
-        MicroAPI.default.loadMentions()
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+        MicroAPI.default.loadMentions { result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl!.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-                default: break
                 }
-            } receiveValue: { [self] receivedmentions in
-                mentions = receivedmentions
-                tableView.reloadData()
-                if mentions.isEmpty {
-                    tableView.setEmptyMessage(message: "No mentions", subtitle: "Replies to your posts from other people will appear here!")
-                } else {
-                    tableView.restore()
+            case let .success(receivedmentions):
+                DispatchQueue.main.async { [self] in
+                    mentions = receivedmentions
+                    tableView.reloadData()
+                    if mentions.isEmpty {
+                        tableView.setEmptyMessage(message: "No mentions", subtitle: "Replies to your posts from other people will appear here!")
+                    } else {
+                        tableView.restore()
+                    }
+                    refreshControl!.endRefreshing()
+                    loadingHud.dismiss()
+                    markMentionsAsRead()
                 }
-                refreshControl!.endRefreshing()
-                loadingHud.dismiss()
-                markMentionsAsRead()
-            }.store(in: &subscriptions)
+            }
+        }
     }
 
     func markMentionsAsRead() {
@@ -109,11 +109,13 @@ class MentionsViewController: UITableViewController {
 }
 
 extension MentionsViewController: PostCellDelegate {
-    func replyToPost(_ id: String) {
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
-        vc.type = .reply
+        vc.type = type
         vc.delegate = self
-        vc.parentID = id
+        vc.parentID = parentID
+        vc.preText = preText ?? ""
+        vc.preLink = preLink
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -134,14 +136,14 @@ extension MentionsViewController: PostCellDelegate {
 }
 
 extension MentionsViewController: CreatePostDelegate {
-	func didSendPost(post: Post?) {
-		if post != nil {
-			let detailVC = PostDetailViewController(style: .insetGrouped)
-			detailVC.mainpost = post!
-			detailVC.hidesBottomBarWhenPushed = true
-			navigationController?.pushViewController(detailVC, animated: true)
-		}
-	}
+    func didSendPost(post: Post?) {
+        if post != nil {
+            let detailVC = PostDetailViewController(style: .insetGrouped)
+            detailVC.mainpost = post!
+            detailVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
+    }
 }
 
 extension MentionsViewController {

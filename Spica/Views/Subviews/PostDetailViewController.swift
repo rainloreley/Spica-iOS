@@ -21,8 +21,6 @@ class PostDetailViewController: UITableViewController {
 
     var loadingHud: JGProgressHUD!
 
-    private var subscriptions = Set<AnyCancellable>()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Post"
@@ -47,30 +45,30 @@ class PostDetailViewController: UITableViewController {
 
     @objc func loadPostDetail() {
         loadingHud.show(in: view)
-        MicroAPI.default.loadPostDetail(post: mainpost)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+        MicroAPI.default.loadPostDetail(post: mainpost) { result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl!.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-
-                default: break
                 }
-            } receiveValue: { [self] postDetail in
-                mainpost = postDetail.main
-                postAncestors = postDetail.ancestors
-                postReplies = postDetail.replies
-                postAncestors.append(postDetail.main)
-                tableView.reloadData()
-                refreshControl!.endRefreshing()
-                loadingHud.dismiss()
+            case let .success(postDetail):
+                DispatchQueue.main.async { [self] in
+                    mainpost = postDetail.main
+                    postAncestors = postDetail.ancestors
+                    postReplies = postDetail.replies
+                    postAncestors.append(postDetail.main)
+                    tableView.reloadData()
+                    refreshControl!.endRefreshing()
+                    loadingHud.dismiss()
 
-                if let index = postAncestors.firstIndex(where: { $0.id == mainpost.id }) {
-                    tableView.scrollToRow(at: IndexPath(row: 2 * index, section: 0), at: .middle, animated: false)
+                    if let index = postAncestors.firstIndex(where: { $0.id == mainpost.id }) {
+                        tableView.scrollToRow(at: IndexPath(row: 2 * index, section: 0), at: .middle, animated: false)
+                    }
                 }
-            }.store(in: &subscriptions)
+            }
+        }
     }
 
     @objc func openReplyView(_: UIButton) {
@@ -142,11 +140,13 @@ class PostDetailViewController: UITableViewController {
 }
 
 extension PostDetailViewController: PostCellDelegate {
-    func replyToPost(_ id: String) {
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
-        vc.type = .reply
+        vc.type = type
         vc.delegate = self
-        vc.parentID = id
+        vc.parentID = parentID
+        vc.preText = preText ?? ""
+        vc.preLink = preLink
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -185,12 +185,12 @@ extension PostDetailViewController {
 }
 
 extension PostDetailViewController: CreatePostDelegate {
-	func didSendPost(post: Post?) {
-		if post != nil {
-			let detailVC = PostDetailViewController(style: .insetGrouped)
-			detailVC.mainpost = post!
-			detailVC.hidesBottomBarWhenPushed = true
-			navigationController?.pushViewController(detailVC, animated: true)
-		}
-	}
+    func didSendPost(post: Post?) {
+        if post != nil {
+            let detailVC = PostDetailViewController(style: .insetGrouped)
+            detailVC.mainpost = post!
+            detailVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
+    }
 }

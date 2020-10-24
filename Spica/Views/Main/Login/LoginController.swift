@@ -13,7 +13,6 @@ import Foundation
 import SwiftUI
 
 class LoginController: ObservableObject {
-    var subscriptions = Set<AnyCancellable>()
     var delegate: LoginViewDelegate?
 
     @Published var nametag: String = ""
@@ -34,19 +33,19 @@ class LoginController: ObservableObject {
             if splitUsername.count != 2 || Int(splitUsername[1]) == nil || splitUsername[1].count != 4 {
                 nametagError = true
             } else {
-                MicroAPI.default.signIn(name: String(splitUsername[0]), tag: String(splitUsername[1]), password: password)
-                    .receive(on: RunLoop.main)
-                    .sink { [self] in
-                        switch $0 {
-                        case let .failure(err):
+                MicroAPI.default.signIn(name: String(splitUsername[0]), tag: String(splitUsername[1]), password: password) { result in
+                    switch result {
+                    case let .failure(err):
+                        DispatchQueue.main.async { [self] in
                             alertMessage = "Login failed with the following error:\n\n\(err.error.name)"
                             showAlert = true
-                        default: break
                         }
-                    } receiveValue: { [self] token in
-                        delegate!.loggedIn(token: token)
+                    case let .success(token):
+                        DispatchQueue.main.async { [self] in
+                            delegate!.loggedIn(token: token)
+                        }
                     }
-                    .store(in: &subscriptions)
+                }
             }
         } else {
             if nametag.isEmpty {

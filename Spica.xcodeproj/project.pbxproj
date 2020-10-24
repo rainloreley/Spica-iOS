@@ -15,6 +15,8 @@
 		8B0CD2AA2530B6F8004459EC /* EZAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0CD2A92530B6F8004459EC /* EZAlertController.swift */; };
 		8B0CD2B02530BB40004459EC /* CreatePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0CD2AF2530BB40004459EC /* CreatePostViewController.swift */; };
 		8B0CD2B92530BDA8004459EC /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 8B0CD2B82530BDA8004459EC /* JGProgressHUD */; };
+		8B11098B25444847004B2A89 /* CircleFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B11098A25444847004B2A89 /* CircleFlags.swift */; };
+		8B11099025445FEF004B2A89 /* SelectFlagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B11098F25445FEF004B2A89 /* SelectFlagViewController.swift */; };
 		8B199E2E252DFFB90060A3BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B199E2D252DFFB90060A3BE /* AppDelegate.swift */; };
 		8B199E30252DFFB90060A3BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B199E2F252DFFB90060A3BE /* SceneDelegate.swift */; };
 		8B199E37252DFFBB0060A3BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B199E36252DFFBB0060A3BE /* Assets.xcassets */; };
@@ -23,6 +25,9 @@
 		8B199E50252DFFBB0060A3BE /* SpicaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B199E4F252DFFBB0060A3BE /* SpicaUITests.swift */; };
 		8B199E6C252E013C0060A3BE /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B199E6B252E013C0060A3BE /* SidebarViewController.swift */; };
 		8B199E71252E015B0060A3BE /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B199E70252E015B0060A3BE /* TabBarController.swift */; };
+		8B23D44E25435B5B004EBBF6 /* UpdateStatusViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B23D44D25435B5B004EBBF6 /* UpdateStatusViewController.swift */; };
+		8B23D45625435B6D004EBBF6 /* UpdateStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B23D45525435B6D004EBBF6 /* UpdateStatusView.swift */; };
+		8B23D46825436306004EBBF6 /* UpdateStatusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B23D46725436306004EBBF6 /* UpdateStatusController.swift */; };
 		8B3364D8252F712F00D46ABE /* MicroError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3364D7252F712F00D46ABE /* MicroError.swift */; };
 		8B35C4562530BF9A003809FA /* CircularProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B35C4552530BF9A003809FA /* CircularProgressBar.swift */; };
 		8B35C45E2530BFB5003809FA /* ProgressBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B35C45D2530BFB5003809FA /* ProgressBarController.swift */; };
@@ -117,6 +122,8 @@
 		8B0CD2A42530B6A4004459EC /* MicroAPI+ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroAPI+ErrorHandling.swift"; sourceTree = "<group>"; };
 		8B0CD2A92530B6F8004459EC /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
 		8B0CD2AF2530BB40004459EC /* CreatePostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostViewController.swift; sourceTree = "<group>"; };
+		8B11098A25444847004B2A89 /* CircleFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleFlags.swift; sourceTree = "<group>"; };
+		8B11098F25445FEF004B2A89 /* SelectFlagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFlagViewController.swift; sourceTree = "<group>"; };
 		8B199E2A252DFFB90060A3BE /* Spica.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spica.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B199E2D252DFFB90060A3BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B199E2F252DFFB90060A3BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -131,6 +138,9 @@
 		8B199E51252DFFBB0060A3BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B199E6B252E013C0060A3BE /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		8B199E70252E015B0060A3BE /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		8B23D44D25435B5B004EBBF6 /* UpdateStatusViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateStatusViewController.swift; sourceTree = "<group>"; };
+		8B23D45525435B6D004EBBF6 /* UpdateStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateStatusView.swift; sourceTree = "<group>"; };
+		8B23D46725436306004EBBF6 /* UpdateStatusController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateStatusController.swift; sourceTree = "<group>"; };
 		8B3364D7252F712F00D46ABE /* MicroError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroError.swift; sourceTree = "<group>"; };
 		8B35C4552530BF9A003809FA /* CircularProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgressBar.swift; sourceTree = "<group>"; };
 		8B35C45D2530BFB5003809FA /* ProgressBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBarController.swift; sourceTree = "<group>"; };
@@ -242,6 +252,7 @@
 		8B0CD2AE2530BB2D004459EC /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				8B23D44C25435B38004EBBF6 /* Update Status */,
 				8BA7B59F253232D800915113 /* Color Picker */,
 				8B35C4542530BF80003809FA /* Progressbar */,
 				8B0CD2AF2530BB40004459EC /* CreatePostViewController.swift */,
@@ -332,6 +343,16 @@
 			path = Head;
 			sourceTree = "<group>";
 		};
+		8B23D44C25435B38004EBBF6 /* Update Status */ = {
+			isa = PBXGroup;
+			children = (
+				8B23D45525435B6D004EBBF6 /* UpdateStatusView.swift */,
+				8B23D46725436306004EBBF6 /* UpdateStatusController.swift */,
+				8B23D44D25435B5B004EBBF6 /* UpdateStatusViewController.swift */,
+			);
+			path = "Update Status";
+			sourceTree = "<group>";
+		};
 		8B3364D6252F711F00D46ABE /* Error Handling */ = {
 			isa = PBXGroup;
 			children = (
@@ -356,6 +377,7 @@
 				8B5C428F2532FC23007B10BD /* CreditsViewController.swift */,
 				8B5C429C25330119007B10BD /* LegalNoticeViewController.swift */,
 				8B5C42A1253301EA007B10BD /* UsedLibrariesViewController.swift */,
+				8B11098F25445FEF004B2A89 /* SelectFlagViewController.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -398,6 +420,7 @@
 				8BBB7F782530E34F004D49BC /* UserHeaderView.swift */,
 				8BBB7F822530E38D004D49BC /* UserHeaderViewController.swift */,
 				8BBB7F7D2530E37A004D49BC /* UserHeaderViewCell.swift */,
+				8B11098A25444847004B2A89 /* CircleFlags.swift */,
 			);
 			path = "User Header Cell";
 			sourceTree = "<group>";
@@ -785,6 +808,7 @@
 			files = (
 				8B199E2E252DFFB90060A3BE /* AppDelegate.swift in Sources */,
 				8BD712D82530B19400D2533C /* VotePost.swift in Sources */,
+				8B23D44E25435B5B004EBBF6 /* UpdateStatusViewController.swift in Sources */,
 				8BBB7F8D2530E421004D49BC /* XPProgressBarView.swift in Sources */,
 				8B35C47F2530D1D4003809FA /* PostDetailViewController.swift in Sources */,
 				8B6AC5B8252E15A6003A2CC4 /* FeedViewController.swift in Sources */,
@@ -800,9 +824,11 @@
 				8BBEA42D253C68960046A3F9 /* Status.swift in Sources */,
 				8B6AC5B0252E0F4D003A2CC4 /* XP.swift in Sources */,
 				8BC9DFF92531C9B700886C92 /* LoginController.swift in Sources */,
+				8B11099025445FEF004B2A89 /* SelectFlagViewController.swift in Sources */,
 				8BD0C7F1253210DD008D432E /* MicroAPI_Mentions.swift in Sources */,
 				8B5C429D25330119007B10BD /* LegalNoticeViewController.swift in Sources */,
 				8B5C42982532FDE6007B10BD /* CreditsCell.swift in Sources */,
+				8B23D45625435B6D004EBBF6 /* UpdateStatusView.swift in Sources */,
 				8BD0C7E725320F49008D432E /* MentionsViewController.swift in Sources */,
 				8B3364D8252F712F00D46ABE /* MicroError.swift in Sources */,
 				8BBB7F882530E3DF004D49BC /* countString.swift in Sources */,
@@ -821,8 +847,10 @@
 				8BBB7F832530E38D004D49BC /* UserHeaderViewController.swift in Sources */,
 				8B5C428A2532F5F4007B10BD /* biometricType.swift in Sources */,
 				8B6AC5A6252E0BC5003A2CC4 /* Post.swift in Sources */,
+				8B11098B25444847004B2A89 /* CircleFlags.swift in Sources */,
 				8B6ACF1F2530D69F004BDEC8 /* ReplyButtonCell.swift in Sources */,
 				8BD0C7EC25320F95008D432E /* Mention.swift in Sources */,
+				8B23D46825436306004EBBF6 /* UpdateStatusController.swift in Sources */,
 				8BA7B5C32532461C00915113 /* GlobalSplitViewController.swift in Sources */,
 				8BE6DE2F252E03C600668AB7 /* PostCell.swift in Sources */,
 				8B35C4632530C07F003809FA /* String.swift in Sources */,
@@ -1012,7 +1040,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1602418840;
+				CURRENT_PROJECT_VERSION = 1603554000;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1037,7 +1065,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1602418840;
+				CURRENT_PROJECT_VERSION = 1603554000;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

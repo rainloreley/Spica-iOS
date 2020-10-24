@@ -19,7 +19,7 @@ class SearchViewController: UITableViewController {
 
     var loadingHud: JGProgressHUD!
     let searchBar = UISearchBar()
-    private var subscriptions = Set<AnyCancellable>()
+    private lazy var searchController = makeSearchController()
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -44,39 +44,41 @@ class SearchViewController: UITableViewController {
         loadingHud.textLabel.text = "Loading..."
         loadingHud.interactionType = .blockNoTouches
 
-        searchBar.searchBarStyle = .prominent
-        searchBar.placeholder = "Search for a name"
-        searchBar.sizeToFit()
-        searchBar.isTranslucent = false
-        searchBar.backgroundImage = UIImage()
-        searchBar.delegate = self
+        /* searchBar.searchBarStyle = .prominent
+         searchBar.placeholder = "Search for a name"
+         searchBar.sizeToFit()
+         searchBar.isTranslucent = false
+         searchBar.backgroundImage = UIImage()
+         searchBar.delegate = self
 
-        navigationItem.titleView = searchBar
+         navigationItem.titleView = searchBar */
+        navigationItem.searchController = searchController
     }
 
     @objc func performSearch() {
         loadingHud.show(in: view)
-        MicroAPI.default.searchUser(searchText)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+        MicroAPI.default.searchUser(searchText) { result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl!.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-                default: break
                 }
-            } receiveValue: { [self] receivedUsers in
-                users = receivedUsers
-                refreshControl!.endRefreshing()
-                loadingHud.dismiss()
-                tableView.reloadData()
-                if users.isEmpty {
-                    tableView.setEmptyMessage(message: "No results", subtitle: "We didn't find a user called \(String("\"\(searchText)\""))... Remember that you need to search for the full name")
-                } else {
-                    tableView.restore()
+            case let .success(receivedUsers):
+                DispatchQueue.main.async { [self] in
+                    users = receivedUsers
+                    refreshControl!.endRefreshing()
+                    loadingHud.dismiss()
+                    tableView.reloadData()
+                    if users.isEmpty {
+                        tableView.setEmptyMessage(message: "No results", subtitle: "We didn't find a user called \(String("\"\(searchText)\""))... Remember that you need to search for the full name")
+                    } else {
+                        tableView.restore()
+                    }
                 }
-            }.store(in: &subscriptions)
+            }
+        }
     }
 
     override func numberOfSections(in _: UITableView) -> Int {
@@ -122,5 +124,20 @@ extension SearchViewController {
         detailVC.user = users[indexPath.section]
         detailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension SearchViewController {
+    private func makeSearchController() -> UISearchController {
+        let controller = UISearchController()
+
+        controller.obscuresBackgroundDuringPresentation = false
+        controller.searchBar.autocapitalizationType = .none
+
+        controller.searchBar.delegate = self
+
+        controller.showsSearchResultsController = true
+
+        return controller
     }
 }

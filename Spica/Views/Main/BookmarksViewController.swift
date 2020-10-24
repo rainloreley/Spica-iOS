@@ -18,7 +18,6 @@ class BookmarksViewController: UITableViewController {
     var bookmarks = [Bookmark]()
 
     var loadingHud: JGProgressHUD!
-    private var subscriptions = Set<AnyCancellable>()
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -62,29 +61,30 @@ class BookmarksViewController: UITableViewController {
     @objc func loadBookmarks(showLoadingIndicator: Bool = true) {
         if bookmarks.isEmpty, showLoadingIndicator { loadingHud.show(in: view) }
         let savedBookmarks = UserDefaults.standard.structArrayData(StoredBookmark.self, forKey: "savedBookmarks")
-        MicroAPI.default.loadBookmarks(savedBookmarks)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+        MicroAPI.default.loadBookmarks(savedBookmarks) { result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl!.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-                default: break
                 }
-            } receiveValue: { [self] returnedBookmarks in
-                bookmarks = returnedBookmarks
-                bookmarks.sort { $0.storedbookmark.added.compare($1.storedbookmark.added) == .orderedDescending }
-                tableView.reloadData()
-                self.refreshControl!.endRefreshing()
-                self.loadingHud.dismiss()
+            case let .success(returnedBookmarks):
+                DispatchQueue.main.async { [self] in
+                    bookmarks = returnedBookmarks
+                    bookmarks.sort { $0.storedbookmark.added.compare($1.storedbookmark.added) == .orderedDescending }
+                    tableView.reloadData()
+                    self.refreshControl!.endRefreshing()
+                    self.loadingHud.dismiss()
 
-                if bookmarks.isEmpty {
-                    tableView.setEmptyMessage(message: "No bookmarks", subtitle: "You can bookmark a post by long-pressing it")
-                } else {
-                    tableView.restore()
+                    if bookmarks.isEmpty {
+                        tableView.setEmptyMessage(message: "No bookmarks", subtitle: "You can bookmark a post by long-pressing it")
+                    } else {
+                        tableView.restore()
+                    }
                 }
-            }.store(in: &subscriptions)
+            }
+        }
     }
 
     override func numberOfSections(in _: UITableView) -> Int {
@@ -105,11 +105,13 @@ class BookmarksViewController: UITableViewController {
 }
 
 extension BookmarksViewController: PostCellDelegate {
-    func replyToPost(_ id: String) {
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
-        vc.type = .reply
+        vc.type = type
         vc.delegate = self
-        vc.parentID = id
+        vc.parentID = parentID
+        vc.preText = preText ?? ""
+        vc.preLink = preLink
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -131,12 +133,12 @@ extension BookmarksViewController: PostCellDelegate {
 
 extension BookmarksViewController: CreatePostDelegate {
     func didSendPost(post: Post?) {
-		if post != nil {
-			let detailVC = PostDetailViewController(style: .insetGrouped)
-			detailVC.mainpost = post!
-			detailVC.hidesBottomBarWhenPushed = true
-			navigationController?.pushViewController(detailVC, animated: true)
-		}
+        if post != nil {
+            let detailVC = PostDetailViewController(style: .insetGrouped)
+            detailVC.mainpost = post!
+            detailVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
     }
 }
 

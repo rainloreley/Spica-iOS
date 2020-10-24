@@ -15,289 +15,327 @@ import SwiftKeychainWrapper
 import SwiftyJSON
 
 extension MicroAPI {
-    func signIn(name: String, tag: String, password: String) -> Future<String, MicroError> {
-        Future<String, MicroError> { promise in
-            AF.request("https://alles.cx/api/login", method: .post, parameters: [
-                "name": name,
-                "tag": tag,
-                "password": password,
-            ], encoding: JSONEncoding.default).responseJSON(queue: .global(qos: .utility)) { [self] response in
-                switch response.result {
-                case .success:
-                    let possibleError = isError(response)
-                    if !possibleError.error.isError {
-                        let signinJSON = JSON(response.data!)
-                        if signinJSON["token"].exists() {
-                            KeychainWrapper.standard.set(signinJSON["token"].string!, forKey: "dev.abmgrt.spica.user.token")
-                            loadSignedinUser()
-                                .receive(on: RunLoop.main)
-                                .sink {
-                                    switch $0 {
-                                    case let .failure(err):
-                                        return promise(.failure(err))
-                                    default: break
-                                    }
-                                } receiveValue: { user in
-                                    KeychainWrapper.standard.set(user.id, forKey: "dev.abmgrt.spica.user.id")
-                                    KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.name")
-                                    KeychainWrapper.standard.set(user.tag, forKey: "dev.abmgrt.spica.user.tag")
-                                }.store(in: &subscriptions)
+    func signIn(name: String, tag: String, password: String, promise: @escaping (Result<String, MicroError>) -> Void) {
+        AF.request("https://alles.cx/api/login", method: .post, parameters: [
+            "name": name,
+            "tag": tag,
+            "password": password,
+        ], encoding: JSONEncoding.default).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let signinJSON = JSON(response.data!)
+                    if signinJSON["token"].exists() {
+                        KeychainWrapper.standard.set(signinJSON["token"].string!, forKey: "dev.abmgrt.spica.user.token")
 
-                            promise(.success(signinJSON["token"].string!))
-                        } else {
-                            promise(.failure(.init(error: .init(isError: true, name: "login_noToken"), action: nil)))
-                        }
-                    } else {
-                        return promise(.failure(possibleError))
-                    }
-                case let .failure(err):
-                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-                }
-            }
-        }
-    }
-
-    func loadSignedinUser() -> Future<User, MicroError> {
-        Future<User, MicroError> { [self] promise in
-            AF.request("https://micro.alles.cx/api/me", method: .get, headers: [
-                "Authorization": loadAuthKey(),
-            ]).responseJSON(queue: .global(qos: .utility)) { response in
-                switch response.result {
-                case .success:
-                    let possibleError = isError(response)
-                    if !possibleError.error.isError {
-                        let userJSON = JSON(response.data!)
-                        promise(.success(User(userJSON)))
-                    } else {
-                        return promise(.failure(possibleError))
-                    }
-                case let .failure(err):
-                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-                }
-            }
-        }
-    }
-
-    func loadUser(_ id: String) -> Future<User, MicroError> {
-        Future<User, MicroError> { [self] promise in
-			
-			let dispatchGroup = DispatchGroup()
-			dispatchGroup.enter()
-			var newID = id
-			loadIdByUsername(newID)
-				.receive(on: RunLoop.main)
-				.sink {
-					switch $0 {
-						case let .failure(err):
-							print(err)
-							dispatchGroup.leave()
-						default: break
-					}
-				} receiveValue: { (usernameID) in
-					newID = usernameID
-					print(newID)
-					dispatchGroup.leave()
-				}.store(in: &subscriptions)
-			
-			
-			dispatchGroup.notify(queue: .main) {
-				AF.request("https://micro.alles.cx/api/users/\(newID)", method: .get, headers: [
-					"Authorization": loadAuthKey(),
-				]).responseJSON(queue: .global(qos: .utility)) { userResponse in
-					switch userResponse.result {
-					case .success:
-						
-						let possibleError = isError(userResponse)
-						if !possibleError.error.isError {
-							let userJSON = JSON(userResponse.data!)
-							var user: User = .init(userJSON)
-							
-							loadUserStatus(user.id)
-								.receive(on: RunLoop.main)
-								.sink {
-									switch $0 {
-										case let .failure(err):
-											promise(.failure(err))
-										default: break
-									}
-								} receiveValue: { (status) in
-									user.status = status
-									promise(.success(user))
-								}.store(in: &subscriptions)
-							
-						} else {
-							promise(.failure(possibleError))
-						}
-					case let .failure(err):
-						return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-					}
-				}
-			}
-        }
-    }
-	
-	func loadUserStatus(_ id: String) -> Future<Status, MicroError> {
-		Future<Status, MicroError> { [self] promise in
-			AF.request("https://wassup.alles.cc/\(id)", method: .get).responseJSON(queue: .global(qos: .utility)) { (response) in
-				switch response.result {
-					case .success:
-						let possibleError = isError(response)
-						if !possibleError.error.isError {
-							let statusJSON = JSON(response.data!)
-							promise(.success(.init(statusJSON)))
-						}
-						else {
-							promise(.failure(possibleError))
-						}
-					case let .failure(err):
-						return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-				}
-			}
-		}
-	}
-	
-	func loadIdByUsername(_ username: String) -> Future<String, MicroError> {
-		Future<String, MicroError> { [self] promise in
-			AF.request("https://micro.alles.cx/api/username/\(username)", method: .get, headers: [
-						"Authorization": loadAuthKey(),
-			]).responseJSON(queue: .global(qos: .utility)) { (response) in
-				switch response.result {
-					case .success:
-						let possibleError = isError(response)
-						if !possibleError.error.isError {
-							let usernameJSON = JSON(response.data!)
-							let userID = usernameJSON["id"].string
-							if userID != nil {
-								return promise(.success(userID!))
-							}
-							else {
-								return promise(.failure(.init(error: .init(isError: true, name: "usernameNotFound"), action: nil)))
-							}
-						}
-						else {
-							promise(.failure(possibleError))
-						}
-					case let .failure(err):
-						return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-				}
-			}
-		}
-	}
-
-    func loadUserPosts(_ id: String) -> Future<[Post], MicroError> {
-        Future<[Post], MicroError> { [self] promise in
-            AF.request("https://micro.alles.cx/api/users/\(id)", method: .get, headers: [
-                "Authorization": loadAuthKey(),
-            ]).responseJSON(queue: .global(qos: .utility)) { response in
-                switch response.result {
-                case .success:
-                    let possibleError = isError(response)
-                    if !possibleError.error.isError {
-                        let userJSON = JSON(response.data!)
-                        var userPosts = [Post]()
-                        var errorCount = 0
-                        var latestError: MicroError?
-                        let dispatchGroup = DispatchGroup()
-                        for json in userJSON["posts"]["recent"].arrayValue {
-                            dispatchGroup.enter()
-                            loadPost(json.string ?? "")
-                                .receive(on: RunLoop.main)
-                                .sink {
-                                    switch $0 {
-                                    case let .failure(err):
-                                        errorCount += 1
-                                        latestError = err
-                                        dispatchGroup.leave()
-                                    default: break
-                                    }
-                                } receiveValue: { userpost in
-                                    userPosts.append(userpost)
-                                    dispatchGroup.leave()
-                                }.store(in: &subscriptions)
-                        }
-                        dispatchGroup.notify(queue: .main) {
-                            userPosts.sort(by: { $0.createdAt.compare($1.createdAt) == .orderedDescending })
-
-                            if userPosts.isEmpty, errorCount > 0 {
-                                return promise(.failure(latestError!))
-                            } else {
-                                return promise(.success(userPosts))
+                        loadSignedinUser { result in
+                            switch result {
+                            case let .failure(err):
+                                return promise(.failure(err))
+                            case let .success(user):
+                                KeychainWrapper.standard.set(user.id, forKey: "dev.abmgrt.spica.user.id")
+                                KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.name")
+                                KeychainWrapper.standard.set(user.tag, forKey: "dev.abmgrt.spica.user.tag")
+                                promise(.success(signinJSON["token"].string!))
                             }
                         }
                     } else {
-                        return promise(.failure(possibleError))
+                        promise(.failure(.init(error: .init(isError: true, name: "login_noToken"), action: nil)))
                     }
-                case let .failure(err):
-                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+                } else {
+                    return promise(.failure(possibleError))
                 }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
             }
         }
     }
 
-    func followUnfollowUser(_ action: FollowUnfollow, id: String) -> Future<String, MicroError> {
-        Future<String, MicroError> { [self] promise in
-            AF.request("https://micro.alles.cx/api/users/\(id)/\(action.rawValue)", method: .post, headers: [
-                "Authorization": loadAuthKey(),
-            ]).responseJSON(queue: .global(qos: .utility)) { response in
-                switch response.result {
-                case .success:
-                    let possibleError = isError(response)
-                    if !possibleError.error.isError {
-                        promise(.success(id))
-                    } else {
-                        promise(.failure(possibleError))
-                    }
-                case let .failure(err):
-                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+    func loadSignedinUser(promise: @escaping (Result<User, MicroError>) -> Void) {
+        AF.request("https://micro.alles.cx/api/me", method: .get, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let userJSON = JSON(response.data!)
+                    promise(.success(User(userJSON)))
+                } else {
+                    return promise(.failure(possibleError))
                 }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
             }
         }
     }
 
-    func loadFollowers() -> Future<[User], MicroError> {
-        Future<[User], MicroError> { [self] promise in
-            AF.request("https://micro.alles.cx/api/followers", method: .get, headers: [
-                "Authorization": loadAuthKey(),
-            ]).responseJSON(queue: .global(qos: .utility)) { response in
-                switch response.result {
-                case .success:
-                    let possibleError = isError(response)
-                    if !possibleError.error.isError {
-                        let responseJSON = JSON(response.data!)
-                        let users = responseJSON["users"].map {
-                            User($1)
+    func loadUser(_ id: String, promise: @escaping (Result<User, MicroError>) -> Void) {
+        loadIdByUsername(id, allowEmptyUsername: true) { [self] result in
+            switch result {
+            case let .failure(err):
+                return promise(.failure(err))
+            case let .success(usernameID):
+                let newID = usernameID != "" ? usernameID : id
+                AF.request("https://micro.alles.cx/api/users/\(newID)", method: .get, headers: [
+                    "Authorization": loadAuthKey(),
+                ]).responseJSON(queue: .global(qos: .utility)) { userResponse in
+                    switch userResponse.result {
+                    case .success:
+
+                        let possibleError = isError(userResponse)
+                        if !possibleError.error.isError {
+                            let userJSON = JSON(userResponse.data!)
+                            var user: User = .init(userJSON)
+
+                            loadUserStatus(user.id) { result in
+                                switch result {
+                                case let .failure(err):
+                                    promise(.failure(err))
+                                case let .success(status):
+                                    user.status = status
+
+                                    loadUserRing(user.id) { ringResult in
+                                        switch ringResult {
+                                        case .failure:
+                                            user.ring = .none
+                                            promise(.success(user))
+                                        case let .success(ring):
+                                            user.ring = ring
+                                            promise(.success(user))
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            promise(.failure(possibleError))
                         }
-                        promise(.success(users))
-                    } else {
-                        return promise(.failure(possibleError))
+                    case let .failure(err):
+                        return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
                     }
-                case let .failure(err):
-                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
                 }
             }
         }
     }
 
-    func loadFollowing() -> Future<[User], MicroError> {
-        Future<[User], MicroError> { [self] promise in
-            AF.request("https://micro.alles.cx/api/following", method: .get, headers: [
-                "Authorization": loadAuthKey(),
-            ]).responseJSON(queue: .global(qos: .utility)) { response in
-                switch response.result {
-                case .success:
-                    let possibleError = isError(response)
-                    if !possibleError.error.isError {
-                        let responseJSON = JSON(response.data!)
-                        let users = responseJSON["users"].map {
-                            User($1)
-                        }
-                        promise(.success(users))
-                    } else {
-                        return promise(.failure(possibleError))
-                    }
-                case let .failure(err):
-                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+    func loadUserStatus(_ id: String, promise: @escaping (Result<Status, MicroError>) -> Void) {
+        AF.request("https://wassup.alles.cc/\(id)", method: .get).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let statusJSON = JSON(response.data!)
+                    promise(.success(.init(statusJSON)))
+                } else {
+                    promise(.failure(possibleError))
                 }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+            }
+        }
+    }
+
+    func loadUserRing(_ id: String, promise: @escaping (Result<ProfileRing, MicroError>) -> Void) {
+        AF.request("https://flag.spica.li/\(id)", method: .get).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let ringJSON = JSON(response.data!)
+                    promise(.success(ProfileRing(rawValue: ringJSON["ring"].string ?? "none") ?? .none))
+                } else {
+                    promise(.failure(possibleError))
+                }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+            }
+        }
+    }
+
+    func updateUserRing(_ ring: ProfileRing, id: String, promise: @escaping (Result<ProfileRing, MicroError>) -> Void) {
+        let userRing: [String: String] = [
+            "ring": ring.rawValue,
+        ]
+        AF.request("https://flag.spica.li/\(id)", method: .post, parameters: userRing, encoding: JSONEncoding.prettyPrinted, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let ringJSON = JSON(response.data!)
+                    promise(.success(ProfileRing(rawValue: ringJSON["ring"].string ?? ring.rawValue) ?? ring))
+                } else {
+                    promise(.failure(possibleError))
+                }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+            }
+        }
+    }
+
+    func loadIdByUsername(_ username: String, allowEmptyUsername: Bool = false, completionHandler: @escaping (Result<String, MicroError>) -> Void) {
+        AF.request("https://micro.alles.cx/api/username/\(username)", method: .get, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let usernameJSON = JSON(response.data!)
+                    if usernameJSON["id"].exists(), usernameJSON["id"].string != nil {
+                        return completionHandler(.success(usernameJSON["id"].string!))
+                    } else {
+                        if allowEmptyUsername {
+                            return completionHandler(.success(""))
+                        } else {
+                            return completionHandler(.failure(.init(error: .init(isError: true, name: "usernameNotFound"), action: nil)))
+                        }
+                    }
+                } else {
+                    if allowEmptyUsername {
+                        return completionHandler(.success(""))
+                    } else {
+                        return completionHandler(.failure(possibleError))
+                    }
+                }
+            case let .failure(err):
+                return completionHandler(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+            }
+        }
+    }
+
+    func loadUserPosts(_ id: String, promise: @escaping (Result<[Post], MicroError>) -> Void) {
+        AF.request("https://micro.alles.cx/api/users/\(id)", method: .get, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let userJSON = JSON(response.data!)
+                    var userPosts = [Post]()
+                    var errorCount = 0
+                    var latestError: MicroError?
+                    let dispatchGroup = DispatchGroup()
+                    for json in userJSON["posts"]["recent"].arrayValue {
+                        dispatchGroup.enter()
+                        loadPost(json.string ?? "") { result in
+                            switch result {
+                            case let .failure(err):
+                                errorCount += 1
+                                latestError = err
+                                dispatchGroup.leave()
+                            case let .success(userpost):
+                                userPosts.append(userpost)
+                                dispatchGroup.leave()
+                            }
+                        }
+                    }
+                    dispatchGroup.notify(queue: .main) {
+                        userPosts.sort(by: { $0.createdAt.compare($1.createdAt) == .orderedDescending })
+
+                        if userPosts.isEmpty, errorCount > 0 {
+                            return promise(.failure(latestError!))
+                        } else {
+                            return promise(.success(userPosts))
+                        }
+                    }
+                } else {
+                    return promise(.failure(possibleError))
+                }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+            }
+        }
+    }
+
+    func followUnfollowUser(_ action: FollowUnfollow, id: String, promise: @escaping (Result<String, MicroError>) -> Void) {
+        AF.request("https://micro.alles.cx/api/users/\(id)/\(action.rawValue)", method: .post, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    promise(.success(id))
+                } else {
+                    promise(.failure(possibleError))
+                }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+            }
+        }
+    }
+
+    func loadFollowers(promise: @escaping (Result<[User], MicroError>) -> Void) {
+        AF.request("https://micro.alles.cx/api/followers", method: .get, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let responseJSON = JSON(response.data!)
+                    let users = responseJSON["users"].map {
+                        User($1)
+                    }
+                    promise(.success(users))
+                } else {
+                    return promise(.failure(possibleError))
+                }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+            }
+        }
+    }
+
+    func loadFollowing(promise: @escaping (Result<[User], MicroError>) -> Void) {
+        AF.request("https://micro.alles.cx/api/following", method: .get, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let responseJSON = JSON(response.data!)
+                    let users = responseJSON["users"].map {
+                        User($1)
+                    }
+                    promise(.success(users))
+                } else {
+                    return promise(.failure(possibleError))
+                }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+            }
+        }
+    }
+
+    func updateStatus(_ content: String?, time: Int?, promise: @escaping (Result<String, MicroError>) -> Void) {
+        var statusConstruct: [String: Any] = [:]
+
+        if content != nil {
+            statusConstruct["content"] = content!
+        }
+        if time != nil {
+            statusConstruct["time"] = time!
+        }
+
+        AF.request("https://wassup.alles.cc", method: .post, parameters: statusConstruct, encoding: JSONEncoding.prettyPrinted, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    promise(.success(content ?? ""))
+                } else {
+                    return promise(.failure(possibleError))
+                }
+            case let .failure(err):
+                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
             }
         }
     }

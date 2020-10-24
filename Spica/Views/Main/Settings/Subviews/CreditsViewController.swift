@@ -16,13 +16,15 @@ class CreditsViewController: UITableViewController {
         Credit(name: "Archie Baer", description: "Alles Founder", twitterURL: URL(string: "https://twitter.com/onlytruearchie")!, allesUID: "00000000-0000-0000-0000-000000000000", imageURL: URL(string: "https://avatar.alles.cc/00000000-0000-0000-0000-000000000000")!),
         Credit(name: "Patrik Svoboda", description: "iOS Developer", twitterURL: URL(string: "https://twitter.com/PatrikTheDev")!, allesUID: "f2d1821d-6bd6-4e26-959f-885428cf8a9b", imageURL: URL(string: "https://pbs.twimg.com/profile_images/1257940562801577984/eWJ4Sp-i_400x400.jpg")!),
         Credit(name: "Jason", description: "Android Developer", twitterURL: URL(string: "https://twitter.com/jso_8910")!, allesUID: "0b528866-df2c-4323-9498-7b4b417b0023", imageURL: URL(string: "https://avatar.alles.cc/0b528866-df2c-4323-9498-7b4b417b0023")!),
-        Credit(name: "David Muñoz", description: "Translator (Spanish)", twitterURL: URL(string: "https://twitter.com/Dmunozv04")!, imageURL: URL(string: "https://crowdin-static.downloads.crowdin.com/avatar/13940729/small/bf4ab120766769e9c9deed4b51c2661c.jpg")!),
+        Credit(name: "David Muñoz", description: "Translator (Spanish)", twitterURL: URL(string: "https://twitter.com/Dmunozv04")!, allesUID: "a5f008b2-575b-4a56-944f-4ee46ad522d8", imageURL: URL(string: "https://crowdin-static.downloads.crowdin.com/avatar/13940729/small/bf4ab120766769e9c9deed4b51c2661c.jpg")!),
         Credit(name: "James Young", description: "Translator (French, Norwegian)", twitterURL: URL(string: "https://twitter.com/onlytruejames")!, allesUID: "af3a1a9e-b0e1-418e-8b4c-76605897eeab", imageURL: URL(string: "https://avatar.alles.cc/af3a1a9e-b0e1-418e-8b4c-76605897eeab")!),
         Credit(name: "@DaThinkingChair", description: "Translator (Spanish)", twitterURL: URL(string: "https://twitter.com/DaThinkingChair")!, imageURL: URL(string: "https://pbs.twimg.com/profile_images/1259314332950769666/UPvu5g-e_400x400.jpg")!),
         Credit(name: "Storm", description: "Translator (Norwegian)", twitterURL: URL(string: "https://twitter.com/StormLovesTech")!, allesUID: "43753811-5856-4d98-93a3-ed8763e9176e", imageURL: URL(string: "https://avatar.alles.cc/43753811-5856-4d98-93a3-ed8763e9176e")!),
         Credit(name: "primenate32", description: "Translator (Frensh, Spanish)", twitterURL: URL(string: "https://twitter.com/n8_64")!, allesUID: "daf52a37-667a-4434-8dcc-c6fa1f9fa508", imageURL: URL(string: "https://pbs.twimg.com/profile_images/1312457889966182402/ygvafSTw_400x400.jpg")!),
         Credit(name: "grify", description: "Translator (Swedish)", twitterURL: URL(string: "https://twitter.com/GrifyDev")!, allesUID: "181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d", imageURL: URL(string: "https://avatar.alles.cc/181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d")!),
     ]
+	
+	// NOTE: Add new members to flag/ring server as well!
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true

@@ -22,8 +22,6 @@ class UserProfileViewController: UITableViewController {
 
     var loadingHud: JGProgressHUD!
 
-    private var subscriptions = Set<AnyCancellable>()
-
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
     }
@@ -38,11 +36,8 @@ class UserProfileViewController: UITableViewController {
         refreshControl!.addTarget(self, action: #selector(loadUser), for: .valueChanged)
         tableView.addSubview(refreshControl!)
         tableView.delegate = self
-		tableView.rowHeight = UITableView.automaticDimension
-		tableView.estimatedRowHeight = 600
-		
-		
-		
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 600
 
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading..."
@@ -52,67 +47,69 @@ class UserProfileViewController: UITableViewController {
     override func viewDidAppear(_: Bool) {
         loadUser()
     }
-	
-	func updateUserButtons() {
-		let signedInUID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-		if user.id == signedInUID {
-			//navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openUpdateStatusSheet))
-		}
-		else {
-			navigationItem.rightBarButtonItem = nil
-		}
-	}
-	
-	@objc func openUpdateStatusSheet() {
-		let vc = CreatePostViewController()
-		vc.type = .status
-		vc.delegate = self
-		present(UINavigationController(rootViewController: vc), animated: true)
-	}
+
+    func updateUserButtons() {
+        let signedInUID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+        if user.id == signedInUID {
+            // navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openUpdateStatusSheet))
+        } else {
+            navigationItem.rightBarButtonItem = nil
+        }
+    }
+
+    @objc func openUpdateStatusSheet() {
+        let vc = CreatePostViewController()
+        // vc.type = .status
+        vc.delegate = self
+        present(UINavigationController(rootViewController: vc), animated: true)
+    }
 
     @objc func loadUser() {
         if userposts.isEmpty { loadingHud.show(in: view) }
-        MicroAPI.default.loadUser(user.id)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+
+        MicroAPI.default.loadUser(user.id) { [self] result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl!.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-                default: break
                 }
-            } receiveValue: { [self] user in
-                self.user = user
-                navigationItem.title = user.name
-                let signedInUID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-                if user.id == signedInUID {
-                    KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.name")
-                    KeychainWrapper.standard.set(user.tag, forKey: "dev.abmgrt.spica.user.tag")
+            case let .success(user):
+                DispatchQueue.main.async {
+                    self.user = user
+                    navigationItem.title = user.name
+                    let signedInUID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+                    if user.id == signedInUID {
+                        KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.name")
+                        KeychainWrapper.standard.set(user.tag, forKey: "dev.abmgrt.spica.user.tag")
+                    }
+                    updateUserButtons()
+                    loadUserPosts()
                 }
-				updateUserButtons()
-                loadUserPosts()
-            }.store(in: &subscriptions)
+            }
+        }
     }
 
     func loadUserPosts() {
-        MicroAPI.default.loadUserPosts(user.id)
-            .receive(on: RunLoop.main)
-            .sink {
-                switch $0 {
-                case let .failure(err):
+        MicroAPI.default.loadUserPosts(user.id) { result in
+            switch result {
+            case let .failure(err):
+                DispatchQueue.main.async {
                     self.refreshControl!.endRefreshing()
                     self.loadingHud.dismiss()
                     MicroAPI.default.errorHandling(error: err, caller: self.view)
-                default: break
                 }
-            } receiveValue: { [self] userposts in
-                self.userposts = userposts
-                userDataLoaded = true
-                loadingHud.dismiss()
-                refreshControl?.endRefreshing()
-                tableView.reloadData()
-            }.store(in: &subscriptions)
+            case let .success(userposts):
+                DispatchQueue.main.async { [self] in
+                    self.userposts = userposts
+                    userDataLoaded = true
+                    loadingHud.dismiss()
+                    refreshControl?.endRefreshing()
+                    tableView.reloadData()
+                }
+            }
+        }
     }
 
     override func numberOfSections(in _: UITableView) -> Int {
@@ -178,11 +175,13 @@ extension UserProfileViewController: UserHeaderDelegate {
 }
 
 extension UserProfileViewController: PostCellDelegate {
-    func replyToPost(_ id: String) {
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
-        vc.type = .reply
+        vc.type = type
         vc.delegate = self
-        vc.parentID = id
+        vc.parentID = parentID
+        vc.preText = preText ?? ""
+        vc.preLink = preLink
         present(UINavigationController(rootViewController: vc), animated: true)
     }
 
@@ -203,15 +202,14 @@ extension UserProfileViewController: PostCellDelegate {
 }
 
 extension UserProfileViewController: CreatePostDelegate {
-	func didSendPost(post: Post?) {
-		if post != nil {
-			let detailVC = PostDetailViewController(style: .insetGrouped)
-			detailVC.mainpost = post!
-			detailVC.hidesBottomBarWhenPushed = true
-			navigationController?.pushViewController(detailVC, animated: true)
-		}
-		else {
-			loadUser()
-		}
-	}
+    func didSendPost(post: Post?) {
+        if post != nil {
+            let detailVC = PostDetailViewController(style: .insetGrouped)
+            detailVC.mainpost = post!
+            detailVC.hidesBottomBarWhenPushed = true
+            navigationController?.pushViewController(detailVC, animated: true)
+        } else {
+            loadUser()
+        }
+    }
 }
