@@ -54,8 +54,8 @@ struct UserHeaderView: View {
                         ProfilePictureView(url: controller.user.profilePictureUrl).modifier(AgenderFlagCircle())
                     case .nonbinary:
                         ProfilePictureView(url: controller.user.profilePictureUrl).modifier(NonbinaryFlagCircle())
-					case .supporter:
-						ProfilePictureView(url: controller.user.profilePictureUrl).modifier(SpicaSupporterFlagCircle())
+                    case .supporter:
+                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(SpicaSupporterFlagCircle())
                     default:
                         ProfilePictureView(url: controller.user.profilePictureUrl)
                     }

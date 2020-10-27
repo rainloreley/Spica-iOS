@@ -8,6 +8,7 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import SafariServices
 import UIKit
 
 class UsedLibrariesViewController: UITableViewController {
@@ -334,9 +335,8 @@ extension UsedLibrariesViewController {
         if indexPath.section == 0 {
             tableView.deselectRow(at: indexPath, animated: true)
             let url = libraries[indexPath.row].url
-            if UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url)
-            }
+            let vc = SFSafariViewController(url: url)
+            present(vc, animated: true)
         }
     }
 
@@ -347,6 +347,7 @@ extension UsedLibrariesViewController {
             Thank you to all maintainers of these libraries!
 
             ~ Lea
+
 
             """
         } else {

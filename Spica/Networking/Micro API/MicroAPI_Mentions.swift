@@ -64,37 +64,34 @@ extension MicroAPI {
         ]).responseJSON { _ in
         }
     }
-	
-	func getUnreadMentions(allowError: Bool = false, promise: @escaping (Result<[String], MicroError>) -> Void) {
-		AF.request("https://micro.alles.cx/api/mentions?unread", method: .get, headers: [
-					"Authorization": loadAuthKey()
-		]).responseJSON(queue: .global(qos: .utility)) { [self] (response) in
-			switch response.result {
-				case .success:
-					let possibleError = isError(response)
-					if !possibleError.error.isError {
-						let mentionJSON = JSON(response.data!)
-						let mentions: [String] = mentionJSON["posts"].arrayValue.map {
-							return $0["id"].stringValue
-						}
-						promise(.success(mentions))
-					}
-					else {
-						if allowError {
-							return promise(.failure(possibleError))
-						}
-						else {
-							return promise(.success([]))
-						}
-					}
-				case let .failure(err):
-					if allowError {
-						return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-					}
-					else {
-						return promise(.success([]))
-					}
-			}
-		}
-	}
+
+    func getUnreadMentions(allowError: Bool = false, promise: @escaping (Result<[String], MicroError>) -> Void) {
+        AF.request("https://micro.alles.cx/api/mentions?unread", method: .get, headers: [
+            "Authorization": loadAuthKey(),
+        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
+            switch response.result {
+            case .success:
+                let possibleError = isError(response)
+                if !possibleError.error.isError {
+                    let mentionJSON = JSON(response.data!)
+                    let mentions: [String] = mentionJSON["posts"].arrayValue.map {
+                        $0["id"].stringValue
+                    }
+                    promise(.success(mentions))
+                } else {
+                    if allowError {
+                        return promise(.failure(possibleError))
+                    } else {
+                        return promise(.success([]))
+                    }
+                }
+            case let .failure(err):
+                if allowError {
+                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+                } else {
+                    return promise(.success([]))
+                }
+            }
+        }
+    }
 }

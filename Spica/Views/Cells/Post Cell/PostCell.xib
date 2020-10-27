@@ -105,10 +105,10 @@
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     </textView>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wWN-c9-PxF">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wWN-c9-PxF">
                         <rect key="frame" x="20" y="228" width="425" height="20"/>
                         <constraints>
-                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="20" id="nl0-K7-Zp2"/>
+                            <constraint firstAttribute="height" constant="20" id="nl0-K7-Zp2"/>
                         </constraints>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gsP-dx-969">
@@ -200,6 +200,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="downvoteButton" destination="SiJ-Kb-rp3" id="Kjh-N9-vd7"/>
+                <outlet property="imageViewHeightConstraint" destination="nl0-K7-Zp2" id="US0-me-sfp"/>
                 <outlet property="interactionCountIcon" destination="731-OT-XBd" id="dcb-y8-lmR"/>
                 <outlet property="interactioncountLabel" destination="1UN-L7-rXa" id="ykO-M4-E5i"/>
                 <outlet property="postContentTextView" destination="oEz-Pa-BhW" id="zzo-XZ-Ul3"/>

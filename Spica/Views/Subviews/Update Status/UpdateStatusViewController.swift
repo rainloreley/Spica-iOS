@@ -42,12 +42,11 @@ class UpdateStatusViewController: UIAlertController {
         view.addSubview(exitBtn)
         exitBtn.snp.makeConstraints { make in
             make.top.equalTo(16)
-			if #available(iOS 14.0, *) {
-				make.trailing.equalTo(view.snp.trailing).offset(-16)
-			}
-			else {
-				make.trailing.equalTo(view.snp.trailing).offset(-32)
-			}
+            if #available(iOS 14.0, *) {
+                make.trailing.equalTo(view.snp.trailing).offset(-16)
+            } else {
+                make.trailing.equalTo(view.snp.trailing).offset(-32)
+            }
             make.height.equalTo(30)
             make.width.equalTo(30)
         }

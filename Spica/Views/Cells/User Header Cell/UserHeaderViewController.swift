@@ -32,8 +32,10 @@ class UserHeaderViewController: ObservableObject {
         MicroAPI.default.followUnfollowUser(action, id: user.id) { [self] result in
             switch result {
             case let .failure(err):
-                user.iamFollowing.toggle()
-                delegate.showError(title: "Error", message: "The action failed with the following response:\n\n\(err.error.name)")
+                DispatchQueue.main.async {
+                    user.iamFollowing.toggle()
+                    delegate.showError(title: "Error", message: "The action failed with the following response:\n\n\(err.error.name)")
+                }
             default: break
             }
         }

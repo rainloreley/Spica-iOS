@@ -10,6 +10,7 @@
 
 import Kingfisher
 import LocalAuthentication
+import SafariServices
 import SPAlert
 import SwiftKeychainWrapper
 import SwiftUI
@@ -145,12 +146,14 @@ class SettingsViewController: UITableViewController {
         switch sender.tag {
         case 0:
             let url = URL(string: "https://spica.li/privacy")!
-            if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+            let vc = SFSafariViewController(url: url)
+            present(vc, animated: true)
         case 1:
             navigationController?.pushViewController(LegalNoticeViewController(), animated: true)
         case 2:
             let url = URL(string: "https://spica.li/")!
-            if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+            let vc = SFSafariViewController(url: url)
+            present(vc, animated: true)
         default: break
         }
     }
@@ -170,13 +173,16 @@ class SettingsViewController: UITableViewController {
         switch sender.tag {
         case 0:
             let url = URL(string: "https://files.alles.cc/Documents/Privacy%20Policy.txt")!
-            if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+            let vc = SFSafariViewController(url: url)
+            present(vc, animated: true)
         case 1:
             let url = URL(string: "https://files.alles.cc/Documents/Terms%20of%20Service.txt")!
-            if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+            let vc = SFSafariViewController(url: url)
+            present(vc, animated: true)
         case 2:
             let url = URL(string: "https://micro.alles.cx")!
-            if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+            let vc = SFSafariViewController(url: url)
+            present(vc, animated: true)
         default: break
         }
     }
@@ -191,7 +197,8 @@ class SettingsViewController: UITableViewController {
 
     @IBAction func githubAction(_: Any) {
         let url = URL(string: "https://github.com/SpicaApp/Spica-iOS")!
-        if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
     }
 
     @IBAction func contactAction(_: Any) {

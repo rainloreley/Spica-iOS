@@ -17,9 +17,9 @@ class SidebarViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var accountViewController: UserProfileViewController!
     private var secondaryViewControllers = [UINavigationController]()
-	
-	var mentionsTimer = Timer()
-	var mentions = [String]()
+
+    var mentionsTimer = Timer()
+    var mentions = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,11 +42,11 @@ class SidebarViewController: UIViewController {
         configureDataSource()
         setInitialSecondaryView()
     }
-	
-	override func viewWillAppear(_ animated: Bool) {
-		loadMentionsCount()
-		mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
-	}
+
+    override func viewWillAppear(_: Bool) {
+        loadMentionsCount()
+        mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
+    }
 
     private func setInitialSecondaryView() {
         collectionView.selectItem(at: IndexPath(row: 0, section: 0),
@@ -54,29 +54,28 @@ class SidebarViewController: UIViewController {
                                   scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
         splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
     }
-	
-	@objc func loadMentionsCount() {
-		MicroAPI.default.getUnreadMentions(allowError: false) { [self] (result) in
-			switch result {
-				case .failure:
-					break
-				case let .success(loadedMentions):
-					if mentions.count != loadedMentions.count {
-						DispatchQueue.main.async {
-							mentions = loadedMentions
-							if mentions.count > 0 {
-								tabsItems[1].image = UIImage(systemName: "bell.badge.fill")
-								configureDataSource()
-							}
-							else {
-								tabsItems[1].image = UIImage(systemName: "bell")
-								configureDataSource()
-							}
-						}
-					}
-			}
-		}
-	}
+
+    @objc func loadMentionsCount() {
+        MicroAPI.default.getUnreadMentions(allowError: false) { [self] result in
+            switch result {
+            case .failure:
+                break
+            case let .success(loadedMentions):
+                if mentions.count != loadedMentions.count {
+                    DispatchQueue.main.async {
+                        mentions = loadedMentions
+                        if mentions.count > 0 {
+                            tabsItems[1].image = UIImage(systemName: "bell.badge.fill")
+                            configureDataSource()
+                        } else {
+                            tabsItems[1].image = UIImage(systemName: "bell")
+                            configureDataSource()
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Layout
@@ -119,14 +118,14 @@ extension SidebarViewController {
             cell.accessories = [.outlineDisclosure()]
         }
 
-		let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [self] cell, index, item in
+        let cellRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [self] cell, index, item in
             var content = cell.defaultContentConfiguration()
             content.text = item.title
             content.image = item.image
-			if index.section == 0 && index.row == 1 && mentions.count > 0 {
-				content.secondaryText = "\(mentions.count)"
-				content.prefersSideBySideTextAndSecondaryText = true
-			}
+            if index.section == 0, index.row == 1, mentions.count > 0 {
+                content.secondaryText = "\(mentions.count)"
+                content.prefersSideBySideTextAndSecondaryText = true
+            }
             cell.contentConfiguration = content
             cell.accessories = []
         }

@@ -8,6 +8,7 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import SafariServices
 import UIKit
 
 class CreditsViewController: UITableViewController {
@@ -23,8 +24,8 @@ class CreditsViewController: UITableViewController {
         Credit(name: "primenate32", description: "Translator (Frensh, Spanish)", twitterURL: URL(string: "https://twitter.com/n8_64")!, allesUID: "daf52a37-667a-4434-8dcc-c6fa1f9fa508", imageURL: URL(string: "https://pbs.twimg.com/profile_images/1312457889966182402/ygvafSTw_400x400.jpg")!),
         Credit(name: "grify", description: "Translator (Swedish)", twitterURL: URL(string: "https://twitter.com/GrifyDev")!, allesUID: "181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d", imageURL: URL(string: "https://avatar.alles.cc/181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d")!),
     ]
-	
-	// NOTE: Add new members to flag/ring server as well!
+
+    // NOTE: Add new members to flag/ring server as well!
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -61,6 +62,7 @@ class CreditsViewController: UITableViewController {
 
             ~ Lea
 
+
             """
         } else {
             return ""
@@ -71,8 +73,16 @@ class CreditsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "creditsCell", for: indexPath) as! CreditsCell
 
         cell.creditUser = credits[indexPath.section]
+        cell.delegate = self
 
         return cell
+    }
+}
+
+extension CreditsViewController: CreditsCellDelegate {
+    func clickedLink(_ url: URL) {
+        let vc = SFSafariViewController(url: url)
+        present(vc, animated: true)
     }
 }
 
@@ -85,9 +95,8 @@ extension CreditsViewController {
                 UIApplication.shared.open(url!)
             }
         } else {
-            if UIApplication.shared.canOpenURL(credits[indexPath.section].twitterURL) {
-                UIApplication.shared.open(credits[indexPath.section].twitterURL)
-            }
+            let vc = SFSafariViewController(url: credits[indexPath.section].twitterURL)
+            present(vc, animated: true)
         }
     }
 }

@@ -11,6 +11,7 @@
 import Combine
 import JGProgressHUD
 import Lightbox
+import SafariServices
 import SPAlert
 import UIKit
 
@@ -104,7 +105,19 @@ class BookmarksViewController: UITableViewController {
     }
 }
 
+extension BookmarksViewController: SFSafariViewControllerDelegate {
+    func safariViewControllerDidFinish(_: SFSafariViewController) {
+        dismiss(animated: true)
+    }
+}
+
 extension BookmarksViewController: PostCellDelegate {
+    func clickedLink(_ url: URL) {
+        let vc = SFSafariViewController(url: url)
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+
     func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
         vc.type = type
@@ -126,7 +139,7 @@ extension BookmarksViewController: PostCellDelegate {
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    func clickedImage(controller: LightboxController) {
+    func clickedImage(_ controller: ImageDetailViewController) {
         present(controller, animated: true, completion: nil)
     }
 }

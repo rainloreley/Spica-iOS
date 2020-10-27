@@ -16,15 +16,18 @@ import SwiftKeychainWrapper
 import UIKit
 
 protocol PostCellDelegate {
-    func clickedImage(controller: LightboxController)
+    func clickedImage(_ controller: ImageDetailViewController)
     // func replyToPost(_ id: String)
     func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?)
     func reloadData()
     func clickedUser(user: User)
+    func clickedLink(_ url: URL)
 }
 
 class PostCell: UITableViewCell {
     var delegate: PostCellDelegate?
+
+    @IBOutlet var imageViewHeightConstraint: NSLayoutConstraint!
 
     var post: Post? {
         didSet {
@@ -50,7 +53,14 @@ class PostCell: UITableViewCell {
             postContentTextView.isSelectable = true
 
             profilePictureImageView?.kf.setImage(with: post?.author.profilePictureUrl)
-            postImageView.kf.setImage(with: post?.imageurl)
+            postImageView.kf.setImage(with: post?.imageurl, completionHandler: { [self] result in
+                switch result {
+                case let .success(value):
+                    imageViewHeightConstraint.constant = value.image.size.height / 3
+                case .failure:
+                    imageViewHeightConstraint.constant = 20
+                }
+			})
 
             let profilePictureTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(clickedUser))
 
@@ -171,39 +181,15 @@ class PostCell: UITableViewCell {
                 LightboxImage(image: image, text: postContentTextView.attributedText.string),
             ]
 
-            let controller = LightboxController(images: images)
+            let controller = ImageDetailViewController(images: images)
             controller.dynamicBackground = true
-            let saveBtn: UIButton = {
-                let btn = UIButton(type: .system)
-                btn.setImage(UIImage(systemName: "square.and.arrow.down"), for: .normal)
-                btn.addTarget(self, action: #selector(saveImage), for: .touchUpInside)
-                btn.tintColor = .white
-                return btn
-            }()
-
-            controller.headerView.addSubview(saveBtn)
-            saveBtn.snp.makeConstraints { make in
-                // make.top.equalTo(controller.headerView.snp.top).offset(-2)
-                make.centerY.equalTo(controller.headerView.closeButton.snp.centerY)
-                make.leading.equalTo(controller.headerView.snp.leading).offset(8)
-                make.width.equalTo(50)
-                make.height.equalTo(50)
-            }
-            delegate?.clickedImage(controller: controller)
-        }
-    }
-
-    @objc func saveImage() {
-        if let image = postImageView.image {
-            UIImageWriteToSavedPhotosAlbum(image, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+            delegate?.clickedImage(controller)
         }
     }
 
     @objc func openLink() {
-        if post?.url != nil {
-            if UIApplication.shared.canOpenURL(post!.url!) {
-                UIApplication.shared.open(post!.url!)
-            }
+        if let url = post?.url {
+            delegate?.clickedLink(url)
         }
     }
 
@@ -275,17 +261,6 @@ class PostCell: UITableViewCell {
     }
 }
 
-extension PostCell: UIImagePickerControllerDelegate {
-    @objc func image(_: UIImage, didFinishSavingWithError error: Error?, contextInfo _: UnsafeRawPointer) {
-        if let error = error {
-            SPAlert.present(title: "Error", message: error.localizedDescription, preset: .error)
-
-        } else {
-            SPAlert.present(title: "Photo saved!", preset: .done)
-        }
-    }
-}
-
 extension PostCell: UITextViewDelegate {
     func textView(_: UITextView, shouldInteractWith url: URL, in _: NSRange, interaction: UITextItemInteraction) -> Bool {
         if interaction == .invokeDefaultAction {
@@ -302,13 +277,9 @@ extension PostCell: UITextViewDelegate {
                     selURL = "https://" + selURL
                 }
                 let adaptedURL = URL(string: String(selURL))
-                if UIApplication.shared.canOpenURL(adaptedURL!) {
-                    UIApplication.shared.open(adaptedURL!)
-                }
+                delegate?.clickedLink(adaptedURL!)
             } else if stringURL.isValidURL {
-                if UIApplication.shared.canOpenURL(url) {
-                    UIApplication.shared.open(url)
-                }
+                delegate?.clickedLink(url)
             }
         }
         return false

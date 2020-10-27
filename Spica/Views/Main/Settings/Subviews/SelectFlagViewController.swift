@@ -35,10 +35,10 @@ class SelectFlagViewController: UITableViewController {
         super.viewDidLoad()
         navigationItem.title = "Select a flag"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-		let signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-		if CreditsViewController().credits.contains(where: { $0.allesUID == signedInID! } ) {
-			flags.append(Flag(name: "Spica Supporter Flag", description: "A ✨ special ✨ flag because you helped developing Spica!", ring: .supporter))
-		}
+        let signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+        if CreditsViewController().credits.contains(where: { $0.allesUID == signedInID! }) {
+            flags.append(Flag(name: "Spica Supporter Flag", description: "A ✨ special ✨ flag because you helped developing Spica!", ring: .supporter))
+        }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -64,7 +64,7 @@ class SelectFlagViewController: UITableViewController {
         cell.textLabel?.text = flag.name
         cell.textLabel?.font = .boldSystemFont(ofSize: 20)
         cell.detailTextLabel?.text = flag.description
-		cell.detailTextLabel?.numberOfLines = 0
+        cell.detailTextLabel?.numberOfLines = 0
         cell.detailTextLabel?.textColor = .secondaryLabel
         // Configure the cell...
 
@@ -92,7 +92,7 @@ class SelectFlagViewController: UITableViewController {
         if section == flags.count - 1 {
             return """
 
-            You can select a flag here, which will be shown around the profile picture on your profile picture. It is visible to anyone else.
+            You can select a flag here, which will be shown around the profile picture on your profile page. It is visible to anyone else.
             Note: this is a Spica feature, so it'll only show if you use Spica 0.9.1 beta 16 or higher
 
             There is a ✨ special ✨ flag for people in \"Credits\". If you're mentioned there but you don't see the special flag, please contact me, thanks!

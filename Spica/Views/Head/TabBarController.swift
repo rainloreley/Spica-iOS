@@ -17,8 +17,8 @@ class TabBarController: UITabBarController {
     private lazy var bookmarksViewController = makeBookmarksViewController()
     private lazy var searchViewController = makeSearchViewController()
     private lazy var accountViewController = makeAccountViewController()
-	
-	var mentionsTimer = Timer()
+
+    var mentionsTimer = Timer()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,27 +28,26 @@ class TabBarController: UITabBarController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         selectedIndex = 0
-		loadMentionsCount()
-		mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
+        loadMentionsCount()
+        mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
     }
-	
-	@objc func loadMentionsCount() {
-		MicroAPI.default.getUnreadMentions(allowError: false) { [self] (result) in
-			switch result {
-				case .failure:
-					break
-				case let .success(mentions):
-					DispatchQueue.main.async {
-						if mentions.count > 0 {
-							mentionViewController.tabBarItem.badgeValue = "\(mentions.count)"
-						}
-						else {
-							mentionViewController.tabBarItem.badgeValue = nil
-						}
-					}
-			}
-		}
-	}
+
+    @objc func loadMentionsCount() {
+        MicroAPI.default.getUnreadMentions(allowError: false) { [self] result in
+            switch result {
+            case .failure:
+                break
+            case let .success(mentions):
+                DispatchQueue.main.async {
+                    if mentions.count > 0 {
+                        mentionViewController.tabBarItem.badgeValue = "\(mentions.count)"
+                    } else {
+                        mentionViewController.tabBarItem.badgeValue = nil
+                    }
+                }
+            }
+        }
+    }
 
     func showViewController(_ vc: UIViewController) {
         if let navigationcontroller = viewControllers?[selectedIndex] as? UINavigationController {

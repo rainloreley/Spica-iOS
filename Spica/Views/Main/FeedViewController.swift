@@ -11,6 +11,7 @@
 import Combine
 import JGProgressHUD
 import Lightbox
+import SafariServices
 import SnapKit
 import UIKit
 
@@ -46,12 +47,11 @@ class FeedViewController: UITableViewController {
 
     @objc func openUpdateStatus(sender: UIBarButtonItem) {
         updateStatusViewController = UpdateStatusViewController(title: "Update status", message: "", preferredStyle: .actionSheet)
-		if #available(iOS 14.0, *) {
-			updateStatusViewController!.rootViewHeight = 350
-		}
-		else {
-			updateStatusViewController!.rootViewHeight = 500
-		}
+        if #available(iOS 14.0, *) {
+            updateStatusViewController!.rootViewHeight = 350
+        } else {
+            updateStatusViewController!.rootViewHeight = 500
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         if let popoverController = updateStatusViewController?.popoverPresentationController {
@@ -68,12 +68,11 @@ class FeedViewController: UITableViewController {
 
     @objc func keyboardWillDisappear() {
         // Do something here
-		if #available(iOS 14.0, *) {
-			updateStatusViewController!.rootViewHeight = 350
-		}
-		else {
-			updateStatusViewController!.rootViewHeight = 500
-		}
+        if #available(iOS 14.0, *) {
+            updateStatusViewController!.rootViewHeight = 350
+        } else {
+            updateStatusViewController!.rootViewHeight = 500
+        }
     }
 
     @objc func openSettings() {
@@ -90,10 +89,10 @@ class FeedViewController: UITableViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-		print("OFFSET: \(tableView.contentOffset.y)")
-		if tableView.contentOffset.y < 200 || posts.isEmpty {
-			loadFeed()
-		}
+        print("OFFSET: \(tableView.contentOffset.y)")
+        if tableView.contentOffset.y < 200 || posts.isEmpty {
+            loadFeed()
+        }
     }
 
     @objc func loadFeed() {
@@ -182,7 +181,19 @@ extension FeedViewController {
     }
 }
 
+extension FeedViewController: SFSafariViewControllerDelegate {
+    func safariViewControllerDidFinish(_: SFSafariViewController) {
+        dismiss(animated: true)
+    }
+}
+
 extension FeedViewController: PostCellDelegate {
+    func clickedLink(_ url: URL) {
+        let vc = SFSafariViewController(url: url)
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+
     func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
         vc.type = type
@@ -204,7 +215,7 @@ extension FeedViewController: PostCellDelegate {
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    func clickedImage(controller: LightboxController) {
+    func clickedImage(_ controller: ImageDetailViewController) {
         present(controller, animated: true, completion: nil)
     }
 }

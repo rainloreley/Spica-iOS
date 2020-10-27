@@ -10,7 +10,12 @@
 
 import UIKit
 
+protocol CreditsCellDelegate {
+    func clickedLink(_ url: URL)
+}
+
 class CreditsCell: UITableViewCell {
+    var delegate: CreditsCellDelegate!
     var creditUser: Credit! {
         didSet {
             nameLabel.text = creditUser.name
@@ -96,10 +101,8 @@ extension CreditsCell: UIContextMenuInteractionDelegate {
     func makeContextMenu() -> UIMenu {
         var actionsArray = [UIAction]()
 
-        let twitter = UIAction(title: "Twitter", image: UIImage(named: "twitter")) { _ in
-            if UIApplication.shared.canOpenURL(self.creditUser.twitterURL) {
-                UIApplication.shared.open(self.creditUser.twitterURL)
-            }
+        let twitter = UIAction(title: "Twitter", image: UIImage(named: "twitter")) { [self] _ in
+            delegate.clickedLink(self.creditUser.twitterURL)
         }
 
         actionsArray.append(twitter)

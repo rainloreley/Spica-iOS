@@ -91,5 +91,5 @@ enum ProfileRing: String {
     case genderfluid
     case agender
     case nonbinary
-	case supporter
+    case supporter
 }

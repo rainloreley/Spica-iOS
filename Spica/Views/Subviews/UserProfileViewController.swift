@@ -11,6 +11,7 @@
 import Combine
 import JGProgressHUD
 import Lightbox
+import SafariServices
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
@@ -67,7 +68,7 @@ class UserProfileViewController: UITableViewController {
     @objc func loadUser() {
         if userposts.isEmpty { loadingHud.show(in: view) }
 
-        MicroAPI.default.loadUser(user.id) { [self] result in
+        MicroAPI.default.loadUser(user.id, loadAdditionalInfo: true) { [self] result in
             switch result {
             case let .failure(err):
                 DispatchQueue.main.async {
@@ -79,6 +80,7 @@ class UserProfileViewController: UITableViewController {
                 DispatchQueue.main.async {
                     self.user = user
                     navigationItem.title = user.name
+                    self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
                     let signedInUID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
                     if user.id == signedInUID {
                         KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.name")
@@ -127,7 +129,7 @@ class UserProfileViewController: UITableViewController {
             cell.headerController.user = user
             cell.headerController.userDataLoaded = userDataLoaded
             cell.headerController.delegate = self
-            // cell.headerController.grow = imageAnimationAllowed
+            cell.headerController.getLoggedInUser()
             return cell
         } else {
             let post = userposts[indexPath.section - 1]
@@ -174,7 +176,19 @@ extension UserProfileViewController: UserHeaderDelegate {
     }
 }
 
+extension UserProfileViewController: SFSafariViewControllerDelegate {
+    func safariViewControllerDidFinish(_: SFSafariViewController) {
+        dismiss(animated: true)
+    }
+}
+
 extension UserProfileViewController: PostCellDelegate {
+    func clickedLink(_ url: URL) {
+        let vc = SFSafariViewController(url: url)
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+
     func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
         vc.type = type
@@ -196,7 +210,7 @@ extension UserProfileViewController: PostCellDelegate {
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    func clickedImage(controller: LightboxController) {
+    func clickedImage(_ controller: ImageDetailViewController) {
         present(controller, animated: true, completion: nil)
     }
 }

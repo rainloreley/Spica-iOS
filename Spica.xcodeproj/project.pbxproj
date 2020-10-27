@@ -54,6 +54,8 @@
 		8B6AC5B8252E15A6003A2CC4 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6AC5B7252E15A6003A2CC4 /* FeedViewController.swift */; };
 		8B6ACF1A2530D667004BDEC8 /* PostDividerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6ACF192530D667004BDEC8 /* PostDividerCell.swift */; };
 		8B6ACF1F2530D69F004BDEC8 /* ReplyButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */; };
+		8B8893792548507500B70C64 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8893782548507500B70C64 /* Array.swift */; };
+		8B88937E254852F000B70C64 /* ImageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B88937D254852F000B70C64 /* ImageDetailViewController.swift */; };
 		8BA7B5A1253232E300915113 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5A0253232E300915113 /* ColorPickerView.swift */; };
 		8BA7B5A6253232FF00915113 /* ColorPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5A5253232FF00915113 /* ColorPickerController.swift */; };
 		8BA7B5AB2532335D00915113 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5AA2532335D00915113 /* UserDefaults.swift */; };
@@ -167,6 +169,8 @@
 		8B6AC5B7252E15A6003A2CC4 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		8B6ACF192530D667004BDEC8 /* PostDividerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDividerCell.swift; sourceTree = "<group>"; };
 		8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
+		8B8893782548507500B70C64 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		8B88937D254852F000B70C64 /* ImageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailViewController.swift; sourceTree = "<group>"; };
 		8BA7B5A0253232E300915113 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		8BA7B5A5253232FF00915113 /* ColorPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerController.swift; sourceTree = "<group>"; };
 		8BA7B5AA2532335D00915113 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
@@ -260,6 +264,7 @@
 				8BC1BFBD2530DF85001186F3 /* UserProfileViewController.swift */,
 				8BBB7F8C2530E421004D49BC /* XPProgressBarView.swift */,
 				8B5C42A725331275007B10BD /* FollowersFollowingViewController.swift */,
+				8B88937D254852F000B70C64 /* ImageDetailViewController.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -464,6 +469,7 @@
 				8B35C46E2530C25B003809FA /* UIViewController.swift */,
 				8BD0C7FB25321A52008D432E /* UITableView.swift */,
 				8BA7B5AA2532335D00915113 /* UserDefaults.swift */,
+				8B8893782548507500B70C64 /* Array.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -819,6 +825,7 @@
 				8BBB7F792530E34F004D49BC /* UserHeaderView.swift in Sources */,
 				8B0081EE2531BB05006427FE /* LoginView.swift in Sources */,
 				8B199E30252DFFB90060A3BE /* SceneDelegate.swift in Sources */,
+				8B88937E254852F000B70C64 /* ImageDetailViewController.swift in Sources */,
 				8BF514EE252E35E20064D95F /* MicroAPI.swift in Sources */,
 				8B0CD2A52530B6A4004459EC /* MicroAPI+ErrorHandling.swift in Sources */,
 				8BBEA42D253C68960046A3F9 /* Status.swift in Sources */,
@@ -867,6 +874,7 @@
 				8BD0C7FC25321A52008D432E /* UITableView.swift in Sources */,
 				8B0CD2B02530BB40004459EC /* CreatePostViewController.swift in Sources */,
 				8BD712D02530AF3900D2533C /* MicroAPI_Posts.swift in Sources */,
+				8B8893792548507500B70C64 /* Array.swift in Sources */,
 				8B5C42A2253301EA007B10BD /* UsedLibrariesViewController.swift in Sources */,
 				8B5C42B225331734007B10BD /* SimpleBookmark.swift in Sources */,
 				8B5C42BF2533187F007B10BD /* MicroAPI_Bookmarks.swift in Sources */,

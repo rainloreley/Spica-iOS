@@ -401,35 +401,35 @@ struct NonbinaryFlagCircle: ViewModifier {
 }
 
 struct SpicaSupporterFlagCircle: ViewModifier {
-	func body(content: Content) -> some View {
-		return content
-			.overlay(Circle()
+    func body(content: Content) -> some View {
+        return content
+            .overlay(Circle()
 
-						.trim(from: 0, to: 0.25)
-				.stroke(Color("flag_supporter_stripe1"), lineWidth: 4)
-				.rotationEffect(.degrees(-90), anchor: .center)
-				.shadow(radius: 8)
-			)
-			.overlay(Circle()
+                .trim(from: 0, to: 0.25)
+                .stroke(Color("flag_supporter_stripe1"), lineWidth: 4)
+                .rotationEffect(.degrees(-90), anchor: .center)
+                .shadow(radius: 8)
+            )
+            .overlay(Circle()
 
-						.trim(from: 0.25, to: 0.5)
-				.stroke(Color("flag_supporter_stripe2"), lineWidth: 4)
-				.rotationEffect(.degrees(-90), anchor: .center)
-				.shadow(radius: 8)
-			)
-			.overlay(Circle()
+                .trim(from: 0.25, to: 0.5)
+                .stroke(Color("flag_supporter_stripe2"), lineWidth: 4)
+                .rotationEffect(.degrees(-90), anchor: .center)
+                .shadow(radius: 8)
+            )
+            .overlay(Circle()
 
-						.trim(from: 0.5, to: 0.75)
-				.stroke(Color("flag_supporter_stripe3"), lineWidth: 4)
-				.rotationEffect(.degrees(-90), anchor: .center)
-				.shadow(radius: 8)
-			)
-			.overlay(Circle()
+                .trim(from: 0.5, to: 0.75)
+                .stroke(Color("flag_supporter_stripe3"), lineWidth: 4)
+                .rotationEffect(.degrees(-90), anchor: .center)
+                .shadow(radius: 8)
+            )
+            .overlay(Circle()
 
-						.trim(from: 0.75, to: 1)
-				.stroke(Color("flag_supporter_stripe4"), lineWidth: 4)
-				.rotationEffect(.degrees(-90), anchor: .center)
-				.shadow(radius: 8)
-			)
-	}
+                .trim(from: 0.75, to: 1)
+                .stroke(Color("flag_supporter_stripe4"), lineWidth: 4)
+                .rotationEffect(.degrees(-90), anchor: .center)
+                .shadow(radius: 8)
+            )
+    }
 }

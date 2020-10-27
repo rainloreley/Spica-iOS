@@ -11,6 +11,7 @@
 import Combine
 import JGProgressHUD
 import Lightbox
+import SafariServices
 import UIKit
 
 class MentionsViewController: UITableViewController {
@@ -108,7 +109,19 @@ class MentionsViewController: UITableViewController {
     }
 }
 
+extension MentionsViewController: SFSafariViewControllerDelegate {
+    func safariViewControllerDidFinish(_: SFSafariViewController) {
+        dismiss(animated: true)
+    }
+}
+
 extension MentionsViewController: PostCellDelegate {
+    func clickedLink(_ url: URL) {
+        let vc = SFSafariViewController(url: url)
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+
     func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
         vc.type = type
@@ -130,7 +143,7 @@ extension MentionsViewController: PostCellDelegate {
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    func clickedImage(controller: LightboxController) {
+    func clickedImage(_ controller: ImageDetailViewController) {
         present(controller, animated: true, completion: nil)
     }
 }

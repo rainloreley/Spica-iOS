@@ -11,6 +11,7 @@
 import Combine
 import JGProgressHUD
 import Lightbox
+import SafariServices
 import UIKit
 
 class PostDetailViewController: UITableViewController {
@@ -139,7 +140,19 @@ class PostDetailViewController: UITableViewController {
     }
 }
 
+extension PostDetailViewController: SFSafariViewControllerDelegate {
+    func safariViewControllerDidFinish(_: SFSafariViewController) {
+        dismiss(animated: true)
+    }
+}
+
 extension PostDetailViewController: PostCellDelegate {
+    func clickedLink(_ url: URL) {
+        let vc = SFSafariViewController(url: url)
+        vc.delegate = self
+        present(vc, animated: true)
+    }
+
     func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
         let vc = CreatePostViewController()
         vc.type = type
@@ -161,7 +174,7 @@ extension PostDetailViewController: PostCellDelegate {
         navigationController?.pushViewController(detailVC, animated: true)
     }
 
-    func clickedImage(controller: LightboxController) {
+    func clickedImage(_ controller: ImageDetailViewController) {
         present(controller, animated: true, completion: nil)
     }
 }
