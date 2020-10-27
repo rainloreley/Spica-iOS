@@ -56,9 +56,9 @@ class PostCell: UITableViewCell {
             postImageView.kf.setImage(with: post?.imageurl, completionHandler: { [self] result in
                 switch result {
                 case let .success(value):
-                    imageViewHeightConstraint.constant = value.image.size.height / 3 // idk
+					imageViewHeightConstraint.constant = value.image.size.height / 3 // idk
                 case .failure:
-                    imageViewHeightConstraint.constant = 20
+					imageViewHeightConstraint.constant = 20
                 }
 			})
 
@@ -129,6 +129,7 @@ class PostCell: UITableViewCell {
 
             let contextInteraction = UIContextMenuInteraction(delegate: self)
             contentView.addInteraction(contextInteraction)
+			postImageView.layoutIfNeeded()
         }
     }
 
