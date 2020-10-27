@@ -211,7 +211,7 @@ extension UserProfileViewController: PostCellDelegate {
     }
 
     func clickedImage(_ controller: ImageDetailViewController) {
-        present(controller, animated: true, completion: nil)
+		self.present(controller, animated: true, completion: nil)
     }
 }
 

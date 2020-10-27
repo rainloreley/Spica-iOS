@@ -23,13 +23,13 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewControllers = [feedViewController, mentionViewController, bookmarksViewController, searchViewController, accountViewController]
+		selectedIndex = 0
+		loadMentionsCount()
+		mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        selectedIndex = 0
-        loadMentionsCount()
-        mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
     }
 
     @objc func loadMentionsCount() {

@@ -56,7 +56,7 @@ class PostCell: UITableViewCell {
             postImageView.kf.setImage(with: post?.imageurl, completionHandler: { [self] result in
                 switch result {
                 case let .success(value):
-                    imageViewHeightConstraint.constant = value.image.size.height / 3
+                    imageViewHeightConstraint.constant = value.image.size.height / 3 // idk
                 case .failure:
                     imageViewHeightConstraint.constant = 20
                 }
