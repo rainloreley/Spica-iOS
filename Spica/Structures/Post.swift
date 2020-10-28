@@ -60,5 +60,5 @@ struct Post {
         mentionedUsers = []
     }
 
-    static var sample = Post(id: "sample", author: User.sample, parent: nil, children: [], content: "Hello world", imageurl: URL(string: "https://avatar.alles.cx/87cd0529-f41b-4075-a002-059bf2311ce7"), image: nil, url: nil, score: 0, vote: 0, interactions: nil, createdAt: Date(), mentionedUsers: [])
+	static var sample = Post(id: "sample", author: User.sample, parent: nil, children: [], content: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et @dolore magna aliquyam erat, sed diam https://voluptua.de At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.", imageurl: URL(string: "https://avatar.alles.cx/87cd0529-f41b-4075-a002-059bf2311ce7"), image: nil, url: nil, score: 0, vote: 1, interactions: 3, createdAt: Date().addingTimeInterval(-60), mentionedUsers: [])
 }

@@ -20,6 +20,7 @@ class UserProfileViewController: UITableViewController {
     var user: User = User()
     var userposts = [Post]()
     var userDataLoaded = false
+	var imageReloadedCells = [String]()
 
     var loadingHud: JGProgressHUD!
 
@@ -30,7 +31,7 @@ class UserProfileViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = user.name
-        tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(UserHeaderViewCell.self, forCellReuseIdentifier: "headerCellUI")
 
         refreshControl = UIRefreshControl()
@@ -134,10 +135,12 @@ class UserProfileViewController: UITableViewController {
         } else {
             let post = userposts[indexPath.section - 1]
 
-            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
+			cell.indexPath = indexPath
+			cell.delegate = self
             cell.post = post
-            cell.delegate = self
+			
 
             return cell
         }
@@ -183,6 +186,18 @@ extension UserProfileViewController: SFSafariViewControllerDelegate {
 }
 
 extension UserProfileViewController: PostCellDelegate {
+	
+	func reloadCell(_ at: IndexPath) {
+		func reloadCell(_ at: IndexPath) {
+			if !imageReloadedCells.contains(userposts[at.section - 1].id) {
+				imageReloadedCells.append(userposts[at.section - 1].id)
+				DispatchQueue.main.async {
+					self.tableView.reloadRows(at: [at], with: .automatic)
+				}
+			}
+		}
+	}
+	
     func clickedLink(_ url: URL) {
         let vc = SFSafariViewController(url: url)
         vc.delegate = self

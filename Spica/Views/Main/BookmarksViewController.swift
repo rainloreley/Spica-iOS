@@ -19,6 +19,7 @@ class BookmarksViewController: UITableViewController {
     var bookmarks = [Bookmark]()
 
     var loadingHud: JGProgressHUD!
+	var imageReloadedCells = [String]()
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -29,7 +30,7 @@ class BookmarksViewController: UITableViewController {
         navigationItem.title = "Bookmarks"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "trash"), style: .plain, target: self, action: #selector(deleteAllConfirmation))
-        tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
 
         refreshControl = UIRefreshControl()
         refreshControl!.addTarget(self, action: #selector(loadBookmarks), for: .valueChanged)
@@ -97,9 +98,11 @@ class BookmarksViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+		
+		cell.indexPath = indexPath
+		cell.delegate = self
         cell.post = bookmarks[indexPath.section].post
-        cell.delegate = self
 
         return cell
     }
@@ -112,6 +115,16 @@ extension BookmarksViewController: SFSafariViewControllerDelegate {
 }
 
 extension BookmarksViewController: PostCellDelegate {
+	
+	func reloadCell(_ at: IndexPath) {
+		if !imageReloadedCells.contains(bookmarks[at.section].post.id) {
+			imageReloadedCells.append(bookmarks[at.section].post.id)
+			DispatchQueue.main.async {
+				self.tableView.reloadRows(at: [at], with: .automatic)
+			}
+		}
+	}
+	
     func clickedLink(_ url: URL) {
         let vc = SFSafariViewController(url: url)
         vc.delegate = self

@@ -21,12 +21,13 @@ class PostDetailViewController: UITableViewController {
     var postReplies = [Post]()
 
     var loadingHud: JGProgressHUD!
+	var imageReloadedCells = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Post"
         navigationController?.navigationBar.prefersLargeTitles = true
-        tableView.register(UINib(nibName: "PostCell", bundle: nil), forCellReuseIdentifier: "postCell")
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(PostDividerCell.self, forCellReuseIdentifier: "dividerCell")
         tableView.register(ReplyButtonCell.self, forCellReuseIdentifier: "replyButtonCell")
 
@@ -106,11 +107,12 @@ class PostDetailViewController: UITableViewController {
                 let count = Array(0 ... indexPath.row).filter { !$0.isMultiple(of: 2) }.count
                 let post = postAncestors[indexPath.row - count]
 
-                let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
                 cell.layer.cornerRadius = 50.0
+				cell.indexPath = indexPath
+				cell.delegate = self
                 cell.post = post
-                cell.delegate = self
 
                 return cell
             } else {
@@ -130,10 +132,11 @@ class PostDetailViewController: UITableViewController {
         } else {
             let post = postReplies[indexPath.row]
 
-            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
+			cell.indexPath = indexPath
+			cell.delegate = self
             cell.post = post
-            cell.delegate = self
 
             return cell
         }
@@ -147,6 +150,17 @@ extension PostDetailViewController: SFSafariViewControllerDelegate {
 }
 
 extension PostDetailViewController: PostCellDelegate {
+	
+	func reloadCell(_ at: IndexPath) {
+		let id = at.section == 0 ? postAncestors[at.row - (Array(0 ... at.row).filter { !$0.isMultiple(of: 2) }.count)].id : postReplies[at.row].id
+		if !imageReloadedCells.contains(id) {
+			imageReloadedCells.append(id)
+			DispatchQueue.main.async {
+				self.tableView.reloadRows(at: [at], with: .automatic)
+			}
+		}
+	}
+	
     func clickedLink(_ url: URL) {
         let vc = SFSafariViewController(url: url)
         vc.delegate = self

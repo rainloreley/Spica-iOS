@@ -17,7 +17,7 @@ class ImageDetailViewController: LightboxController {
         let shareBtn: UIButton = {
             let btn = UIButton(type: .system)
             btn.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
-            btn.addTarget(self, action: #selector(shareImage), for: .touchUpInside)
+            btn.addTarget(self, action: #selector(shareImage(_:)), for: .touchUpInside)
             btn.tintColor = .white
             return btn
         }()
@@ -32,10 +32,16 @@ class ImageDetailViewController: LightboxController {
     }
 	
 
-    @objc func shareImage() {
+	@objc func shareImage(_ sender: UIButton) {
         if let image = images.first?.image {
             let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-            activityViewController.popoverPresentationController?.sourceView = view
+            //activityViewController.popoverPresentationController?.sourceView = view
+			if let popoverController = activityViewController.popoverPresentationController {
+				popoverController.sourceView = sender
+				popoverController.sourceRect = sender.bounds
+				/*popoverController.sourceView = view
+				popoverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)*/
+			}
             present(activityViewController, animated: true, completion: nil)
         }
     }
