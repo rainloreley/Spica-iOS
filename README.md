@@ -38,4 +38,4 @@ If you want to build/install the app, please keep in mind that everything here c
 
 ## 📄 License
 
-Spica is licensed under the GPLv3 license. More information can be found in the [LICENSE file](LICENSE).
+Spica is licensed under the MIT license. More information can be found in the [LICENSE file](LICENSE).
