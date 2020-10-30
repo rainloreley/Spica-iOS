@@ -292,10 +292,7 @@ class UsedLibrariesViewController: UITableViewController {
         libraries.sort(by: { $0.name < $1.name })
     }
 
-    // MARK: - Table view data source
-
     override func numberOfSections(in _: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return libraries.count + 1
     }
 
@@ -345,8 +342,6 @@ extension UsedLibrariesViewController {
             return """
 
             Thank you to all maintainers of these libraries!
-
-            ~ Lea
 
 
             """

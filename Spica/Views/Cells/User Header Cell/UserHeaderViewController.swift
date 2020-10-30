@@ -16,6 +16,7 @@ protocol UserHeaderDelegate {
     func showError(title: String, message: String)
     func clickedOnFollowerCount()
     func clickedOnFollowingCount()
+	func clickedOnProfilePicture(_ image: UIImage)
 }
 
 class UserHeaderViewController: ObservableObject {
@@ -28,7 +29,7 @@ class UserHeaderViewController: ObservableObject {
 
     func followUnfollowUser() {
         user.iamFollowing.toggle()
-        let action: FollowUnfollow = user.iamFollowing ? .follow : .unfollow // Inverted because of previous line
+        let action: FollowUnfollow = user.iamFollowing ? .follow : .unfollow
         MicroAPI.default.followUnfollowUser(action, id: user.id) { [self] result in
             switch result {
             case let .failure(err):
@@ -54,4 +55,10 @@ class UserHeaderViewController: ObservableObject {
 
         isLoggedInUser = user.id == signedInID
     }
+	
+	func clickProfilePicture(_ image: UIImage?) {
+		if let tempImage = image {
+			delegate.clickedOnProfilePicture(tempImage)
+		}
+	}
 }

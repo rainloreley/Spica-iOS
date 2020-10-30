@@ -23,7 +23,6 @@ class ColorPickerController: ObservableObject {
             if #available(iOS 14.0, *) {
                 delegate.changedColor(UIColor(color))
             } else {
-                // Fallback on earlier versions
             }
         }
     }

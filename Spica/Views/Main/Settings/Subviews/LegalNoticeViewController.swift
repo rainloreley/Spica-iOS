@@ -68,7 +68,6 @@ class LegalNoticeViewController: UIViewController {
 
         webView = WKWebView(frame: .zero)
         webView.loadHTMLString(legalNotice, baseURL: nil)
-        // webView.scrollView.isScrollEnabled = false
         webView.scrollView.automaticallyAdjustsScrollIndicatorInsets = true
         view.addSubview(webView)
 

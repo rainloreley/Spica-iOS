@@ -30,18 +30,14 @@ class ImageDetailViewController: LightboxController {
             make.height.equalTo(50)
         }
     }
-	
 
-	@objc func shareImage(_ sender: UIButton) {
+    @objc func shareImage(_ sender: UIButton) {
         if let image = images.first?.image {
             let activityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-            //activityViewController.popoverPresentationController?.sourceView = view
-			if let popoverController = activityViewController.popoverPresentationController {
-				popoverController.sourceView = sender
-				popoverController.sourceRect = sender.bounds
-				/*popoverController.sourceView = view
-				popoverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)*/
-			}
+            if let popoverController = activityViewController.popoverPresentationController {
+                popoverController.sourceView = sender
+                popoverController.sourceRect = sender.bounds
+            }
             present(activityViewController, animated: true, completion: nil)
         }
     }

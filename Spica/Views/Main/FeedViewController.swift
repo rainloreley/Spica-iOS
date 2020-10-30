@@ -19,7 +19,7 @@ class FeedViewController: UITableViewController {
     var posts = [Post]()
     var loadingHud: JGProgressHUD!
     var latestPostsLoaded = false
-	var imageReloadedCells = [String]()
+    var imageReloadedCells = [String]()
     private var contentOffset: CGPoint?
 
     override func viewWillAppear(_: Bool) {
@@ -32,7 +32,7 @@ class FeedViewController: UITableViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openNewPostView)), UIBarButtonItem(image: UIImage(systemName: "text.bubble"), style: .plain, target: self, action: #selector(openUpdateStatus(sender:)))]
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
-		tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
+        tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
 
         refreshControl = UIRefreshControl()
         refreshControl!.addTarget(self, action: #selector(loadFeed), for: .valueChanged)
@@ -57,8 +57,6 @@ class FeedViewController: UITableViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         if let popoverController = updateStatusViewController?.popoverPresentationController {
             popoverController.barButtonItem = sender
-            /* popoverController.sourceView = view
-             popoverController.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0) */
         }
         present(updateStatusViewController!, animated: true, completion: nil)
     }
@@ -90,7 +88,6 @@ class FeedViewController: UITableViewController {
     }
 
     override func viewDidAppear(_: Bool) {
-        print("OFFSET: \(tableView.contentOffset.y)")
         if tableView.contentOffset.y < 200 || posts.isEmpty {
             loadFeed()
         }
@@ -175,8 +172,8 @@ extension FeedViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
-		cell.indexPath = indexPath
-		cell.delegate = self
+        cell.indexPath = indexPath
+        cell.delegate = self
         cell.post = posts[indexPath.section]
 
         return cell
@@ -190,15 +187,15 @@ extension FeedViewController: SFSafariViewControllerDelegate {
 }
 
 extension FeedViewController: PostCellDelegate {
-	func reloadCell(_ at: IndexPath) {
-		if !imageReloadedCells.contains(posts[at.section].id) {
-			imageReloadedCells.append(posts[at.section].id)
-			DispatchQueue.main.async {
-				self.tableView.reloadRows(at: [at], with: .automatic)
-			}
-		}
-	}
-	
+    func reloadCell(_ at: IndexPath) {
+        if !imageReloadedCells.contains(posts[at.section].id) {
+            imageReloadedCells.append(posts[at.section].id)
+            DispatchQueue.main.async {
+                self.tableView.reloadRows(at: [at], with: .automatic)
+            }
+        }
+    }
+
     func clickedLink(_ url: URL) {
         let vc = SFSafariViewController(url: url)
         vc.delegate = self

@@ -20,7 +20,7 @@ class UserProfileViewController: UITableViewController {
     var user: User = User()
     var userposts = [Post]()
     var userDataLoaded = false
-	var imageReloadedCells = [String]()
+    var imageReloadedCells = [String]()
 
     var loadingHud: JGProgressHUD!
 
@@ -48,15 +48,6 @@ class UserProfileViewController: UITableViewController {
 
     override func viewDidAppear(_: Bool) {
         loadUser()
-    }
-
-    func updateUserButtons() {
-        let signedInUID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-        if user.id == signedInUID {
-            // navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openUpdateStatusSheet))
-        } else {
-            navigationItem.rightBarButtonItem = nil
-        }
     }
 
     @objc func openUpdateStatusSheet() {
@@ -87,7 +78,6 @@ class UserProfileViewController: UITableViewController {
                         KeychainWrapper.standard.set(user.name, forKey: "dev.abmgrt.spica.user.name")
                         KeychainWrapper.standard.set(user.tag, forKey: "dev.abmgrt.spica.user.tag")
                     }
-                    updateUserButtons()
                     loadUserPosts()
                 }
             }
@@ -137,10 +127,9 @@ class UserProfileViewController: UITableViewController {
 
             let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
-			cell.indexPath = indexPath
-			cell.delegate = self
+            cell.indexPath = indexPath
+            cell.delegate = self
             cell.post = post
-			
 
             return cell
         }
@@ -160,6 +149,13 @@ extension UserProfileViewController {
 }
 
 extension UserProfileViewController: UserHeaderDelegate {
+	
+	func clickedOnProfilePicture(_ image: UIImage) {
+		let controller = ImageDetailViewController(images: [LightboxImage(image: image)], startIndex: 0)
+		controller.dynamicBackground = true
+		present(controller, animated: true, completion: nil)
+	}
+	
     func showError(title: String, message: String) {
         EZAlertController.alert(title, message: message)
     }
@@ -186,18 +182,15 @@ extension UserProfileViewController: SFSafariViewControllerDelegate {
 }
 
 extension UserProfileViewController: PostCellDelegate {
-	
-	func reloadCell(_ at: IndexPath) {
-		func reloadCell(_ at: IndexPath) {
-			if !imageReloadedCells.contains(userposts[at.section - 1].id) {
-				imageReloadedCells.append(userposts[at.section - 1].id)
-				DispatchQueue.main.async {
-					self.tableView.reloadRows(at: [at], with: .automatic)
-				}
-			}
-		}
-	}
-	
+    func reloadCell(_ at: IndexPath) {
+        if !imageReloadedCells.contains(userposts[at.section - 1].id) {
+            imageReloadedCells.append(userposts[at.section - 1].id)
+            DispatchQueue.main.async {
+                self.tableView.reloadRows(at: [at], with: .automatic)
+            }
+        }
+    }
+
     func clickedLink(_ url: URL) {
         let vc = SFSafariViewController(url: url)
         vc.delegate = self
@@ -226,7 +219,7 @@ extension UserProfileViewController: PostCellDelegate {
     }
 
     func clickedImage(_ controller: ImageDetailViewController) {
-		self.present(controller, animated: true, completion: nil)
+        present(controller, animated: true, completion: nil)
     }
 }
 

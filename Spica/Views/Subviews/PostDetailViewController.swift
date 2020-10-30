@@ -21,7 +21,7 @@ class PostDetailViewController: UITableViewController {
     var postReplies = [Post]()
 
     var loadingHud: JGProgressHUD!
-	var imageReloadedCells = [String]()
+    var imageReloadedCells = [String]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,8 +110,8 @@ class PostDetailViewController: UITableViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
                 cell.layer.cornerRadius = 50.0
-				cell.indexPath = indexPath
-				cell.delegate = self
+                cell.indexPath = indexPath
+                cell.delegate = self
                 cell.post = post
 
                 return cell
@@ -134,8 +134,8 @@ class PostDetailViewController: UITableViewController {
 
             let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
-			cell.indexPath = indexPath
-			cell.delegate = self
+            cell.indexPath = indexPath
+            cell.delegate = self
             cell.post = post
 
             return cell
@@ -150,17 +150,16 @@ extension PostDetailViewController: SFSafariViewControllerDelegate {
 }
 
 extension PostDetailViewController: PostCellDelegate {
-	
-	func reloadCell(_ at: IndexPath) {
-		let id = at.section == 0 ? postAncestors[at.row - (Array(0 ... at.row).filter { !$0.isMultiple(of: 2) }.count)].id : postReplies[at.row].id
-		if !imageReloadedCells.contains(id) {
-			imageReloadedCells.append(id)
-			DispatchQueue.main.async {
-				self.tableView.reloadRows(at: [at], with: .automatic)
-			}
-		}
-	}
-	
+    func reloadCell(_ at: IndexPath) {
+        let id = at.section == 0 ? postAncestors[at.row - (Array(0 ... at.row).filter { !$0.isMultiple(of: 2) }.count)].id : postReplies[at.row].id
+        if !imageReloadedCells.contains(id) {
+            imageReloadedCells.append(id)
+            DispatchQueue.main.async {
+                self.tableView.reloadRows(at: [at], with: .automatic)
+            }
+        }
+    }
+
     func clickedLink(_ url: URL) {
         let vc = SFSafariViewController(url: url)
         vc.delegate = self

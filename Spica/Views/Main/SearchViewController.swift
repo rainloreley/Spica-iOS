@@ -23,11 +23,6 @@ class SearchViewController: UITableViewController {
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
-        searchText = ""
-        searchBar.text = ""
-        users.removeAll()
-        tableView.reloadData()
-        tableView.setEmptyMessage(message: "Search", subtitle: "Try searching for \"Archie Baer\"! His account should appear here")
     }
 
     override func viewDidLoad() {
@@ -36,24 +31,35 @@ class SearchViewController: UITableViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
         refreshControl = UIRefreshControl()
-        refreshControl!.addTarget(self, action: #selector(performSearch), for: .valueChanged)
+        refreshControl!.addTarget(self, action: #selector(refreshControlPulled), for: .valueChanged)
         tableView.addSubview(refreshControl!)
         tableView.delegate = self
 
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading..."
         loadingHud.interactionType = .blockNoTouches
-
-        /* searchBar.searchBarStyle = .prominent
-         searchBar.placeholder = "Search for a name"
-         searchBar.sizeToFit()
-         searchBar.isTranslucent = false
-         searchBar.backgroundImage = UIImage()
-         searchBar.delegate = self
-
-         navigationItem.titleView = searchBar */
         navigationItem.searchController = searchController
+		
+		navigationController?.navigationBar.prefersLargeTitles = true
+		searchText = ""
+		searchBar.text = ""
+		users.removeAll()
+		tableView.reloadData()
+		tableView.setEmptyMessage(message: "Search", subtitle: "Try searching for \"Archie\"! The account should appear in the list\n\ntip: username + uid searching also works ;)")
     }
+	
+	@objc func refreshControlPulled() {
+		if searchText != "" {
+			performSearch()
+		}
+		else if users.isEmpty {
+			tableView.setEmptyMessage(message: "Search", subtitle: "Try searching for \"Archie\"! The account should appear in the list\n\ntip: username + uid searching also works ;)")
+			refreshControl?.endRefreshing()
+		}
+		else {
+			refreshControl?.endRefreshing()
+		}
+	}
 
     @objc func performSearch() {
         loadingHud.show(in: view)

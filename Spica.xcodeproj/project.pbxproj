@@ -48,6 +48,8 @@
 		8B5C42BF2533187F007B10BD /* MicroAPI_Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42BE2533187F007B10BD /* MicroAPI_Bookmarks.swift */; };
 		8B5C42C725331ED7007B10BD /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42C625331ED7007B10BD /* SearchViewController.swift */; };
 		8B5C42CC25332108007B10BD /* MicroAPI_Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42CB25332108007B10BD /* MicroAPI_Search.swift */; };
+		8B5ECC71254C5248006EA6B2 /* FlagServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5ECC70254C5248006EA6B2 /* FlagServerAPI.swift */; };
+		8B5ECC7C254C536B006EA6B2 /* MicroAPI_Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5ECC7B254C536B006EA6B2 /* MicroAPI_Status.swift */; };
 		8B6AC5A6252E0BC5003A2CC4 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6AC5A5252E0BC5003A2CC4 /* Post.swift */; };
 		8B6AC5AB252E0E70003A2CC4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6AC5AA252E0E70003A2CC4 /* User.swift */; };
 		8B6AC5B0252E0F4D003A2CC4 /* XP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6AC5AF252E0F4D003A2CC4 /* XP.swift */; };
@@ -162,6 +164,8 @@
 		8B5C42C625331ED7007B10BD /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		8B5C42CB25332108007B10BD /* MicroAPI_Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Search.swift; sourceTree = "<group>"; };
 		8B5C42D625333060007B10BD /* Spica.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Spica.entitlements; sourceTree = "<group>"; };
+		8B5ECC70254C5248006EA6B2 /* FlagServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagServerAPI.swift; sourceTree = "<group>"; };
+		8B5ECC7B254C536B006EA6B2 /* MicroAPI_Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Status.swift; sourceTree = "<group>"; };
 		8B6AC5A5252E0BC5003A2CC4 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		8B6AC5AA252E0E70003A2CC4 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8B6AC5AF252E0F4D003A2CC4 /* XP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XP.swift; sourceTree = "<group>"; };
@@ -385,6 +389,14 @@
 			path = Subviews;
 			sourceTree = "<group>";
 		};
+		8B5ECC6F254C522C006EA6B2 /* FlagServer */ = {
+			isa = PBXGroup;
+			children = (
+				8B5ECC70254C5248006EA6B2 /* FlagServerAPI.swift */,
+			);
+			path = FlagServer;
+			sourceTree = "<group>";
+		};
 		8B6AC5A4252E0BB6003A2CC4 /* Structures */ = {
 			isa = PBXGroup;
 			children = (
@@ -505,6 +517,7 @@
 		8BE6DE28252E033000668AB7 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				8B5ECC6F254C522C006EA6B2 /* FlagServer */,
 				8BE6DE29252E033600668AB7 /* Micro API */,
 			);
 			path = Networking;
@@ -521,6 +534,7 @@
 				8BC1BFC22530E04B001186F3 /* MicroAPI_User.swift */,
 				8BD712CF2530AF3900D2533C /* MicroAPI_Posts.swift */,
 				8B5C42CB25332108007B10BD /* MicroAPI_Search.swift */,
+				8B5ECC7B254C536B006EA6B2 /* MicroAPI_Status.swift */,
 			);
 			path = "Micro API";
 			sourceTree = "<group>";
@@ -530,19 +544,11 @@
 			children = (
 				8BDCD9FB254993790098499B /* Post Cell */,
 				8BBB7F702530E332004D49BC /* User Header Cell */,
-				8BE6DE2C252E038600668AB7 /* Post Cell Old */,
 				8B6ACF192530D667004BDEC8 /* PostDividerCell.swift */,
 				8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */,
 				8B5C42972532FDE6007B10BD /* CreditsCell.swift */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		8BE6DE2C252E038600668AB7 /* Post Cell Old */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Post Cell Old";
 			sourceTree = "<group>";
 		};
 		C5A3CCF3DC6F0A6D12C268BC /* Frameworks */ = {
@@ -820,6 +826,7 @@
 				8BD712D82530B19400D2533C /* VotePost.swift in Sources */,
 				8B23D44E25435B5B004EBBF6 /* UpdateStatusViewController.swift in Sources */,
 				8BBB7F8D2530E421004D49BC /* XPProgressBarView.swift in Sources */,
+				8B5ECC71254C5248006EA6B2 /* FlagServerAPI.swift in Sources */,
 				8B35C47F2530D1D4003809FA /* PostDetailViewController.swift in Sources */,
 				8B6AC5B8252E15A6003A2CC4 /* FeedViewController.swift in Sources */,
 				8B5C42CC25332108007B10BD /* MicroAPI_Search.swift in Sources */,
@@ -830,6 +837,7 @@
 				8B0081EE2531BB05006427FE /* LoginView.swift in Sources */,
 				8B199E30252DFFB90060A3BE /* SceneDelegate.swift in Sources */,
 				8B88937E254852F000B70C64 /* ImageDetailViewController.swift in Sources */,
+				8B5ECC7C254C536B006EA6B2 /* MicroAPI_Status.swift in Sources */,
 				8BF514EE252E35E20064D95F /* MicroAPI.swift in Sources */,
 				8B0CD2A52530B6A4004459EC /* MicroAPI+ErrorHandling.swift in Sources */,
 				8BBEA42D253C68960046A3F9 /* Status.swift in Sources */,
@@ -1052,7 +1060,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1603896457;
+				CURRENT_PROJECT_VERSION = 1604068042;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1060,7 +1068,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;
@@ -1077,7 +1085,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1603896457;
+				CURRENT_PROJECT_VERSION = 1604068042;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1085,7 +1093,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = NO;

@@ -17,8 +17,6 @@ extension MicroAPI {
 
             if error.action != nil {
                 if error.action!.starts(with: "nav:"), error.action!.components(separatedBy: ":").last == "login" {
-                    // NAVIGATE TO LOGIN
-                    // return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
                     let mySceneDelegate = caller.window!.windowScene!.delegate as! SceneDelegate
                     mySceneDelegate.window?.rootViewController = LoginViewController()
                     mySceneDelegate.window?.makeKeyAndVisible()

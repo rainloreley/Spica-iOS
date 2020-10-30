@@ -45,7 +45,10 @@ extension MicroAPI {
                     usernameDispatchGroup.notify(queue: .global(qos: .utility)) {
                         let uidDispatchGroup = DispatchGroup()
                         uidDispatchGroup.enter()
-                        loadUser(query) { uidResult in
+                        let charsForUID: Set<Character> =
+                            Set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLKMNOPQRSTUVWXYZ1234567890-")
+                        let escapedUID = String(query.filter { charsForUID.contains($0) })
+                        loadUser(escapedUID) { uidResult in
                             switch uidResult {
                             case .failure:
                                 uidDispatchGroup.leave()
@@ -75,7 +78,7 @@ extension MicroAPI {
         loadIdByUsername(escapedForUsername, allowEmptyUsername: true) { [self] usernameResult in
             switch usernameResult {
             case .failure:
-                return promise(.failure(.init(error: .init(isError: true, name: "notFOund"), action: nil)))
+                return promise(.failure(.init(error: .init(isError: true, name: "notFound"), action: nil)))
             case let .success(id):
                 loadUser(id) { userResult in
                     switch userResult {

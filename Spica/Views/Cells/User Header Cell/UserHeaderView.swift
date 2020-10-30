@@ -15,6 +15,7 @@ import SwiftUI
 
 struct UserHeaderView: View {
     @ObservedObject var controller: UserHeaderViewController
+	@State var profilePicture: UIImage?
 
     var frameWidth: CGFloat = 0
     var frameHeight: CGFloat = 0
@@ -32,34 +33,35 @@ struct UserHeaderView: View {
         VStack(alignment: .leading) {
             HStack {
                 Group {
-                    // Image(uiImage: controller.user.image ?? UIImage(systemName: "person.circle"))
                     switch controller.user.ring {
                     case .rainbow:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(RainbowFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(RainbowFlagCircle())
                     case .trans:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(TransFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(TransFlagCircle())
                     case .bisexual:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(BisexualFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(BisexualFlagCircle())
                     case .pansexual:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(PansexualFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(PansexualFlagCircle())
                     case .lesbian:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(LesbianFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(LesbianFlagCircle())
                     case .asexual:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(AsexualFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(AsexualFlagCircle())
                     case .genderqueer:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(GenderqueerFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(GenderqueerFlagCircle())
                     case .genderfluid:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(GenderfluidFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(GenderfluidFlagCircle())
                     case .agender:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(AgenderFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(AgenderFlagCircle())
                     case .nonbinary:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(NonbinaryFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(NonbinaryFlagCircle())
                     case .supporter:
-                        ProfilePictureView(url: controller.user.profilePictureUrl).modifier(SpicaSupporterFlagCircle())
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(SpicaSupporterFlagCircle())
                     default:
-                        ProfilePictureView(url: controller.user.profilePictureUrl)
+						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture)
                     }
-                }
+				}.onTapGesture {
+					controller.clickProfilePicture(profilePicture)
+				}
                 Spacer()
             }
             Group {
@@ -121,11 +123,11 @@ struct UserHeaderView: View {
                 }
 
                 if controller.user.status.content != nil, controller.user.status.date != nil {
-                    LoadingSkeleton(loaded: $controller.userDataLoaded) {
-                        Text("\"\(controller.user.status.content!)\"").italic().frame(maxWidth: frameWidth - 40).lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true).multilineTextAlignment(.leading)
-                            .padding(.top, 4)
-                    }
+                    Text("\"\(controller.user.status.content!)\"").italic()
+                        .fixedSize(horizontal: false, vertical: true).frame(maxWidth: frameWidth - 40, alignment: .leading).lineLimit(nil)
+                        .multilineTextAlignment(.leading)
+                        .padding(.top, 4)
+
                     LoadingSkeleton(loaded: $controller.userDataLoaded) {
                         Text("\(RelativeDateTimeFormatter().localizedString(for: controller.user.status.date!, relativeTo: Date()))").font(.footnote).foregroundColor(.secondary).padding(.bottom, 4)
                     }
@@ -158,18 +160,22 @@ struct UserHeaderView: View {
                 controller.getLoggedInUser()
             }
             .background(Color.clear)
-        // .frame(width: frameWidth, height: frameHeight)
     }
 }
 
 struct ProfilePictureView: View {
     var url: URL
+	@Binding var profilePicture: UIImage?
     var body: some View {
         KFImage(url)
+			.onSuccess { r in
+				profilePicture = r.image
+			}
             .resizable()
             .frame(width: 120, height: 120, alignment: .center)
             .clipShape(Circle())
             .shadow(radius: 10)
+			
     }
 }
 

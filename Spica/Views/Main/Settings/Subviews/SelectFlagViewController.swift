@@ -39,34 +39,25 @@ class SelectFlagViewController: UITableViewController {
         if CreditsViewController().credits.contains(where: { $0.allesUID == signedInID! }) {
             flags.append(Flag(name: "Spica Supporter Flag", description: "A ✨ special ✨ flag because you helped developing Spica!", ring: .supporter))
         }
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
-    // MARK: - Table view data source
-
     override func numberOfSections(in _: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return flags.count
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return 1
     }
 
     override func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+		
         let flag = flags[indexPath.section]
         cell.textLabel?.text = flag.name
         cell.textLabel?.font = .boldSystemFont(ofSize: 20)
         cell.detailTextLabel?.text = flag.description
         cell.detailTextLabel?.numberOfLines = 0
         cell.detailTextLabel?.textColor = .secondaryLabel
-        // Configure the cell...
 
         return cell
     }
@@ -74,7 +65,7 @@ class SelectFlagViewController: UITableViewController {
     override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedFlag = flags[indexPath.section]
         let signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
-        MicroAPI.default.updateUserRing(selectedFlag.ring, id: signedInID!) { result in
+		FlagServerAPI.default.updateUserRing(selectedFlag.ring, id: signedInID!) { result in
             switch result {
             case let .failure(err):
                 DispatchQueue.main.async {

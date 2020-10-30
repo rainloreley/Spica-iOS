@@ -78,8 +78,6 @@ class SidebarViewController: UIViewController {
     }
 }
 
-// MARK: - Layout
-
 @available(iOS 14.0, *)
 extension SidebarViewController {
     private func createLayout() -> UICollectionViewLayout {
@@ -90,8 +88,6 @@ extension SidebarViewController {
         }
     }
 }
-
-// MARK: - Data
 
 @available(iOS 14.0, *)
 extension SidebarViewController {
@@ -110,7 +106,6 @@ extension SidebarViewController {
     }
 
     private func configureDataSource() {
-        // Configuring cells
         let headerRegistration = UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
             var content = cell.defaultContentConfiguration()
             content.text = item.title
@@ -130,7 +125,6 @@ extension SidebarViewController {
             cell.accessories = []
         }
 
-        // Creating the datasource
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: Item) -> UICollectionViewCell? in
             if indexPath.item == 0, indexPath.section != 0 {
@@ -140,7 +134,6 @@ extension SidebarViewController {
             }
         }
 
-        // Creating and applying snapshots
         let sections: [Section] = [.tabs]
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections(sections)
@@ -157,8 +150,6 @@ extension SidebarViewController {
     }
 }
 
-// MARK: - UICollectionViewDelegate
-
 @available(iOS 14.0, *)
 extension SidebarViewController: UICollectionViewDelegate {
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -167,15 +158,19 @@ extension SidebarViewController: UICollectionViewDelegate {
     }
 }
 
-// MARK: - Structs and sample data
-
 struct Item: Hashable {
     let title: String?
     var image: UIImage?
     private let identifier = UUID()
 }
 
-var tabsItems = [Item(title: "Feed", image: UIImage(systemName: "house")), Item(title: "Mentions", image: UIImage(systemName: "bell")), Item(title: "Bookmarks", image: UIImage(systemName: "bookmark")), Item(title: "Search", image: UIImage(systemName: "magnifyingglass")), Item(title: "Account", image: UIImage(systemName: "person.circle")), Item(title: "Settings", image: UIImage(systemName: "gear"))]
+var tabsItems = [
+	Item(title: "Feed", image: UIImage(systemName: "house")),
+	Item(title: "Mentions", image: UIImage(systemName: "bell")),
+	Item(title: "Bookmarks", image: UIImage(systemName: "bookmark")),
+	Item(title: "Search", image: UIImage(systemName: "magnifyingglass")),
+	Item(title: "Account", image: UIImage(systemName: "person.circle")),
+	Item(title: "Settings", image: UIImage(systemName: "gear"))]
 
 enum Section: String {
     case tabs

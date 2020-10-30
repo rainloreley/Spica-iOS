@@ -36,7 +36,6 @@ extension MicroAPI {
                             dispatchGroup.enter()
                             if String(word).starts(with: "@"), word.count > 1 {
                                 let filteredWord = String(word).removeSpecialChars
-                                // let filteredWordWithoutAtSymbol = String(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])
                                 let mentionedUserRaw = filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex]
                                 loadUser(String(mentionedUserRaw)) { result in
                                     switch result {
@@ -64,7 +63,6 @@ extension MicroAPI {
                 return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
             }
         }
-        // }
     }
 
     func loadPostDetail(post: Post, promise: @escaping (Result<PostDetail, MicroError>) -> Void) {

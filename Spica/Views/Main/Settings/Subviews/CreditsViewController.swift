@@ -21,11 +21,10 @@ class CreditsViewController: UITableViewController {
         Credit(name: "James Young", description: "Translator (French, Norwegian)", twitterURL: URL(string: "https://twitter.com/onlytruejames")!, allesUID: "af3a1a9e-b0e1-418e-8b4c-76605897eeab", imageURL: URL(string: "https://avatar.alles.cc/af3a1a9e-b0e1-418e-8b4c-76605897eeab")!),
         Credit(name: "@DaThinkingChair", description: "Translator (Spanish)", twitterURL: URL(string: "https://twitter.com/DaThinkingChair")!, imageURL: URL(string: "https://pbs.twimg.com/profile_images/1259314332950769666/UPvu5g-e_400x400.jpg")!),
         Credit(name: "Storm", description: "Translator (Norwegian)", twitterURL: URL(string: "https://twitter.com/StormLovesTech")!, allesUID: "43753811-5856-4d98-93a3-ed8763e9176e", imageURL: URL(string: "https://avatar.alles.cc/43753811-5856-4d98-93a3-ed8763e9176e")!),
-        Credit(name: "primenate32", description: "Translator (Frensh, Spanish)", twitterURL: URL(string: "https://twitter.com/n8_64")!, allesUID: "daf52a37-667a-4434-8dcc-c6fa1f9fa508", imageURL: URL(string: "https://pbs.twimg.com/profile_images/1312457889966182402/ygvafSTw_400x400.jpg")!),
+        Credit(name: "primenate32", description: "Translator (Spanish)", twitterURL: URL(string: "https://twitter.com/n8_64")!, allesUID: "daf52a37-667a-4434-8dcc-c6fa1f9fa508", imageURL: URL(string: "https://pbs.twimg.com/profile_images/1312457889966182402/ygvafSTw_400x400.jpg")!),
         Credit(name: "grify", description: "Translator (Swedish)", twitterURL: URL(string: "https://twitter.com/GrifyDev")!, allesUID: "181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d", imageURL: URL(string: "https://avatar.alles.cc/181cbcb1-5bf4-43f1-9ec9-0b36e67ab02d")!),
+		Credit(name: "Charlie", description: "A lot of bug reports and suggestions", twitterURL: URL(string: "https://twitter.com/CharlieTheCutie")!, allesUID: "5b0e1bcc-19b0-4c9e-9d98-b8fad3473920", imageURL: URL(string: "https://avatar.alles.cc/5b0e1bcc-19b0-4c9e-9d98-b8fad3473920")!)
     ]
-
-    // NOTE: Add new members to flag/ring server as well!
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -38,8 +37,6 @@ class CreditsViewController: UITableViewController {
         tableView.rowHeight = CGFloat(70)
         tableView.register(CreditsCell.self, forCellReuseIdentifier: "creditsCell")
     }
-
-    // MARK: - Table view data source
 
     override func numberOfSections(in _: UITableView) -> Int {
         return credits.count
@@ -57,10 +54,6 @@ class CreditsViewController: UITableViewController {
 
             Thank you for reading this. Without these awesome people, this app wouldn't be possible!
             Also thank you to everyone testing the app, giving feedback and reporting bugs!
-
-            ily <3
-
-            ~ Lea
 
 
             """

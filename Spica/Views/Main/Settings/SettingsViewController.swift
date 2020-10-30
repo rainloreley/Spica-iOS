@@ -50,7 +50,7 @@ class SettingsViewController: UITableViewController {
         let tag = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.tag") ?? ""
 
         accountNametag.text = "\(name)#\(tag)"
-        accountProfilePicture.kf.setImage(with: URL(string: "https://avatar.alles.cc/\(id)"))
+        accountProfilePicture.kf.setImage(with: URL(string: "https://avatar.alles.cc/\(id)?size=50"))
     }
 
     @IBAction func clearCache(_: Any) {

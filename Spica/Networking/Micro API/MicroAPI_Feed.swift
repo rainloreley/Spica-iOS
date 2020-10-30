@@ -15,8 +15,6 @@ import SwiftyJSON
 
 extension MicroAPI {
     func loadFeed(before: Int? = nil, promise: @escaping (Result<[Post], MicroError>) -> Void) {
-        // return Future<[Post], MicroError> { [self] promise in
-
         let url = before != nil ? "https://micro.alles.cx/api/feed?before=\(before!)" : "https://micro.alles.cx/api/feed"
         AF.request(url, method: .get, headers: [
             "Authorization": loadAuthKey(),
@@ -56,10 +54,8 @@ extension MicroAPI {
                     promise(.failure(possibleFeedError))
                 }
             case let .failure(err):
-                // Implement error handling
                 return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
             }
         }
-        // }
     }
 }

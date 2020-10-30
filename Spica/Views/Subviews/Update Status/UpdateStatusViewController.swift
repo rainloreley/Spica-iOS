@@ -62,8 +62,6 @@ class UpdateStatusViewController: UIAlertController {
             make.trailing.equalTo(view.snp.trailing).offset(-32)
             make.bottom.equalTo(view.snp.bottom).offset(-32)
         }
-
-        // Do any additional setup after loading the view.
     }
 
     @objc func closeView() {

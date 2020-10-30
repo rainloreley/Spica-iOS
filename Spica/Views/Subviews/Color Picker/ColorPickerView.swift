@@ -15,7 +15,6 @@ struct ColorPickerView: View {
 
     var body: some View {
         if #available(iOS 14.0, *) {
-            // ColorPicker("Accent color", selection: $controller.color)
             VStack {
                 ColorPicker(selection: $controller.color, label: {
                     Text("Accent color").bold().font(.title)
@@ -28,7 +27,6 @@ struct ColorPickerView: View {
                 }.frame(maxWidth: .infinity).padding().background(Color.accentColor).cornerRadius(12)
             }.padding()
         } else {
-            // Fallback on earlier versions
             Text("Not supported")
         }
     }

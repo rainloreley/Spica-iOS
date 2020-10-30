@@ -42,7 +42,7 @@ struct User {
         self.plus = plus
         self.nickname = nickname != "" ? nickname : name
         self.profilePicture = profilePicture
-        self.profilePictureUrl = (profilePictureUrl != nil ? profilePictureUrl : URL(string: "https://avatar.alles.cc/\(id)"))!
+		self.profilePictureUrl = profilePictureUrl ?? URL(string: "https://avatar.alles.cc/\(id)")!
         self.createdAt = createdAt
         self.xp = xp
         self.followercount = followercount
@@ -76,7 +76,7 @@ struct User {
         ring = .none
     }
 
-    static var sample = User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", plus: true, nickname: "Lea", profilePicture: UIImage(named: "leapfp"), createdAt: Date(), xp: XP(), followercount: 100, iamFollowing: true, followingcount: 69, isFollowingMe: true, ring: .rainbow)
+    static var sample = User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", plus: true, nickname: "Lea", profilePicture: UIImage(named: "leapfp"), createdAt: Date(), xp: XP(), followercount: 100, iamFollowing: true, followingcount: 69, isFollowingMe: true, status: Status(id: "test", content: "lol", date: Date().addingTimeInterval(-60), end: Date().addingTimeInterval(200)), ring: .rainbow)
 }
 
 enum ProfileRing: String {

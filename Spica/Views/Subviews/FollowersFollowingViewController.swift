@@ -75,8 +75,6 @@ class FollowersFollowingViewController: UIViewController {
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading..."
         loadingHud.interactionType = .blockNoTouches
-
-        // Do any additional setup after loading the view.
     }
 
     @objc func loadData() {
@@ -175,7 +173,6 @@ struct UserCell: View {
 
     var body: some View {
         HStack {
-            // Image(uiImage: follower.image ?? UIImage(systemName: "person.circle"))
             KFImage(user.profilePictureUrl)
                 .resizable().frame(width: 40, height: 40, alignment: .leading).cornerRadius(20)
             VStack(alignment: .leading) {

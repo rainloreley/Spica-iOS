@@ -42,15 +42,15 @@ extension UITableView {
         messageLabel.snp.makeConstraints { make in
             make.centerX.equalTo(backView.snp.centerX)
             make.centerY.equalTo(backView.snp.centerY)
-            make.leading.equalTo(backView.snp.leading).offset(8)
-            make.trailing.equalTo(backView.snp.trailing).offset(-8)
+            make.leading.equalTo(backView.snp.leading).offset(16)
+            make.trailing.equalTo(backView.snp.trailing).offset(-16)
         }
 
         subtitleLabel.snp.makeConstraints { make in
             make.centerX.equalTo(backView.snp.centerX)
             make.top.equalTo(messageLabel.snp.bottom)
-            make.leading.equalTo(backView.snp.leading).offset(8)
-            make.trailing.equalTo(backView.snp.trailing).offset(-8)
+            make.leading.equalTo(backView.snp.leading).offset(16)
+            make.trailing.equalTo(backView.snp.trailing).offset(-16)
         }
 
         separatorStyle = .none

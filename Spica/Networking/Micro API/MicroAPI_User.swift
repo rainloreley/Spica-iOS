@@ -97,7 +97,7 @@ extension MicroAPI {
                                     case let .success(status):
                                         user.status = status
 
-                                        loadUserRing(user.id) { ringResult in
+										FlagServerAPI.default.loadUserRing(user.id) { ringResult in
                                             switch ringResult {
                                             case .failure:
                                                 user.ring = .none
@@ -119,62 +119,6 @@ extension MicroAPI {
                         return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
                     }
                 }
-            }
-        }
-    }
-
-    func loadUserStatus(_ id: String, promise: @escaping (Result<Status, MicroError>) -> Void) {
-        AF.request("https://wassup.alles.cc/\(id)", method: .get).responseJSON(queue: .global(qos: .utility)) { [self] response in
-            switch response.result {
-            case .success:
-                let possibleError = isError(response)
-                if !possibleError.error.isError {
-                    let statusJSON = JSON(response.data!)
-                    promise(.success(.init(statusJSON)))
-                } else {
-                    promise(.failure(possibleError))
-                }
-            case let .failure(err):
-                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-            }
-        }
-    }
-
-    func loadUserRing(_ id: String, promise: @escaping (Result<ProfileRing, MicroError>) -> Void) {
-        AF.request("https://flag.spica.li/\(id)", method: .get).responseJSON(queue: .global(qos: .utility)) { [self] response in
-            switch response.result {
-            case .success:
-                let possibleError = isError(response)
-                if !possibleError.error.isError {
-                    let ringJSON = JSON(response.data!)
-                    promise(.success(ProfileRing(rawValue: ringJSON["ring"].string ?? "none") ?? .none))
-                } else {
-                    promise(.failure(possibleError))
-                }
-            case let .failure(err):
-                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-            }
-        }
-    }
-
-    func updateUserRing(_ ring: ProfileRing, id: String, promise: @escaping (Result<ProfileRing, MicroError>) -> Void) {
-        let userRing: [String: String] = [
-            "ring": ring.rawValue,
-        ]
-        AF.request("https://flag.spica.li/\(id)", method: .post, parameters: userRing, encoding: JSONEncoding.prettyPrinted, headers: [
-            "Authorization": loadAuthKey(),
-        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
-            switch response.result {
-            case .success:
-                let possibleError = isError(response)
-                if !possibleError.error.isError {
-                    let ringJSON = JSON(response.data!)
-                    promise(.success(ProfileRing(rawValue: ringJSON["ring"].string ?? ring.rawValue) ?? ring))
-                } else {
-                    promise(.failure(possibleError))
-                }
-            case let .failure(err):
-                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
             }
         }
     }
@@ -308,33 +252,6 @@ extension MicroAPI {
                         User($1)
                     }
                     promise(.success(users))
-                } else {
-                    return promise(.failure(possibleError))
-                }
-            case let .failure(err):
-                return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
-            }
-        }
-    }
-
-    func updateStatus(_ content: String?, time: Int?, promise: @escaping (Result<String, MicroError>) -> Void) {
-        var statusConstruct: [String: Any] = [:]
-
-        if content != nil {
-            statusConstruct["content"] = content!
-        }
-        if time != nil {
-            statusConstruct["time"] = time!
-        }
-
-        AF.request("https://wassup.alles.cc", method: .post, parameters: statusConstruct, encoding: JSONEncoding.prettyPrinted, headers: [
-            "Authorization": loadAuthKey(),
-        ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
-            switch response.result {
-            case .success:
-                let possibleError = isError(response)
-                if !possibleError.error.isError {
-                    promise(.success(content ?? ""))
                 } else {
                     return promise(.failure(possibleError))
                 }
