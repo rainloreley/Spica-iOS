@@ -206,7 +206,10 @@ class SettingsViewController: UITableViewController {
         if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
     }
 
-    override func viewDidLoad() {
+	@IBAction func joinBetaAction(_ sender: Any) {
+		let url = URL(string: <#T##String#>)
+	}
+	override func viewDidLoad() {
         super.viewDidLoad()
     }
 }
