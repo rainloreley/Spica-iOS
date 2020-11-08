@@ -22,6 +22,7 @@ protocol PostCellDelegate {
     func clickedUser(user: User)
     func clickedLink(_ url: URL)
     func reloadCell(_ at: IndexPath)
+	func deletedPost(_ post: Post)
 }
 
 class PostCellView: UITableViewCell {
@@ -630,11 +631,13 @@ extension PostCellView: UIContextMenuInteractionDelegate {
                     MicroAPI.default.deletePost(post!.id) { result in
                         switch result {
                         case let .failure(err):
-                            EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.name)")
+							DispatchQueue.main.async {
+								EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.name)")
+							}
                         case .success:
                             DispatchQueue.main.async {
                                 SPAlert.present(title: "Deleted", preset: .done)
-                                self.delegate?.reloadData()
+								self.delegate?.deletedPost(post!)
                             }
                         }
                     }
@@ -643,6 +646,6 @@ extension PostCellView: UIContextMenuInteractionDelegate {
             actions.append(delete)
         }
 
-        return UIMenu(title: "Post", children: actions)
+        return UIMenu(title: "", children: actions)
     }
 }

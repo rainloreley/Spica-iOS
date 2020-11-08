@@ -150,6 +150,11 @@ extension PostDetailViewController: SFSafariViewControllerDelegate {
 }
 
 extension PostDetailViewController: PostCellDelegate {
+	
+	func deletedPost(_ post: Post) {
+		navigationController?.popViewController(animated: true)
+	}
+	
     func reloadCell(_ at: IndexPath) {
         let id = at.section == 0 ? postAncestors[at.row - (Array(0 ... at.row).filter { !$0.isMultiple(of: 2) }.count)].id : postReplies[at.row].id
         if !imageReloadedCells.contains(id) {

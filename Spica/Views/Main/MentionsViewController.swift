@@ -118,6 +118,11 @@ extension MentionsViewController: SFSafariViewControllerDelegate {
 }
 
 extension MentionsViewController: PostCellDelegate {
+	
+	func deletedPost(_ post: Post) {
+		loadMentions()
+	}
+	
     func reloadCell(_ at: IndexPath) {
         if !imageReloadedCells.contains(mentions[at.section].post.id) {
             imageReloadedCells.append(mentions[at.section].post.id)
