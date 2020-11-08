@@ -179,6 +179,11 @@ extension BookmarksViewController: SFSafariViewControllerDelegate {
 }
 
 extension BookmarksViewController: PostCellDelegate {
+	
+	func deletedPost(_ post: Post) {
+		loadBookmarks()
+	}
+	
     func reloadCell(_ at: IndexPath) {
         if !imageReloadedCells.contains(bookmarks[at.section].post.id) {
             imageReloadedCells.append(bookmarks[at.section].post.id)

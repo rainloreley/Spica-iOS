@@ -207,7 +207,8 @@ class SettingsViewController: UITableViewController {
     }
 
 	@IBAction func joinBetaAction(_ sender: Any) {
-		let url = URL(string: <#T##String#>)
+		let url = URL(string: "https://go.abmgrt.dev/spica-beta")!
+		if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
 	}
 	override func viewDidLoad() {
         super.viewDidLoad()
@@ -225,7 +226,7 @@ extension SettingsViewController {
         case 1: return 4 // Settings - KEEP CHANGE FLAG AT THE BOTTOM
         case 2: return 3 // Spica
         case 3: return 3 // Alles Micro
-        case 4: return 4 // Other
+        case 4: return 5 // Other
         case 5: return 2 // About
         default: return 0
         }

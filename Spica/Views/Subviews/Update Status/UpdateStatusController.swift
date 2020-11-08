@@ -34,13 +34,21 @@ class UpdateStatusController: ObservableObject {
     }
 
     func updateStatus() {
-        MicroAPI.default.updateStatus(enteredText, time: Int(selectedDate.timeIntervalSince(Date()))) { [self] result in
-            switch result {
-            case let .failure(err):
-                delegate.statusError(err: err)
-            case .success:
-                delegate.statusUpdated()
-            }
-        }
+		if enteredText.count < 3 {
+			delegate.statusError(err: .init(error: .init(isError: true, name: "The entered text is too short"), action: nil))
+		}
+		else if enteredText.count > 100 {
+			delegate.statusError(err: .init(error: .init(isError: true, name: "The entered text is too long"), action: nil))
+		}
+		else {
+			MicroAPI.default.updateStatus(enteredText, time: Int(selectedDate.timeIntervalSince(Date()))) { [self] result in
+				switch result {
+				case let .failure(err):
+					delegate.statusError(err: err)
+				case .success:
+					delegate.statusUpdated()
+				}
+			}
+		}
     }
 }

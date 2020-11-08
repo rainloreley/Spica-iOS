@@ -40,6 +40,7 @@ class UserProfileViewController: UITableViewController {
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 600
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(openUserOptions(_:)))
 
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading..."
@@ -49,6 +50,35 @@ class UserProfileViewController: UITableViewController {
     override func viewDidAppear(_: Bool) {
         loadUser()
     }
+	
+	@objc func openUserOptions(_ sender: UIBarButtonItem) {
+		
+		let userOptionsSheet = UIAlertController(title: "\(user.name)", message: nil, preferredStyle: .actionSheet)
+		
+		if let popoverController = userOptionsSheet.popoverPresentationController {
+			popoverController.barButtonItem = sender
+		}
+		
+		let allesPeopleAction = UIAlertAction(title: "Open Alles People page", style: .default) { (_) in
+			let vc = SFSafariViewController(url: URL(string: "https://alles.cx/\(self.user.id)")!)
+			vc.delegate = self
+			self.present(vc, animated: true)
+		}
+		
+		let copyIDAction = UIAlertAction(title: "Copy ID", style: .default) { (_) in
+			let pasteboard = UIPasteboard.general
+			pasteboard.string = self.user.id
+			SPAlert.present(title: "Copied", preset: .done)
+		}
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		
+		userOptionsSheet.addAction(allesPeopleAction)
+		userOptionsSheet.addAction(copyIDAction)
+		userOptionsSheet.addAction(cancelAction)
+		
+		present(userOptionsSheet, animated: true, completion: nil)
+	}
 
     @objc func openUpdateStatusSheet() {
         let vc = CreatePostViewController()
@@ -182,6 +212,11 @@ extension UserProfileViewController: SFSafariViewControllerDelegate {
 }
 
 extension UserProfileViewController: PostCellDelegate {
+	
+	func deletedPost(_ post: Post) {
+		loadUser()
+	}
+	
     func reloadCell(_ at: IndexPath) {
         if !imageReloadedCells.contains(userposts[at.section - 1].id) {
             imageReloadedCells.append(userposts[at.section - 1].id)

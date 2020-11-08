@@ -187,6 +187,16 @@ extension FeedViewController: SFSafariViewControllerDelegate {
 }
 
 extension FeedViewController: PostCellDelegate {
+	
+	func deletedPost(_ post: Post) {
+		if let index = posts.firstIndex(where: { $0.id == post.id }) {
+			posts.remove(at: index)
+			DispatchQueue.main.async {
+				self.tableView.reloadData()
+			}
+		}
+	}
+	
     func reloadCell(_ at: IndexPath) {
         if !imageReloadedCells.contains(posts[at.section].id) {
             imageReloadedCells.append(posts[at.section].id)
@@ -238,7 +248,7 @@ extension FeedViewController {
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
         let difference = maximumOffset - currentOffset
 
-        if canLoadFromBottom, difference <= -120.0 {
+        if canLoadFromBottom, difference <= 50.0 {
             let previousScrollViewBottomInset = scrollView.contentInset.bottom
             scrollView.contentInset.bottom = previousScrollViewBottomInset + 50
             loadMoreFeed(posts.last!.createdAt)
