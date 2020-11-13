@@ -19,6 +19,9 @@ class ImageDetailViewController: LightboxController {
             btn.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
             btn.addTarget(self, action: #selector(shareImage(_:)), for: .touchUpInside)
             btn.tintColor = .white
+			if #available(iOS 13.4, *) {
+				btn.isPointerInteractionEnabled = true
+			}
             return btn
         }()
 
@@ -29,6 +32,10 @@ class ImageDetailViewController: LightboxController {
             make.width.equalTo(50)
             make.height.equalTo(50)
         }
+		
+		if #available(iOS 13.4, *) {
+			headerView.closeButton.isPointerInteractionEnabled = true
+		}
     }
 
     @objc func shareImage(_ sender: UIButton) {

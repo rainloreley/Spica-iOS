@@ -33,32 +33,7 @@ struct UserHeaderView: View {
         VStack(alignment: .leading) {
             HStack {
                 Group {
-                    switch controller.user.ring {
-                    case .rainbow:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(RainbowFlagCircle())
-                    case .trans:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(TransFlagCircle())
-                    case .bisexual:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(BisexualFlagCircle())
-                    case .pansexual:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(PansexualFlagCircle())
-                    case .lesbian:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(LesbianFlagCircle())
-                    case .asexual:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(AsexualFlagCircle())
-                    case .genderqueer:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(GenderqueerFlagCircle())
-                    case .genderfluid:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(GenderfluidFlagCircle())
-                    case .agender:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(AgenderFlagCircle())
-                    case .nonbinary:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(NonbinaryFlagCircle())
-                    case .supporter:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture).modifier(SpicaSupporterFlagCircle())
-                    default:
-						ProfilePictureView(url: controller.user.profilePictureUrl, profilePicture: $profilePicture)
-                    }
+					getSwiftUIProfilePicture(controller.user.ring, url: controller.user.profilePictureUrl, binding: $profilePicture, size: 120)
 				}.onTapGesture {
 					controller.clickProfilePicture(profilePicture)
 				}
@@ -68,7 +43,13 @@ struct UserHeaderView: View {
                 HStack {
                     Text("\(controller.user.nickname)\(controller.user.plus ? String("⁺") : String(""))").font(.title).bold()
                 }
-                Text("\(controller.user.name)#\(controller.user.tag)").foregroundColor(.secondary)
+				Group {
+					Text("\(controller.user.name)#\(controller.user.tag)").foregroundColor(.secondary)
+					if controller.user.username != nil {
+						Text("@\(controller.user.username!)").foregroundColor(.secondary)
+					}
+				}
+				
                 if controller.user.isFollowingMe && !controller.isLoggedInUser {
                     Text("Follows you").foregroundColor(.init(UIColor.tertiaryLabel))
                 }
@@ -163,18 +144,60 @@ struct UserHeaderView: View {
     }
 }
 
+struct EmbeddedProfilePictureView: View {
+	var ring: ProfileRing
+	var url: URL
+	var size: Int
+	@State var image: UIImage?
+	var addShadow: Bool
+	var body: some View {
+		getSwiftUIProfilePicture(ring, url: url, binding: $image, size: size, addShadow: addShadow)
+	}
+}
+
+func getSwiftUIProfilePicture(_ ring: ProfileRing, url: URL, binding: Binding<UIImage?>, size: Int, addShadow: Bool = true) -> some View {
+	switch ring {
+	case .rainbow:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(RainbowFlagCircle(addShadow: addShadow)))
+	case .trans:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(TransFlagCircle(addShadow: addShadow)))
+	case .bisexual:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(BisexualFlagCircle(addShadow: addShadow)))
+	case .pansexual:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(PansexualFlagCircle(addShadow: addShadow)))
+	case .lesbian:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(LesbianFlagCircle(addShadow: addShadow)))
+	case .asexual:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(AsexualFlagCircle(addShadow: addShadow)))
+	case .genderqueer:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(GenderqueerFlagCircle(addShadow: addShadow)))
+	case .genderfluid:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(GenderfluidFlagCircle(addShadow: addShadow)))
+	case .agender:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(AgenderFlagCircle(addShadow: addShadow)))
+	case .nonbinary:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(NonbinaryFlagCircle(addShadow: addShadow)))
+	case .supporter:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(SpicaSupporterFlagCircle(addShadow: addShadow)))
+	default:
+		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow))
+	}
+}
+
 struct ProfilePictureView: View {
     var url: URL
+	var size: Int = 120
 	@Binding var profilePicture: UIImage?
+	var addShadow: Bool = true
     var body: some View {
-        KFImage(url)
+		KFImage(url)
 			.onSuccess { r in
 				profilePicture = r.image
 			}
-            .resizable()
-            .frame(width: 120, height: 120, alignment: .center)
-            .clipShape(Circle())
-            .shadow(radius: 10)
+			.resizable()
+			.frame(width: CGFloat(size), height: CGFloat(size), alignment: .center)
+			.clipShape(Circle())
+			.shadow(radius: addShadow ? 10 : 0)
 			
     }
 }

@@ -18,6 +18,7 @@ struct User {
     var tag: String
     var plus: Bool
     var nickname: String
+	var username: String?
     var profilePicture: UIImage?
     var profilePictureUrl: URL
     var createdAt: Date
@@ -35,12 +36,13 @@ struct User {
     var status: Status
     var ring: ProfileRing
 
-    init(id: String = "", name: String = "", tag: String = "", plus: Bool = false, nickname: String = "", profilePicture: UIImage? = nil, profilePictureUrl: URL? = nil, createdAt: Date = Date(), xp: XP = XP(), followercount: Int = 0, iamFollowing: Bool = false, followingcount: Int = 0, isFollowingMe: Bool = false, postsCount: Int = 0, repliesCount: Int = 0, status: Status = Status(), ring: ProfileRing = .none) {
+	init(id: String = "", name: String = "", tag: String = "", plus: Bool = false, nickname: String = "", username: String? = nil, profilePicture: UIImage? = nil, profilePictureUrl: URL? = nil, createdAt: Date = Date(), xp: XP = XP(), followercount: Int = 0, iamFollowing: Bool = false, followingcount: Int = 0, isFollowingMe: Bool = false, postsCount: Int = 0, repliesCount: Int = 0, status: Status = Status(), ring: ProfileRing = .none) {
         self.id = id
         self.name = name
         self.tag = tag
         self.plus = plus
         self.nickname = nickname != "" ? nickname : name
+		self.username = username
         self.profilePicture = profilePicture
 		self.profilePictureUrl = profilePictureUrl ?? URL(string: "https://avatar.alles.cc/\(id)")!
         self.createdAt = createdAt
@@ -61,6 +63,7 @@ struct User {
         tag = json["tag"].string ?? ""
         plus = json["plus"].bool ?? false
         nickname = json["nickname"].string ?? json["name"].string ?? ""
+		username = json["username"].string ?? nil
         profilePicture = nil
         profilePictureUrl = URL(string: "https://avatar.alles.cc/\(json["id"].string ?? String("_"))")!
         createdAt = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
@@ -76,7 +79,7 @@ struct User {
         ring = .none
     }
 
-    static var sample = User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", plus: true, nickname: "Lea", profilePicture: UIImage(named: "leapfp"), createdAt: Date(), xp: XP(), followercount: 100, iamFollowing: true, followingcount: 69, isFollowingMe: true, status: Status(id: "test", content: "lol", date: Date().addingTimeInterval(-60), end: Date().addingTimeInterval(200)), ring: .rainbow)
+    static var sample = User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", plus: true, nickname: "Lea", username: "lea", profilePicture: UIImage(named: "leapfp"), createdAt: Date(), xp: XP(), followercount: 100, iamFollowing: true, followingcount: 69, isFollowingMe: true, status: Status(id: "test", content: "lol", date: Date().addingTimeInterval(-60), end: Date().addingTimeInterval(200)), ring: .rainbow)
 }
 
 enum ProfileRing: String {

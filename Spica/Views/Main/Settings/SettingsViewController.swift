@@ -21,7 +21,8 @@ class SettingsViewController: UITableViewController {
     @IBOutlet var accountNametag: UILabel!
     @IBOutlet var versionBuildLabel: UILabel!
     @IBOutlet var biometricSwitch: UISwitch!
-
+	@IBOutlet weak var showFlagOnPostSwitch: UISwitch!
+	
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
 
@@ -39,11 +40,9 @@ class SettingsViewController: UITableViewController {
             biometricSwitch.isEnabled = false
         }
 
-        if UserDefaults.standard.bool(forKey: "biometricAuthEnabled") {
-            biometricSwitch.setOn(true, animated: false)
-        } else {
-            biometricSwitch.setOn(false, animated: false)
-        }
+		biometricSwitch.setOn(UserDefaults.standard.bool(forKey: "biometricAuthEnabled"), animated: false)
+		
+		showFlagOnPostSwitch.setOn(!UserDefaults.standard.bool(forKey: "disablePostFlagLoading"), animated: false)
 
         let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") ?? "_"
         let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name") ?? ""
@@ -62,7 +61,11 @@ class SettingsViewController: UITableViewController {
     @IBAction func changePfpFlag(_: Any) {
         navigationController?.pushViewController(SelectFlagViewController(style: .insetGrouped), animated: true)
     }
-
+	
+	@IBAction func showFlagOnPostSwitchChanged(_ sender: Any) {
+		UserDefaults.standard.set(!showFlagOnPostSwitch.isOn, forKey: "disablePostFlagLoading")
+	}
+	
     @IBAction func biometricAuthChanged(_: Any) {
         let authContext = LAContext()
         var authError: NSError?
@@ -223,7 +226,7 @@ extension SettingsViewController {
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 2 // Account
-        case 1: return 4 // Settings - KEEP CHANGE FLAG AT THE BOTTOM
+        case 1: return 5 // Settings - KEEP CHANGE FLAG AT THE BOTTOM
         case 2: return 3 // Spica
         case 3: return 3 // Alles Micro
         case 4: return 5 // Other

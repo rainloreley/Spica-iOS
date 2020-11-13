@@ -71,7 +71,7 @@ extension MicroAPI {
         }
     }
 
-    func loadUser(_ id: String, loadAdditionalInfo: Bool = false, promise: @escaping (Result<User, MicroError>) -> Void) {
+	func loadUser(_ id: String, loadStatus: Bool = false, loadRing: Bool = false, promise: @escaping (Result<User, MicroError>) -> Void) {
         loadIdByUsername(id, allowEmptyUsername: true) { [self] result in
             switch result {
             case let .failure(err):
@@ -89,29 +89,47 @@ extension MicroAPI {
                             let userJSON = JSON(userResponse.data!)
                             var user: User = .init(userJSON)
 
-                            if loadAdditionalInfo {
-                                loadUserStatus(user.id) { result in
-                                    switch result {
-                                    case let .failure(err):
-                                        promise(.failure(err))
-                                    case let .success(status):
-                                        user.status = status
-
-										FlagServerAPI.default.loadUserRing(user.id) { ringResult in
-                                            switch ringResult {
-                                            case .failure:
-                                                user.ring = .none
-                                                promise(.success(user))
-                                            case let .success(ring):
-                                                user.ring = ring
-                                                promise(.success(user))
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                promise(.success(user))
-                            }
+							if loadStatus {
+								loadUserStatus(user.id) { result in
+									switch result {
+									case let .failure(err):
+										promise(.failure(err))
+									case let .success(status):
+										user.status = status
+										
+										if loadRing {
+											FlagServerAPI.default.loadUserRing(user.id) { ringResult in
+												switch ringResult {
+												case .failure:
+													user.ring = .none
+													promise(.success(user))
+												case let .success(ring):
+													user.ring = ring
+													promise(.success(user))
+												}
+											}
+										}
+										else {
+											promise(.success(user))
+										}
+									}
+								}
+							}
+							else if loadRing {
+								FlagServerAPI.default.loadUserRing(user.id) { ringResult in
+									switch ringResult {
+									case .failure:
+										user.ring = .none
+										promise(.success(user))
+									case let .success(ring):
+										user.ring = ring
+										promise(.success(user))
+									}
+								}
+							}
+							else {
+								promise(.success(user))
+							}
                         } else {
                             promise(.failure(possibleError))
                         }

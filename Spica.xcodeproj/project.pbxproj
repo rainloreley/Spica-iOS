@@ -48,6 +48,7 @@
 		8B5C42BF2533187F007B10BD /* MicroAPI_Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42BE2533187F007B10BD /* MicroAPI_Bookmarks.swift */; };
 		8B5C42C725331ED7007B10BD /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42C625331ED7007B10BD /* SearchViewController.swift */; };
 		8B5C42CC25332108007B10BD /* MicroAPI_Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42CB25332108007B10BD /* MicroAPI_Search.swift */; };
+		8B5E3249255EBB3E009B0F0C /* MicroAPI+ReceiveErrorMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5E3248255EBB3E009B0F0C /* MicroAPI+ReceiveErrorMessage.swift */; };
 		8B5ECC71254C5248006EA6B2 /* FlagServerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5ECC70254C5248006EA6B2 /* FlagServerAPI.swift */; };
 		8B5ECC7C254C536B006EA6B2 /* MicroAPI_Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5ECC7B254C536B006EA6B2 /* MicroAPI_Status.swift */; };
 		8B6AC5A6252E0BC5003A2CC4 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6AC5A5252E0BC5003A2CC4 /* Post.swift */; };
@@ -164,6 +165,7 @@
 		8B5C42C625331ED7007B10BD /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		8B5C42CB25332108007B10BD /* MicroAPI_Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Search.swift; sourceTree = "<group>"; };
 		8B5C42D625333060007B10BD /* Spica.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Spica.entitlements; sourceTree = "<group>"; };
+		8B5E3248255EBB3E009B0F0C /* MicroAPI+ReceiveErrorMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroAPI+ReceiveErrorMessage.swift"; sourceTree = "<group>"; };
 		8B5ECC70254C5248006EA6B2 /* FlagServerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagServerAPI.swift; sourceTree = "<group>"; };
 		8B5ECC7B254C536B006EA6B2 /* MicroAPI_Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Status.swift; sourceTree = "<group>"; };
 		8B6AC5A5252E0BC5003A2CC4 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 			children = (
 				8B3364D7252F712F00D46ABE /* MicroError.swift */,
 				8B0CD2A42530B6A4004459EC /* MicroAPI+ErrorHandling.swift */,
+				8B5E3248255EBB3E009B0F0C /* MicroAPI+ReceiveErrorMessage.swift */,
 			);
 			path = "Error Handling";
 			sourceTree = "<group>";
@@ -878,6 +881,7 @@
 				8B5C42A825331275007B10BD /* FollowersFollowingViewController.swift in Sources */,
 				8BA7B5AB2532335D00915113 /* UserDefaults.swift in Sources */,
 				8B0081E92531BAFC006427FE /* LoginViewController.swift in Sources */,
+				8B5E3249255EBB3E009B0F0C /* MicroAPI+ReceiveErrorMessage.swift in Sources */,
 				8B5C42BA253317C9007B10BD /* Bookmark.swift in Sources */,
 				8B6ACF1A2530D667004BDEC8 /* PostDividerCell.swift in Sources */,
 				8BA7B5A1253232E300915113 /* ColorPickerView.swift in Sources */,
@@ -1064,6 +1068,7 @@
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1071,9 +1076,9 @@
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -1089,6 +1094,7 @@
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1096,9 +1102,9 @@
 				MARKETING_VERSION = 1.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Release;
 		};

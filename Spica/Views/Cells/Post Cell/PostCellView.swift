@@ -14,6 +14,7 @@ import Lightbox
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
+import SwiftUI
 
 protocol PostCellDelegate {
     func clickedImage(_ controller: ImageDetailViewController)
@@ -31,7 +32,8 @@ class PostCellView: UITableViewCell {
 
     var post: Post? {
         didSet {
-            profilePictureImageView.image = post?.author.profilePicture
+			
+            //profilePictureImageView.image = post?.author.profilePicture
             if post?.author.plus == true {
                 let font: UIFont? = usernameLabel.font
 
@@ -50,8 +52,35 @@ class PostCellView: UITableViewCell {
             postContentTextView.isUserInteractionEnabled = true
             postContentTextView.delaysContentTouches = false
             postContentTextView.isSelectable = true
+			
+			if !UserDefaults.standard.bool(forKey: "disablePostFlagLoading") || post!.author.ring != .none {
+				let internalProfilePictureView = UIHostingController(rootView: EmbeddedProfilePictureView(ring: post!.author.ring, url: post!.author.profilePictureUrl, size: 40, addShadow: false)).view
+				profilePictureImageView.addSubview(internalProfilePictureView!)
+				internalProfilePictureView?.backgroundColor = .clear
+				profilePictureImageView.backgroundColor = .clear
+				internalProfilePictureView?.snp.makeConstraints({ (make) in
+					make.top.equalTo(profilePictureImageView.snp.top)
+					make.bottom.equalTo(profilePictureImageView.snp.bottom)
+					make.leading.equalTo(profilePictureImageView.snp.leading)
+					make.trailing.equalTo(profilePictureImageView.snp.trailing)
+				})
+			}
+			else {
+				let profileImageView = UIImageView(image: UIImage(systemName: "person.circle"))
+				profileImageView.contentMode = .scaleAspectFit
+				profileImageView.clipsToBounds = true
+				profileImageView.layer.cornerRadius = 20
+				profilePictureImageView.addSubview(profileImageView)
+				profilePictureImageView.backgroundColor = .clear
+				profileImageView.snp.makeConstraints { (make) in
+					make.top.equalTo(profilePictureImageView.snp.top)
+					make.bottom.equalTo(profilePictureImageView.snp.bottom)
+					make.leading.equalTo(profilePictureImageView.snp.leading)
+					make.trailing.equalTo(profilePictureImageView.snp.trailing)
+				}
+				profileImageView.kf.setImage(with: post?.author.profilePictureUrl)
+			}
 
-            profilePictureImageView.kf.setImage(with: post?.author.profilePictureUrl)
             postImageView.kf.setImage(with: post?.imageurl, completionHandler: { [self] result in
                 layoutPostImageView(height: postImageView.image != nil ? Int(postImageView.image!.size.height / 3) : 20)
                 switch result {
@@ -195,12 +224,14 @@ class PostCellView: UITableViewCell {
         }
     }
 
-    var profilePictureImageView: UIImageView = {
-        let imgView = UIImageView(image: UIImage(systemName: "person.circle"))
+    var profilePictureImageView: UIView = {
+		let view = UIView()
+		return view
+        /*let imgView = UIImageView(image: UIImage(systemName: "person.circle"))
         imgView.contentMode = .scaleAspectFit
         imgView.clipsToBounds = true
         imgView.layer.cornerRadius = 20
-        return imgView
+        return imgView*/
     }()
 
     var usernameLabel: UILabel = {
@@ -251,6 +282,9 @@ class PostCellView: UITableViewCell {
         let button = UIButton(type: .system)
         button.setTitle("+", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 19)
+		if #available(iOS 13.4, *) {
+			button.isPointerInteractionEnabled = true
+		}
         return button
     }()
 
@@ -264,6 +298,9 @@ class PostCellView: UITableViewCell {
         let button = UIButton(type: .system)
         button.setTitle("-", for: .normal)
         button.titleLabel?.font = .boldSystemFont(ofSize: 24)
+		if #available(iOS 13.4, *) {
+			button.isPointerInteractionEnabled = true
+		}
         return button
     }()
 
@@ -632,7 +669,7 @@ extension PostCellView: UIContextMenuInteractionDelegate {
                         switch result {
                         case let .failure(err):
 							DispatchQueue.main.async {
-								EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.name)")
+								EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.humanDescription)")
 							}
                         case .success:
                             DispatchQueue.main.async {

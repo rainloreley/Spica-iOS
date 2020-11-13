@@ -30,6 +30,7 @@ class PostDetailViewController: UITableViewController {
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(PostDividerCell.self, forCellReuseIdentifier: "dividerCell")
         tableView.register(ReplyButtonCell.self, forCellReuseIdentifier: "replyButtonCell")
+		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.left")!, style: .plain, target: self, action: #selector(openReplyView(_:)))
 
         refreshControl = UIRefreshControl()
         refreshControl!.addTarget(self, action: #selector(loadPostDetail), for: .valueChanged)
@@ -73,7 +74,7 @@ class PostDetailViewController: UITableViewController {
         }
     }
 
-    @objc func openReplyView(_: UIButton) {
+    @objc func openReplyView(_: Any) {
         if mainpost != nil {
             let vc = CreatePostViewController()
             vc.type = .reply

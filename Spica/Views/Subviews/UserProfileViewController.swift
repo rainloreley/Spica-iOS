@@ -90,7 +90,7 @@ class UserProfileViewController: UITableViewController {
     @objc func loadUser() {
         if userposts.isEmpty { loadingHud.show(in: view) }
 
-        MicroAPI.default.loadUser(user.id, loadAdditionalInfo: true) { [self] result in
+		MicroAPI.default.loadUser(user.id, loadStatus: true, loadRing: true) { [self] result in
             switch result {
             case let .failure(err):
                 DispatchQueue.main.async {

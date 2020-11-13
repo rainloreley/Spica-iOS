@@ -37,7 +37,7 @@ class LoginController: ObservableObject {
                     switch result {
                     case let .failure(err):
                         DispatchQueue.main.async { [self] in
-                            alertMessage = "Login failed with the following error:\n\n\(err.error.name)"
+							alertMessage = "Login failed with the following error:\n\n\(err.error.humanDescription)"
                             showAlert = true
                         }
                     case let .success(token):
