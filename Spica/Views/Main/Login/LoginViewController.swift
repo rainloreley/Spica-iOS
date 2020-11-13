@@ -37,5 +37,8 @@ extension LoginViewController: LoginViewDelegate {
 
         sceneDelegate.window?.rootViewController = initialViewController
         sceneDelegate.window?.makeKeyAndVisible()
+		
+		let appDelegate = UIApplication.shared.delegate as! AppDelegate
+		appDelegate.registerForPushNotifications()
     }
 }

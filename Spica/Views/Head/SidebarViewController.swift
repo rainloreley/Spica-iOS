@@ -46,6 +46,7 @@ class SidebarViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         loadMentionsCount()
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
+		NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
     }
 
     private func setInitialSecondaryView() {

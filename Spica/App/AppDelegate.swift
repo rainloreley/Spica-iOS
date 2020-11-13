@@ -10,15 +10,76 @@
 
 import UIKit
 import URLNavigator
+import UserNotifications
+import SwiftKeychainWrapper
+import SwiftyJSON
 
 let navigator = Navigator()
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
-    func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    func application(_: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+		if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token") && KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
+			registerForPushNotifications()
+		}
+		UIApplication.shared.applicationIconBadgeNumber = 0
         return true
     }
+	
+	func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+		let userInfo = response.notification.request.content.userInfo
+		UIApplication.shared.applicationIconBadgeNumber = 0
+		guard let data = userInfo as? [String: AnyObject] else {
+			completionHandler()
+			return
+		  }
+		let payload = JSON(data)
+		if payload["type"].exists() && payload["id"].exists() {
+			if payload["type"].string! == "reply" {
+				UIApplication.shared.open(URL(string: "spica://post/\(payload["id"].string!)")!)
+			}
+			else {
+				completionHandler()
+			}
+		}
+		else {
+			completionHandler()
+		}
+	}
+	
+	func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+		UIApplication.shared.applicationIconBadgeNumber = 0
+		NotificationCenter.default.post(name: Notification.Name("loadMentionsCount"), object: nil)
+		completionHandler(.alert)
+	}
+	
+	func registerForPushNotifications() {
+		UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+			UNUserNotificationCenter.current().delegate = self
+			guard granted else { return }
+			self.getNotificationSettings()
+		}
+	}
+	
+	func getNotificationSettings() {
+		UNUserNotificationCenter.current().getNotificationSettings { settings in
+			guard settings.authorizationStatus == .authorized else { return }
+			DispatchQueue.main.async {
+				UIApplication.shared.registerForRemoteNotifications()
+			}
+		}
+	}
+	
+	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+		let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+		let token = tokenParts.joined()
+		SpicaPushAPI.default.setDeviceTokenForSignedInUser(token) { (result) in
+			//
+		}
+	}
+	
+	
 
     // MARK: UISceneSession Lifecycle
 

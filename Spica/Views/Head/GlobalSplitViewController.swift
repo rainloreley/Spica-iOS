@@ -9,6 +9,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 class GlobalSplitViewController: UISplitViewController {
     override func viewDidLoad() {

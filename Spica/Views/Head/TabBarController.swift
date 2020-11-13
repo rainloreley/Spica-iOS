@@ -26,6 +26,7 @@ class TabBarController: UITabBarController {
         selectedIndex = 0
         loadMentionsCount()
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
+		NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
