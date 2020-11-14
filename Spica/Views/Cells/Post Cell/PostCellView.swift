@@ -53,32 +53,30 @@ class PostCellView: UITableViewCell {
             postContentTextView.delaysContentTouches = false
             postContentTextView.isSelectable = true
 			
-			if !UserDefaults.standard.bool(forKey: "disablePostFlagLoading") || post!.author.ring != .none {
-				let internalProfilePictureView = UIHostingController(rootView: EmbeddedProfilePictureView(ring: post!.author.ring, url: post!.author.profilePictureUrl, size: 40, addShadow: false)).view
-				profilePictureImageView.addSubview(internalProfilePictureView!)
-				internalProfilePictureView?.backgroundColor = .clear
-				profilePictureImageView.backgroundColor = .clear
-				internalProfilePictureView?.snp.makeConstraints({ (make) in
-					make.top.equalTo(profilePictureImageView.snp.top)
-					make.bottom.equalTo(profilePictureImageView.snp.bottom)
-					make.leading.equalTo(profilePictureImageView.snp.leading)
-					make.trailing.equalTo(profilePictureImageView.snp.trailing)
-				})
+			if let defaultview = profilePictureImageView.viewWithTag(394) { defaultview.removeFromSuperview() }
+			if let defaultview = profilePictureImageView.viewWithTag(239) { defaultview.removeFromSuperview() }
+			
+			if let ring = post?.author.ring {
+				if ring != .none {
+					if let defaultview = profilePictureImageView.viewWithTag(394) { defaultview.removeFromSuperview() }
+					let internalProfilePictureView = UIHostingController(rootView: EmbeddedProfilePictureView(ring: ring, url: post!.author.profilePictureUrl, size: 40, addShadow: false)).view
+					profilePictureImageView.addSubview(internalProfilePictureView!)
+					internalProfilePictureView?.backgroundColor = .clear
+					internalProfilePictureView?.tag = 239
+					profilePictureImageView.backgroundColor = .clear
+					internalProfilePictureView?.snp.makeConstraints({ (make) in
+						make.top.equalTo(profilePictureImageView.snp.top)
+						make.bottom.equalTo(profilePictureImageView.snp.bottom)
+						make.leading.equalTo(profilePictureImageView.snp.leading)
+						make.trailing.equalTo(profilePictureImageView.snp.trailing)
+					})
+				}
+				else {
+					buildDefaultPfp()
+				}
 			}
 			else {
-				let profileImageView = UIImageView(image: UIImage(systemName: "person.circle"))
-				profileImageView.contentMode = .scaleAspectFit
-				profileImageView.clipsToBounds = true
-				profileImageView.layer.cornerRadius = 20
-				profilePictureImageView.addSubview(profileImageView)
-				profilePictureImageView.backgroundColor = .clear
-				profileImageView.snp.makeConstraints { (make) in
-					make.top.equalTo(profilePictureImageView.snp.top)
-					make.bottom.equalTo(profilePictureImageView.snp.bottom)
-					make.leading.equalTo(profilePictureImageView.snp.leading)
-					make.trailing.equalTo(profilePictureImageView.snp.trailing)
-				}
-				profileImageView.kf.setImage(with: post?.author.profilePictureUrl)
+				buildDefaultPfp()
 			}
 
             postImageView.kf.setImage(with: post?.imageurl, completionHandler: { [self] result in
@@ -148,6 +146,24 @@ class PostCellView: UITableViewCell {
             contentView.addInteraction(contextInteraction)
         }
     }
+	
+	func buildDefaultPfp() {
+		if let defaultview = profilePictureImageView.viewWithTag(239) { defaultview.removeFromSuperview() }
+		let profileImageView = UIImageView(image: UIImage(systemName: "person.circle"))
+		profileImageView.contentMode = .scaleAspectFit
+		profileImageView.clipsToBounds = true
+		profileImageView.layer.cornerRadius = 20
+		profileImageView.tag = 394
+		profilePictureImageView.addSubview(profileImageView)
+		profilePictureImageView.backgroundColor = .clear
+		profileImageView.snp.makeConstraints { (make) in
+			make.top.equalTo(profilePictureImageView.snp.top)
+			make.bottom.equalTo(profilePictureImageView.snp.bottom)
+			make.leading.equalTo(profilePictureImageView.snp.leading)
+			make.trailing.equalTo(profilePictureImageView.snp.trailing)
+		}
+		profileImageView.kf.setImage(with: post?.author.profilePictureUrl)
+	}
 
     func parseStringIntoAttributedString(_ text: String) -> NSMutableAttributedString {
         let attributedText = NSMutableAttributedString(string: "")

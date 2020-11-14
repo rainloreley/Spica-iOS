@@ -33,7 +33,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
 
             URLNavigationMap.initialize(navigator: navigator, sceneDelegate: self)
-			print("Make view visible")
             window.makeKeyAndVisible()
             verifyBiometricAuthentication()
             Kingfisher.ImageCache.default.diskStorage.config.expiration = .days(1)

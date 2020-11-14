@@ -13,7 +13,7 @@ import UIKit
 
 @available(iOS 14.0, *)
 class SidebarViewController: UIViewController {
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var dataSource: UICollectionViewDiffableDataSource<SidebarSection, Item>!
     private var collectionView: UICollectionView!
     private var accountViewController: UserProfileViewController!
     private var secondaryViewControllers = [UINavigationController]()
@@ -134,7 +134,7 @@ extension SidebarViewController {
             cell.accessories = []
         }
 
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
+        dataSource = UICollectionViewDiffableDataSource<SidebarSection, Item>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: Item) -> UICollectionViewCell? in
             if indexPath.item == 0, indexPath.section != 0 {
                 return collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
@@ -143,8 +143,8 @@ extension SidebarViewController {
             }
         }
 
-        let sections: [Section] = [.tabs]
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        let sections: [SidebarSection] = [.tabs]
+        var snapshot = NSDiffableDataSourceSnapshot<SidebarSection, Item>()
         snapshot.appendSections(sections)
         dataSource.apply(snapshot, animatingDifferences: false)
 
@@ -181,6 +181,6 @@ var tabsItems = [
 	Item(title: "Account", image: UIImage(systemName: "person.circle")),
 	Item(title: "Settings", image: UIImage(systemName: "gear"))]
 
-enum Section: String {
+enum SidebarSection: String {
     case tabs
 }

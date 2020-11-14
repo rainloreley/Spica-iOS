@@ -15,6 +15,7 @@ import SPAlert
 import SwiftKeychainWrapper
 import SwiftUI
 import UIKit
+import JGProgressHUD
 
 class SettingsViewController: UITableViewController {
     @IBOutlet var accountProfilePicture: UIImageView!
@@ -22,6 +23,8 @@ class SettingsViewController: UITableViewController {
     @IBOutlet var versionBuildLabel: UILabel!
     @IBOutlet var biometricSwitch: UISwitch!
 	@IBOutlet weak var showFlagOnPostSwitch: UISwitch!
+	
+	var loadingHud: JGProgressHUD!
 	
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -61,6 +64,10 @@ class SettingsViewController: UITableViewController {
     @IBAction func changePfpFlag(_: Any) {
         navigationController?.pushViewController(SelectFlagViewController(style: .insetGrouped), animated: true)
     }
+	
+	@IBAction func gotoNotificationSettings(_ sender: Any) {
+		navigationController?.pushViewController(UIHostingController(rootView: NotificationSettingsView(controller: .init())), animated: true)
+	}
 	
 	@IBAction func showFlagOnPostSwitchChanged(_ sender: Any) {
 		UserDefaults.standard.set(!showFlagOnPostSwitch.isOn, forKey: "disablePostFlagLoading")
@@ -162,14 +169,31 @@ class SettingsViewController: UITableViewController {
     }
 
     @IBAction func signOut(_: Any) {
-        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
-        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
-        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
-        KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
-        UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
-        let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
-        sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
-        sceneDelegate.window?.makeKeyAndVisible()
+		loadingHud.show(in: view)
+		
+		var storedDeviceTokens = UserDefaults.standard.stringArray(forKey: "pushNotificationDeviceTokens") ?? []
+		storedDeviceTokens.append(UserDefaults.standard.string(forKey: "pushNotificationCurrentDevice") ?? "")
+		SpicaPushAPI.default.deleteDevices(storedDeviceTokens) { (result) in
+			switch result {
+				case let .failure(err):
+					self.loadingHud.dismiss()
+					EZAlertController.alert("Error", message: "The following error occurred while trying to revoke the push device tokens:\n\n\(err.error.humanDescription)")
+					break
+				case .success:
+					UserDefaults.standard.removeObject(forKey: "pushNotificationDeviceTokens")
+					UserDefaults.standard.removeObject(forKey: "pushNotificationCurrentDevice")
+					UserDefaults.standard.removeObject(forKey: "disableTokenUploading")
+					KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
+					KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
+					KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+					KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+					UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
+					self.loadingHud.dismiss()
+					let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+					sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
+					sceneDelegate.window?.makeKeyAndVisible()
+			}
+		}
     }
 
     @IBAction func allesMicroButtons(_ sender: UIButton) {
@@ -215,6 +239,9 @@ class SettingsViewController: UITableViewController {
 	}
 	override func viewDidLoad() {
         super.viewDidLoad()
+		loadingHud = JGProgressHUD(style: .dark)
+		loadingHud.textLabel.text = "Loading..."
+		loadingHud.interactionType = .blockNoTouches
     }
 }
 
@@ -226,7 +253,7 @@ extension SettingsViewController {
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 2 // Account
-        case 1: return 5 // Settings - KEEP CHANGE FLAG AT THE BOTTOM
+        case 1: return 6 // Settings - KEEP CHANGE FLAG AT THE BOTTOM
         case 2: return 3 // Spica
         case 3: return 3 // Alles Micro
         case 4: return 5 // Other

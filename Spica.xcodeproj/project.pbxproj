@@ -60,6 +60,10 @@
 		8B6ACF1F2530D69F004BDEC8 /* ReplyButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */; };
 		8B8893792548507500B70C64 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8893782548507500B70C64 /* Array.swift */; };
 		8B88937E254852F000B70C64 /* ImageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B88937D254852F000B70C64 /* ImageDetailViewController.swift */; };
+		8B9C23BA256035F600FB4AEA /* PushUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C23B9256035F600FB4AEA /* PushUser.swift */; };
+		8B9C23C22560365700FB4AEA /* PushDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C23C12560365700FB4AEA /* PushDevice.swift */; };
+		8BA53BB6256012F6007249F5 /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA53BB5256012F6007249F5 /* NotificationSettingsView.swift */; };
+		8BA53BBE25601D10007249F5 /* NotificationSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA53BBD25601D0F007249F5 /* NotificationSettingsController.swift */; };
 		8BA7B5A1253232E300915113 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5A0253232E300915113 /* ColorPickerView.swift */; };
 		8BA7B5A6253232FF00915113 /* ColorPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5A5253232FF00915113 /* ColorPickerController.swift */; };
 		8BA7B5AB2532335D00915113 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA7B5AA2532335D00915113 /* UserDefaults.swift */; };
@@ -178,6 +182,10 @@
 		8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
 		8B8893782548507500B70C64 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		8B88937D254852F000B70C64 /* ImageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailViewController.swift; sourceTree = "<group>"; };
+		8B9C23B9256035F600FB4AEA /* PushUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushUser.swift; sourceTree = "<group>"; };
+		8B9C23C12560365700FB4AEA /* PushDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushDevice.swift; sourceTree = "<group>"; };
+		8BA53BB5256012F6007249F5 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
+		8BA53BBD25601D0F007249F5 /* NotificationSettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsController.swift; sourceTree = "<group>"; };
 		8BA7B5A0253232E300915113 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		8BA7B5A5253232FF00915113 /* ColorPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerController.swift; sourceTree = "<group>"; };
 		8BA7B5AA2532335D00915113 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
@@ -394,6 +402,7 @@
 		8B5C428E2532FBCD007B10BD /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
+				8BA53BB425601230007249F5 /* Notifications */,
 				8B5C428F2532FC23007B10BD /* CreditsViewController.swift */,
 				8B5C429C25330119007B10BD /* LegalNoticeViewController.swift */,
 				8B5C42A1253301EA007B10BD /* UsedLibrariesViewController.swift */,
@@ -413,6 +422,7 @@
 		8B6AC5A4252E0BB6003A2CC4 /* Structures */ = {
 			isa = PBXGroup;
 			children = (
+				8B9C23B8256035E400FB4AEA /* Push Notifications */,
 				8B6AC5A5252E0BC5003A2CC4 /* Post.swift */,
 				8B6AC5AA252E0E70003A2CC4 /* User.swift */,
 				8B6AC5AF252E0F4D003A2CC4 /* XP.swift */,
@@ -423,6 +433,24 @@
 				8BBEA42C253C68960046A3F9 /* Status.swift */,
 			);
 			path = Structures;
+			sourceTree = "<group>";
+		};
+		8B9C23B8256035E400FB4AEA /* Push Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				8B9C23B9256035F600FB4AEA /* PushUser.swift */,
+				8B9C23C12560365700FB4AEA /* PushDevice.swift */,
+			);
+			path = "Push Notifications";
+			sourceTree = "<group>";
+		};
+		8BA53BB425601230007249F5 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				8BA53BB5256012F6007249F5 /* NotificationSettingsView.swift */,
+				8BA53BBD25601D0F007249F5 /* NotificationSettingsController.swift */,
+			);
+			path = Notifications;
 			sourceTree = "<group>";
 		};
 		8BA7B59F253232D800915113 /* Color Picker */ = {
@@ -837,10 +865,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B199E2E252DFFB90060A3BE /* AppDelegate.swift in Sources */,
+				8B9C23C22560365700FB4AEA /* PushDevice.swift in Sources */,
 				8BD712D82530B19400D2533C /* VotePost.swift in Sources */,
 				8B23D44E25435B5B004EBBF6 /* UpdateStatusViewController.swift in Sources */,
 				8BBB7F8D2530E421004D49BC /* XPProgressBarView.swift in Sources */,
 				8B5ECC71254C5248006EA6B2 /* FlagServerAPI.swift in Sources */,
+				8BA53BB6256012F6007249F5 /* NotificationSettingsView.swift in Sources */,
 				8B35C47F2530D1D4003809FA /* PostDetailViewController.swift in Sources */,
 				8B6AC5B8252E15A6003A2CC4 /* FeedViewController.swift in Sources */,
 				8B5C42CC25332108007B10BD /* MicroAPI_Search.swift in Sources */,
@@ -860,6 +890,7 @@
 				8BC9DFF92531C9B700886C92 /* LoginController.swift in Sources */,
 				8B11099025445FEF004B2A89 /* SelectFlagViewController.swift in Sources */,
 				8BD0C7F1253210DD008D432E /* MicroAPI_Mentions.swift in Sources */,
+				8B9C23BA256035F600FB4AEA /* PushUser.swift in Sources */,
 				8B5C429D25330119007B10BD /* LegalNoticeViewController.swift in Sources */,
 				8B5C42982532FDE6007B10BD /* CreditsCell.swift in Sources */,
 				8B23D45625435B6D004EBBF6 /* UpdateStatusView.swift in Sources */,
@@ -878,6 +909,7 @@
 				8B35C46F2530C25B003809FA /* UIViewController.swift in Sources */,
 				8B6AC5AB252E0E70003A2CC4 /* User.swift in Sources */,
 				8B199E6C252E013C0060A3BE /* SidebarViewController.swift in Sources */,
+				8BA53BBE25601D10007249F5 /* NotificationSettingsController.swift in Sources */,
 				8BBB7F832530E38D004D49BC /* UserHeaderViewController.swift in Sources */,
 				8BDCD9FD254994070098499B /* PostCellView.swift in Sources */,
 				8B5C428A2532F5F4007B10BD /* biometricType.swift in Sources */,
@@ -1076,7 +1108,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1604838015;
+				CURRENT_PROJECT_VERSION = 1605385141;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1085,7 +1117,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
@@ -1102,7 +1134,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1604838015;
+				CURRENT_PROJECT_VERSION = 1605385141;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1111,7 +1143,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.abmgrt.spica;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;

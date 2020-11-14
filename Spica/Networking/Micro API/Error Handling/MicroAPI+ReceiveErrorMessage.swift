@@ -17,7 +17,7 @@ extension MicroAPI {
 				return "This value has already been set and cannot be updated."
 			case "badAuthorization":
 				return "You're unauthorized to access this resource."
-			case "badReqeust":
+			case "badRequest":
 				return "Not all required parameters were sent."
 			case "billing.invalidPlan":
 				return "This subscription plan cannot be subscribed to as it is not valid."

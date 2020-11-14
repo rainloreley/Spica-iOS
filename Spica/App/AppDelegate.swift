@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Override point for customization after application launch.
 		if KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.token") && KeychainWrapper.standard.hasValue(forKey: "dev.abmgrt.spica.user.id") {
 			registerForPushNotifications()
+			getNotificationSettings()
 		}
 		UIApplication.shared.applicationIconBadgeNumber = 0
         return true
@@ -74,9 +75,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 	func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
 		let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
 		let token = tokenParts.joined()
+		print("Registered for push notifications with token: \(token)")
 		SpicaPushAPI.default.setDeviceTokenForSignedInUser(token) { (result) in
-			//
+			switch result {
+				case let .failure(err):
+					print(err.error.name)
+				default: break
+			}
 		}
+	}
+	func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+		print("Failed to register for push notifications: \(error.localizedDescription)")
 	}
 	
 	
