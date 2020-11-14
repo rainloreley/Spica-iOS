@@ -153,7 +153,12 @@ extension PostDetailViewController: SFSafariViewControllerDelegate {
 extension PostDetailViewController: PostCellDelegate {
 	
 	func deletedPost(_ post: Post) {
-		navigationController?.popViewController(animated: true)
+		if postReplies.contains(where: { $0.id == post.id }) {
+			loadPostDetail()
+		}
+		else {
+			navigationController?.popViewController(animated: true)
+		}
 	}
 	
     func reloadCell(_ at: IndexPath) {

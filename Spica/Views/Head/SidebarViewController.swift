@@ -20,6 +20,7 @@ class SidebarViewController: UIViewController {
 
     var mentionsTimer = Timer()
     var mentions = [String]()
+	var viewControllerToNavigateTo: UIViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,12 +49,19 @@ class SidebarViewController: UIViewController {
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
 		NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
     }
+	
+	func setViewController(_ vc: UIViewController) {
+		viewControllerToNavigateTo = vc
+	}
 
     private func setInitialSecondaryView() {
         collectionView.selectItem(at: IndexPath(row: 0, section: 0),
                                   animated: false,
                                   scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
         splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
+		if viewControllerToNavigateTo != nil {
+			(splitViewController?.viewControllers.last as? UINavigationController)?.pushViewController(viewControllerToNavigateTo!, animated: true)
+		}
     }
 
     @objc func loadMentionsCount() {

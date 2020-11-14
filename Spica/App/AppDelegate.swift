@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 		  }
 		let payload = JSON(data)
 		if payload["type"].exists() && payload["id"].exists() {
-			if payload["type"].string! == "reply" {
+			if payload["type"].string! == "post" {
 				UIApplication.shared.open(URL(string: "spica://post/\(payload["id"].string!)")!)
 			}
 			else {

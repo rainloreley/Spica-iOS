@@ -18,7 +18,7 @@ public class SpicaPushAPI {
 	static let `default` = SpicaPushAPI()
 	
 	func setDeviceTokenForSignedInUser(_ token: String, promise: @escaping (Result<String, MicroError>) -> Void) {
-		AF.request("http://192.168.2.115:8080/device/create", method: .post, parameters: [
+		AF.request("http://192.168.2.118:8080/device/create", method: .post, parameters: [
 			"name": UIDevice.current.name,
 			"uid": KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")!,
 			"token": token

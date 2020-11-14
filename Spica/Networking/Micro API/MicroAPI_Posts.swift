@@ -165,7 +165,7 @@ extension MicroAPI {
             }
         }
 
-        AF.request("http://192.168.2.115:8080/post/send", method: .post, parameters: newPostConstruct, encoding: JSONEncoding.prettyPrinted, headers: [
+        AF.request("http://192.168.2.118:8080/post/send", method: .post, parameters: newPostConstruct, encoding: JSONEncoding.prettyPrinted, headers: [
             "Authorization": loadAuthKey(),
         ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
             switch response.result {
