@@ -33,6 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
 
             URLNavigationMap.initialize(navigator: navigator, sceneDelegate: self)
+			print("Make view visible")
             window.makeKeyAndVisible()
             verifyBiometricAuthentication()
             Kingfisher.ImageCache.default.diskStorage.config.expiration = .days(1)
@@ -40,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             if isUserLoggedIn() {
                 if !launchOptions.urlContexts.isEmpty {
                     guard let url = launchOptions.urlContexts.first else { return }
-                    guard let navigatorViewController = navigator.viewController(for: url.url) else { return }
+					guard let navigatorViewController = navigator.viewController(for: url.url) else { return }
                     showURLContextViewController(navigatorViewController)
                 }
             }
@@ -81,7 +82,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         spicaAppSidebarViewController = SidebarViewController()
         loadTabBar()
 
-        spicaAppSplitViewController.setViewController(spicaAppSidebarViewController, for: .primary)
+		spicaAppSplitViewController.setViewController(spicaAppSidebarViewController, for: .primary)
         spicaAppSplitViewController.setViewController(spicaAppTabbarViewController, for: .compact)
     }
 
