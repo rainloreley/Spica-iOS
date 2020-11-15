@@ -409,7 +409,9 @@ class PostCellView: UITableViewCell {
         VotePost.default.vote(post: post!, vote: vote) { [self] result in
             switch result {
             case let .failure(err):
-                MicroAPI.default.errorHandling(error: err, caller: self.contentView)
+				DispatchQueue.main.async {
+					MicroAPI.default.errorHandling(error: err, caller: self.contentView)
+				}
             case let .success(votepost):
                 DispatchQueue.main.async {
                     post?.score = votepost.score

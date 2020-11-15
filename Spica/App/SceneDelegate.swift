@@ -27,6 +27,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options launchOptions: UIScene.ConnectionOptions) {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
+			#if targetEnvironment(macCatalyst)
+				if let titlebar = windowScene.titlebar {
+					titlebar.titleVisibility = .hidden
+					titlebar.toolbar = nil
+				}
+			   #endif
             let initialViewController = loadInitialViewController()
             window.rootViewController = initialViewController
             self.window = window

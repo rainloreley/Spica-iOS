@@ -38,7 +38,7 @@ public class SpicaPushAPI {
 			#endif
 			AF.request("https://push.spica.li/device/create", method: .post, parameters: [
 				"name": UIDevice.current.name,
-				"uid": KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")!,
+				"uid": KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") ?? "",
 				"token": token,
 				"type": type
 			], encoding: JSONEncoding.prettyPrinted, headers: [

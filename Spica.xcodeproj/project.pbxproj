@@ -199,6 +199,7 @@
 		8BBEA42C253C68960046A3F9 /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
 		8BC1BFBD2530DF85001186F3 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BC1BFC22530E04B001186F3 /* MicroAPI_User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_User.swift; sourceTree = "<group>"; };
+		8BC7A1CF256175DA00AB2DA3 /* SpicaDebug.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = SpicaDebug.entitlements; path = "../../../../../../../Library/Mobile Documents/com~apple~CloudDocs/.Trash/SpicaDebug.entitlements"; sourceTree = "<group>"; };
 		8BC9DFF82531C9B700886C92 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		8BD0C7E625320F49008D432E /* MentionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentionsViewController.swift; sourceTree = "<group>"; };
 		8BD0C7EB25320F95008D432E /* Mention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mention.swift; sourceTree = "<group>"; };
@@ -309,6 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				8B5C42D625333060007B10BD /* Spica.entitlements */,
+				8BC7A1CF256175DA00AB2DA3 /* SpicaDebug.entitlements */,
 				8BA7B5BB253244A300915113 /* URL Navigation */,
 				8BD0C80B25322C57008D432E /* Functions */,
 				8BD712C12530A81400D2533C /* Extensions */,
@@ -1106,9 +1108,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Spica/SpicaDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1605385141;
+				CURRENT_PROJECT_VERSION = 1605385143;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1134,7 +1136,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Spica/Spica.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1605385141;
+				CURRENT_PROJECT_VERSION = 1605385143;
 				DEVELOPMENT_TEAM = G8434KY9GR;
 				INFOPLIST_FILE = Spica/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
