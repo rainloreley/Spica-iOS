@@ -424,15 +424,8 @@
 		8B6AC5A4252E0BB6003A2CC4 /* Structures */ = {
 			isa = PBXGroup;
 			children = (
+				8BF5471B2562E5F500440537 /* Micro */,
 				8B9C23B8256035E400FB4AEA /* Push Notifications */,
-				8B6AC5A5252E0BC5003A2CC4 /* Post.swift */,
-				8B6AC5AA252E0E70003A2CC4 /* User.swift */,
-				8B6AC5AF252E0F4D003A2CC4 /* XP.swift */,
-				8B35C4832530D2A1003809FA /* PostDetail.swift */,
-				8BD0C7EB25320F95008D432E /* Mention.swift */,
-				8B5C42B125331734007B10BD /* SimpleBookmark.swift */,
-				8B5C42B9253317C9007B10BD /* Bookmark.swift */,
-				8BBEA42C253C68960046A3F9 /* Status.swift */,
 			);
 			path = Structures;
 			sourceTree = "<group>";
@@ -593,6 +586,21 @@
 				8B5C42972532FDE6007B10BD /* CreditsCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		8BF5471B2562E5F500440537 /* Micro */ = {
+			isa = PBXGroup;
+			children = (
+				8B6AC5A5252E0BC5003A2CC4 /* Post.swift */,
+				8B6AC5AA252E0E70003A2CC4 /* User.swift */,
+				8B6AC5AF252E0F4D003A2CC4 /* XP.swift */,
+				8B35C4832530D2A1003809FA /* PostDetail.swift */,
+				8BD0C7EB25320F95008D432E /* Mention.swift */,
+				8B5C42B125331734007B10BD /* SimpleBookmark.swift */,
+				8B5C42B9253317C9007B10BD /* Bookmark.swift */,
+				8BBEA42C253C68960046A3F9 /* Status.swift */,
+			);
+			path = Micro;
 			sourceTree = "<group>";
 		};
 		C5A3CCF3DC6F0A6D12C268BC /* Frameworks */ = {
