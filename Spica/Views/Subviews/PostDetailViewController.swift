@@ -11,6 +11,7 @@
 import Combine
 import JGProgressHUD
 import Lightbox
+import SwiftUI
 import SafariServices
 import UIKit
 
@@ -107,6 +108,8 @@ class PostDetailViewController: UITableViewController {
             if indexPath.row % 2 == 0 {
                 let count = Array(0 ... indexPath.row).filter { !$0.isMultiple(of: 2) }.count
                 let post = postAncestors[indexPath.row - count]
+				
+				
 
                 let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
@@ -114,6 +117,15 @@ class PostDetailViewController: UITableViewController {
                 cell.indexPath = indexPath
                 cell.delegate = self
                 cell.post = post
+				
+				if post.id == mainpost.id {
+					cell.layer.borderWidth = 2
+					cell.layer.borderColor = UIColor.systemYellow.cgColor
+				}
+				else {
+					cell.layer.borderWidth = 0
+					cell.layer.borderColor = nil
+				}
 
                 return cell
             } else {
@@ -138,6 +150,15 @@ class PostDetailViewController: UITableViewController {
             cell.indexPath = indexPath
             cell.delegate = self
             cell.post = post
+			
+			if post.id == mainpost.id {
+				cell.layer.borderWidth = 2
+				cell.layer.borderColor = UIColor.systemYellow.cgColor
+			}
+			else {
+				cell.layer.borderWidth = 0
+				cell.layer.borderColor = nil
+			}
 
             return cell
         }
@@ -211,11 +232,17 @@ extension PostDetailViewController {
             if indexPath.section == 0, indexPath.row % 2 == 0 {
                 let detailVC = PostDetailViewController(style: .insetGrouped)
                 let count = Array(0 ... indexPath.row).filter { !$0.isMultiple(of: 2) }.count
-                detailVC.mainpost = Post(id: postAncestors[indexPath.row - count].id)
-                navigationController?.pushViewController(detailVC, animated: true)
+				let selectedPostID = postAncestors[indexPath.row - count].id
+				if mainpost.id != selectedPostID {
+					detailVC.mainpost = Post(id: selectedPostID)
+					navigationController?.pushViewController(detailVC, animated: true)
+				}
             } else if indexPath.section == 2 {
-                detailVC.mainpost = Post(id: postReplies[indexPath.row].id)
-                navigationController?.pushViewController(detailVC, animated: true)
+				let selectedPostID = postReplies[indexPath.row].id
+				if mainpost.id != selectedPostID {
+					detailVC.mainpost = Post(id: selectedPostID)
+					navigationController?.pushViewController(detailVC, animated: true)
+				}
             }
         }
     }

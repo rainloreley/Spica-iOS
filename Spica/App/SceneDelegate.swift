@@ -98,12 +98,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			showURLContextViewController(navigatorViewController)
 		}
 		else {
-			print("HELLO")
 			guard let navigatorViewController = navigator.viewController(for: URL(string: "spica://user/\(String(splitPath.first!))")!) else { return }
-			print(navigatorViewController)
 			showURLContextViewController(navigatorViewController)
 		}
 	}
+	
 
     func loadInitialViewController(checkLogin: Bool = true) -> UIViewController {
         if !isUserLoggedIn(), checkLogin {

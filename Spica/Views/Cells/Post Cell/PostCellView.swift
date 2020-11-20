@@ -187,8 +187,8 @@ class PostCellView: UITableViewCell {
                     nameToInsert = (post?.mentionedUsers[index].name)!
                 }
                 let selectablePart = NSMutableAttributedString(string: String(word.replacingOccurrences(of: filteredWordWithoutAtSymbol, with: nameToInsert)) + " ")
-                selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
-                selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: selectablePart.length - 1))
+				selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: filteredWord.count /*selectablePart.length - 1*/))
+				selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: /*selectablePart.length - 1*/ filteredWord.count))
                 attributedText.append(selectablePart)
             } else {
                 if word == "\n" {
@@ -222,7 +222,9 @@ class PostCellView: UITableViewCell {
 
     @objc func openLink() {
         if let url = post?.url {
-            delegate?.clickedLink(url)
+			let newURL = analyzeLink(url)
+			if newURL != url { UIApplication.shared.open(newURL) } else { delegate?.clickedLink(url) }
+            
         }
     }
 
@@ -297,7 +299,7 @@ class PostCellView: UITableViewCell {
     var upvoteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("+", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 19)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 22) // 19 22
 		if #available(iOS 13.4, *) {
 			button.isPointerInteractionEnabled = true
 		}
@@ -313,7 +315,7 @@ class PostCellView: UITableViewCell {
     var downvoteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("-", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 24)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 30) // 24 27 30
 		if #available(iOS 13.4, *) {
 			button.isPointerInteractionEnabled = true
 		}
@@ -648,6 +650,32 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         }
 
         actions.append(repost)
+		
+		let upvote = UIAction(title: "Upvote", image: UIImage(systemName: "hand.thumbsup")!) { (_) in
+			self.vote(.upvote)
+		}
+		
+		let downvote = UIAction(title: "Downvote", image: UIImage(systemName: "hand.thumbsdown")!) { (_) in
+			self.vote(.downvote)
+		}
+		
+		let neutralvote = UIAction(title: "Reset vote", image: UIImage(systemName: "gobackward")!) { (_) in
+			self.vote(self.post?.vote == 1 ? .upvote : .downvote)
+		}
+		
+		if post?.vote == 1 {
+			actions.append(neutralvote)
+			actions.append(downvote)
+		}
+		else if post?.vote == 0 {
+			actions.append(upvote)
+			actions.append(downvote)
+		}
+		else if post?.vote == -1 {
+			actions.append(upvote)
+			actions.append(neutralvote)
+		}
+		
 
         let bookmarks = UserDefaults.standard.structArrayData(StoredBookmark.self, forKey: "savedBookmarks")
 

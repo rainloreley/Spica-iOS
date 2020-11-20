@@ -110,7 +110,7 @@ struct NotificationSettingsListView: View {
 			}
 		}
 		
-		Section(footer: Text("Disabling this settings prevents the app from uploading new device tokens for this device. You might still receive push notifications until you revoke the device.")) {
+		Section(footer: Text("Disabling this setting prevents the app from uploading new device tokens for this device. You might still receive push notifications until you revoke the device.")) {
 			Toggle(isOn: $controller.allowTokenUploading) {
 				Text("Allow token uploading")
 			}

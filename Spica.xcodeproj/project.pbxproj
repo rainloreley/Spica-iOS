@@ -77,6 +77,7 @@
 		8BBB7F882530E3DF004D49BC /* countString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB7F872530E3DF004D49BC /* countString.swift */; };
 		8BBB7F8D2530E421004D49BC /* XPProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB7F8C2530E421004D49BC /* XPProgressBarView.swift */; };
 		8BBB7F952530E566004D49BC /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8BBB7F942530E566004D49BC /* KingfisherSwiftUI */; };
+		8BBE232F256851FE0053970D /* analyzeLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBE232E256851FE0053970D /* analyzeLink.swift */; };
 		8BBEA42D253C68960046A3F9 /* Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBEA42C253C68960046A3F9 /* Status.swift */; };
 		8BC1BFBE2530DF85001186F3 /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC1BFBD2530DF85001186F3 /* UserProfileViewController.swift */; };
 		8BC1BFC32530E04B001186F3 /* MicroAPI_User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BC1BFC22530E04B001186F3 /* MicroAPI_User.swift */; };
@@ -196,6 +197,7 @@
 		8BBB7F822530E38D004D49BC /* UserHeaderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHeaderViewController.swift; sourceTree = "<group>"; };
 		8BBB7F872530E3DF004D49BC /* countString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = countString.swift; sourceTree = "<group>"; };
 		8BBB7F8C2530E421004D49BC /* XPProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XPProgressBarView.swift; sourceTree = "<group>"; };
+		8BBE232E256851FE0053970D /* analyzeLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = analyzeLink.swift; sourceTree = "<group>"; };
 		8BBEA42C253C68960046A3F9 /* Status.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Status.swift; sourceTree = "<group>"; };
 		8BC1BFBD2530DF85001186F3 /* UserProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		8BC1BFC22530E04B001186F3 /* MicroAPI_User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_User.swift; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 				8BBB7F872530E3DF004D49BC /* countString.swift */,
 				8BD712D72530B19400D2533C /* VotePost.swift */,
 				8B5C42892532F5F4007B10BD /* biometricType.swift */,
+				8BBE232E256851FE0053970D /* analyzeLink.swift */,
 			);
 			path = Functions;
 			sourceTree = "<group>";
@@ -943,6 +946,7 @@
 				8B5C42AD25331724007B10BD /* BookmarksViewController.swift in Sources */,
 				8BD0C7FC25321A52008D432E /* UITableView.swift in Sources */,
 				8B0CD2B02530BB40004459EC /* CreatePostViewController.swift in Sources */,
+				8BBE232F256851FE0053970D /* analyzeLink.swift in Sources */,
 				8BD712D02530AF3900D2533C /* MicroAPI_Posts.swift in Sources */,
 				8B8893792548507500B70C64 /* Array.swift in Sources */,
 				8B5C42A2253301EA007B10BD /* UsedLibrariesViewController.swift in Sources */,
