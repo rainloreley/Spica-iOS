@@ -28,7 +28,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
 	
-	func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+	func application(
+	  _ application: UIApplication,
+	  continue userActivity: NSUserActivity,
+	  restorationHandler: @escaping ([UIUserActivityRestoring]?
+	) -> Void) -> Bool {
+	  
+	  // 1
+	  guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+		let url = userActivity.webpageURL else {
+		  return false
+	  }
+		
+		application.open(url)
+	  
+	  return false
+	}
+
+	
+	/*func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+		print("Continue user activity")
 		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb, let url = userActivity.webpageURL, let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
 			  return false
 		}
@@ -36,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 		print(components)
 		
 		return true
-	}
+	}*/
 	
 	func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
 		let userInfo = response.notification.request.content.userInfo

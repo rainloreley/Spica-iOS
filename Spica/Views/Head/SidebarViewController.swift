@@ -48,7 +48,26 @@ class SidebarViewController: UIViewController {
         loadMentionsCount()
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
 		NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(openUniversalLink(_:)), name: Notification.Name("openUniversalLink"), object: nil)
     }
+	
+	@objc func openUniversalLink(_ notification: NSNotification) {
+		if let path = notification.userInfo?["path"] as? String {
+			switch path {
+				case "feed":
+					collectionView.selectItem(at: IndexPath(row: 0, section: 0),
+											  animated: false,
+											  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
+					splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
+				case "mentions":
+					collectionView.selectItem(at: IndexPath(row: 1, section: 0),
+											  animated: false,
+											  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
+					splitViewController?.setViewController(secondaryViewControllers[1], for: .secondary)
+				default: break
+			}
+		}
+	}
 	
 	func setViewController(_ vc: UIViewController) {
 		viewControllerToNavigateTo = vc

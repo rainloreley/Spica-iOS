@@ -27,11 +27,24 @@ class TabBarController: UITabBarController {
         loadMentionsCount()
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
 		NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(openUniversalLink(_:)), name: Notification.Name("openUniversalLink"), object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
+	
+	@objc func openUniversalLink(_ notification: NSNotification) {
+		if let path = notification.userInfo?["path"] as? String {
+			switch path {
+				case "feed":
+					selectedIndex = 0
+				case "mentions":
+					selectedIndex = 1
+				default: break
+			}
+		}
+	}
 
     @objc func loadMentionsCount() {
         MicroAPI.default.getUnreadMentions(allowError: false) { [self] result in
