@@ -9,6 +9,7 @@
 //
 
 import SwiftUI
+import KingfisherSwiftUI
 
 struct NotificationSettingsView: View {
 	
@@ -68,6 +69,11 @@ struct NotificationSettingsListView: View {
 			Toggle(isOn: $controller.mentionsEnabled, label: {
 				Text("Mentions")
 			})
+			NavigationLink(
+				destination: SubscriptionsDetailView(controller: controller),
+				label: {
+					Text("Posts by users (\(controller.subscribedUsers.count))")
+				})
 		}
 		
 		Section(header: Text("Devices")) {
@@ -148,6 +154,48 @@ struct NotificationSettingsListView: View {
 		}
 		
 		
+	}
+}
+
+struct SubscriptionsDetailView: View {
+	
+	@ObservedObject var controller: NotificationSettingsController
+	
+	var body: some View {
+		Group {
+			if #available(iOS 14.0, *) {
+				List {
+					SubscriptionsDetailViewList(controller: controller)
+				}.listStyle(InsetGroupedListStyle())
+			} else {
+				List {
+					SubscriptionsDetailViewList(controller: controller)
+				}.listStyle(GroupedListStyle())
+				.environment(\.horizontalSizeClass, .regular)
+			}
+		}.navigationBarTitle(Text("Users"))
+	}
+}
+
+struct SubscriptionsDetailViewList: View {
+	
+	@ObservedObject var controller: NotificationSettingsController
+	
+	var body: some View {
+		ForEach(controller.subscribedUsers) { subscription in
+			HStack {
+				KFImage(subscription.profilePictureUrl)
+					.resizable().frame(width: 40, height: 40, alignment: .leading).cornerRadius(20)
+				VStack(alignment: .leading) {
+					Text("\(subscription.name)").bold()
+					Text("\(subscription.name)#\(subscription.tag)").foregroundColor(.secondary)
+				}
+				Spacer()
+			}.padding()
+			.onTapGesture {
+				UIApplication.shared.open(URL(string: "spica://user/\(subscription.id)")!)
+			}
+		}
 	}
 }
 

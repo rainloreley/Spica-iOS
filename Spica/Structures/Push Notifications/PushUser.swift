@@ -17,6 +17,7 @@ struct PushUser {
 	var repliesEnabled: Bool
 	var mentionsEnabled: Bool
 	var devices: [PushDevice]
+	var usersSubscribedTo: [User]
 	
 	init(_ json: JSON) {
 		id = json["id"].string ?? ""
@@ -25,6 +26,10 @@ struct PushUser {
 		mentionsEnabled = json["mentionsEnabled"].bool ?? true
 		devices = json["devices"].arrayValue.map { json in
 			return PushDevice(json)
+		}
+		usersSubscribedTo = json["userpushsubscriptions"].arrayValue.map { json in
+			print(json)
+			return User(id: json["subscribedto"].string ?? "")
 		}
 	}
 }

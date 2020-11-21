@@ -72,7 +72,7 @@ public class SpicaPushAPI {
 		}
 	}
 	
-	func getUserData(promise: @escaping (Result<PushUser, MicroError>) -> Void) {
+	func getUserData(loadUsers: Bool = true, promise: @escaping (Result<PushUser, MicroError>) -> Void) {
 		AF.request("https://push.spica.li/user", method: .get, headers: [
 			"Authorization": KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") ?? ""
 		]).responseJSON { (response) in
@@ -81,7 +81,34 @@ public class SpicaPushAPI {
 				let possibleError = MicroAPI.default.isError(response)
 				let userJSON = JSON(response.data!)
 				if !possibleError.error.isError {
-					promise(.success(.init(userJSON)))
+					
+					var user = PushUser(userJSON)
+					
+					if loadUsers {
+						var subscribedusers = [User]()
+						let dispatchGroup = DispatchGroup()
+						
+						for subscription in user.usersSubscribedTo {
+							dispatchGroup.enter()
+							MicroAPI.default.loadUser(subscription.id) { (result) in
+								switch result {
+									case .failure:
+										subscribedusers.append(User(id: subscription.id, name: subscription.id))
+										dispatchGroup.leave()
+									case let .success(fetchedsubscriptionuser):
+										subscribedusers.append(fetchedsubscriptionuser)
+										dispatchGroup.leave()
+								}
+							}
+						}
+						dispatchGroup.notify(queue: .main) {
+							user.usersSubscribedTo = subscribedusers
+							promise(.success(user))
+						}
+					}
+					else {
+						promise(.success(user))
+					}
 				} else {
 					promise(.failure(possibleError))
 				}
@@ -105,6 +132,27 @@ public class SpicaPushAPI {
 				let userJSON = JSON(response.data!)
 				if !possibleError.error.isError {
 					promise(.success(.init(userJSON)))
+				} else {
+					promise(.failure(possibleError))
+				}
+			case let .failure(err):
+				return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+			}
+		}
+	}
+	
+	func changeUserSubscription(_ uid: String, add: Bool, promise: @escaping (Result<JSON, MicroError>) -> Void) {
+		AF.request("https://push.spica.li/subscriptions", method: add ? .post : .delete, parameters: [
+			"uid": uid
+		], encoding: JSONEncoding.prettyPrinted, headers: [
+					"Authorization": KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.token") ?? ""
+		]).responseJSON { (response) in
+			switch response.result {
+			case .success:
+				let possibleError = MicroAPI.default.isError(response)
+				let json = JSON(response.data!)
+				if !possibleError.error.isError {
+					promise(.success(json))
 				} else {
 					promise(.failure(possibleError))
 				}

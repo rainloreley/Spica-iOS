@@ -122,8 +122,15 @@ extension MicroAPI {
                                 loadPost(highestAncestor!.parent!) { ancestorResult in
                                     switch ancestorResult {
                                     case let .failure(parentErr):
-                                        parentDispatchGroup.leave()
-                                        return promise(.failure(parentErr))
+										if parentErr.error.name == "missingResource" {
+											finishedPostDetail.ancestors.append(Post.deleted)
+											highestAncestor = nil
+											parentDispatchGroup.leave()
+										}
+										else {
+											parentDispatchGroup.leave()
+											return promise(.failure(parentErr))
+										}
                                     case let .success(parentPost):
                                         finishedPostDetail.ancestors.append(parentPost)
                                         highestAncestor = parentPost

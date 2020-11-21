@@ -132,18 +132,41 @@ class PostCellView: UITableViewCell {
 
             postdateLabel.text = RelativeDateTimeFormatter().localizedString(for: post!.createdAt, relativeTo: Date())
             replycountLabel.text = String((post?.children.count)!)
-            if post?.interactions != nil {
-                interactioncountLabel.text = String((post?.interactions)!)
-                interactioncountLabel.isHidden = false
-                interactioncountIcon.isHidden = false
-            } else {
-                interactioncountLabel.isHidden = true
-                interactioncountIcon.isHidden = true
-                interactioncountLabel.text = ""
-            }
-
-            let contextInteraction = UIContextMenuInteraction(delegate: self)
-            contentView.addInteraction(contextInteraction)
+			
+			let contextInteraction = UIContextMenuInteraction(delegate: self)
+			
+			if post?.isDeleted == true {
+				interactioncountLabel.isHidden = true
+				interactioncountIcon.isHidden = true
+				replycountIcon.isHidden = true
+				replycountLabel.isHidden = true
+				postdateLabel.isHidden = true
+				upvoteButton.isHidden = true
+				downvoteButton.isHidden = true
+				postScoreLabel.isHidden = true
+				contentView.removeInteraction(contextInteraction)
+			}
+			else {
+				interactioncountLabel.isHidden = false
+				interactioncountIcon.isHidden = false
+				replycountIcon.isHidden = false
+				replycountLabel.isHidden = false
+				postdateLabel.isHidden = false
+				upvoteButton.isHidden = false
+				downvoteButton.isHidden = false
+				postScoreLabel.isHidden = false
+				contentView.addInteraction(contextInteraction)
+			}
+			
+			if post?.interactions != nil {
+				interactioncountLabel.text = String((post?.interactions)!)
+				interactioncountLabel.isHidden = false
+				interactioncountIcon.isHidden = false
+			} else {
+				interactioncountLabel.isHidden = true
+				interactioncountIcon.isHidden = true
+				interactioncountLabel.text = ""
+			}
         }
     }
 	
@@ -181,14 +204,18 @@ class PostCellView: UITableViewCell {
                 attributedText.append(selectablePart)
             } else if String(word).starts(with: "@"), word.count > 1 {
                 let filteredWord = String(word).removeSpecialChars
+				
                 let filteredWordWithoutAtSymbol = String(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])
                 var nameToInsert = filteredWordWithoutAtSymbol
                 if let index = post?.mentionedUsers.firstIndex(where: { $0.id == nameToInsert }) {
-                    nameToInsert = (post?.mentionedUsers[index].name)!
+                    nameToInsert = (post?.mentionedUsers[index].name) ?? filteredWordWithoutAtSymbol
                 }
+				if post!.id == "4cec8561-4013-47db-b5eb-cacbf631f0e9" && filteredWord == "@4f3c00c2-0191-481d-aa56-57cfa8ddaf67" {
+					
+				}
                 let selectablePart = NSMutableAttributedString(string: String(word.replacingOccurrences(of: filteredWordWithoutAtSymbol, with: nameToInsert)) + " ")
-				selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: filteredWord.count /*selectablePart.length - 1*/))
-				selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: /*selectablePart.length - 1*/ filteredWord.count))
+				selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: nameToInsert.count + 1 /*selectablePart.length - 1*/))
+				selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: /*selectablePart.length - 1*/ nameToInsert.count + 1))
                 attributedText.append(selectablePart)
             } else {
                 if word == "\n" {
@@ -615,21 +642,27 @@ extension PostCellView: UITextViewDelegate {
 
 extension PostCellView: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
-            self.makeContextMenu()
-		})
+		
+		if post?.isDeleted == true {
+			return nil
+		}
+		else {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { [self] _ in
+				self.makeContextMenu()
+			})
+		}
     }
 
     func makeContextMenu() -> UIMenu {
         var actions = [UIAction]()
 
-        let copyPostID = UIAction(title: "Copy post ID", image: UIImage(systemName: "doc.on.doc")) { [self] _ in
+        /*let copyPostID = UIAction(title: "Copy post ID", image: UIImage(systemName: "doc.on.doc")) { [self] _ in
             let pasteboard = UIPasteboard.general
             pasteboard.string = post?.id
             SPAlert.present(title: "Copied", preset: .done)
         }
 
-        actions.append(copyPostID)
+        actions.append(copyPostID)*/
 
         let copyUserID = UIAction(title: "Copy user ID", image: UIImage(systemName: "person.circle")) { [self] _ in
             let pasteboard = UIPasteboard.general
@@ -638,6 +671,14 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         }
 
         actions.append(copyUserID)
+		
+		let copyContent = UIAction(title: "Copy content", image: UIImage(systemName: "doc.on.doc")) { [self] _ in
+			let pasteboard = UIPasteboard.general
+			pasteboard.string = post?.content
+			SPAlert.present(title: "Copied", preset: .done)
+		}
+
+		actions.append(copyContent)
 
         let reply = UIAction(title: "Reply", image: UIImage(systemName: "arrowshape.turn.up.left")) { [self] _ in
             self.delegate?.openPostView(.reply, preText: nil, preLink: nil, parentID: post!.id)

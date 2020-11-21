@@ -15,17 +15,23 @@ func analyzeLink(_ url: URL) -> URL {
 	if components.first == "/" { components.remove(at: 0) }
 	
 	if url.host == "micro.alles.cx" {
-		if components.first == "followers" {
-			return URL(string: "spica://followers")!
-		}
-		else if components.first == "following" {
-			return URL(string: "spica://following")!
-		}
-		else if components.first == "p" && components.count == 2 {
-			return URL(string: "spica://post/\(components[1])")!
+		
+		if components.count > 0 {
+			if components.first == "followers" {
+				return URL(string: "spica://followers")!
+			}
+			else if components.first == "following" {
+				return URL(string: "spica://following")!
+			}
+			else if components.first == "p" && components.count == 2 {
+				return URL(string: "spica://post/\(components[1])")!
+			}
+			else {
+				return URL(string: "spica://user/\(String(components.first!))")!
+			}
 		}
 		else {
-			return URL(string: "spica://user/\(String(components.first!))")!
+			return url
 		}
 	}
 	else {

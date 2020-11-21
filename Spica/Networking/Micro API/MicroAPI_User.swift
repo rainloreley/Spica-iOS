@@ -97,20 +97,34 @@ extension MicroAPI {
 									case let .success(status):
 										user.status = status
 										
-										if loadRing {
-											FlagServerAPI.default.loadUserRing(user.id) { ringResult in
-												switch ringResult {
-												case .failure:
-													user.ring = .none
-													promise(.success(user))
-												case let .success(ring):
-													user.ring = ring
-													promise(.success(user))
-												}
+										SpicaPushAPI.default.getUserData { (pushresult) in
+											switch pushresult {
+												case let .failure(err):
+													promise(.failure(err))
+												case let .success(pushuser):
+													if pushuser.usersSubscribedTo.contains(where: { $0.id == user.id }) {
+														user.userSubscribedTo = true
+													}
+													else {
+														user.userSubscribedTo = false
+													}
+													
+													if loadRing {
+														FlagServerAPI.default.loadUserRing(user.id) { ringResult in
+															switch ringResult {
+															case .failure:
+																user.ring = .none
+																promise(.success(user))
+															case let .success(ring):
+																user.ring = ring
+																promise(.success(user))
+															}
+														}
+													}
+													else {
+														promise(.success(user))
+													}
 											}
-										}
-										else {
-											promise(.success(user))
 										}
 									}
 								}

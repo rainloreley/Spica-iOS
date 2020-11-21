@@ -74,14 +74,13 @@ class PostDetailViewController: UITableViewController {
             }
         }
     }
+	
+	var postView: UIHostingController<CreatePostView>?
 
     @objc func openReplyView(_: Any) {
         if mainpost != nil {
-            let vc = CreatePostViewController()
-            vc.type = .reply
-            vc.delegate = self
-            vc.parentID = mainpost.id
-            present(UINavigationController(rootViewController: vc), animated: true)
+			postView = UIHostingController(rootView: CreatePostView(type: .reply, controller: .init(delegate: self, parentID: mainpost.id)))
+			present(UINavigationController(rootViewController: postView!), animated: true)
         }
     }
 
@@ -198,15 +197,10 @@ extension PostDetailViewController: PostCellDelegate {
         present(vc, animated: true)
     }
 
-    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-        let vc = CreatePostViewController()
-        vc.type = type
-        vc.delegate = self
-        vc.parentID = parentID
-        vc.preText = preText ?? ""
-        vc.preLink = preLink
-        present(UINavigationController(rootViewController: vc), animated: true)
-    }
+	func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
+		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+		present(UINavigationController(rootViewController: postView!), animated: true)
+	}
 
     func reloadData() {
         loadPostDetail()
@@ -232,15 +226,15 @@ extension PostDetailViewController {
             if indexPath.section == 0, indexPath.row % 2 == 0 {
                 let detailVC = PostDetailViewController(style: .insetGrouped)
                 let count = Array(0 ... indexPath.row).filter { !$0.isMultiple(of: 2) }.count
-				let selectedPostID = postAncestors[indexPath.row - count].id
-				if mainpost.id != selectedPostID {
-					detailVC.mainpost = Post(id: selectedPostID)
+				let selectedPost = postAncestors[indexPath.row - count]
+				if mainpost.id != selectedPost.id && selectedPost.isDeleted != true {
+					detailVC.mainpost = selectedPost //Post(id: selectedPost.id)
 					navigationController?.pushViewController(detailVC, animated: true)
 				}
             } else if indexPath.section == 2 {
-				let selectedPostID = postReplies[indexPath.row].id
-				if mainpost.id != selectedPostID {
-					detailVC.mainpost = Post(id: selectedPostID)
+				let selectedPost = postReplies[indexPath.row]
+				if mainpost.id != selectedPost.id && selectedPost.isDeleted != true {
+					detailVC.mainpost = selectedPost
 					navigationController?.pushViewController(detailVC, animated: true)
 				}
             }
@@ -249,6 +243,11 @@ extension PostDetailViewController {
 }
 
 extension PostDetailViewController: CreatePostDelegate {
+	
+	func dismissView() {
+		postView!.dismiss(animated: true, completion: nil)
+	}
+	
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)

@@ -19,6 +19,7 @@ import UIKit
 
 protocol CreatePostDelegate {
     func didSendPost(post: Post?)
+	func dismissView()
 }
 
 class CreatePostViewController: UIViewController, UITextViewDelegate {

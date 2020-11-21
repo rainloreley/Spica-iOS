@@ -41,6 +41,7 @@ class NotificationSettingsController: ObservableObject {
 	}
 	
 	@Published var devices = [PushDevice]()
+	@Published var subscribedUsers = [User]()
 	
 	@Published var allowTokenUploading: Bool = true {
 		didSet {
@@ -78,6 +79,7 @@ class NotificationSettingsController: ObservableObject {
 					repliesEnabled = user.repliesEnabled
 					mentionsEnabled = user.mentionsEnabled
 					devices = user.devices
+					subscribedUsers = user.usersSubscribedTo
 					finishedInitialLoading = true
 					
 			}
@@ -97,6 +99,7 @@ class NotificationSettingsController: ObservableObject {
 					repliesEnabled = user.repliesEnabled
 					mentionsEnabled = user.mentionsEnabled
 					devices = user.devices
+					subscribedUsers = user.usersSubscribedTo
 					finishedInitialLoading = true
 					
 			}

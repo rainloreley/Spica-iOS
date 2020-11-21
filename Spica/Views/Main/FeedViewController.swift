@@ -14,6 +14,7 @@ import Lightbox
 import SafariServices
 import SnapKit
 import UIKit
+import SwiftUI
 
 class FeedViewController: UITableViewController {
     var posts = [Post]()
@@ -79,12 +80,12 @@ class FeedViewController: UITableViewController {
         let vc = storyboard.instantiateInitialViewController()
         present(vc!, animated: true)
     }
+	
+	var postView: UIHostingController<CreatePostView>?
 
     @objc func openNewPostView() {
-        let vc = CreatePostViewController()
-        vc.type = .post
-        vc.delegate = self
-        present(UINavigationController(rootViewController: vc), animated: true)
+		postView = UIHostingController(rootView: CreatePostView(type: .post, controller: CreatePostController(delegate: self)))
+        present(UINavigationController(rootViewController: postView!), animated: true)
     }
 
     override func viewDidAppear(_: Bool) {
@@ -163,7 +164,7 @@ class FeedViewController: UITableViewController {
 
 extension FeedViewController {
     override func numberOfSections(in _: UITableView) -> Int {
-        return posts.count
+		return posts.count
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
@@ -213,13 +214,8 @@ extension FeedViewController: PostCellDelegate {
     }
 
     func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-        let vc = CreatePostViewController()
-        vc.type = type
-        vc.delegate = self
-        vc.parentID = parentID
-        vc.preText = preText ?? ""
-        vc.preLink = preLink
-        present(UINavigationController(rootViewController: vc), animated: true)
+		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+		present(UINavigationController(rootViewController: postView!), animated: true)
     }
 
     func reloadData() {
@@ -266,6 +262,11 @@ extension FeedViewController {
 }
 
 extension FeedViewController: CreatePostDelegate {
+	
+	func dismissView() {
+		postView!.dismiss(animated: true, completion: nil)
+	}
+
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)
