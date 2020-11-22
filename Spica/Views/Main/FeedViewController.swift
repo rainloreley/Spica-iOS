@@ -25,6 +25,16 @@ class FeedViewController: UITableViewController {
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
+		if #available(iOS 14.0, *) {
+			if spicaAppSplitViewController.isCollapsed {
+				navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+			}
+			else {
+				navigationItem.leftBarButtonItem = nil
+			}
+		} else {
+			navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+		}
     }
 
     override func viewDidLoad() {
@@ -32,7 +42,6 @@ class FeedViewController: UITableViewController {
         navigationItem.title = "Feed"
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openNewPostView)), UIBarButtonItem(image: UIImage(systemName: "text.bubble"), style: .plain, target: self, action: #selector(openUpdateStatus(sender:)))]
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
 
         refreshControl = UIRefreshControl()

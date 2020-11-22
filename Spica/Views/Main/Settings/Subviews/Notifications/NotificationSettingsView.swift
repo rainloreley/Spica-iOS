@@ -191,7 +191,7 @@ struct SubscriptionsDetailViewList: View {
 					Text("\(subscription.name)#\(subscription.tag)").foregroundColor(.secondary)
 				}
 				Spacer()
-			}.padding()
+			}.padding(6)
 			.onTapGesture {
 				UIApplication.shared.open(URL(string: "spica://user/\(subscription.id)")!)
 			}

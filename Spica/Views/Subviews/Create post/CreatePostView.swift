@@ -16,15 +16,36 @@ struct CreatePostView: View {
 	
 	@State var type: PostType = .post
 	@ObservedObject var controller: CreatePostController
+	@State var isDrop: Bool = false
+	
+    var body: some View {
+	
+		Group {
+			someView()
+		}
+    }
+	
+	func someView() -> AnyView {
+		if #available(iOS 13.4, *) {
+			return AnyView(CreatePostSubView(type: $type, controller: controller)
+							.onDrop(of: ["public.image"], delegate: self))
+		} else {
+			return AnyView(CreatePostSubView(type: $type, controller: controller))
+		}
+		}
+}
+
+struct CreatePostSubView: View {
+	
+	@Binding var type: PostType
+	@ObservedObject var controller: CreatePostController
 	@State private var showingImagePicker = false
 	@State private var showingImageAlert = false
 	
 	@State private var textStyle = UIFont.TextStyle.body
 	@State var placeholder = "Hi! What's up?"
 	
-	@Environment(\.presentationMode) var presentationMode
-	
-    var body: some View {
+	var body: some View {
 		GeometryReader(content: { geometry in
 			ZStack {
 				VStack {
@@ -63,6 +84,13 @@ struct CreatePostView: View {
 		.padding()
 		.navigationBarTitle(Text("\(type == .reply ? String("Reply") : String("Post"))"), displayMode: .inline)
 			  .navigationBarItems(leading: HStack {
+				#if targetEnvironment(macCatalyst)
+				Button(action: {
+					controller.delegate!.dismissView()
+				}, label: {
+					Image(systemName: "xmark.circle.fill").foregroundColor(.gray).imageScale(.large).padding(.trailing)
+				})
+				#endif
 				  Button(action: {
 					  if controller.selectedImage != nil {
 						  showingImageAlert = true
@@ -113,21 +141,52 @@ struct CreatePostView: View {
 		.alert(isPresented: $controller.showErrorMessage, content: {
 			Alert(title: Text("Error"), message: Text(controller.errorMessage), dismissButton: .cancel())
 		})
-			  .actionSheet(isPresented: $showingImageAlert, content: {
-				  ActionSheet(title: Text("Manage image"), message: Text("Please select an option"), buttons: [
-								  .default(Text("Select another image"), action: {
-									  showingImageAlert = false
-									  showingImagePicker = true
-								  }),
-								  .destructive(Text("Remove image"), action: {
-									  controller.selectedImage = nil
-									  showingImageAlert = false
-								  }),
-								  .cancel()
-				  ])
-		  })
+		.actionSheet(isPresented: $showingImageAlert, content: {
+				ActionSheet(title: Text("Manage image"), message: Text("Please select an option"), buttons: [
+								.default(Text("Select another image"), action: {
+									showingImageAlert = false
+									showingImagePicker = true
+								}),
+								.destructive(Text("Remove image"), action: {
+									controller.selectedImage = nil
+									showingImageAlert = false
+								}),
+								.cancel()
+				])
+		})
+	}
+}
 
-    }
+@available(iOS 13.4, *)
+extension CreatePostView: DropDelegate {
+	func dropEntered(info: DropInfo) {
+			self.isDrop = true
+		}
+
+		func dropExited(info: DropInfo) {
+			self.isDrop = false
+		}
+	
+	func validateDrop(info: DropInfo) -> Bool {
+		return info.hasItemsConforming(to: ["public.image"])
+	}
+
+		func performDrop(info: DropInfo) -> Bool {
+			guard
+				let itemProvider = info.itemProviders(for: ["public.image"]).first
+			else { return false }
+			
+			itemProvider.loadDataRepresentation(forTypeIdentifier: "public.image") { (item, error) in
+				if item != nil {
+					let image = UIImage(data: item!)
+					DispatchQueue.main.async {
+						controller.selectedImage = image
+					}
+				}
+			}
+
+			return true
+		}
 }
 
 struct CreatePostView_Previews: PreviewProvider {

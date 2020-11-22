@@ -73,7 +73,7 @@ class UserProfileViewController: UITableViewController {
 			SPAlert.present(title: "Copied", preset: .done)
 		}
 		
-		let changeSubscriptionStatus = UIAlertAction(title: user.userSubscribedTo ? "Don't get notifications for new posts" : "Get notifications for new posts", style: .default) { [self] (_) in
+		let changeSubscriptionStatus = UIAlertAction(title: user.userSubscribedTo ? "Disable notifications" : "Enable notifications", style: .default) { [self] (_) in
 			SpicaPushAPI.default.changeUserSubscription(user.id, add: !user.userSubscribedTo) { (result) in
 				switch result {
 					case let .failure(err):
@@ -90,7 +90,7 @@ class UserProfileViewController: UITableViewController {
 		
 		userOptionsSheet.addAction(allesPeopleAction)
 		userOptionsSheet.addAction(copyIDAction)
-		if user.id != KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") {
+		if user.id != KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") && userDataLoaded {
 			userOptionsSheet.addAction(changeSubscriptionStatus)
 		}
 		userOptionsSheet.addAction(cancelAction)

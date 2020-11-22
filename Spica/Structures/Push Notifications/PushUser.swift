@@ -28,7 +28,6 @@ struct PushUser {
 			return PushDevice(json)
 		}
 		usersSubscribedTo = json["userpushsubscriptions"].arrayValue.map { json in
-			print(json)
 			return User(id: json["subscribedto"].string ?? "")
 		}
 	}
