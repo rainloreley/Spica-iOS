@@ -11,6 +11,8 @@
 import SwiftUI
 import KMPlaceholderTextView
 import SPAlert
+import SwiftKeychainWrapper
+import KingfisherSwiftUI
 
 struct CreatePostView: View {
 	
@@ -56,7 +58,7 @@ struct CreatePostSubView: View {
 					}
 					HStack {
 						VStack {
-							Image("leapfp").resizable().frame(width: 40, height: 40, alignment: .center)
+							KFImage(URL(string: "https://avatar.alles.cc/\(KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") ?? "_")")!).resizable().frame(width: 40, height: 40, alignment: .center)
 								.cornerRadius(20).padding(.bottom)
 							CircularProgressBar(controller: controller.progressbarController).frame(width: 35, height: 35, alignment: .center)
 							Spacer()
