@@ -27,6 +27,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo _: UISceneSession, options launchOptions: UIScene.ConnectionOptions) {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
+			#if targetEnvironment(macCatalyst)
+				if let titlebar = windowScene.titlebar {
+					titlebar.titleVisibility = .hidden
+					titlebar.toolbar = nil
+				}
+			   #endif
             let initialViewController = loadInitialViewController()
             window.rootViewController = initialViewController
             self.window = window
@@ -38,14 +44,65 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             Kingfisher.ImageCache.default.diskStorage.config.expiration = .days(1)
 
             if isUserLoggedIn() {
-                if !launchOptions.urlContexts.isEmpty {
-                    guard let url = launchOptions.urlContexts.first else { return }
-                    guard let navigatorViewController = navigator.viewController(for: url.url) else { return }
-                    showURLContextViewController(navigatorViewController)
-                }
+				
+				//handleUniversalLink(launchOptions.userActivities.first)
+				
+				if launchOptions.userActivities.first != nil && launchOptions.userActivities.first!.activityType == NSUserActivityTypeBrowsingWeb {
+					handleUniversalLink(launchOptions.userActivities.first!)
+				}
+				else {
+					if !launchOptions.urlContexts.isEmpty {
+						guard let url = launchOptions.urlContexts.first else { return }
+						guard let navigatorViewController = navigator.viewController(for: url.url) else { return }
+						showURLContextViewController(navigatorViewController)
+					}
+				}
             }
         }
     }
+	
+	func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+		handleUniversalLink(userActivity)
+	}
+	
+	func handleUniversalLink(_ userActivity: NSUserActivity) {
+		
+		guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+			  let incomingURL = userActivity.webpageURL,
+				let components = NSURLComponents(url: incomingURL, resolvingAgainstBaseURL: true) else {
+				return
+			}
+		
+		guard let path = components.path else {
+				return
+			}
+		
+		let splitPath = path.split(separator: "/")
+		
+		if splitPath.isEmpty {
+			NotificationCenter.default.post(name: Notification.Name("openUniversalLink"), object: nil, userInfo: ["path": "feed"])
+		}
+		else if splitPath.first == "replies" {
+			NotificationCenter.default.post(name: Notification.Name("openUniversalLink"), object: nil, userInfo: ["path": "mentions"])
+		}
+		else if splitPath.first == "followers" {
+			guard let navigatorViewController = navigator.viewController(for: URL(string: "spica://followers")!) else { return }
+			showURLContextViewController(navigatorViewController)
+		}
+		else if splitPath.first == "following" {
+			guard let navigatorViewController = navigator.viewController(for: URL(string: "spica://following")!) else { return }
+			showURLContextViewController(navigatorViewController)
+		}
+		else if splitPath.first == "p" && splitPath.count == 2 {
+			guard let navigatorViewController = navigator.viewController(for: URL(string: "spica://post/\(splitPath[1])")!) else { return }
+			showURLContextViewController(navigatorViewController)
+		}
+		else {
+			guard let navigatorViewController = navigator.viewController(for: URL(string: "spica://user/\(String(splitPath.first!))")!) else { return }
+			showURLContextViewController(navigatorViewController)
+		}
+	}
+	
 
     func loadInitialViewController(checkLogin: Bool = true) -> UIViewController {
         if !isUserLoggedIn(), checkLogin {
@@ -81,7 +138,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         spicaAppSidebarViewController = SidebarViewController()
         loadTabBar()
 
-        spicaAppSplitViewController.setViewController(spicaAppSidebarViewController, for: .primary)
+		spicaAppSplitViewController.setViewController(spicaAppSidebarViewController, for: .primary)
         spicaAppSplitViewController.setViewController(spicaAppTabbarViewController, for: .compact)
     }
 

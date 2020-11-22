@@ -27,7 +27,7 @@ public class MicroAPI {
         } else {
             let json = JSON(response.data!)
             if json["err"].exists() {
-                return .init(error: .init(isError: true, name: json["err"].string ?? "unknown"), action: json["err"].string ?? "" == "badAuthorization" ? "nav:login" : "")
+				return .init(error: .init(isError: true, name: json["err"].string ?? "unknown", humanDescription: getErrorMessage(error: json["err"].string ?? "")), action: json["err"].string ?? "" == "badAuthorization" ? "nav:login" : "")
             }
             return .init(error: .init(isError: false, name: ""), action: nil)
         }
@@ -37,4 +37,11 @@ public class MicroAPI {
 struct MicroAnalyzedError {
     var isError: Bool
     var name: String
+	var humanDescription: String
+	
+	init(isError: Bool, name: String, humanDescription: String = "") {
+		self.isError = isError
+		self.name = name
+		self.humanDescription = humanDescription != "" ? humanDescription : name
+	}
 }

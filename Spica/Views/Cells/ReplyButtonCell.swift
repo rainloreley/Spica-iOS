@@ -26,6 +26,9 @@ class ReplyButtonCell: UITableViewCell {
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 12
         button.titleLabel?.font = .boldSystemFont(ofSize: 17)
+		if #available(iOS 13.4, *) {
+			button.isPointerInteractionEnabled = true
+		}
         return button
     }()
 

@@ -14,6 +14,7 @@ import Lightbox
 import SafariServices
 import SPAlert
 import UIKit
+import SwiftUI
 
 class BookmarksViewController: UITableViewController {
     var bookmarks = [Bookmark]()
@@ -21,6 +22,7 @@ class BookmarksViewController: UITableViewController {
     var loadingHud: JGProgressHUD!
     var imageReloadedCells = [String]()
     var sortingMethod: BookmarkSortingMethod = .byAddedDateDescending
+	var postView: UIHostingController<CreatePostView>?
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -199,15 +201,11 @@ extension BookmarksViewController: PostCellDelegate {
         present(vc, animated: true)
     }
 
-    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-        let vc = CreatePostViewController()
-        vc.type = type
-        vc.delegate = self
-        vc.parentID = parentID
-        vc.preText = preText ?? ""
-        vc.preLink = preLink
-        present(UINavigationController(rootViewController: vc), animated: true)
-    }
+
+	func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
+		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+		present(UINavigationController(rootViewController: postView!), animated: true)
+	}
 
     func reloadData() {
         loadBookmarks()
@@ -226,6 +224,11 @@ extension BookmarksViewController: PostCellDelegate {
 }
 
 extension BookmarksViewController: CreatePostDelegate {
+	
+	func dismissView() {
+		postView!.dismiss(animated: true, completion: nil)
+	}
+	
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)

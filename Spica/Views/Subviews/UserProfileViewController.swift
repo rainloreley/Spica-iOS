@@ -13,6 +13,7 @@ import JGProgressHUD
 import Lightbox
 import SafariServices
 import SPAlert
+import SwiftUI
 import SwiftKeychainWrapper
 import UIKit
 
@@ -23,6 +24,7 @@ class UserProfileViewController: UITableViewController {
     var imageReloadedCells = [String]()
 
     var loadingHud: JGProgressHUD!
+	var postView: UIHostingController<CreatePostView>?
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -71,26 +73,35 @@ class UserProfileViewController: UITableViewController {
 			SPAlert.present(title: "Copied", preset: .done)
 		}
 		
+		let changeSubscriptionStatus = UIAlertAction(title: user.userSubscribedTo ? "Disable notifications" : "Enable notifications", style: .default) { [self] (_) in
+			SpicaPushAPI.default.changeUserSubscription(user.id, add: !user.userSubscribedTo) { (result) in
+				switch result {
+					case let .failure(err):
+						MicroAPI.default.errorHandling(error: err, caller: view)
+					case .success:
+						user.userSubscribedTo.toggle()
+						SPAlert.present(title: "Changed notification status", preset: .done)
+						loadUser()
+				}
+			}
+		}
+		
 		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 		
 		userOptionsSheet.addAction(allesPeopleAction)
 		userOptionsSheet.addAction(copyIDAction)
+		if user.id != KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") && userDataLoaded {
+			userOptionsSheet.addAction(changeSubscriptionStatus)
+		}
 		userOptionsSheet.addAction(cancelAction)
 		
 		present(userOptionsSheet, animated: true, completion: nil)
 	}
-
-    @objc func openUpdateStatusSheet() {
-        let vc = CreatePostViewController()
-        // vc.type = .status
-        vc.delegate = self
-        present(UINavigationController(rootViewController: vc), animated: true)
-    }
-
+	
     @objc func loadUser() {
         if userposts.isEmpty { loadingHud.show(in: view) }
 
-        MicroAPI.default.loadUser(user.id, loadAdditionalInfo: true) { [self] result in
+		MicroAPI.default.loadUser(user.id, loadStatus: true, loadRing: true) { [self] result in
             switch result {
             case let .failure(err):
                 DispatchQueue.main.async {
@@ -232,16 +243,10 @@ extension UserProfileViewController: PostCellDelegate {
         present(vc, animated: true)
     }
 
-    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-        let vc = CreatePostViewController()
-        vc.type = type
-        vc.delegate = self
-        vc.parentID = parentID
-        vc.preText = preText ?? ""
-        vc.preLink = preLink
-        present(UINavigationController(rootViewController: vc), animated: true)
-    }
-
+	func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
+		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+		present(UINavigationController(rootViewController: postView!), animated: true)
+	}
     func reloadData() {
         loadUser()
     }
@@ -259,6 +264,11 @@ extension UserProfileViewController: PostCellDelegate {
 }
 
 extension UserProfileViewController: CreatePostDelegate {
+	
+	func dismissView() {
+		postView!.dismiss(animated: true, completion: nil)
+	}
+	
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)

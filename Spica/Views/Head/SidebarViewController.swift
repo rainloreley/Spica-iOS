@@ -13,13 +13,14 @@ import UIKit
 
 @available(iOS 14.0, *)
 class SidebarViewController: UIViewController {
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var dataSource: UICollectionViewDiffableDataSource<SidebarSection, Item>!
     private var collectionView: UICollectionView!
     private var accountViewController: UserProfileViewController!
     private var secondaryViewControllers = [UINavigationController]()
 
     var mentionsTimer = Timer()
     var mentions = [String]()
+	var viewControllerToNavigateTo: UIViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,13 +47,40 @@ class SidebarViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         loadMentionsCount()
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
+		NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
+		NotificationCenter.default.addObserver(self, selector: #selector(openUniversalLink(_:)), name: Notification.Name("openUniversalLink"), object: nil)
     }
+	
+	@objc func openUniversalLink(_ notification: NSNotification) {
+		if let path = notification.userInfo?["path"] as? String {
+			switch path {
+				case "feed":
+					collectionView.selectItem(at: IndexPath(row: 0, section: 0),
+											  animated: false,
+											  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
+					splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
+				case "mentions":
+					collectionView.selectItem(at: IndexPath(row: 1, section: 0),
+											  animated: false,
+											  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
+					splitViewController?.setViewController(secondaryViewControllers[1], for: .secondary)
+				default: break
+			}
+		}
+	}
+	
+	func setViewController(_ vc: UIViewController) {
+		viewControllerToNavigateTo = vc
+	}
 
     private func setInitialSecondaryView() {
         collectionView.selectItem(at: IndexPath(row: 0, section: 0),
                                   animated: false,
                                   scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
         splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
+		if viewControllerToNavigateTo != nil {
+			(splitViewController?.viewControllers.last as? UINavigationController)?.pushViewController(viewControllerToNavigateTo!, animated: true)
+		}
     }
 
     @objc func loadMentionsCount() {
@@ -125,7 +153,7 @@ extension SidebarViewController {
             cell.accessories = []
         }
 
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
+        dataSource = UICollectionViewDiffableDataSource<SidebarSection, Item>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: Item) -> UICollectionViewCell? in
             if indexPath.item == 0, indexPath.section != 0 {
                 return collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
@@ -134,8 +162,8 @@ extension SidebarViewController {
             }
         }
 
-        let sections: [Section] = [.tabs]
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        let sections: [SidebarSection] = [.tabs]
+        var snapshot = NSDiffableDataSourceSnapshot<SidebarSection, Item>()
         snapshot.appendSections(sections)
         dataSource.apply(snapshot, animatingDifferences: false)
 
@@ -172,6 +200,6 @@ var tabsItems = [
 	Item(title: "Account", image: UIImage(systemName: "person.circle")),
 	Item(title: "Settings", image: UIImage(systemName: "gear"))]
 
-enum Section: String {
+enum SidebarSection: String {
     case tabs
 }

@@ -26,5 +26,25 @@ struct URLNavigationMap {
             userDetail.user = User(id: userID)
             return userDetail
         }
+		
+		/*navigator.register("spica://feed") { _, _, _ in
+			let feed = FeedViewController(style: .insetGrouped)
+			return feed
+		}
+		navigator.register("spica://mentions") { _, _, _ in
+			let mentions = MentionsViewController(style: .insetGrouped)
+			return mentions
+		}*/
+		navigator.register("spica://followers") { _, _, _ in
+			let followers = FollowersFollowingViewController()
+			followers.selectedIndex = 0
+			return followers
+		}
+		
+		navigator.register("spica://following") { _, _, _ in
+			let followers = FollowersFollowingViewController()
+			followers.selectedIndex = 1
+			return followers
+		}
     }
 }

@@ -35,7 +35,7 @@ class UserHeaderViewController: ObservableObject {
             case let .failure(err):
                 DispatchQueue.main.async {
                     user.iamFollowing.toggle()
-                    delegate.showError(title: "Error", message: "The action failed with the following response:\n\n\(err.error.name)")
+                    delegate.showError(title: "Error", message: "The action failed with the following response:\n\n\(err.error.humanDescription)")
                 }
             default: break
             }

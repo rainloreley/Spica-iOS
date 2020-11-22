@@ -1,6 +1,6 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 28.10.20.
+// File created by Lea Baumgart on 28.10.20.
 //
 // Licensed under the MIT License
 // Copyright © 2020 Lea Baumgart. All rights reserved.
@@ -14,6 +14,7 @@ import Lightbox
 import SPAlert
 import SwiftKeychainWrapper
 import UIKit
+import SwiftUI
 
 protocol PostCellDelegate {
     func clickedImage(_ controller: ImageDetailViewController)
@@ -31,7 +32,8 @@ class PostCellView: UITableViewCell {
 
     var post: Post? {
         didSet {
-            profilePictureImageView.image = post?.author.profilePicture
+			
+            //profilePictureImageView.image = post?.author.profilePicture
             if post?.author.plus == true {
                 let font: UIFont? = usernameLabel.font
 
@@ -50,8 +52,33 @@ class PostCellView: UITableViewCell {
             postContentTextView.isUserInteractionEnabled = true
             postContentTextView.delaysContentTouches = false
             postContentTextView.isSelectable = true
+			
+			if let defaultview = profilePictureImageView.viewWithTag(394) { defaultview.removeFromSuperview() }
+			if let defaultview = profilePictureImageView.viewWithTag(239) { defaultview.removeFromSuperview() }
+			
+			if let ring = post?.author.ring {
+				if ring != .none {
+					if let defaultview = profilePictureImageView.viewWithTag(394) { defaultview.removeFromSuperview() }
+					let internalProfilePictureView = UIHostingController(rootView: EmbeddedProfilePictureView(ring: ring, url: post!.author.profilePictureUrl, size: 40, addShadow: false)).view
+					profilePictureImageView.addSubview(internalProfilePictureView!)
+					internalProfilePictureView?.backgroundColor = .clear
+					internalProfilePictureView?.tag = 239
+					profilePictureImageView.backgroundColor = .clear
+					internalProfilePictureView?.snp.makeConstraints({ (make) in
+						make.top.equalTo(profilePictureImageView.snp.top)
+						make.bottom.equalTo(profilePictureImageView.snp.bottom)
+						make.leading.equalTo(profilePictureImageView.snp.leading)
+						make.trailing.equalTo(profilePictureImageView.snp.trailing)
+					})
+				}
+				else {
+					buildDefaultPfp()
+				}
+			}
+			else {
+				buildDefaultPfp()
+			}
 
-            profilePictureImageView.kf.setImage(with: post?.author.profilePictureUrl)
             postImageView.kf.setImage(with: post?.imageurl, completionHandler: { [self] result in
                 layoutPostImageView(height: postImageView.image != nil ? Int(postImageView.image!.size.height / 3) : 20)
                 switch result {
@@ -105,20 +132,61 @@ class PostCellView: UITableViewCell {
 
             postdateLabel.text = RelativeDateTimeFormatter().localizedString(for: post!.createdAt, relativeTo: Date())
             replycountLabel.text = String((post?.children.count)!)
-            if post?.interactions != nil {
-                interactioncountLabel.text = String((post?.interactions)!)
-                interactioncountLabel.isHidden = false
-                interactioncountIcon.isHidden = false
-            } else {
-                interactioncountLabel.isHidden = true
-                interactioncountIcon.isHidden = true
-                interactioncountLabel.text = ""
-            }
-
-            let contextInteraction = UIContextMenuInteraction(delegate: self)
-            contentView.addInteraction(contextInteraction)
+			
+			let contextInteraction = UIContextMenuInteraction(delegate: self)
+			
+			if post?.isDeleted == true {
+				interactioncountLabel.isHidden = true
+				interactioncountIcon.isHidden = true
+				replycountIcon.isHidden = true
+				replycountLabel.isHidden = true
+				postdateLabel.isHidden = true
+				upvoteButton.isHidden = true
+				downvoteButton.isHidden = true
+				postScoreLabel.isHidden = true
+				contentView.removeInteraction(contextInteraction)
+			}
+			else {
+				interactioncountLabel.isHidden = false
+				interactioncountIcon.isHidden = false
+				replycountIcon.isHidden = false
+				replycountLabel.isHidden = false
+				postdateLabel.isHidden = false
+				upvoteButton.isHidden = false
+				downvoteButton.isHidden = false
+				postScoreLabel.isHidden = false
+				contentView.addInteraction(contextInteraction)
+			}
+			
+			if post?.interactions != nil {
+				interactioncountLabel.text = String((post?.interactions)!)
+				interactioncountLabel.isHidden = false
+				interactioncountIcon.isHidden = false
+			} else {
+				interactioncountLabel.isHidden = true
+				interactioncountIcon.isHidden = true
+				interactioncountLabel.text = ""
+			}
         }
     }
+	
+	func buildDefaultPfp() {
+		if let defaultview = profilePictureImageView.viewWithTag(239) { defaultview.removeFromSuperview() }
+		let profileImageView = UIImageView(image: UIImage(systemName: "person.circle"))
+		profileImageView.contentMode = .scaleAspectFit
+		profileImageView.clipsToBounds = true
+		profileImageView.layer.cornerRadius = 20
+		profileImageView.tag = 394
+		profilePictureImageView.addSubview(profileImageView)
+		profilePictureImageView.backgroundColor = .clear
+		profileImageView.snp.makeConstraints { (make) in
+			make.top.equalTo(profilePictureImageView.snp.top)
+			make.bottom.equalTo(profilePictureImageView.snp.bottom)
+			make.leading.equalTo(profilePictureImageView.snp.leading)
+			make.trailing.equalTo(profilePictureImageView.snp.trailing)
+		}
+		profileImageView.kf.setImage(with: post?.author.profilePictureUrl)
+	}
 
     func parseStringIntoAttributedString(_ text: String) -> NSMutableAttributedString {
         let attributedText = NSMutableAttributedString(string: "")
@@ -136,14 +204,18 @@ class PostCellView: UITableViewCell {
                 attributedText.append(selectablePart)
             } else if String(word).starts(with: "@"), word.count > 1 {
                 let filteredWord = String(word).removeSpecialChars
+				
                 let filteredWordWithoutAtSymbol = String(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])
                 var nameToInsert = filteredWordWithoutAtSymbol
                 if let index = post?.mentionedUsers.firstIndex(where: { $0.id == nameToInsert }) {
-                    nameToInsert = (post?.mentionedUsers[index].name)!
+                    nameToInsert = (post?.mentionedUsers[index].name) ?? filteredWordWithoutAtSymbol
                 }
+				if post!.id == "4cec8561-4013-47db-b5eb-cacbf631f0e9" && filteredWord == "@4f3c00c2-0191-481d-aa56-57cfa8ddaf67" {
+					
+				}
                 let selectablePart = NSMutableAttributedString(string: String(word.replacingOccurrences(of: filteredWordWithoutAtSymbol, with: nameToInsert)) + " ")
-                selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: selectablePart.length - 1))
-                selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: selectablePart.length - 1))
+				selectablePart.addAttribute(.underlineStyle, value: 1, range: NSRange(location: 0, length: nameToInsert.count + 1 /*selectablePart.length - 1*/))
+				selectablePart.addAttribute(.link, value: "user:\(filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex])", range: NSRange(location: 0, length: /*selectablePart.length - 1*/ nameToInsert.count + 1))
                 attributedText.append(selectablePart)
             } else {
                 if word == "\n" {
@@ -177,7 +249,9 @@ class PostCellView: UITableViewCell {
 
     @objc func openLink() {
         if let url = post?.url {
-            delegate?.clickedLink(url)
+			let newURL = analyzeLink(url)
+			if newURL != url { UIApplication.shared.open(newURL) } else { delegate?.clickedLink(url) }
+            
         }
     }
 
@@ -195,12 +269,14 @@ class PostCellView: UITableViewCell {
         }
     }
 
-    var profilePictureImageView: UIImageView = {
-        let imgView = UIImageView(image: UIImage(systemName: "person.circle"))
+    var profilePictureImageView: UIView = {
+		let view = UIView()
+		return view
+        /*let imgView = UIImageView(image: UIImage(systemName: "person.circle"))
         imgView.contentMode = .scaleAspectFit
         imgView.clipsToBounds = true
         imgView.layer.cornerRadius = 20
-        return imgView
+        return imgView*/
     }()
 
     var usernameLabel: UILabel = {
@@ -250,7 +326,10 @@ class PostCellView: UITableViewCell {
     var upvoteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("+", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 19)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 22) // 19 22
+		if #available(iOS 13.4, *) {
+			button.isPointerInteractionEnabled = true
+		}
         return button
     }()
 
@@ -263,7 +342,10 @@ class PostCellView: UITableViewCell {
     var downvoteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("-", for: .normal)
-        button.titleLabel?.font = .boldSystemFont(ofSize: 24)
+        button.titleLabel?.font = .boldSystemFont(ofSize: 30) // 24 27 30
+		if #available(iOS 13.4, *) {
+			button.isPointerInteractionEnabled = true
+		}
         return button
     }()
 
@@ -356,7 +438,9 @@ class PostCellView: UITableViewCell {
         VotePost.default.vote(post: post!, vote: vote) { [self] result in
             switch result {
             case let .failure(err):
-                MicroAPI.default.errorHandling(error: err, caller: self.contentView)
+				DispatchQueue.main.async {
+					MicroAPI.default.errorHandling(error: err, caller: self.contentView)
+				}
             case let .success(votepost):
                 DispatchQueue.main.async {
                     post?.score = votepost.score
@@ -558,21 +642,27 @@ extension PostCellView: UITextViewDelegate {
 
 extension PostCellView: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_: UIContextMenuInteraction, configurationForMenuAtLocation _: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { _ in
-            self.makeContextMenu()
-		})
+		
+		if post?.isDeleted == true {
+			return nil
+		}
+		else {
+			return UIContextMenuConfiguration(identifier: nil, previewProvider: nil, actionProvider: { [self] _ in
+				self.makeContextMenu()
+			})
+		}
     }
 
     func makeContextMenu() -> UIMenu {
         var actions = [UIAction]()
 
-        let copyPostID = UIAction(title: "Copy post ID", image: UIImage(systemName: "doc.on.doc")) { [self] _ in
+        /*let copyPostID = UIAction(title: "Copy post ID", image: UIImage(systemName: "doc.on.doc")) { [self] _ in
             let pasteboard = UIPasteboard.general
             pasteboard.string = post?.id
             SPAlert.present(title: "Copied", preset: .done)
         }
 
-        actions.append(copyPostID)
+        actions.append(copyPostID)*/
 
         let copyUserID = UIAction(title: "Copy user ID", image: UIImage(systemName: "person.circle")) { [self] _ in
             let pasteboard = UIPasteboard.general
@@ -581,6 +671,14 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         }
 
         actions.append(copyUserID)
+		
+		let copyContent = UIAction(title: "Copy content", image: UIImage(systemName: "doc.on.doc")) { [self] _ in
+			let pasteboard = UIPasteboard.general
+			pasteboard.string = post?.content
+			SPAlert.present(title: "Copied", preset: .done)
+		}
+
+		actions.append(copyContent)
 
         let reply = UIAction(title: "Reply", image: UIImage(systemName: "arrowshape.turn.up.left")) { [self] _ in
             self.delegate?.openPostView(.reply, preText: nil, preLink: nil, parentID: post!.id)
@@ -593,6 +691,32 @@ extension PostCellView: UIContextMenuInteractionDelegate {
         }
 
         actions.append(repost)
+		
+		let upvote = UIAction(title: "Upvote", image: UIImage(systemName: "hand.thumbsup")!) { (_) in
+			self.vote(.upvote)
+		}
+		
+		let downvote = UIAction(title: "Downvote", image: UIImage(systemName: "hand.thumbsdown")!) { (_) in
+			self.vote(.downvote)
+		}
+		
+		let neutralvote = UIAction(title: "Reset vote", image: UIImage(systemName: "gobackward")!) { (_) in
+			self.vote(self.post?.vote == 1 ? .upvote : .downvote)
+		}
+		
+		if post?.vote == 1 {
+			actions.append(neutralvote)
+			actions.append(downvote)
+		}
+		else if post?.vote == 0 {
+			actions.append(upvote)
+			actions.append(downvote)
+		}
+		else if post?.vote == -1 {
+			actions.append(upvote)
+			actions.append(neutralvote)
+		}
+		
 
         let bookmarks = UserDefaults.standard.structArrayData(StoredBookmark.self, forKey: "savedBookmarks")
 
@@ -632,7 +756,7 @@ extension PostCellView: UIContextMenuInteractionDelegate {
                         switch result {
                         case let .failure(err):
 							DispatchQueue.main.async {
-								EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.name)")
+								EZAlertController.alert("Error", message: "The following error occurred:\n\n\(err.error.humanDescription)")
 							}
                         case .success:
                             DispatchQueue.main.async {

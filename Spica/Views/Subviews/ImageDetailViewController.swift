@@ -1,6 +1,6 @@
 //
 // Spica for iOS (Spica)
-// File created by Adrian Baumgart on 27.10.20.
+// File created by Lea Baumgart on 27.10.20.
 //
 // Licensed under the MIT License
 // Copyright © 2020 Lea Baumgart. All rights reserved.
@@ -19,6 +19,9 @@ class ImageDetailViewController: LightboxController {
             btn.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
             btn.addTarget(self, action: #selector(shareImage(_:)), for: .touchUpInside)
             btn.tintColor = .white
+			if #available(iOS 13.4, *) {
+				btn.isPointerInteractionEnabled = true
+			}
             return btn
         }()
 
@@ -29,6 +32,10 @@ class ImageDetailViewController: LightboxController {
             make.width.equalTo(50)
             make.height.equalTo(50)
         }
+		
+		if #available(iOS 13.4, *) {
+			headerView.closeButton.isPointerInteractionEnabled = true
+		}
     }
 
     @objc func shareImage(_ sender: UIButton) {

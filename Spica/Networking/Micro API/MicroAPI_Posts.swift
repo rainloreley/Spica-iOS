@@ -25,37 +25,59 @@ extension MicroAPI {
                 if !possibleError.error.isError {
                     let postJSON = JSON(postResponse.data!)
                     var post: Post = .init(postJSON)
-                    if loadMentions {
-                        let content = post.content.replacingOccurrences(of: "\n", with: " \n ")
+					
+					let userDispatchGroup = DispatchGroup()
+					
+					userDispatchGroup.enter()
+					
+					if !UserDefaults.standard.bool(forKey: "disablePostFlagLoading") {
+						loadUser(post.author.id, loadRing: true) { (userResult) in
+							switch userResult {
+								case .failure:
+									userDispatchGroup.leave()
+								case let .success(user):
+									post.author = user
+									userDispatchGroup.leave()
+							}
+						}
+					}
+					else {
+						userDispatchGroup.leave()
+					}
+					
+					userDispatchGroup.notify(queue: .global(qos: .utility)) {
+						if loadMentions {
+							let content = post.content.replacingOccurrences(of: "\n", with: " \n ")
 
-                        let splittedContent = content.split(separator: " ")
+							let splittedContent = content.split(separator: " ")
 
-                        let dispatchGroup = DispatchGroup()
+							let dispatchGroup = DispatchGroup()
 
-                        for word in splittedContent {
-                            dispatchGroup.enter()
-                            if String(word).starts(with: "@"), word.count > 1 {
-                                let filteredWord = String(word).removeSpecialChars
-                                let mentionedUserRaw = filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex]
-                                loadUser(String(mentionedUserRaw)) { result in
-                                    switch result {
-                                    case .failure:
-                                        dispatchGroup.leave()
-                                    case let .success(user):
-                                        post.mentionedUsers.append(user)
-                                        dispatchGroup.leave()
-                                    }
-                                }
-                            } else {
-                                dispatchGroup.leave()
-                            }
-                        }
-                        dispatchGroup.notify(queue: .main) {
-                            return promise(.success(post))
-                        }
-                    } else {
-                        return promise(.success(post))
-                    }
+							for word in splittedContent {
+								dispatchGroup.enter()
+								if String(word).starts(with: "@"), word.count > 1 {
+									let filteredWord = String(word).removeSpecialChars
+									let mentionedUserRaw = filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex]
+									loadUser(String(mentionedUserRaw)) { result in
+										switch result {
+										case .failure:
+											dispatchGroup.leave()
+										case let .success(user):
+											post.mentionedUsers.append(user)
+											dispatchGroup.leave()
+										}
+									}
+								} else {
+									dispatchGroup.leave()
+								}
+							}
+							dispatchGroup.notify(queue: .main) {
+								return promise(.success(post))
+							}
+						} else {
+							return promise(.success(post))
+						}
+					}
                 } else {
                     promise(.failure(possibleError))
                 }
@@ -100,8 +122,15 @@ extension MicroAPI {
                                 loadPost(highestAncestor!.parent!) { ancestorResult in
                                     switch ancestorResult {
                                     case let .failure(parentErr):
-                                        parentDispatchGroup.leave()
-                                        return promise(.failure(parentErr))
+										if parentErr.error.name == "missingResource" {
+											finishedPostDetail.ancestors.append(Post.deleted)
+											highestAncestor = nil
+											parentDispatchGroup.leave()
+										}
+										else {
+											parentDispatchGroup.leave()
+											return promise(.failure(parentErr))
+										}
                                     case let .success(parentPost):
                                         finishedPostDetail.ancestors.append(parentPost)
                                         highestAncestor = parentPost
@@ -143,7 +172,7 @@ extension MicroAPI {
             }
         }
 
-        AF.request("https://micro.alles.cx/api/posts", method: .post, parameters: newPostConstruct, encoding: JSONEncoding.prettyPrinted, headers: [
+        AF.request("https://push.spica.li/post/send", method: .post, parameters: newPostConstruct, encoding: JSONEncoding.prettyPrinted, headers: [
             "Authorization": loadAuthKey(),
         ]).responseJSON(queue: .global(qos: .utility)) { [self] response in
             switch response.result {

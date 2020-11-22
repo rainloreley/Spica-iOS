@@ -13,12 +13,14 @@ import JGProgressHUD
 import Lightbox
 import SafariServices
 import UIKit
+import SwiftUI
 
 class MentionsViewController: UITableViewController {
     var mentions = [Mention]()
 
     var loadingHud: JGProgressHUD!
     var imageReloadedCells = [String]()
+	var postView: UIHostingController<CreatePostView>?
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -138,15 +140,11 @@ extension MentionsViewController: PostCellDelegate {
         present(vc, animated: true)
     }
 
-    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-        let vc = CreatePostViewController()
-        vc.type = type
-        vc.delegate = self
-        vc.parentID = parentID
-        vc.preText = preText ?? ""
-        vc.preLink = preLink
-        present(UINavigationController(rootViewController: vc), animated: true)
-    }
+
+	func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
+		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+		present(UINavigationController(rootViewController: postView!), animated: true)
+	}
 
     func reloadData() {
         loadMentions()
@@ -165,6 +163,11 @@ extension MentionsViewController: PostCellDelegate {
 }
 
 extension MentionsViewController: CreatePostDelegate {
+	
+	func dismissView() {
+		postView!.dismiss(animated: true, completion: nil)
+	}
+	
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)

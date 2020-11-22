@@ -3,8 +3,6 @@
 
 # Spica for iOS
 
-[![Crowdin](https://badges.crowdin.net/spica/localized.svg)](https://crowdin.com/project/spica)
-
 Spica for iOS is an iOS/iPadOS client for [Alles Micro](https://micro.alles.cx). It's privacy focused and easy to use.
 
 **UPDATE: The rewrite is done, the master branch is now the old version. Please use the main branch from now on :)**
