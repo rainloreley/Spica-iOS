@@ -158,7 +158,7 @@ class PostCellView: UITableViewCell {
 				contentView.addInteraction(contextInteraction)
 			}
 			
-			if post?.interactions != nil {
+			if post?.interactions != nil && post?.isDeleted != true {
 				interactioncountLabel.text = String((post?.interactions)!)
 				interactioncountLabel.isHidden = false
 				interactioncountIcon.isHidden = false

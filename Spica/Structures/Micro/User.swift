@@ -36,8 +36,9 @@ struct User: Identifiable {
     var status: Status
     var ring: ProfileRing
 	var userSubscribedTo: Bool
+	var spicaUserHasPushAccount: Bool
 
-	init(id: String = "", name: String = "", tag: String = "", plus: Bool = false, nickname: String = "", username: String? = nil, profilePicture: UIImage? = nil, profilePictureUrl: URL? = nil, createdAt: Date = Date(), xp: XP = XP(), followercount: Int = 0, iamFollowing: Bool = false, followingcount: Int = 0, isFollowingMe: Bool = false, postsCount: Int = 0, repliesCount: Int = 0, status: Status = Status(), ring: ProfileRing = .none, userSubscribedTo: Bool = false) {
+	init(id: String = "", name: String = "", tag: String = "", plus: Bool = false, nickname: String = "", username: String? = nil, profilePicture: UIImage? = nil, profilePictureUrl: URL? = nil, createdAt: Date = Date(), xp: XP = XP(), followercount: Int = 0, iamFollowing: Bool = false, followingcount: Int = 0, isFollowingMe: Bool = false, postsCount: Int = 0, repliesCount: Int = 0, status: Status = Status(), ring: ProfileRing = .none, userSubscribedTo: Bool = false, spicaUserHasPushAccount: Bool = false) {
         self.id = id
         self.name = name
         self.tag = tag
@@ -57,6 +58,7 @@ struct User: Identifiable {
         self.status = status
         self.ring = ring
 		self.userSubscribedTo = userSubscribedTo
+		self.spicaUserHasPushAccount = spicaUserHasPushAccount
     }
 
     init(_ json: JSON) {
@@ -80,9 +82,10 @@ struct User: Identifiable {
         status = Status()
         ring = .none
 		userSubscribedTo = false
+		spicaUserHasPushAccount = false
     }
 
-    static var sample = User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", plus: true, nickname: "Lea", username: "lea", profilePicture: UIImage(named: "leapfp"), createdAt: Date(), xp: XP(), followercount: 100, iamFollowing: true, followingcount: 69, isFollowingMe: true, status: Status(id: "test", content: "lol", date: Date().addingTimeInterval(-60), end: Date().addingTimeInterval(200)), ring: .rainbow, userSubscribedTo: false)
+    static var sample = User(id: "87cd0529-f41b-4075-a002-059bf2311ce7", name: "Lea", tag: "0001", plus: true, nickname: "Lea", username: "lea", profilePicture: UIImage(named: "leapfp"), createdAt: Date(), xp: XP(), followercount: 100, iamFollowing: true, followingcount: 69, isFollowingMe: true, status: Status(id: "test", content: "lol", date: Date().addingTimeInterval(-60), end: Date().addingTimeInterval(200)), ring: .rainbow, userSubscribedTo: true, spicaUserHasPushAccount: true)
 	
 	static var deleted = User(id: randomString(length: 20), name: "Deleted", tag: "0000", plus: false, profilePicture: UIImage(systemName: "person.crop.circle")!)
 }

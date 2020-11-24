@@ -44,7 +44,12 @@ struct UserHeaderView: View {
                     Text("\(controller.user.nickname)\(controller.user.plus ? String("⁺") : String(""))").font(.title).bold()
                 }
 				Group {
-					Text("\(controller.user.name)#\(controller.user.tag)").foregroundColor(.secondary)
+					HStack {
+						Text("\(controller.user.name)#\(controller.user.tag)").foregroundColor(.secondary)
+						if controller.user.userSubscribedTo {
+							Image(systemName: "bell").frame(width: 15, height: 15).foregroundColor(.secondary)
+						}
+					}
 					if controller.user.username != nil {
 						Text("@\(controller.user.username!)").foregroundColor(.secondary)
 					}
@@ -244,6 +249,6 @@ struct LoadingSkeleton<Content: View>: View {
 
 struct UserHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        UserHeaderView(controller: UserHeaderViewController())
+		UserHeaderView(controller: UserHeaderViewController(user: User.sample, userDataLoaded: true))
     }
 }

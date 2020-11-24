@@ -18,15 +18,20 @@ struct NotificationSettingsView: View {
     var body: some View {
 		Group {
 			if controller.finishedInitialLoading {
-				if #available(iOS 14.0, *) {
-					List {
-						NotificationSettingsListView(controller: controller)
-					}.listStyle(InsetGroupedListStyle())
-				} else {
-					List {
-						NotificationSettingsListView(controller: controller)
-					}.listStyle(GroupedListStyle())
-					.environment(\.horizontalSizeClass, .regular)
+				if controller.pushaccountexists {
+					if #available(iOS 14.0, *) {
+						List {
+							NotificationSettingsListView(controller: controller)
+						}.listStyle(InsetGroupedListStyle())
+					} else {
+						List {
+							NotificationSettingsListView(controller: controller)
+						}.listStyle(GroupedListStyle())
+						.environment(\.horizontalSizeClass, .regular)
+					}
+				}
+				else {
+					Text("There's currently no user record in our database. Please enable push notifications within your devices' settings and relaunch the app")
 				}
 			}
 			else {
