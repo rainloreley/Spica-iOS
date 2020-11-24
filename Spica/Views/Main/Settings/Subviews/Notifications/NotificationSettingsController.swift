@@ -55,6 +55,8 @@ class NotificationSettingsController: ObservableObject {
 	
 	@Published var microError: MicroError?
 	
+	@Published var pushaccountexists: Bool = false
+	
 	func updateSettings(changedValue: String) {
 		SpicaPushAPI.default.updateUserData(notificationsEnabled: notificationsEnabled, repliesEnabled: repliesEnabled, mentionsEnabled: mentionsEnabled) { [self] (result) in
 			switch result {
@@ -79,6 +81,7 @@ class NotificationSettingsController: ObservableObject {
 					repliesEnabled = user.repliesEnabled
 					mentionsEnabled = user.mentionsEnabled
 					devices = user.devices
+					pushaccountexists = true
 					subscribedUsers = user.usersSubscribedTo
 					finishedInitialLoading = true
 					
@@ -92,14 +95,21 @@ class NotificationSettingsController: ObservableObject {
 		SpicaPushAPI.default.getUserData { [self] (result) in
 			switch result {
 				case let .failure(err):
-					microError = err
-					showErrorMessage = true
+					if err.error.name == "missingResource" {
+						pushaccountexists = false
+						finishedInitialLoading = true
+					}
+					else {
+						microError = err
+						showErrorMessage = true
+					}
 				case let .success(user):
 					notificationsEnabled = user.notificationsEnabled
 					repliesEnabled = user.repliesEnabled
 					mentionsEnabled = user.mentionsEnabled
 					devices = user.devices
 					subscribedUsers = user.usersSubscribedTo
+					pushaccountexists = true
 					finishedInitialLoading = true
 					
 			}

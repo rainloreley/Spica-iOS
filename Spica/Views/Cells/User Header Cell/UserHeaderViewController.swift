@@ -20,10 +20,16 @@ protocol UserHeaderDelegate {
 }
 
 class UserHeaderViewController: ObservableObject {
-    @Published var user: User = User()
+	@Published var user: User = User()
 
     @Published var userDataLoaded: Bool = false
     @Published var isLoggedInUser: Bool = false
+	
+	init(user: User = User(), userDataLoaded: Bool = false, isLoggedInUser: Bool = false) {
+		self.user = user
+		self.userDataLoaded = userDataLoaded
+		self.isLoggedInUser = isLoggedInUser
+	}
 
     var delegate: UserHeaderDelegate!
 

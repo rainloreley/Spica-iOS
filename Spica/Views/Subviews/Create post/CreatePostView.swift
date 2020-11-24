@@ -220,8 +220,8 @@ struct TextView: UIViewRepresentable {
 	}
  
 	func updateUIView(_ uiView: KMPlaceholderTextView, context: Context) {
-		uiView.text = text
-		uiView.font = UIFont.preferredFont(forTextStyle: textStyle)
+		/*uiView.text = text
+		uiView.font = UIFont.preferredFont(forTextStyle: textStyle)*/
 	}
 	
  func makeCoordinator() -> Coordinator {
@@ -236,7 +236,7 @@ struct TextView: UIViewRepresentable {
 	 }
   
 	 func textViewDidChange(_ textView: UITextView) {
-		 self.text.wrappedValue = textView.text
+		self.text.wrappedValue = textView.text
 	 }
 	
 	func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {

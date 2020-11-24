@@ -90,7 +90,7 @@ class UserProfileViewController: UITableViewController {
 		
 		userOptionsSheet.addAction(allesPeopleAction)
 		userOptionsSheet.addAction(copyIDAction)
-		if user.id != KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") && userDataLoaded {
+		if user.id != KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") && userDataLoaded && user.spicaUserHasPushAccount {
 			userOptionsSheet.addAction(changeSubscriptionStatus)
 		}
 		userOptionsSheet.addAction(cancelAction)

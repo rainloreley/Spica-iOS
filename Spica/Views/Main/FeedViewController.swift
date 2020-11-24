@@ -181,12 +181,13 @@ extension FeedViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
-        cell.indexPath = indexPath
-        cell.delegate = self
-        cell.post = posts[indexPath.section]
+		
+		let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+		cell.indexPath = indexPath
+		cell.delegate = self
+		cell.post = posts[indexPath.section]
 
-        return cell
+		return cell
     }
 }
 
