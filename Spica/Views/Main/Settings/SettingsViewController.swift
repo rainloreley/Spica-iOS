@@ -8,6 +8,7 @@
 // https://github.com/SpicaApp/Spica-iOS
 //
 
+import JGProgressHUD
 import Kingfisher
 import LocalAuthentication
 import SafariServices
@@ -15,17 +16,18 @@ import SPAlert
 import SwiftKeychainWrapper
 import SwiftUI
 import UIKit
-import JGProgressHUD
 
 class SettingsViewController: UITableViewController {
     @IBOutlet var accountProfilePicture: UIImageView!
     @IBOutlet var accountNametag: UILabel!
     @IBOutlet var versionBuildLabel: UILabel!
     @IBOutlet var biometricSwitch: UISwitch!
-	@IBOutlet weak var showFlagOnPostSwitch: UISwitch!
+    @IBOutlet var showFlagOnPostSwitch: UISwitch!
+    @IBOutlet var rickrollDetectionSwitch: UISwitch!
+	@IBOutlet weak var imageCompressionControl: UISegmentedControl!
 	
-	var loadingHud: JGProgressHUD!
-	
+    var loadingHud: JGProgressHUD!
+
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
 
@@ -43,9 +45,31 @@ class SettingsViewController: UITableViewController {
             biometricSwitch.isEnabled = false
         }
 
-		biometricSwitch.setOn(UserDefaults.standard.bool(forKey: "biometricAuthEnabled"), animated: false)
-		
-		showFlagOnPostSwitch.setOn(!UserDefaults.standard.bool(forKey: "disablePostFlagLoading"), animated: false)
+        biometricSwitch.setOn(UserDefaults.standard.bool(forKey: "biometricAuthEnabled"), animated: false)
+
+        showFlagOnPostSwitch.setOn(!UserDefaults.standard.bool(forKey: "disablePostFlagLoading"), animated: false)
+
+        rickrollDetectionSwitch.setOn(!UserDefaults.standard.bool(forKey: "rickrollDetectionDisabled"), animated: false)
+		let savedImageCompression = UserDefaults.standard.double(forKey: "imageCompressionValue")
+		if savedImageCompression == 0 {
+			UserDefaults.standard.set(0.5, forKey: "imageCompressionValue")
+			imageCompressionControl.selectedSegmentIndex = 2
+		}
+		else {
+			switch savedImageCompression {
+				case 0.25:
+					imageCompressionControl.selectedSegmentIndex = 3
+				case 0.5:
+					imageCompressionControl.selectedSegmentIndex = 2
+				case 0.75:
+					imageCompressionControl.selectedSegmentIndex = 1
+				case 1:
+					imageCompressionControl.selectedSegmentIndex = 0
+				default:
+					UserDefaults.standard.set(0.5, forKey: "imageCompressionValue")
+					imageCompressionControl.selectedSegmentIndex = 2
+			}
+		}
 
         let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") ?? "_"
         let name = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.name") ?? ""
@@ -62,17 +86,22 @@ class SettingsViewController: UITableViewController {
     }
 
     @IBAction func changePfpFlag(_: Any) {
-        navigationController?.pushViewController(SelectFlagViewController(style: .insetGrouped), animated: true)
+        //navigationController?.pushViewController(SelectFlagViewController(style: .insetGrouped), animated: true)
+		navigationController?.pushViewController(UIHostingController(rootView: SelectFlagView()), animated: true)
     }
-	
-	@IBAction func gotoNotificationSettings(_ sender: Any) {
-		navigationController?.pushViewController(UIHostingController(rootView: NotificationSettingsView(controller: .init())), animated: true)
-	}
-	
-	@IBAction func showFlagOnPostSwitchChanged(_ sender: Any) {
-		UserDefaults.standard.set(!showFlagOnPostSwitch.isOn, forKey: "disablePostFlagLoading")
-	}
-	
+
+    @IBAction func gotoNotificationSettings(_: Any) {
+        navigationController?.pushViewController(UIHostingController(rootView: NotificationSettingsView(controller: .init())), animated: true)
+    }
+
+    @IBAction func showFlagOnPostSwitchChanged(_: Any) {
+        UserDefaults.standard.set(!showFlagOnPostSwitch.isOn, forKey: "disablePostFlagLoading")
+    }
+
+    @IBAction func rickrollDetectionSwitchChanged(_: Any) {
+        UserDefaults.standard.set(!rickrollDetectionSwitch.isOn, forKey: "rickrollDetectionDisabled")
+    }
+
     @IBAction func biometricAuthChanged(_: Any) {
         let authContext = LAContext()
         var authError: NSError?
@@ -101,6 +130,22 @@ class SettingsViewController: UITableViewController {
             EZAlertController.alert("Device error", message: String(format: "\(type) is not enrolled on your device. Please verify it's enabled in your devices' settings"))
         }
     }
+	
+	@IBAction func changedImageCompressionValue(_ sender: UISegmentedControl) {
+		switch sender.selectedSegmentIndex {
+			case 0: // Best
+				UserDefaults.standard.set(1, forKey: "imageCompressionValue")
+			case 1: // Good
+				UserDefaults.standard.set(0.75, forKey: "imageCompressionValue")
+			case 2: // Normal
+				UserDefaults.standard.set(0.5, forKey: "imageCompressionValue")
+			case 3: // Bad
+				UserDefaults.standard.set(0.25, forKey: "imageCompressionValue")
+			default:
+				UserDefaults.standard.set(0.5, forKey: "imageCompressionValue")
+		}
+	}
+	
 
     var colorPickerController: ColorPickerController!
     var changeAccentColorSheet = UIAlertController(title: "Change accent color", message: "", preferredStyle: .actionSheet)
@@ -159,7 +204,8 @@ class SettingsViewController: UITableViewController {
             let vc = SFSafariViewController(url: url)
             present(vc, animated: true)
         case 1:
-            navigationController?.pushViewController(LegalNoticeViewController(), animated: true)
+            //navigationController?.pushViewController(LegalNoticeViewController(), animated: true)
+			navigationController?.pushViewController(UIHostingController(rootView: LegalNoticeView()), animated: true)
         case 2:
             let url = URL(string: "https://spica.li/")!
             let vc = SFSafariViewController(url: url)
@@ -169,31 +215,30 @@ class SettingsViewController: UITableViewController {
     }
 
     @IBAction func signOut(_: Any) {
-		loadingHud.show(in: view)
-		
-		var storedDeviceTokens = UserDefaults.standard.stringArray(forKey: "pushNotificationDeviceTokens") ?? []
-		storedDeviceTokens.append(UserDefaults.standard.string(forKey: "pushNotificationCurrentDevice") ?? "")
-		SpicaPushAPI.default.deleteDevices(storedDeviceTokens) { (result) in
-			switch result {
-				case let .failure(err):
-					self.loadingHud.dismiss()
-					EZAlertController.alert("Error", message: "The following error occurred while trying to revoke the push device tokens:\n\n\(err.error.humanDescription)")
-					break
-				case .success:
-					UserDefaults.standard.removeObject(forKey: "pushNotificationDeviceTokens")
-					UserDefaults.standard.removeObject(forKey: "pushNotificationCurrentDevice")
-					UserDefaults.standard.removeObject(forKey: "disableTokenUploading")
-					KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
-					KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
-					KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
-					KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
-					UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
-					self.loadingHud.dismiss()
-					let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
-					sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
-					sceneDelegate.window?.makeKeyAndVisible()
-			}
-		}
+        loadingHud.show(in: view)
+
+        var storedDeviceTokens = UserDefaults.standard.stringArray(forKey: "pushNotificationDeviceTokens") ?? []
+        storedDeviceTokens.append(UserDefaults.standard.string(forKey: "pushNotificationCurrentDevice") ?? "")
+        SpicaPushAPI.default.deleteDevices(storedDeviceTokens) { result in
+            switch result {
+            case let .failure(err):
+                self.loadingHud.dismiss()
+                EZAlertController.alert("Error", message: "The following error occurred while trying to revoke the push device tokens:\n\n\(err.error.humanDescription)")
+            case .success:
+				let domain = Bundle.main.bundleIdentifier!
+				UserDefaults.standard.removePersistentDomain(forName: domain)
+				UserDefaults.standard.synchronize()
+                KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.name")
+                KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.tag")
+                KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.token")
+                KeychainWrapper.standard.removeObject(forKey: "dev.abmgrt.spica.user.id")
+                UserDefaults.standard.set(false, forKey: "biometricAuthEnabled")
+                self.loadingHud.dismiss()
+                let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+                sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
+                sceneDelegate.window?.makeKeyAndVisible()
+            }
+        }
     }
 
     @IBAction func allesMicroButtons(_ sender: UIButton) {
@@ -215,11 +260,13 @@ class SettingsViewController: UITableViewController {
     }
 
     @IBAction func gotoCredits(_: Any) {
-        navigationController?.pushViewController(CreditsViewController(style: .insetGrouped), animated: true)
+        //navigationController?.pushViewController(CreditsViewController(style: .insetGrouped), animated: true)
+		navigationController?.pushViewController(UIHostingController(rootView: CreditsView()), animated: true)
     }
 
     @IBAction func gotoUsedLibraries(_: Any) {
-        navigationController?.pushViewController(UsedLibrariesViewController(style: .insetGrouped), animated: true)
+        //navigationController?.pushViewController(UsedLibrariesViewController(style: .insetGrouped), animated: true)
+		navigationController?.pushViewController(UIHostingController(rootView: UsedLibrariesView()), animated: true)
     }
 
     @IBAction func githubAction(_: Any) {
@@ -233,15 +280,16 @@ class SettingsViewController: UITableViewController {
         if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
     }
 
-	@IBAction func joinBetaAction(_ sender: Any) {
-		let url = URL(string: "https://go.abmgrt.dev/spica-beta")!
-		if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
-	}
-	override func viewDidLoad() {
+    @IBAction func joinBetaAction(_: Any) {
+        let url = URL(string: "https://go.abmgrt.dev/spica-beta")!
+        if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+    }
+
+    override func viewDidLoad() {
         super.viewDidLoad()
-		loadingHud = JGProgressHUD(style: .dark)
-		loadingHud.textLabel.text = "Loading..."
-		loadingHud.interactionType = .blockNoTouches
+        loadingHud = JGProgressHUD(style: .dark)
+        loadingHud.textLabel.text = "Loading..."
+        loadingHud.interactionType = .blockNoTouches
     }
 }
 
@@ -253,7 +301,7 @@ extension SettingsViewController {
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return 2 // Account
-        case 1: return 6 // Settings - KEEP CHANGE FLAG AT THE BOTTOM
+        case 1: return 8 // Settings
         case 2: return 3 // Spica
         case 3: return 3 // Alles Micro
         case 4: return 5 // Other

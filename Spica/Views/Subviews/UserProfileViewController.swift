@@ -13,8 +13,8 @@ import JGProgressHUD
 import Lightbox
 import SafariServices
 import SPAlert
-import SwiftUI
 import SwiftKeychainWrapper
+import SwiftUI
 import UIKit
 
 class UserProfileViewController: UITableViewController {
@@ -24,7 +24,7 @@ class UserProfileViewController: UITableViewController {
     var imageReloadedCells = [String]()
 
     var loadingHud: JGProgressHUD!
-	var postView: UIHostingController<CreatePostView>?
+    var postView: UIHostingController<CreatePostView>?
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = false
@@ -42,7 +42,7 @@ class UserProfileViewController: UITableViewController {
         tableView.delegate = self
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 600
-		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(openUserOptions(_:)))
+        navigationItem.rightBarButtonItems = [UIBarButtonItem(image: UIImage(systemName: "square.and.pencil"), style: .plain, target: self, action: #selector(openNewPostView)), UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(openUserOptions(_:)))]
 
         loadingHud = JGProgressHUD(style: .dark)
         loadingHud.textLabel.text = "Loading..."
@@ -53,55 +53,60 @@ class UserProfileViewController: UITableViewController {
         loadUser()
     }
 	
-	@objc func openUserOptions(_ sender: UIBarButtonItem) {
-		
-		let userOptionsSheet = UIAlertController(title: "\(user.name)", message: nil, preferredStyle: .actionSheet)
-		
-		if let popoverController = userOptionsSheet.popoverPresentationController {
-			popoverController.barButtonItem = sender
-		}
-		
-		let allesPeopleAction = UIAlertAction(title: "Open Alles People page", style: .default) { (_) in
-			let vc = SFSafariViewController(url: URL(string: "https://alles.cx/\(self.user.id)")!)
-			vc.delegate = self
-			self.present(vc, animated: true)
-		}
-		
-		let copyIDAction = UIAlertAction(title: "Copy ID", style: .default) { (_) in
-			let pasteboard = UIPasteboard.general
-			pasteboard.string = self.user.id
-			SPAlert.present(title: "Copied", preset: .done)
-		}
-		
-		let changeSubscriptionStatus = UIAlertAction(title: user.userSubscribedTo ? "Disable notifications" : "Enable notifications", style: .default) { [self] (_) in
-			SpicaPushAPI.default.changeUserSubscription(user.id, add: !user.userSubscribedTo) { (result) in
-				switch result {
-					case let .failure(err):
-						MicroAPI.default.errorHandling(error: err, caller: view)
-					case .success:
-						user.userSubscribedTo.toggle()
-						SPAlert.present(title: "Changed notification status", preset: .done)
-						loadUser()
-				}
-			}
-		}
-		
-		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-		
-		userOptionsSheet.addAction(allesPeopleAction)
-		userOptionsSheet.addAction(copyIDAction)
-		if user.id != KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id") && userDataLoaded && user.spicaUserHasPushAccount {
-			userOptionsSheet.addAction(changeSubscriptionStatus)
-		}
-		userOptionsSheet.addAction(cancelAction)
-		
-		present(userOptionsSheet, animated: true, completion: nil)
+	@objc func openNewPostView() {
+		postView = UIHostingController(rootView: CreatePostView(type: .post, controller: CreatePostController(loadedDraftId: randomString(length: 30), delegate: self, preText: "@\(user.username ?? user.id)")))
+		postView?.isModalInPresentation = true
+		present(UINavigationController(rootViewController: postView!), animated: true)
 	}
-	
+
+    @objc func openUserOptions(_ sender: UIBarButtonItem) {
+        let userOptionsSheet = UIAlertController(title: "\(user.name)", message: nil, preferredStyle: .actionSheet)
+
+        if let popoverController = userOptionsSheet.popoverPresentationController {
+            popoverController.barButtonItem = sender
+        }
+
+        let allesPeopleAction = UIAlertAction(title: "Open Alles People page", style: .default) { _ in
+            let vc = SFSafariViewController(url: URL(string: "https://alles.cx/\(self.user.id)")!)
+            vc.delegate = self
+            self.present(vc, animated: true)
+        }
+
+        let copyIDAction = UIAlertAction(title: "Copy ID", style: .default) { _ in
+            let pasteboard = UIPasteboard.general
+            pasteboard.string = self.user.id
+            SPAlert.present(title: "Copied", preset: .done)
+        }
+
+        let changeSubscriptionStatus = UIAlertAction(title: user.userSubscribedTo ? "Disable notifications" : "Enable notifications", style: .default) { [self] _ in
+            SpicaPushAPI.default.changeUserSubscription(user.id, add: !user.userSubscribedTo) { result in
+                switch result {
+                case let .failure(err):
+                    MicroAPI.default.errorHandling(error: err, caller: view)
+                case .success:
+                    user.userSubscribedTo.toggle()
+                    SPAlert.present(title: "Changed notification status", preset: .done)
+                    loadUser()
+                }
+            }
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+        userOptionsSheet.addAction(allesPeopleAction)
+        userOptionsSheet.addAction(copyIDAction)
+        if user.id != KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id"), userDataLoaded, user.spicaUserHasPushAccount {
+            userOptionsSheet.addAction(changeSubscriptionStatus)
+        }
+        userOptionsSheet.addAction(cancelAction)
+
+        present(userOptionsSheet, animated: true, completion: nil)
+    }
+
     @objc func loadUser() {
         if userposts.isEmpty { loadingHud.show(in: view) }
 
-		MicroAPI.default.loadUser(user.id, loadStatus: true, loadRing: true) { [self] result in
+        MicroAPI.default.loadUser(user.id, loadStatus: true, loadRing: true) { [self] result in
             switch result {
             case let .failure(err):
                 DispatchQueue.main.async {
@@ -190,13 +195,12 @@ extension UserProfileViewController {
 }
 
 extension UserProfileViewController: UserHeaderDelegate {
-	
-	func clickedOnProfilePicture(_ image: UIImage) {
-		let controller = ImageDetailViewController(images: [LightboxImage(image: image)], startIndex: 0)
-		controller.dynamicBackground = true
-		present(controller, animated: true, completion: nil)
-	}
-	
+    func clickedOnProfilePicture(_ image: UIImage) {
+        let controller = ImageDetailViewController(images: [LightboxImage(image: image)], startIndex: 0)
+        controller.dynamicBackground = true
+        present(controller, animated: true, completion: nil)
+    }
+
     func showError(title: String, message: String) {
         EZAlertController.alert(title, message: message)
     }
@@ -223,11 +227,18 @@ extension UserProfileViewController: SFSafariViewControllerDelegate {
 }
 
 extension UserProfileViewController: PostCellDelegate {
-	
-	func deletedPost(_ post: Post) {
-		loadUser()
-	}
-	
+    func updatePost(_ post: Post, reload: Bool, at: IndexPath) {
+        guard let postIndexInArray = userposts.firstIndex(where: { $0.id == post.id }) else { return }
+        userposts[postIndexInArray] = post
+        if reload {
+            tableView.reloadRows(at: [at], with: .automatic)
+        }
+    }
+
+    func deletedPost(_: Post) {
+        loadUser()
+    }
+
     func reloadCell(_ at: IndexPath) {
         if !imageReloadedCells.contains(userposts[at.section - 1].id) {
             imageReloadedCells.append(userposts[at.section - 1].id)
@@ -243,10 +254,12 @@ extension UserProfileViewController: PostCellDelegate {
         present(vc, animated: true)
     }
 
-	func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
-		present(UINavigationController(rootViewController: postView!), animated: true)
-	}
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
+        postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+        postView?.isModalInPresentation = true
+        present(UINavigationController(rootViewController: postView!), animated: true)
+    }
+
     func reloadData() {
         loadUser()
     }
@@ -264,11 +277,10 @@ extension UserProfileViewController: PostCellDelegate {
 }
 
 extension UserProfileViewController: CreatePostDelegate {
-	
-	func dismissView() {
-		postView!.dismiss(animated: true, completion: nil)
-	}
-	
+    func dismissView() {
+        postView!.dismiss(animated: true, completion: nil)
+    }
+
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)

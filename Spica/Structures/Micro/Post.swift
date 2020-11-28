@@ -27,9 +27,10 @@ struct Post {
     var interactions: Int?
     var createdAt: Date
     var mentionedUsers: [User]
-	var isDeleted: Bool
+    var isDeleted: Bool
+    var containsRickroll: Bool
 
-	init(id: String = "", author: User = User(), parent: String? = nil, children: [String] = [], content: String = "", imageurl: URL? = nil, image: UIImage? = nil, url: URL? = nil, score: Int = 0, vote: Int = 0, interactions: Int? = nil, createdAt: Date = Date(), mentionedUsers: [User] = [], isDeleted: Bool = false) {
+    init(id: String = "", author: User = User(), parent: String? = nil, children: [String] = [], content: String = "", imageurl: URL? = nil, image: UIImage? = nil, url: URL? = nil, score: Int = 0, vote: Int = 0, interactions: Int? = nil, createdAt: Date = Date(), mentionedUsers: [User] = [], isDeleted: Bool = false, containsRickroll: Bool = false) {
         self.id = id
         self.author = author
         self.parent = parent
@@ -43,7 +44,8 @@ struct Post {
         self.interactions = interactions
         self.createdAt = createdAt
         self.mentionedUsers = mentionedUsers
-		self.isDeleted = isDeleted
+        self.isDeleted = isDeleted
+        self.containsRickroll = containsRickroll
     }
 
     init(_ json: JSON) {
@@ -60,10 +62,11 @@ struct Post {
         interactions = json["interactions"].int ?? nil
         createdAt = Date.dateFromISOString(string: json["createdAt"].string ?? "") ?? Date()
         mentionedUsers = []
-		isDeleted = false
+        isDeleted = false
+        containsRickroll = false
     }
 
     static var sample = Post(id: "sample", author: User.sample, parent: nil, children: [], content: "content", imageurl: URL(string: "https://avatar.alles.cx/87cd0529-f41b-4075-a002-059bf2311ce7"), image: nil, url: nil, score: 0, vote: 1, interactions: 3, createdAt: Date().addingTimeInterval(-60), mentionedUsers: [])
-	
-	static var deleted = Post(id: randomString(length: 20), author: User.deleted, parent: nil, children: [], content: "*deleted*", imageurl: nil, image: nil, score: 0, vote: 0, interactions: 0, createdAt: Date(timeIntervalSince1970: .zero), isDeleted: true)
+
+    static var deleted = Post(id: randomString(length: 20), author: User.deleted, parent: nil, children: [], content: "*deleted*", imageurl: nil, image: nil, score: 0, vote: 0, interactions: 0, createdAt: Date(timeIntervalSince1970: .zero), isDeleted: true)
 }

@@ -10,6 +10,7 @@
 
 import SwiftKeychainWrapper
 import UIKit
+import SwiftUI
 
 @available(iOS 14.0, *)
 class SidebarViewController: UIViewController {
@@ -20,7 +21,7 @@ class SidebarViewController: UIViewController {
 
     var mentionsTimer = Timer()
     var mentions = [String]()
-	var viewControllerToNavigateTo: UIViewController?
+    var viewControllerToNavigateTo: UIViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,8 +31,11 @@ class SidebarViewController: UIViewController {
         let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
         accountViewController!.user = User(id: id ?? "")
 
-        let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
-        let settingsViewController = settingsStoryboard.instantiateInitialViewController() as! UINavigationController
+		
+		let settingsViewController = UINavigationController(rootViewController: UIHostingController(rootView: SettingsView(controller: .init(delegate: self, colorDelegate: self))))
+		settingsViewController.navigationBar.prefersLargeTitles = true
+        /*let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
+        let settingsViewController = settingsStoryboard.instantiateInitialViewController() as! UINavigationController*/
 
         secondaryViewControllers = [UINavigationController(rootViewController: FeedViewController(style: .insetGrouped)),
                                     UINavigationController(rootViewController: MentionsViewController(style: .insetGrouped)),
@@ -47,40 +51,40 @@ class SidebarViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         loadMentionsCount()
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
-		NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
-		NotificationCenter.default.addObserver(self, selector: #selector(openUniversalLink(_:)), name: Notification.Name("openUniversalLink"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(openUniversalLink(_:)), name: Notification.Name("openUniversalLink"), object: nil)
     }
-	
-	@objc func openUniversalLink(_ notification: NSNotification) {
-		if let path = notification.userInfo?["path"] as? String {
-			switch path {
-				case "feed":
-					collectionView.selectItem(at: IndexPath(row: 0, section: 0),
-											  animated: false,
-											  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
-					splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
-				case "mentions":
-					collectionView.selectItem(at: IndexPath(row: 1, section: 0),
-											  animated: false,
-											  scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
-					splitViewController?.setViewController(secondaryViewControllers[1], for: .secondary)
-				default: break
-			}
-		}
-	}
-	
-	func setViewController(_ vc: UIViewController) {
-		viewControllerToNavigateTo = vc
-	}
+
+    @objc func openUniversalLink(_ notification: NSNotification) {
+        if let path = notification.userInfo?["path"] as? String {
+            switch path {
+            case "feed":
+                collectionView.selectItem(at: IndexPath(row: 0, section: 0),
+                                          animated: false,
+                                          scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
+                splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
+            case "mentions":
+                collectionView.selectItem(at: IndexPath(row: 1, section: 0),
+                                          animated: false,
+                                          scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
+                splitViewController?.setViewController(secondaryViewControllers[1], for: .secondary)
+            default: break
+            }
+        }
+    }
+
+    func setViewController(_ vc: UIViewController) {
+        viewControllerToNavigateTo = vc
+    }
 
     private func setInitialSecondaryView() {
         collectionView.selectItem(at: IndexPath(row: 0, section: 0),
                                   animated: false,
                                   scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
         splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
-		if viewControllerToNavigateTo != nil {
-			(splitViewController?.viewControllers.last as? UINavigationController)?.pushViewController(viewControllerToNavigateTo!, animated: true)
-		}
+        if viewControllerToNavigateTo != nil {
+            (splitViewController?.viewControllers.last as? UINavigationController)?.pushViewController(viewControllerToNavigateTo!, animated: true)
+        }
     }
 
     @objc func loadMentionsCount() {
@@ -89,8 +93,9 @@ class SidebarViewController: UIViewController {
             case .failure:
                 break
             case let .success(loadedMentions):
-                if mentions.count != loadedMentions.count {
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    UIApplication.shared.applicationIconBadgeNumber = loadedMentions.count
+                    if mentions.count != loadedMentions.count {
                         mentions = loadedMentions
                         if mentions.count > 0 {
                             tabsItems[1].image = UIImage(systemName: "bell.badge.fill")
@@ -104,6 +109,28 @@ class SidebarViewController: UIViewController {
             }
         }
     }
+}
+
+@available(iOS 14.0, *)
+extension SidebarViewController: ColorPickerControllerDelegate, SettingsDelegate {
+	
+	func changedColor(_ color: UIColor) {
+		UserDefaults.standard.setColor(color: color, forKey: "globalTintColor")
+		guard let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate else { return }
+		sceneDelegate.window?.tintColor = color
+	}
+	
+	func signedOut() {
+		let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+		sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
+		sceneDelegate.window?.makeKeyAndVisible()
+	}
+	
+	func setBiomicSessionToAuthorized() {
+		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+		sceneDelegate.sessionAuthorized = true
+	}
+	
 }
 
 @available(iOS 14.0, *)
@@ -193,12 +220,13 @@ struct Item: Hashable {
 }
 
 var tabsItems = [
-	Item(title: "Feed", image: UIImage(systemName: "house")),
-	Item(title: "Mentions", image: UIImage(systemName: "bell")),
-	Item(title: "Bookmarks", image: UIImage(systemName: "bookmark")),
-	Item(title: "Search", image: UIImage(systemName: "magnifyingglass")),
-	Item(title: "Account", image: UIImage(systemName: "person.circle")),
-	Item(title: "Settings", image: UIImage(systemName: "gear"))]
+    Item(title: "Feed", image: UIImage(systemName: "house")),
+    Item(title: "Mentions", image: UIImage(systemName: "bell")),
+    Item(title: "Bookmarks", image: UIImage(systemName: "bookmark")),
+    Item(title: "Search", image: UIImage(systemName: "magnifyingglass")),
+    Item(title: "Account", image: UIImage(systemName: "person.circle")),
+    Item(title: "Settings", image: UIImage(systemName: "gear")),
+]
 
 enum SidebarSection: String {
     case tabs

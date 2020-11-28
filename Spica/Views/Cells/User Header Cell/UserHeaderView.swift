@@ -15,7 +15,7 @@ import SwiftUI
 
 struct UserHeaderView: View {
     @ObservedObject var controller: UserHeaderViewController
-	@State var profilePicture: UIImage?
+    @State var profilePicture: UIImage?
 
     var frameWidth: CGFloat = 0
     var frameHeight: CGFloat = 0
@@ -33,28 +33,28 @@ struct UserHeaderView: View {
         VStack(alignment: .leading) {
             HStack {
                 Group {
-					getSwiftUIProfilePicture(controller.user.ring, url: controller.user.profilePictureUrl, binding: $profilePicture, size: 120)
-				}.onTapGesture {
-					controller.clickProfilePicture(profilePicture)
-				}
+                    getSwiftUIProfilePicture(controller.user.ring, url: controller.user.profilePictureUrl, binding: $profilePicture, size: 120)
+                }.onTapGesture {
+                    controller.clickProfilePicture(profilePicture)
+                }
                 Spacer()
             }
             Group {
                 HStack {
                     Text("\(controller.user.nickname)\(controller.user.plus ? String("⁺") : String(""))").font(.title).bold()
                 }
-				Group {
-					HStack {
-						Text("\(controller.user.name)#\(controller.user.tag)").foregroundColor(.secondary)
-						if controller.user.userSubscribedTo {
-							Image(systemName: "bell").frame(width: 15, height: 15).foregroundColor(.secondary)
-						}
-					}
-					if controller.user.username != nil {
-						Text("@\(controller.user.username!)").foregroundColor(.secondary)
-					}
-				}
-				
+                Group {
+                    HStack {
+                        Text("\(controller.user.name)#\(controller.user.tag)").foregroundColor(.secondary)
+                        if controller.user.userSubscribedTo {
+                            Image(systemName: "bell").frame(width: 15, height: 15).foregroundColor(.secondary)
+                        }
+                    }
+                    if controller.user.username != nil {
+                        Text("@\(controller.user.username!)").foregroundColor(.secondary)
+                    }
+                }
+
                 if controller.user.isFollowingMe && !controller.isLoggedInUser {
                     Text("Follows you").foregroundColor(.init(UIColor.tertiaryLabel))
                 }
@@ -150,60 +150,59 @@ struct UserHeaderView: View {
 }
 
 struct EmbeddedProfilePictureView: View {
-	var ring: ProfileRing
-	var url: URL
-	var size: Int
-	@State var image: UIImage?
-	var addShadow: Bool
-	var body: some View {
-		getSwiftUIProfilePicture(ring, url: url, binding: $image, size: size, addShadow: addShadow)
-	}
+    var ring: ProfileRing
+    var url: URL
+    var size: Int
+    @State var image: UIImage?
+    var addShadow: Bool
+    var body: some View {
+        getSwiftUIProfilePicture(ring, url: url, binding: $image, size: size, addShadow: addShadow)
+    }
 }
 
 func getSwiftUIProfilePicture(_ ring: ProfileRing, url: URL, binding: Binding<UIImage?>, size: Int, addShadow: Bool = true) -> some View {
-	switch ring {
-	case .rainbow:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(RainbowFlagCircle(addShadow: addShadow)))
-	case .trans:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(TransFlagCircle(addShadow: addShadow)))
-	case .bisexual:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(BisexualFlagCircle(addShadow: addShadow)))
-	case .pansexual:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(PansexualFlagCircle(addShadow: addShadow)))
-	case .lesbian:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(LesbianFlagCircle(addShadow: addShadow)))
-	case .asexual:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(AsexualFlagCircle(addShadow: addShadow)))
-	case .genderqueer:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(GenderqueerFlagCircle(addShadow: addShadow)))
-	case .genderfluid:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(GenderfluidFlagCircle(addShadow: addShadow)))
-	case .agender:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(AgenderFlagCircle(addShadow: addShadow)))
-	case .nonbinary:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(NonbinaryFlagCircle(addShadow: addShadow)))
-	case .supporter:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(SpicaSupporterFlagCircle(addShadow: addShadow)))
-	default:
-		return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow))
-	}
+    switch ring {
+    case .rainbow:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(RainbowFlagCircle(addShadow: addShadow)))
+    case .trans:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(TransFlagCircle(addShadow: addShadow)))
+    case .bisexual:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(BisexualFlagCircle(addShadow: addShadow)))
+    case .pansexual:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(PansexualFlagCircle(addShadow: addShadow)))
+    case .lesbian:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(LesbianFlagCircle(addShadow: addShadow)))
+    case .asexual:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(AsexualFlagCircle(addShadow: addShadow)))
+    case .genderqueer:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(GenderqueerFlagCircle(addShadow: addShadow)))
+    case .genderfluid:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(GenderfluidFlagCircle(addShadow: addShadow)))
+    case .agender:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(AgenderFlagCircle(addShadow: addShadow)))
+    case .nonbinary:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(NonbinaryFlagCircle(addShadow: addShadow)))
+    case .supporter:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow).modifier(SpicaSupporterFlagCircle(addShadow: addShadow)))
+    default:
+        return AnyView(ProfilePictureView(url: url, size: size, profilePicture: binding, addShadow: addShadow))
+    }
 }
 
 struct ProfilePictureView: View {
     var url: URL
-	var size: Int = 120
-	@Binding var profilePicture: UIImage?
-	var addShadow: Bool = true
+    var size: Int = 120
+    @Binding var profilePicture: UIImage?
+    var addShadow: Bool = true
     var body: some View {
-		KFImage(url)
-			.onSuccess { r in
-				profilePicture = r.image
-			}
-			.resizable()
-			.frame(width: CGFloat(size), height: CGFloat(size), alignment: .center)
-			.clipShape(Circle())
-			.shadow(radius: addShadow ? 10 : 0)
-			
+        KFImage(url)
+            .onSuccess { r in
+                profilePicture = r.image
+            }
+            .resizable()
+            .frame(width: CGFloat(size), height: CGFloat(size), alignment: .center)
+            .clipShape(Circle())
+            .shadow(radius: addShadow ? 10 : 0)
     }
 }
 
@@ -249,6 +248,6 @@ struct LoadingSkeleton<Content: View>: View {
 
 struct UserHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-		UserHeaderView(controller: UserHeaderViewController(user: User.sample, userDataLoaded: true))
+        UserHeaderView(controller: UserHeaderViewController(user: User.sample, userDataLoaded: true))
     }
 }

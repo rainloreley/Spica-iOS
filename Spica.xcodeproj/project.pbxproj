@@ -15,10 +15,8 @@
 		8B08D47B256957B00049A2A5 /* CreatePostController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B08D47A256957B00049A2A5 /* CreatePostController.swift */; };
 		8B0CD2A52530B6A4004459EC /* MicroAPI+ErrorHandling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0CD2A42530B6A4004459EC /* MicroAPI+ErrorHandling.swift */; };
 		8B0CD2AA2530B6F8004459EC /* EZAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0CD2A92530B6F8004459EC /* EZAlertController.swift */; };
-		8B0CD2B02530BB40004459EC /* CreatePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0CD2AF2530BB40004459EC /* CreatePostViewController.swift */; };
 		8B0CD2B92530BDA8004459EC /* JGProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 8B0CD2B82530BDA8004459EC /* JGProgressHUD */; };
 		8B11098B25444847004B2A89 /* CircleFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B11098A25444847004B2A89 /* CircleFlags.swift */; };
-		8B11099025445FEF004B2A89 /* SelectFlagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B11098F25445FEF004B2A89 /* SelectFlagViewController.swift */; };
 		8B199E2E252DFFB90060A3BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B199E2D252DFFB90060A3BE /* AppDelegate.swift */; };
 		8B199E30252DFFB90060A3BE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B199E2F252DFFB90060A3BE /* SceneDelegate.swift */; };
 		8B199E37252DFFBB0060A3BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B199E36252DFFBB0060A3BE /* Assets.xcassets */; };
@@ -41,13 +39,9 @@
 		8B36E90D256945E6006081C1 /* randomString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B36E90C256945E6006081C1 /* randomString.swift */; };
 		8B3FED43255EFCA50019748D /* SpicaPushAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3FED42255EFCA50019748D /* SpicaPushAPI.swift */; };
 		8B5C428A2532F5F4007B10BD /* biometricType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42892532F5F4007B10BD /* biometricType.swift */; };
-		8B5C42902532FC23007B10BD /* CreditsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C428F2532FC23007B10BD /* CreditsViewController.swift */; };
-		8B5C42982532FDE6007B10BD /* CreditsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42972532FDE6007B10BD /* CreditsCell.swift */; };
-		8B5C429D25330119007B10BD /* LegalNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C429C25330119007B10BD /* LegalNoticeViewController.swift */; };
-		8B5C42A2253301EA007B10BD /* UsedLibrariesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42A1253301EA007B10BD /* UsedLibrariesViewController.swift */; };
 		8B5C42A825331275007B10BD /* FollowersFollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42A725331275007B10BD /* FollowersFollowingViewController.swift */; };
 		8B5C42AD25331724007B10BD /* BookmarksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42AC25331724007B10BD /* BookmarksViewController.swift */; };
-		8B5C42B225331734007B10BD /* SimpleBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42B125331734007B10BD /* SimpleBookmark.swift */; };
+		8B5C42B225331734007B10BD /* StoredBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42B125331734007B10BD /* StoredBookmark.swift */; };
 		8B5C42BA253317C9007B10BD /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42B9253317C9007B10BD /* Bookmark.swift */; };
 		8B5C42BF2533187F007B10BD /* MicroAPI_Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42BE2533187F007B10BD /* MicroAPI_Bookmarks.swift */; };
 		8B5C42C725331ED7007B10BD /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5C42C625331ED7007B10BD /* SearchViewController.swift */; };
@@ -63,6 +57,12 @@
 		8B6ACF1F2530D69F004BDEC8 /* ReplyButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */; };
 		8B8893792548507500B70C64 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8893782548507500B70C64 /* Array.swift */; };
 		8B88937E254852F000B70C64 /* ImageDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B88937D254852F000B70C64 /* ImageDetailViewController.swift */; };
+		8B8B808825727E9F003BC1CE /* CreditsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B808725727E9F003BC1CE /* CreditsView.swift */; };
+		8B8B809325728AAF003BC1CE /* UsedLibrariesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B809225728AAF003BC1CE /* UsedLibrariesView.swift */; };
+		8B8B809B25728FB9003BC1CE /* LegalNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B809A25728FB9003BC1CE /* LegalNoticeView.swift */; };
+		8B8B80A3257292AA003BC1CE /* SelectFlagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B80A2257292AA003BC1CE /* SelectFlagView.swift */; };
+		8B8B80AB2572969C003BC1CE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B80AA2572969C003BC1CE /* SettingsView.swift */; };
+		8B8B80B0257296D8003BC1CE /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B80AF257296D8003BC1CE /* SettingsController.swift */; };
 		8B9C23BA256035F600FB4AEA /* PushUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C23B9256035F600FB4AEA /* PushUser.swift */; };
 		8B9C23C22560365700FB4AEA /* PushDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C23C12560365700FB4AEA /* PushDevice.swift */; };
 		8BA53BB6256012F6007249F5 /* NotificationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA53BB5256012F6007249F5 /* NotificationSettingsView.swift */; };
@@ -97,6 +97,7 @@
 		8BD712D02530AF3900D2533C /* MicroAPI_Posts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD712CF2530AF3900D2533C /* MicroAPI_Posts.swift */; };
 		8BD712D82530B19400D2533C /* VotePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD712D72530B19400D2533C /* VotePost.swift */; };
 		8BDCD9FD254994070098499B /* PostCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDCD9FC254994070098499B /* PostCellView.swift */; };
+		8BF3628E257156AB00801995 /* Draft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF3628D257156AB00801995 /* Draft.swift */; };
 		8BF514E9252E1BFA0064D95F /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8BF514E8252E1BFA0064D95F /* SnapKit */; };
 		8BF514EE252E35E20064D95F /* MicroAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF514ED252E35E20064D95F /* MicroAPI.swift */; };
 		8BF514F4252E36380064D95F /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 8BF514F3252E36380064D95F /* SwiftyJSON */; };
@@ -136,9 +137,7 @@
 		8B08D47A256957B00049A2A5 /* CreatePostController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostController.swift; sourceTree = "<group>"; };
 		8B0CD2A42530B6A4004459EC /* MicroAPI+ErrorHandling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicroAPI+ErrorHandling.swift"; sourceTree = "<group>"; };
 		8B0CD2A92530B6F8004459EC /* EZAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EZAlertController.swift; sourceTree = "<group>"; };
-		8B0CD2AF2530BB40004459EC /* CreatePostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePostViewController.swift; sourceTree = "<group>"; };
 		8B11098A25444847004B2A89 /* CircleFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleFlags.swift; sourceTree = "<group>"; };
-		8B11098F25445FEF004B2A89 /* SelectFlagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFlagViewController.swift; sourceTree = "<group>"; };
 		8B199E2A252DFFB90060A3BE /* Spica.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Spica.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B199E2D252DFFB90060A3BE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B199E2F252DFFB90060A3BE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -166,13 +165,9 @@
 		8B36E90C256945E6006081C1 /* randomString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = randomString.swift; sourceTree = "<group>"; };
 		8B3FED42255EFCA50019748D /* SpicaPushAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpicaPushAPI.swift; sourceTree = "<group>"; };
 		8B5C42892532F5F4007B10BD /* biometricType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = biometricType.swift; sourceTree = "<group>"; };
-		8B5C428F2532FC23007B10BD /* CreditsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsViewController.swift; sourceTree = "<group>"; };
-		8B5C42972532FDE6007B10BD /* CreditsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsCell.swift; sourceTree = "<group>"; };
-		8B5C429C25330119007B10BD /* LegalNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalNoticeViewController.swift; sourceTree = "<group>"; };
-		8B5C42A1253301EA007B10BD /* UsedLibrariesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedLibrariesViewController.swift; sourceTree = "<group>"; };
 		8B5C42A725331275007B10BD /* FollowersFollowingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowersFollowingViewController.swift; sourceTree = "<group>"; };
 		8B5C42AC25331724007B10BD /* BookmarksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksViewController.swift; sourceTree = "<group>"; };
-		8B5C42B125331734007B10BD /* SimpleBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleBookmark.swift; sourceTree = "<group>"; };
+		8B5C42B125331734007B10BD /* StoredBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredBookmark.swift; sourceTree = "<group>"; };
 		8B5C42B9253317C9007B10BD /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		8B5C42BE2533187F007B10BD /* MicroAPI_Bookmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Bookmarks.swift; sourceTree = "<group>"; };
 		8B5C42C625331ED7007B10BD /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -189,6 +184,12 @@
 		8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyButtonCell.swift; sourceTree = "<group>"; };
 		8B8893782548507500B70C64 /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		8B88937D254852F000B70C64 /* ImageDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailViewController.swift; sourceTree = "<group>"; };
+		8B8B808725727E9F003BC1CE /* CreditsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreditsView.swift; sourceTree = "<group>"; };
+		8B8B809225728AAF003BC1CE /* UsedLibrariesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsedLibrariesView.swift; sourceTree = "<group>"; };
+		8B8B809A25728FB9003BC1CE /* LegalNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalNoticeView.swift; sourceTree = "<group>"; };
+		8B8B80A2257292AA003BC1CE /* SelectFlagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFlagView.swift; sourceTree = "<group>"; };
+		8B8B80AA2572969C003BC1CE /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		8B8B80AF257296D8003BC1CE /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		8B9C23B9256035F600FB4AEA /* PushUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushUser.swift; sourceTree = "<group>"; };
 		8B9C23C12560365700FB4AEA /* PushDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushDevice.swift; sourceTree = "<group>"; };
 		8BA53BB5256012F6007249F5 /* NotificationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettingsView.swift; sourceTree = "<group>"; };
@@ -220,6 +221,7 @@
 		8BD712CF2530AF3900D2533C /* MicroAPI_Posts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Posts.swift; sourceTree = "<group>"; };
 		8BD712D72530B19400D2533C /* VotePost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VotePost.swift; sourceTree = "<group>"; };
 		8BDCD9FC254994070098499B /* PostCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCellView.swift; sourceTree = "<group>"; };
+		8BF3628D257156AB00801995 /* Draft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Draft.swift; sourceTree = "<group>"; };
 		8BF514ED252E35E20064D95F /* MicroAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI.swift; sourceTree = "<group>"; };
 		D857C0F4AA214C804056AA15 /* Pods-Spica.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spica.release.xcconfig"; path = "Target Support Files/Pods-Spica/Pods-Spica.release.xcconfig"; sourceTree = "<group>"; };
 		F87B63D51347794269D49C47 /* Pods_Spica.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spica.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -292,7 +294,6 @@
 				8B23D44C25435B38004EBBF6 /* Update Status */,
 				8BA7B59F253232D800915113 /* Color Picker */,
 				8B35C4542530BF80003809FA /* Progressbar */,
-				8B0CD2AF2530BB40004459EC /* CreatePostViewController.swift */,
 				8B35C47E2530D1D4003809FA /* PostDetailViewController.swift */,
 				8BC1BFBD2530DF85001186F3 /* UserProfileViewController.swift */,
 				8BBB7F8C2530E421004D49BC /* XPProgressBarView.swift */,
@@ -423,10 +424,12 @@
 			isa = PBXGroup;
 			children = (
 				8BA53BB425601230007249F5 /* Notifications */,
-				8B5C428F2532FC23007B10BD /* CreditsViewController.swift */,
-				8B5C429C25330119007B10BD /* LegalNoticeViewController.swift */,
-				8B5C42A1253301EA007B10BD /* UsedLibrariesViewController.swift */,
-				8B11098F25445FEF004B2A89 /* SelectFlagViewController.swift */,
+				8B8B808725727E9F003BC1CE /* CreditsView.swift */,
+				8B8B809225728AAF003BC1CE /* UsedLibrariesView.swift */,
+				8B8B809A25728FB9003BC1CE /* LegalNoticeView.swift */,
+				8B8B80A2257292AA003BC1CE /* SelectFlagView.swift */,
+				8B8B80AA2572969C003BC1CE /* SettingsView.swift */,
+				8B8B80AF257296D8003BC1CE /* SettingsController.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -603,7 +606,6 @@
 				8BBB7F702530E332004D49BC /* User Header Cell */,
 				8B6ACF192530D667004BDEC8 /* PostDividerCell.swift */,
 				8B6ACF1E2530D69F004BDEC8 /* ReplyButtonCell.swift */,
-				8B5C42972532FDE6007B10BD /* CreditsCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -616,9 +618,10 @@
 				8B6AC5AF252E0F4D003A2CC4 /* XP.swift */,
 				8B35C4832530D2A1003809FA /* PostDetail.swift */,
 				8BD0C7EB25320F95008D432E /* Mention.swift */,
-				8B5C42B125331734007B10BD /* SimpleBookmark.swift */,
+				8B5C42B125331734007B10BD /* StoredBookmark.swift */,
 				8B5C42B9253317C9007B10BD /* Bookmark.swift */,
 				8BBEA42C253C68960046A3F9 /* Status.swift */,
+				8BF3628D257156AB00801995 /* Draft.swift */,
 			);
 			path = Micro;
 			sourceTree = "<group>";
@@ -907,6 +910,7 @@
 				8B35C4842530D2A1003809FA /* PostDetail.swift in Sources */,
 				8B08D47B256957B00049A2A5 /* CreatePostController.swift in Sources */,
 				8B35C4562530BF9A003809FA /* CircularProgressBar.swift in Sources */,
+				8B8B80B0257296D8003BC1CE /* SettingsController.swift in Sources */,
 				8BD0C80725321C12008D432E /* SettingsViewController.swift in Sources */,
 				8BBB7F792530E34F004D49BC /* UserHeaderView.swift in Sources */,
 				8B0081EE2531BB05006427FE /* LoginView.swift in Sources */,
@@ -919,16 +923,13 @@
 				8BBEA42D253C68960046A3F9 /* Status.swift in Sources */,
 				8B6AC5B0252E0F4D003A2CC4 /* XP.swift in Sources */,
 				8BC9DFF92531C9B700886C92 /* LoginController.swift in Sources */,
-				8B11099025445FEF004B2A89 /* SelectFlagViewController.swift in Sources */,
 				8BD0C7F1253210DD008D432E /* MicroAPI_Mentions.swift in Sources */,
 				8B9C23BA256035F600FB4AEA /* PushUser.swift in Sources */,
-				8B5C429D25330119007B10BD /* LegalNoticeViewController.swift in Sources */,
-				8B5C42982532FDE6007B10BD /* CreditsCell.swift in Sources */,
+				8B8B809B25728FB9003BC1CE /* LegalNoticeView.swift in Sources */,
 				8B23D45625435B6D004EBBF6 /* UpdateStatusView.swift in Sources */,
 				8BD0C7E725320F49008D432E /* MentionsViewController.swift in Sources */,
 				8B3364D8252F712F00D46ABE /* MicroError.swift in Sources */,
 				8BBB7F882530E3DF004D49BC /* countString.swift in Sources */,
-				8B5C42902532FC23007B10BD /* CreditsViewController.swift in Sources */,
 				8B199E71252E015B0060A3BE /* TabBarController.swift in Sources */,
 				8BA7B5BD253244B800915113 /* URLNavigationMap.swift in Sources */,
 				8BD712C32530A81D00D2533C /* Date.swift in Sources */,
@@ -943,10 +944,12 @@
 				8B199E6C252E013C0060A3BE /* SidebarViewController.swift in Sources */,
 				8BA53BBE25601D10007249F5 /* NotificationSettingsController.swift in Sources */,
 				8BBB7F832530E38D004D49BC /* UserHeaderViewController.swift in Sources */,
+				8B8B809325728AAF003BC1CE /* UsedLibrariesView.swift in Sources */,
 				8BDCD9FD254994070098499B /* PostCellView.swift in Sources */,
 				8B5C428A2532F5F4007B10BD /* biometricType.swift in Sources */,
 				8B6AC5A6252E0BC5003A2CC4 /* Post.swift in Sources */,
 				8B11098B25444847004B2A89 /* CircleFlags.swift in Sources */,
+				8B8B80AB2572969C003BC1CE /* SettingsView.swift in Sources */,
 				8B6ACF1F2530D69F004BDEC8 /* ReplyButtonCell.swift in Sources */,
 				8BD0C7EC25320F95008D432E /* Mention.swift in Sources */,
 				8B23D46825436306004EBBF6 /* UpdateStatusController.swift in Sources */,
@@ -955,6 +958,7 @@
 				8BC1BFC32530E04B001186F3 /* MicroAPI_User.swift in Sources */,
 				8B5C42C725331ED7007B10BD /* SearchViewController.swift in Sources */,
 				8B5C42A825331275007B10BD /* FollowersFollowingViewController.swift in Sources */,
+				8BF3628E257156AB00801995 /* Draft.swift in Sources */,
 				8BA7B5AB2532335D00915113 /* UserDefaults.swift in Sources */,
 				8B0081E92531BAFC006427FE /* LoginViewController.swift in Sources */,
 				8B5E3249255EBB3E009B0F0C /* MicroAPI+ReceiveErrorMessage.swift in Sources */,
@@ -964,13 +968,13 @@
 				8B36E90D256945E6006081C1 /* randomString.swift in Sources */,
 				8BA7B5A6253232FF00915113 /* ColorPickerController.swift in Sources */,
 				8B5C42AD25331724007B10BD /* BookmarksViewController.swift in Sources */,
+				8B8B808825727E9F003BC1CE /* CreditsView.swift in Sources */,
 				8BD0C7FC25321A52008D432E /* UITableView.swift in Sources */,
-				8B0CD2B02530BB40004459EC /* CreatePostViewController.swift in Sources */,
 				8BBE232F256851FE0053970D /* analyzeLink.swift in Sources */,
 				8BD712D02530AF3900D2533C /* MicroAPI_Posts.swift in Sources */,
 				8B8893792548507500B70C64 /* Array.swift in Sources */,
-				8B5C42A2253301EA007B10BD /* UsedLibrariesViewController.swift in Sources */,
-				8B5C42B225331734007B10BD /* SimpleBookmark.swift in Sources */,
+				8B5C42B225331734007B10BD /* StoredBookmark.swift in Sources */,
+				8B8B80A3257292AA003BC1CE /* SelectFlagView.swift in Sources */,
 				8B5C42BF2533187F007B10BD /* MicroAPI_Bookmarks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

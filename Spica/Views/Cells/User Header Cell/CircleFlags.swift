@@ -12,7 +12,7 @@ import Foundation
 import SwiftUI
 
 struct RainbowFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -61,7 +61,7 @@ struct RainbowFlagCircle: ViewModifier {
 }
 
 struct TransFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -103,7 +103,7 @@ struct TransFlagCircle: ViewModifier {
 }
 
 struct BisexualFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -131,7 +131,7 @@ struct BisexualFlagCircle: ViewModifier {
 }
 
 struct PansexualFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -159,7 +159,7 @@ struct PansexualFlagCircle: ViewModifier {
 }
 
 struct LesbianFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -215,7 +215,7 @@ struct LesbianFlagCircle: ViewModifier {
 }
 
 struct AsexualFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -250,7 +250,7 @@ struct AsexualFlagCircle: ViewModifier {
 }
 
 struct GenderqueerFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -278,7 +278,7 @@ struct GenderqueerFlagCircle: ViewModifier {
 }
 
 struct GenderfluidFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -320,7 +320,7 @@ struct GenderfluidFlagCircle: ViewModifier {
 }
 
 struct AgenderFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -376,7 +376,7 @@ struct AgenderFlagCircle: ViewModifier {
 }
 
 struct NonbinaryFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()
@@ -411,7 +411,7 @@ struct NonbinaryFlagCircle: ViewModifier {
 }
 
 struct SpicaSupporterFlagCircle: ViewModifier {
-	var addShadow: Bool
+    var addShadow: Bool
     func body(content: Content) -> some View {
         return content
             .overlay(Circle()

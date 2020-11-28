@@ -39,27 +39,25 @@ class SearchViewController: UITableViewController {
         loadingHud.textLabel.text = "Loading..."
         loadingHud.interactionType = .blockNoTouches
         navigationItem.searchController = searchController
-		
-		navigationController?.navigationBar.prefersLargeTitles = true
-		searchText = ""
-		searchBar.text = ""
-		users.removeAll()
-		tableView.reloadData()
-		tableView.setEmptyMessage(message: "Search", subtitle: "Try searching for \"Archie\"! The account should appear in the list\n\ntip: username + uid searching also works ;)")
+
+        navigationController?.navigationBar.prefersLargeTitles = true
+        searchText = ""
+        searchBar.text = ""
+        users.removeAll()
+        tableView.reloadData()
+        tableView.setEmptyMessage(message: "Search", subtitle: "Try searching for \"Archie\"! The account should appear in the list\n\ntip: username + uid searching also works ;)")
     }
-	
-	@objc func refreshControlPulled() {
-		if searchText != "" {
-			performSearch()
-		}
-		else if users.isEmpty {
-			tableView.setEmptyMessage(message: "Search", subtitle: "Try searching for \"Archie\"! The account should appear in the list\n\ntip: username + uid searching also works ;)")
-			refreshControl?.endRefreshing()
-		}
-		else {
-			refreshControl?.endRefreshing()
-		}
-	}
+
+    @objc func refreshControlPulled() {
+        if searchText != "" {
+            performSearch()
+        } else if users.isEmpty {
+            tableView.setEmptyMessage(message: "Search", subtitle: "Try searching for \"Archie\"! The account should appear in the list\n\ntip: username + uid searching also works ;)")
+            refreshControl?.endRefreshing()
+        } else {
+            refreshControl?.endRefreshing()
+        }
+    }
 
     @objc func performSearch() {
         loadingHud.show(in: view)

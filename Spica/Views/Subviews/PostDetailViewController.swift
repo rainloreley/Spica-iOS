@@ -11,8 +11,8 @@
 import Combine
 import JGProgressHUD
 import Lightbox
-import SwiftUI
 import SafariServices
+import SwiftUI
 import UIKit
 
 class PostDetailViewController: UITableViewController {
@@ -31,7 +31,7 @@ class PostDetailViewController: UITableViewController {
         tableView.register(PostCellView.self, forCellReuseIdentifier: "postCell")
         tableView.register(PostDividerCell.self, forCellReuseIdentifier: "dividerCell")
         tableView.register(ReplyButtonCell.self, forCellReuseIdentifier: "replyButtonCell")
-		navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.left")!, style: .plain, target: self, action: #selector(openReplyView(_:)))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.left")!, style: .plain, target: self, action: #selector(openReplyView(_:)))
 
         refreshControl = UIRefreshControl()
         refreshControl!.addTarget(self, action: #selector(loadPostDetail), for: .valueChanged)
@@ -74,13 +74,14 @@ class PostDetailViewController: UITableViewController {
             }
         }
     }
-	
-	var postView: UIHostingController<CreatePostView>?
+
+    var postView: UIHostingController<CreatePostView>?
 
     @objc func openReplyView(_: Any) {
         if mainpost != nil {
-			postView = UIHostingController(rootView: CreatePostView(type: .reply, controller: .init(delegate: self, parentID: mainpost.id)))
-			present(UINavigationController(rootViewController: postView!), animated: true)
+            postView = UIHostingController(rootView: CreatePostView(type: .reply, controller: .init(delegate: self, parentID: mainpost.id)))
+            postView?.isModalInPresentation = true
+            present(UINavigationController(rootViewController: postView!), animated: true)
         }
     }
 
@@ -107,8 +108,6 @@ class PostDetailViewController: UITableViewController {
             if indexPath.row % 2 == 0 {
                 let count = Array(0 ... indexPath.row).filter { !$0.isMultiple(of: 2) }.count
                 let post = postAncestors[indexPath.row - count]
-				
-				
 
                 let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
 
@@ -116,15 +115,14 @@ class PostDetailViewController: UITableViewController {
                 cell.indexPath = indexPath
                 cell.delegate = self
                 cell.post = post
-				
-				if post.id == mainpost.id {
-					cell.layer.borderWidth = 2
-					cell.layer.borderColor = UIColor.systemYellow.cgColor
-				}
-				else {
-					cell.layer.borderWidth = 0
-					cell.layer.borderColor = nil
-				}
+
+                if post.id == mainpost.id {
+                    cell.layer.borderWidth = 2
+                    cell.layer.borderColor = UIColor.systemYellow.cgColor
+                } else {
+                    cell.layer.borderWidth = 0
+                    cell.layer.borderColor = nil
+                }
 
                 return cell
             } else {
@@ -149,15 +147,14 @@ class PostDetailViewController: UITableViewController {
             cell.indexPath = indexPath
             cell.delegate = self
             cell.post = post
-			
-			if post.id == mainpost.id {
-				cell.layer.borderWidth = 2
-				cell.layer.borderColor = UIColor.systemYellow.cgColor
-			}
-			else {
-				cell.layer.borderWidth = 0
-				cell.layer.borderColor = nil
-			}
+
+            if post.id == mainpost.id {
+                cell.layer.borderWidth = 2
+                cell.layer.borderColor = UIColor.systemYellow.cgColor
+            } else {
+                cell.layer.borderWidth = 0
+                cell.layer.borderColor = nil
+            }
 
             return cell
         }
@@ -171,16 +168,30 @@ extension PostDetailViewController: SFSafariViewControllerDelegate {
 }
 
 extension PostDetailViewController: PostCellDelegate {
-	
-	func deletedPost(_ post: Post) {
-		if postReplies.contains(where: { $0.id == post.id }) {
-			loadPostDetail()
-		}
-		else {
-			navigationController?.popViewController(animated: true)
-		}
-	}
-	
+    func updatePost(_ post: Post, reload: Bool, at: IndexPath) {
+        if at.section == 0 {
+            guard let postIndexInArray = postAncestors.firstIndex(where: { $0.id == post.id }) else { return }
+            postAncestors[postIndexInArray] = post
+            if reload {
+                tableView.reloadRows(at: [at], with: .automatic)
+            }
+        } else {
+            guard let postIndexInArray = postReplies.firstIndex(where: { $0.id == post.id }) else { return }
+            postReplies[postIndexInArray] = post
+            if reload {
+                tableView.reloadRows(at: [at], with: .automatic)
+            }
+        }
+    }
+
+    func deletedPost(_ post: Post) {
+        if postReplies.contains(where: { $0.id == post.id }) {
+            loadPostDetail()
+        } else {
+            navigationController?.popViewController(animated: true)
+        }
+    }
+
     func reloadCell(_ at: IndexPath) {
         let id = at.section == 0 ? postAncestors[at.row - (Array(0 ... at.row).filter { !$0.isMultiple(of: 2) }.count)].id : postReplies[at.row].id
         if !imageReloadedCells.contains(id) {
@@ -197,10 +208,11 @@ extension PostDetailViewController: PostCellDelegate {
         present(vc, animated: true)
     }
 
-	func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
-		present(UINavigationController(rootViewController: postView!), animated: true)
-	}
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
+        postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+        postView?.isModalInPresentation = true
+        present(UINavigationController(rootViewController: postView!), animated: true)
+    }
 
     func reloadData() {
         loadPostDetail()
@@ -226,28 +238,27 @@ extension PostDetailViewController {
             if indexPath.section == 0, indexPath.row % 2 == 0 {
                 let detailVC = PostDetailViewController(style: .insetGrouped)
                 let count = Array(0 ... indexPath.row).filter { !$0.isMultiple(of: 2) }.count
-				let selectedPost = postAncestors[indexPath.row - count]
-				if mainpost.id != selectedPost.id && selectedPost.isDeleted != true {
-					detailVC.mainpost = selectedPost //Post(id: selectedPost.id)
-					navigationController?.pushViewController(detailVC, animated: true)
-				}
+                let selectedPost = postAncestors[indexPath.row - count]
+                if mainpost.id != selectedPost.id, selectedPost.isDeleted != true {
+                    detailVC.mainpost = selectedPost // Post(id: selectedPost.id)
+                    navigationController?.pushViewController(detailVC, animated: true)
+                }
             } else if indexPath.section == 2 {
-				let selectedPost = postReplies[indexPath.row]
-				if mainpost.id != selectedPost.id && selectedPost.isDeleted != true {
-					detailVC.mainpost = selectedPost
-					navigationController?.pushViewController(detailVC, animated: true)
-				}
+                let selectedPost = postReplies[indexPath.row]
+                if mainpost.id != selectedPost.id, selectedPost.isDeleted != true {
+                    detailVC.mainpost = selectedPost
+                    navigationController?.pushViewController(detailVC, animated: true)
+                }
             }
         }
     }
 }
 
 extension PostDetailViewController: CreatePostDelegate {
-	
-	func dismissView() {
-		postView!.dismiss(animated: true, completion: nil)
-	}
-	
+    func dismissView() {
+        postView!.dismiss(animated: true, completion: nil)
+    }
+
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)

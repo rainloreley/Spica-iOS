@@ -13,8 +13,8 @@ import JGProgressHUD
 import Lightbox
 import SafariServices
 import SPAlert
-import UIKit
 import SwiftUI
+import UIKit
 
 class BookmarksViewController: UITableViewController {
     var bookmarks = [Bookmark]()
@@ -22,7 +22,7 @@ class BookmarksViewController: UITableViewController {
     var loadingHud: JGProgressHUD!
     var imageReloadedCells = [String]()
     var sortingMethod: BookmarkSortingMethod = .byAddedDateDescending
-	var postView: UIHostingController<CreatePostView>?
+    var postView: UIHostingController<CreatePostView>?
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -52,7 +52,7 @@ class BookmarksViewController: UITableViewController {
 
     @objc func deleteAllConfirmation() {
         EZAlertController.alert("Delete all bookmarks?", message: "Are you sure you want to delete all bookmarks?", actions: [
-			UIAlertAction(title: "Cancel", style: .cancel, handler: nil),
+            UIAlertAction(title: "Cancel", style: .cancel, handler: nil),
             UIAlertAction(title: "Delete", style: .destructive, handler: { _ in
                 UserDefaults.standard.setStructArray([StoredBookmark](), forKey: "savedBookmarks")
                 SPAlert.present(title: "Deleted!", preset: .done)
@@ -181,11 +181,18 @@ extension BookmarksViewController: SFSafariViewControllerDelegate {
 }
 
 extension BookmarksViewController: PostCellDelegate {
-	
-	func deletedPost(_ post: Post) {
-		loadBookmarks()
-	}
-	
+    func updatePost(_ post: Post, reload: Bool, at: IndexPath) {
+        guard let postIndexInArray = bookmarks.firstIndex(where: { $0.post.id == post.id }) else { return }
+        bookmarks[postIndexInArray].post = post
+        if reload {
+            tableView.reloadRows(at: [at], with: .automatic)
+        }
+    }
+
+    func deletedPost(_: Post) {
+        loadBookmarks()
+    }
+
     func reloadCell(_ at: IndexPath) {
         if !imageReloadedCells.contains(bookmarks[at.section].post.id) {
             imageReloadedCells.append(bookmarks[at.section].post.id)
@@ -201,11 +208,11 @@ extension BookmarksViewController: PostCellDelegate {
         present(vc, animated: true)
     }
 
-
-	func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
-		present(UINavigationController(rootViewController: postView!), animated: true)
-	}
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
+        postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+        postView?.isModalInPresentation = true
+        present(UINavigationController(rootViewController: postView!), animated: true)
+    }
 
     func reloadData() {
         loadBookmarks()
@@ -224,11 +231,10 @@ extension BookmarksViewController: PostCellDelegate {
 }
 
 extension BookmarksViewController: CreatePostDelegate {
-	
-	func dismissView() {
-		postView!.dismiss(animated: true, completion: nil)
-	}
-	
+    func dismissView() {
+        postView!.dismiss(animated: true, completion: nil)
+    }
+
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)

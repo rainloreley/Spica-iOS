@@ -71,7 +71,7 @@ extension MicroAPI {
         }
     }
 
-	func loadUser(_ id: String, loadStatus: Bool = false, loadRing: Bool = false, promise: @escaping (Result<User, MicroError>) -> Void) {
+    func loadUser(_ id: String, loadStatus: Bool = false, loadRing: Bool = false, promise: @escaping (Result<User, MicroError>) -> Void) {
         loadIdByUsername(id, allowEmptyUsername: true) { [self] result in
             switch result {
             case let .failure(err):
@@ -89,79 +89,74 @@ extension MicroAPI {
                             let userJSON = JSON(userResponse.data!)
                             var user: User = .init(userJSON)
 
-							if loadStatus {
-								loadUserStatus(user.id) { result in
-									switch result {
-									case let .failure(err):
-										promise(.failure(err))
-									case let .success(status):
-										user.status = status
-										
-										SpicaPushAPI.default.getUserData { (pushresult) in
-											switch pushresult {
-												case let .failure(err):
-													user.spicaUserHasPushAccount = false
-													user.userSubscribedTo = false
-													if loadRing {
-														FlagServerAPI.default.loadUserRing(user.id) { ringResult in
-															switch ringResult {
-															case .failure:
-																user.ring = .none
-																promise(.success(user))
-															case let .success(ring):
-																user.ring = ring
-																promise(.success(user))
-															}
-														}
-													}
-													else {
-														promise(.success(user))
-													}
-												case let .success(pushuser):
-													if pushuser.usersSubscribedTo.contains(where: { $0.id == user.id }) {
-														user.spicaUserHasPushAccount = true
-														user.userSubscribedTo = true
-													}
-													else {
-														user.spicaUserHasPushAccount = true
-														user.userSubscribedTo = false
-													}
-													
-													if loadRing {
-														FlagServerAPI.default.loadUserRing(user.id) { ringResult in
-															switch ringResult {
-															case .failure:
-																user.ring = .none
-																promise(.success(user))
-															case let .success(ring):
-																user.ring = ring
-																promise(.success(user))
-															}
-														}
-													}
-													else {
-														promise(.success(user))
-													}
-											}
-										}
-									}
-								}
-							}
-							else if loadRing {
-								FlagServerAPI.default.loadUserRing(user.id) { ringResult in
-									switch ringResult {
-									case .failure:
-										user.ring = .none
-										promise(.success(user))
-									case let .success(ring):
-										user.ring = ring
-										promise(.success(user))
-									}
-								}
-							}
-							else {
-								promise(.success(user))
-							}
+                            if loadStatus {
+                                loadUserStatus(user.id) { result in
+                                    switch result {
+                                    case let .failure(err):
+                                        promise(.failure(err))
+                                    case let .success(status):
+                                        user.status = status
+
+                                        SpicaPushAPI.default.getUserData { pushresult in
+                                            switch pushresult {
+                                            case .failure:
+                                                user.spicaUserHasPushAccount = false
+                                                user.userSubscribedTo = false
+                                                if loadRing {
+                                                    FlagServerAPI.default.loadUserRing(user.id) { ringResult in
+                                                        switch ringResult {
+                                                        case .failure:
+                                                            user.ring = .none
+                                                            promise(.success(user))
+                                                        case let .success(ring):
+                                                            user.ring = ring
+                                                            promise(.success(user))
+                                                        }
+                                                    }
+                                                } else {
+                                                    promise(.success(user))
+                                                }
+                                            case let .success(pushuser):
+                                                if pushuser.usersSubscribedTo.contains(where: { $0.id == user.id }) {
+                                                    user.spicaUserHasPushAccount = true
+                                                    user.userSubscribedTo = true
+                                                } else {
+                                                    user.spicaUserHasPushAccount = true
+                                                    user.userSubscribedTo = false
+                                                }
+
+                                                if loadRing {
+                                                    FlagServerAPI.default.loadUserRing(user.id) { ringResult in
+                                                        switch ringResult {
+                                                        case .failure:
+                                                            user.ring = .none
+                                                            promise(.success(user))
+                                                        case let .success(ring):
+                                                            user.ring = ring
+                                                            promise(.success(user))
+                                                        }
+                                                    }
+                                                } else {
+                                                    promise(.success(user))
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else if loadRing {
+                                FlagServerAPI.default.loadUserRing(user.id) { ringResult in
+                                    switch ringResult {
+                                    case .failure:
+                                        user.ring = .none
+                                        promise(.success(user))
+                                    case let .success(ring):
+                                        user.ring = ring
+                                        promise(.success(user))
+                                    }
+                                }
+                            } else {
+                                promise(.success(user))
+                            }
                         } else {
                             promise(.failure(possibleError))
                         }
