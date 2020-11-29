@@ -12,15 +12,16 @@ import Combine
 import JGProgressHUD
 import Lightbox
 import SafariServices
-import UIKit
+import SPAlert
 import SwiftUI
+import UIKit
 
 class MentionsViewController: UITableViewController {
     var mentions = [Mention]()
 
     var loadingHud: JGProgressHUD!
     var imageReloadedCells = [String]()
-	var postView: UIHostingController<CreatePostView>?
+    var postView: UIHostingController<CreatePostView>?
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -93,10 +94,11 @@ class MentionsViewController: UITableViewController {
         cell.delegate = self
         cell.post = mentions[indexPath.section].post
 
+		if let unreadIndicator = cell.viewWithTag(924) { unreadIndicator.removeFromSuperview() }
         if !mentions[indexPath.section].read {
             let unreadIndicator = UIView()
             unreadIndicator.backgroundColor = .systemBlue
-            unreadIndicator.tag = 294
+            unreadIndicator.tag = 924
             unreadIndicator.layer.cornerRadius = 10
             cell.addSubview(unreadIndicator)
             unreadIndicator.snp.makeConstraints { make in
@@ -106,7 +108,7 @@ class MentionsViewController: UITableViewController {
                 make.trailing.equalTo(cell.snp.trailing).offset(-8)
             }
         } else {
-            if let unreadIndicator = cell.viewWithTag(294) { unreadIndicator.removeFromSuperview() }
+            if let unreadIndicator = cell.viewWithTag(924) { unreadIndicator.removeFromSuperview() }
         }
 
         return cell
@@ -120,11 +122,18 @@ extension MentionsViewController: SFSafariViewControllerDelegate {
 }
 
 extension MentionsViewController: PostCellDelegate {
-	
-	func deletedPost(_ post: Post) {
-		loadMentions()
-	}
-	
+    func updatePost(_ post: Post, reload: Bool, at: IndexPath) {
+        guard let postIndexInArray = mentions.firstIndex(where: { $0.post.id == post.id }) else { return }
+        mentions[postIndexInArray].post = post
+        if reload {
+            tableView.reloadRows(at: [at], with: .automatic)
+        }
+    }
+
+    func deletedPost(_: Post) {
+        loadMentions()
+    }
+
     func reloadCell(_ at: IndexPath) {
         if !imageReloadedCells.contains(mentions[at.section].post.id) {
             imageReloadedCells.append(mentions[at.section].post.id)
@@ -140,11 +149,11 @@ extension MentionsViewController: PostCellDelegate {
         present(vc, animated: true)
     }
 
-
-	func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
-		present(UINavigationController(rootViewController: postView!), animated: true)
-	}
+    func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
+        postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+        postView?.isModalInPresentation = true
+        present(UINavigationController(rootViewController: postView!), animated: true)
+    }
 
     func reloadData() {
         loadMentions()
@@ -163,11 +172,10 @@ extension MentionsViewController: PostCellDelegate {
 }
 
 extension MentionsViewController: CreatePostDelegate {
-	
-	func dismissView() {
-		postView!.dismiss(animated: true, completion: nil)
-	}
-	
+    func dismissView() {
+        postView!.dismiss(animated: true, completion: nil)
+    }
+
     func didSendPost(post: Post?) {
         if post != nil {
             let detailVC = PostDetailViewController(style: .insetGrouped)

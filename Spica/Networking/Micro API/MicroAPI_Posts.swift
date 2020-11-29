@@ -25,59 +25,84 @@ extension MicroAPI {
                 if !possibleError.error.isError {
                     let postJSON = JSON(postResponse.data!)
                     var post: Post = .init(postJSON)
-					
-					let userDispatchGroup = DispatchGroup()
-					
-					userDispatchGroup.enter()
-					
-					if !UserDefaults.standard.bool(forKey: "disablePostFlagLoading") {
-						loadUser(post.author.id, loadRing: true) { (userResult) in
-							switch userResult {
-								case .failure:
-									userDispatchGroup.leave()
-								case let .success(user):
-									post.author = user
-									userDispatchGroup.leave()
-							}
-						}
-					}
-					else {
-						userDispatchGroup.leave()
-					}
-					
-					userDispatchGroup.notify(queue: .global(qos: .utility)) {
-						if loadMentions {
-							let content = post.content.replacingOccurrences(of: "\n", with: " \n ")
 
-							let splittedContent = content.split(separator: " ")
+                    let userDispatchGroup = DispatchGroup()
 
-							let dispatchGroup = DispatchGroup()
+                    userDispatchGroup.enter()
 
-							for word in splittedContent {
-								dispatchGroup.enter()
-								if String(word).starts(with: "@"), word.count > 1 {
-									let filteredWord = String(word).removeSpecialChars
-									let mentionedUserRaw = filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex]
-									loadUser(String(mentionedUserRaw)) { result in
-										switch result {
-										case .failure:
-											dispatchGroup.leave()
-										case let .success(user):
-											post.mentionedUsers.append(user)
-											dispatchGroup.leave()
-										}
-									}
-								} else {
-									dispatchGroup.leave()
-								}
-							}
-							dispatchGroup.notify(queue: .main) {
-								return promise(.success(post))
-							}
-						} else {
-							return promise(.success(post))
-						}
-					}
+                    if !UserDefaults.standard.bool(forKey: "disablePostFlagLoading") {
+                        loadUser(post.author.id, loadRing: true) { userResult in
+                            switch userResult {
+                            case .failure:
+                                userDispatchGroup.leave()
+                            case let .success(user):
+                                post.author = user
+                                userDispatchGroup.leave()
+                            }
+                        }
+                    } else {
+                        userDispatchGroup.leave()
+                    }
+
+                    userDispatchGroup.notify(queue: .global(qos: .utility)) {
+                        if loadMentions {
+                            let content = post.content.replacingOccurrences(of: "\n", with: " \n ")
+
+                            let splittedContent = content.split(separator: " ")
+
+                            let dispatchGroup = DispatchGroup()
+
+                            for word in splittedContent {
+                                dispatchGroup.enter()
+                                if String(word).starts(with: "@"), word.count > 1 {
+                                    let filteredWord = String(word).removeSpecialChars
+                                    let mentionedUserRaw = filteredWord[filteredWord.index(filteredWord.startIndex, offsetBy: 1) ..< filteredWord.endIndex]
+                                    loadUser(String(mentionedUserRaw)) { result in
+                                        switch result {
+                                        case .failure:
+                                            dispatchGroup.leave()
+                                        case let .success(user):
+                                            post.mentionedUsers.append(user)
+                                            dispatchGroup.leave()
+                                        }
+                                    }
+                                } else {
+                                    dispatchGroup.leave()
+                                }
+                            }
+                            dispatchGroup.notify(queue: .main) {
+                                if let posturl = post.url {
+                                    isPostRickroll(posturl) { result in
+                                        switch result {
+                                        case let .success(isRickroll):
+                                            post.containsRickroll = isRickroll
+                                            return promise(.success(post))
+                                        default:
+                                            post.containsRickroll = false
+                                            return promise(.success(post))
+                                        }
+                                    }
+                                } else {
+                                    return promise(.success(post))
+                                }
+                            }
+                        } else {
+                            if let posturl = post.url {
+                                isPostRickroll(posturl) { result in
+                                    switch result {
+                                    case let .success(isRickroll):
+                                        post.containsRickroll = isRickroll
+                                        return promise(.success(post))
+                                    default:
+                                        post.containsRickroll = false
+                                        return promise(.success(post))
+                                    }
+                                }
+                            } else {
+                                return promise(.success(post))
+                            }
+                        }
+                    }
                 } else {
                     promise(.failure(possibleError))
                 }
@@ -122,15 +147,14 @@ extension MicroAPI {
                                 loadPost(highestAncestor!.parent!) { ancestorResult in
                                     switch ancestorResult {
                                     case let .failure(parentErr):
-										if parentErr.error.name == "missingResource" {
-											finishedPostDetail.ancestors.append(Post.deleted)
-											highestAncestor = nil
-											parentDispatchGroup.leave()
-										}
-										else {
-											parentDispatchGroup.leave()
-											return promise(.failure(parentErr))
-										}
+                                        if parentErr.error.name == "missingResource" {
+                                            finishedPostDetail.ancestors.append(Post.deleted)
+                                            highestAncestor = nil
+                                            parentDispatchGroup.leave()
+                                        } else {
+                                            parentDispatchGroup.leave()
+                                            return promise(.failure(parentErr))
+                                        }
                                     case let .success(parentPost):
                                         finishedPostDetail.ancestors.append(parentPost)
                                         highestAncestor = parentPost
@@ -158,7 +182,15 @@ extension MicroAPI {
         ]
 
         if let image = image {
-            let base64Image = "data:image/jpeg;base64,\((image.jpegData(compressionQuality: 0.5)?.base64EncodedString())!)"
+			let savedImageCompression = UserDefaults.standard.double(forKey: "imageCompressionValue")
+			var compressionToBeUsed = 0.5
+			if savedImageCompression == 0 {
+				compressionToBeUsed = 0.5
+			}
+			else {
+				compressionToBeUsed = savedImageCompression
+			}
+			let base64Image = "data:image/jpeg;base64,\((image.jpegData(compressionQuality: CGFloat(compressionToBeUsed))?.base64EncodedString())!)"
             newPostConstruct["image"] = "\(base64Image)"
         }
 
@@ -182,7 +214,14 @@ extension MicroAPI {
                     let responseJSON = JSON(response.data!)
                     return promise(.success(Post(responseJSON)))
                 } else {
-                    return promise(.failure(possibleError))
+					if possibleError.error.name == "internalError" && image != nil {
+						var newError = possibleError
+						newError.error.humanDescription = "\(newError.error.humanDescription)\n\n(A reason could be that the image is too big. Try changing the image quality setting within Spicas settings)"
+						return promise(.failure(newError))
+					}
+					else {
+						return promise(.failure(possibleError))
+					}
                 }
             case let .failure(err):
                 return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
@@ -209,6 +248,32 @@ extension MicroAPI {
             }
         } else {
             return promise(.failure(.init(error: .init(isError: true, name: "spica_valueNotAllowed"), action: nil)))
+        }
+    }
+
+    func isPostRickroll(_ url: URL, promise: @escaping (Result<Bool, MicroError>) -> Void) {
+        if UserDefaults.standard.bool(forKey: "rickrollDetectionDisabled") {
+            return promise(.success(false))
+        } else {
+            AF.request("https://astley.vercel.app/?url=\(url.absoluteString)", method: .get).responseJSON(queue: .global(qos: .utility)) { [self] response in
+                switch response.result {
+                case .success:
+                    let possibleError = isError(response)
+                    if !possibleError.error.isError {
+                        let rickrollJSON = JSON(response.data!)
+
+                        if rickrollJSON["rickroll"].exists() {
+                            return promise(.success(rickrollJSON["rickroll"].bool ?? false))
+                        } else {
+                            return promise(.success(false))
+                        }
+                    } else {
+                        return promise(.failure(possibleError))
+                    }
+                case let .failure(err):
+                    return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+                }
+            }
         }
     }
 

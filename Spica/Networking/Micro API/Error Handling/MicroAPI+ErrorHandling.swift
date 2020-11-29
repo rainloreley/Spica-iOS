@@ -13,7 +13,7 @@ import UIKit
 
 extension MicroAPI {
     public func errorHandling(error: MicroError, caller: UIView) {
-		EZAlertController.alert("Error", message: "The following error occurred:\n\(error.error.humanDescription)", buttons: ["Ok"]) { _, _ in
+        EZAlertController.alert("Error", message: "The following error occurred:\n\(error.error.humanDescription)", buttons: ["Ok"]) { _, _ in
 
             if error.action != nil {
                 if error.action!.starts(with: "nav:"), error.action!.components(separatedBy: ":").last == "login" {

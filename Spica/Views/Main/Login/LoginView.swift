@@ -38,41 +38,45 @@ struct LoginView: View {
                     Text("Login").bold().foregroundColor(.white).padding([.leading, .trailing])
 				}).padding().background(Color.blue).cornerRadius(12)
                 Spacer()
-                VStack {
-                    Text("By signing in, you agree to")
-                    HStack {
-                        Button(action: {
-                            let url = URL(string: "https://files.alles.cc/Documents/Terms%20of%20Service.txt")!
-                            if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
-                        }, label: {
-                            Text("Alles Terms of Service,")
-						})
-                        Button(action: {
-                            let url = URL(string: "https://files.alles.cc/Documents/Privacy%20Policy.txt")!
-                            if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
-                        }, label: {
-                            Text("Privacy Policy")
-						})
-                    }.foregroundColor(.blue)
-                        .padding(1)
-                    Text("and")
-                    HStack {
-                        Button(action: {
-                            let url = URL(string: "https://spica.li/privacy")!
-                            if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
-                        }, label: {
-                            Text("Spicas Privacy Policy")
-						})
-                    }.foregroundColor(.blue)
-                        .padding(1)
-                }.multilineTextAlignment(.center).font(.footnote).foregroundColor(.secondary)
+               /**/
 
             }.padding().navigationBarTitle(Text("Login"))
                 .alert(isPresented: $controller.showAlert) {
                     Alert(title: Text("Error"), message: Text("\(controller.alertMessage)"), dismissButton: .default(Text("Ok")))
-                }
+				}.background(
+					VStack {
+						Spacer()
+						Text("By signing in, you agree to")
+						HStack {
+							Button(action: {
+								let url = URL(string: "https://files.alles.cc/Documents/Terms%20of%20Service.txt")!
+								if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+							}, label: {
+								Text("Alles Terms of Service,")
+							})
+							Button(action: {
+								let url = URL(string: "https://files.alles.cc/Documents/Privacy%20Policy.txt")!
+								if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+							}, label: {
+								Text("Privacy Policy")
+							})
+						}.foregroundColor(.blue)
+							.padding(1)
+						Text("and")
+						HStack {
+							Button(action: {
+								let url = URL(string: "https://spica.li/privacy")!
+								if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+							}, label: {
+								Text("Spicas Privacy Policy")
+							})
+						}.foregroundColor(.blue)
+							.padding(1)
+					}.padding(.bottom, 32).multilineTextAlignment(.center).font(.footnote).foregroundColor(.secondary)
+					.edgesIgnoringSafeArea(.bottom)
+				)
         }.navigationViewStyle(StackNavigationViewStyle())
-    }
+	}
 }
 
 struct LoginView_Previews: PreviewProvider {

@@ -13,8 +13,8 @@ import JGProgressHUD
 import Lightbox
 import SafariServices
 import SnapKit
-import UIKit
 import SwiftUI
+import UIKit
 
 class FeedViewController: UITableViewController {
     var posts = [Post]()
@@ -25,16 +25,15 @@ class FeedViewController: UITableViewController {
 
     override func viewWillAppear(_: Bool) {
         navigationController?.navigationBar.prefersLargeTitles = true
-		if #available(iOS 14.0, *) {
-			if spicaAppSplitViewController.isCollapsed {
-				navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
-			}
-			else {
-				navigationItem.leftBarButtonItem = nil
-			}
-		} else {
-			navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
-		}
+        if #available(iOS 14.0, *) {
+            if spicaAppSplitViewController.isCollapsed {
+                navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+            } else {
+                navigationItem.leftBarButtonItem = nil
+            }
+        } else {
+            navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .plain, target: self, action: #selector(openSettings))
+        }
     }
 
     override func viewDidLoad() {
@@ -85,21 +84,50 @@ class FeedViewController: UITableViewController {
     }
 
     @objc func openSettings() {
-        let storyboard = UIStoryboard(name: "Settings", bundle: nil)
+		let vc = UINavigationController(rootViewController: UIHostingController(rootView: SettingsView(controller: .init(delegate: self, colorDelegate: self))))
+		vc.navigationBar.prefersLargeTitles = true
+		present(vc, animated: true, completion: nil)
+        /*let storyboard = UIStoryboard(name: "Settings", bundle: nil)
         let vc = storyboard.instantiateInitialViewController()
-        present(vc!, animated: true)
+        present(vc!, animated: true)*/
     }
-	
-	var postView: UIHostingController<CreatePostView>?
+
+    var postView: UIHostingController<CreatePostView>?
 
     @objc func openNewPostView() {
-		postView = UIHostingController(rootView: CreatePostView(type: .post, controller: CreatePostController(delegate: self)))
+        postView = UIHostingController(rootView: CreatePostView(type: .post, controller: CreatePostController(delegate: self)))
+        postView?.isModalInPresentation = true
         present(UINavigationController(rootViewController: postView!), animated: true)
     }
 
     override func viewDidAppear(_: Bool) {
         if tableView.contentOffset.y < 200 || posts.isEmpty {
             loadFeed()
+        } else {
+            var indexesToReload = [IndexPath]()
+            let dispatchGroup = DispatchGroup()
+            for post in posts {
+                dispatchGroup.enter()
+                MicroAPI.default.loadPost(post.id) { [self] result in
+                    switch result {
+                    case .failure:
+                        dispatchGroup.leave()
+                    case let .success(post):
+                        guard let indexForPost = posts.firstIndex(where: { $0.id == post.id }) else {
+                            dispatchGroup.leave()
+                            return
+                        }
+
+                        indexesToReload.append(.init(row: 0, section: indexForPost))
+                        posts[indexForPost] = post
+                        dispatchGroup.leave()
+                    }
+                }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                self.tableView.reloadRows(at: indexesToReload, with: .automatic)
+            }
         }
     }
 
@@ -173,7 +201,7 @@ class FeedViewController: UITableViewController {
 
 extension FeedViewController {
     override func numberOfSections(in _: UITableView) -> Int {
-		return posts.count
+        return posts.count
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
@@ -181,13 +209,12 @@ extension FeedViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		
-		let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
-		cell.indexPath = indexPath
-		cell.delegate = self
-		cell.post = posts[indexPath.section]
+        let cell = tableView.dequeueReusableCell(withIdentifier: "postCell", for: indexPath) as! PostCellView
+        cell.indexPath = indexPath
+        cell.delegate = self
+        cell.post = posts[indexPath.section]
 
-		return cell
+        return cell
     }
 }
 
@@ -198,16 +225,23 @@ extension FeedViewController: SFSafariViewControllerDelegate {
 }
 
 extension FeedViewController: PostCellDelegate {
-	
-	func deletedPost(_ post: Post) {
-		if let index = posts.firstIndex(where: { $0.id == post.id }) {
-			posts.remove(at: index)
-			DispatchQueue.main.async {
-				self.tableView.reloadData()
-			}
-		}
-	}
-	
+    func updatePost(_ post: Post, reload: Bool, at: IndexPath) {
+        guard let postIndexInArray = posts.firstIndex(where: { $0.id == post.id }) else { return }
+        posts[postIndexInArray] = post
+        if reload {
+            tableView.reloadRows(at: [at], with: .automatic)
+        }
+    }
+
+    func deletedPost(_ post: Post) {
+        if let index = posts.firstIndex(where: { $0.id == post.id }) {
+            posts.remove(at: index)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+
     func reloadCell(_ at: IndexPath) {
         if !imageReloadedCells.contains(posts[at.section].id) {
             imageReloadedCells.append(posts[at.section].id)
@@ -224,8 +258,9 @@ extension FeedViewController: PostCellDelegate {
     }
 
     func openPostView(_ type: PostType, preText: String?, preLink: String?, parentID: String?) {
-		postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
-		present(UINavigationController(rootViewController: postView!), animated: true)
+        postView = UIHostingController(rootView: CreatePostView(type: type, controller: .init(delegate: self, parentID: parentID, preText: preText ?? "", preLink: preLink ?? "")))
+        postView?.isModalInPresentation = true
+        present(UINavigationController(rootViewController: postView!), animated: true)
     }
 
     func reloadData() {
@@ -272,10 +307,9 @@ extension FeedViewController {
 }
 
 extension FeedViewController: CreatePostDelegate {
-	
-	func dismissView() {
-		postView!.dismiss(animated: true, completion: nil)
-	}
+    func dismissView() {
+        postView!.dismiss(animated: true, completion: nil)
+    }
 
     func didSendPost(post: Post?) {
         if post != nil {
@@ -285,4 +319,26 @@ extension FeedViewController: CreatePostDelegate {
             navigationController?.pushViewController(detailVC, animated: true)
         }
     }
+}
+
+extension FeedViewController: SettingsDelegate {
+	
+	func signedOut() {
+		let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+		sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
+		sceneDelegate.window?.makeKeyAndVisible()
+	}
+	
+	func setBiomicSessionToAuthorized() {
+		let sceneDelegate = view.window!.windowScene!.delegate as! SceneDelegate
+		sceneDelegate.sessionAuthorized = true
+	}
+}
+
+extension FeedViewController: ColorPickerControllerDelegate {
+	func changedColor(_ color: UIColor) {
+		UserDefaults.standard.setColor(color: color, forKey: "globalTintColor")
+		guard let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate else { return }
+		sceneDelegate.window?.tintColor = color
+	}
 }

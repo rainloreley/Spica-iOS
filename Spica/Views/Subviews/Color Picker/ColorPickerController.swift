@@ -22,8 +22,7 @@ class ColorPickerController: ObservableObject {
         didSet {
             if #available(iOS 14.0, *) {
                 delegate.changedColor(UIColor(color))
-            } else {
-            }
+            } else {}
         }
     }
 

@@ -13,31 +13,31 @@ import SwiftUI
 struct UpdateStatusView: View {
     @ObservedObject var controller: UpdateStatusController
     var body: some View {
-		GeometryReader(content: { geometry in
-			VStack {
-				VStack(alignment: .leading) {
-					Text("Status:").bold()
-					TextField("", text: $controller.enteredText).textFieldStyle(RoundedBorderTextFieldStyle()).frame(width: geometry.size.width)
-				}
+        GeometryReader(content: { geometry in
+            VStack {
+                VStack(alignment: .leading) {
+                    Text("Status:").bold()
+                    TextField("", text: $controller.enteredText).textFieldStyle(RoundedBorderTextFieldStyle()).frame(width: geometry.size.width)
+                }
 
-				VStack(alignment: .leading) {
-					Text("Expiration date:").bold()
-					DatePicker("", selection: $controller.selectedDate, in: Date() ... Date().addingTimeInterval(604_800))
-				}
-				Button(action: {
-					controller.updateStatus()
+                VStack(alignment: .leading) {
+                    Text("Expiration date:").bold()
+                    DatePicker("", selection: $controller.selectedDate, in: Date() ... Date().addingTimeInterval(604_800))
+                }
+                Button(action: {
+                    controller.updateStatus()
 				}) {
-					Text("Update").foregroundColor(.white)
-				}.frame(maxWidth: .infinity).padding().background(Color.accentColor).cornerRadius(12)
-					.padding([.top, .bottom], 2)
+                    Text("Update").foregroundColor(.white)
+                }.frame(maxWidth: .infinity).padding().background(Color.accentColor).cornerRadius(12)
+                    .padding([.top, .bottom], 2)
 
-				Button(action: {
-					controller.clearStatus()
+                Button(action: {
+                    controller.clearStatus()
 				}) {
-					Text("Clear").foregroundColor(.white)
-				}.frame(maxWidth: .infinity).padding().background(Color.accentColor).cornerRadius(12)
-					.padding([.top, .bottom], 2)
-			}
+                    Text("Clear").foregroundColor(.white)
+                }.frame(maxWidth: .infinity).padding().background(Color.accentColor).cornerRadius(12)
+                    .padding([.top, .bottom], 2)
+            }
 		})
     }
 }

@@ -12,23 +12,23 @@ import Foundation
 import SwiftyJSON
 
 struct PushUser {
-	var id: String
-	var notificationsEnabled: Bool
-	var repliesEnabled: Bool
-	var mentionsEnabled: Bool
-	var devices: [PushDevice]
-	var usersSubscribedTo: [User]
-	
-	init(_ json: JSON) {
-		id = json["id"].string ?? ""
-		notificationsEnabled = json["notificationsEnabled"].bool ?? true
-		repliesEnabled = json["repliesEnabled"].bool ?? true
-		mentionsEnabled = json["mentionsEnabled"].bool ?? true
-		devices = json["devices"].arrayValue.map { json in
-			return PushDevice(json)
-		}
-		usersSubscribedTo = json["userpushsubscriptions"].arrayValue.map { json in
-			return User(id: json["subscribedto"].string ?? "")
-		}
-	}
+    var id: String
+    var notificationsEnabled: Bool
+    var repliesEnabled: Bool
+    var mentionsEnabled: Bool
+    var devices: [PushDevice]
+    var usersSubscribedTo: [User]
+
+    init(_ json: JSON) {
+        id = json["id"].string ?? ""
+        notificationsEnabled = json["notificationsEnabled"].bool ?? true
+        repliesEnabled = json["repliesEnabled"].bool ?? true
+        mentionsEnabled = json["mentionsEnabled"].bool ?? true
+        devices = json["devices"].arrayValue.map { json in
+            PushDevice(json)
+        }
+        usersSubscribedTo = json["userpushsubscriptions"].arrayValue.map { json in
+            User(id: json["subscribedto"].string ?? "")
+        }
+    }
 }

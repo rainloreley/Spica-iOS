@@ -16,20 +16,20 @@ protocol UserHeaderDelegate {
     func showError(title: String, message: String)
     func clickedOnFollowerCount()
     func clickedOnFollowingCount()
-	func clickedOnProfilePicture(_ image: UIImage)
+    func clickedOnProfilePicture(_ image: UIImage)
 }
 
 class UserHeaderViewController: ObservableObject {
-	@Published var user: User = User()
+    @Published var user: User = User()
 
     @Published var userDataLoaded: Bool = false
     @Published var isLoggedInUser: Bool = false
-	
-	init(user: User = User(), userDataLoaded: Bool = false, isLoggedInUser: Bool = false) {
-		self.user = user
-		self.userDataLoaded = userDataLoaded
-		self.isLoggedInUser = isLoggedInUser
-	}
+
+    init(user: User = User(), userDataLoaded: Bool = false, isLoggedInUser: Bool = false) {
+        self.user = user
+        self.userDataLoaded = userDataLoaded
+        self.isLoggedInUser = isLoggedInUser
+    }
 
     var delegate: UserHeaderDelegate!
 
@@ -61,10 +61,10 @@ class UserHeaderViewController: ObservableObject {
 
         isLoggedInUser = user.id == signedInID
     }
-	
-	func clickProfilePicture(_ image: UIImage?) {
-		if let tempImage = image {
-			delegate.clickedOnProfilePicture(tempImage)
-		}
-	}
+
+    func clickProfilePicture(_ image: UIImage?) {
+        if let tempImage = image {
+            delegate.clickedOnProfilePicture(tempImage)
+        }
+    }
 }
