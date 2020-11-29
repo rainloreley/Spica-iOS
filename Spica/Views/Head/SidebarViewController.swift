@@ -18,7 +18,8 @@ class SidebarViewController: UIViewController {
     private var collectionView: UICollectionView!
     private var accountViewController: UserProfileViewController!
     private var secondaryViewControllers = [UINavigationController]()
-
+	
+	var previouslySelectedIndex: IndexPath?
     var mentionsTimer = Timer()
     var mentions = [String]()
     var viewControllerToNavigateTo: UIViewController?
@@ -30,12 +31,9 @@ class SidebarViewController: UIViewController {
         accountViewController = UserProfileViewController(style: .insetGrouped)
         let id = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
         accountViewController!.user = User(id: id ?? "")
-
 		
 		let settingsViewController = UINavigationController(rootViewController: UIHostingController(rootView: SettingsView(controller: .init(delegate: self, colorDelegate: self))))
 		settingsViewController.navigationBar.prefersLargeTitles = true
-        /*let settingsStoryboard = UIStoryboard(name: "Settings", bundle: nil)
-        let settingsViewController = settingsStoryboard.instantiateInitialViewController() as! UINavigationController*/
 
         secondaryViewControllers = [UINavigationController(rootViewController: FeedViewController(style: .insetGrouped)),
                                     UINavigationController(rootViewController: MentionsViewController(style: .insetGrouped)),
@@ -59,11 +57,13 @@ class SidebarViewController: UIViewController {
         if let path = notification.userInfo?["path"] as? String {
             switch path {
             case "feed":
+				previouslySelectedIndex = IndexPath(row: 0, section: 0)
                 collectionView.selectItem(at: IndexPath(row: 0, section: 0),
                                           animated: false,
                                           scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
                 splitViewController?.setViewController(secondaryViewControllers[0], for: .secondary)
             case "mentions":
+				previouslySelectedIndex = IndexPath(row: 1, section: 0)
                 collectionView.selectItem(at: IndexPath(row: 1, section: 0),
                                           animated: false,
                                           scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
@@ -78,6 +78,7 @@ class SidebarViewController: UIViewController {
     }
 
     private func setInitialSecondaryView() {
+		previouslySelectedIndex = IndexPath(row: 0, section: 0)
         collectionView.selectItem(at: IndexPath(row: 0, section: 0),
                                   animated: false,
                                   scrollPosition: UICollectionView.ScrollPosition.centeredVertically)
@@ -207,9 +208,22 @@ extension SidebarViewController {
 
 @available(iOS 14.0, *)
 extension SidebarViewController: UICollectionViewDelegate {
+	
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard indexPath.section == 0 else { return }
-        splitViewController?.setViewController(secondaryViewControllers[indexPath.row], for: .secondary)
+		if indexPath == previouslySelectedIndex ?? IndexPath(row: 99, section: 99) {
+			if indexPath.section == 0 && indexPath.row == 0 && secondaryViewControllers[0].viewControllers.count == 1 {
+				let vc = (secondaryViewControllers[0].viewControllers.first as! FeedViewController)
+				vc.tableView.setContentOffset(.init(x: 0, y: -116), animated: true)
+			}
+			else {
+				secondaryViewControllers[indexPath.row].popToRootViewController(animated: true)
+			}
+		}
+		else {
+			guard indexPath.section == 0 else { return }
+			splitViewController?.setViewController(secondaryViewControllers[indexPath.row], for: .secondary)
+		}
+		previouslySelectedIndex = indexPath
     }
 }
 

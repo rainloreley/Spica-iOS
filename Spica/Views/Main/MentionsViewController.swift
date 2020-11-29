@@ -94,6 +94,7 @@ class MentionsViewController: UITableViewController {
         cell.delegate = self
         cell.post = mentions[indexPath.section].post
 
+		if let unreadIndicator = cell.viewWithTag(924) { unreadIndicator.removeFromSuperview() }
         if !mentions[indexPath.section].read {
             let unreadIndicator = UIView()
             unreadIndicator.backgroundColor = .systemBlue

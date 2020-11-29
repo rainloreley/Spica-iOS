@@ -24,6 +24,7 @@ class TabBarController: UITabBarController {
         super.viewDidLoad()
         viewControllers = [feedViewController, mentionViewController, bookmarksViewController, searchViewController, accountViewController]
         selectedIndex = 0
+		self.delegate = self
         loadMentionsCount()
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
         NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
@@ -71,6 +72,21 @@ class TabBarController: UITabBarController {
             navigationcontroller.viewControllers.last?.navigationController?.pushViewController(vc, animated: true)
         }
     }
+}
+
+extension TabBarController: UITabBarControllerDelegate {
+	/*func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+		print(selectedIndex)
+		print(viewController.tabBarItem.tag)
+		//(viewController as! UINavigationController).popToRootViewController(animated: true)
+	}*/
+	override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+		if selectedIndex == item.tag && selectedIndex == 0 && (viewControllers![selectedIndex] as! UINavigationController).viewControllers.count == 1 {
+			// pressed twice
+			let vc = ((viewControllers![selectedIndex] as! UINavigationController).viewControllers[0] as! FeedViewController)
+			vc.tableView.setContentOffset(.init(x: 0, y: -116), animated: true)
+		}
+	}
 }
 
 private extension TabBarController {
