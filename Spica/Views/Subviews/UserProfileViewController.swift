@@ -16,6 +16,7 @@ import SPAlert
 import SwiftKeychainWrapper
 import SwiftUI
 import UIKit
+import Kingfisher
 
 class UserProfileViewController: UITableViewController {
     var user: User = User()
@@ -53,6 +54,14 @@ class UserProfileViewController: UITableViewController {
         loadUser()
     }
 	
+	@objc func showImagePicker(_ source: UIImagePickerController.SourceType) {
+		let pickercontroller = UIImagePickerController()
+		pickercontroller.sourceType = source
+		//pickercontroller.allowsEditing = true
+		pickercontroller.delegate = self
+		present(pickercontroller, animated: true, completion: nil)
+	}
+	
 	@objc func openNewPostView() {
 		postView = UIHostingController(rootView: CreatePostView(type: .post, controller: CreatePostController(loadedDraftId: randomString(length: 30), delegate: self, preText: "@\(user.username ?? user.id)")))
 		postView?.isModalInPresentation = true
@@ -77,6 +86,7 @@ class UserProfileViewController: UITableViewController {
             pasteboard.string = self.user.id
             SPAlert.present(title: "Copied", preset: .done)
         }
+		
 
         let changeSubscriptionStatus = UIAlertAction(title: user.userSubscribedTo ? "Disable notifications" : "Enable notifications", style: .default) { [self] _ in
             SpicaPushAPI.default.changeUserSubscription(user.id, add: !user.userSubscribedTo) { result in
@@ -90,11 +100,23 @@ class UserProfileViewController: UITableViewController {
                 }
             }
         }
+		
+		userOptionsSheet.addAction(allesPeopleAction)
+		userOptionsSheet.addAction(copyIDAction)
+		
+		let signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+		
+		if user.id == signedInID {
+			let changeProfilePictureAction = UIAlertAction(title: "Change profile picture", style: .default) { [self] (_) in
+				
+				updatePfpSourceSheet(sender)
+			}
+			
+			userOptionsSheet.addAction(changeProfilePictureAction)
+		}
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
 
-        userOptionsSheet.addAction(allesPeopleAction)
-        userOptionsSheet.addAction(copyIDAction)
         if user.id != KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id"), userDataLoaded, user.spicaUserHasPushAccount {
             userOptionsSheet.addAction(changeSubscriptionStatus)
         }
@@ -102,6 +124,35 @@ class UserProfileViewController: UITableViewController {
 
         present(userOptionsSheet, animated: true, completion: nil)
     }
+	
+	@objc func updatePfpSourceSheet(_ sender: UIBarButtonItem?) {
+		let pfpSourceSheet = UIAlertController(title: "Source", message: "Please select a source", preferredStyle: .actionSheet)
+		
+		if let popoverController = pfpSourceSheet.popoverPresentationController, sender != nil {
+			popoverController.barButtonItem = sender!
+		}
+		else if let popoverController = pfpSourceSheet.popoverPresentationController {
+			popoverController.sourceView = view
+			popoverController.sourceRect = view.bounds
+		}
+		
+		if UIImagePickerController.isSourceTypeAvailable(.camera) {
+			let camera = UIAlertAction(title: "Camera", style: .default) { (_) in
+				self.showImagePicker(.camera)
+			}
+			pfpSourceSheet.addAction(camera)
+		}
+		
+		let photoLibrary = UIAlertAction(title: "Library", style: .default) { (_) in
+			self.showImagePicker(.photoLibrary)
+		}
+		pfpSourceSheet.addAction(photoLibrary)
+		
+		let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+		pfpSourceSheet.addAction(cancelAction)
+		
+		self.present(pfpSourceSheet, animated: true, completion: nil)
+	}
 
     @objc func loadUser() {
         if userposts.isEmpty { loadingHud.show(in: view) }
@@ -182,6 +233,41 @@ class UserProfileViewController: UITableViewController {
     }
 }
 
+extension UserProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+	func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+		if let image = info[.editedImage] as? UIImage {
+			picker.dismiss(animated: true, completion: nil)
+			uploadNewProfilePicture(image)
+		}
+		
+		if let image = info[.originalImage] as? UIImage {
+			picker.dismiss(animated: true, completion: nil)
+			uploadNewProfilePicture(image)
+		} else {
+			picker.dismiss(animated: true, completion: nil)
+		}
+	}
+	
+	func uploadNewProfilePicture(_ image: UIImage) {
+		MicroAPI.default.updateProfilePicture(image) { (result) in
+			switch result {
+				case .success:
+					DispatchQueue.main.async {
+						Kingfisher.ImageCache.default.clearCache {
+							SPAlert.present(title: "Updated!", preset: .done)
+							self.loadUser()
+						}
+					}
+				case let .failure(err):
+					DispatchQueue.main.async {
+						MicroAPI.default.errorHandling(error: err, caller: self.view)
+					}
+					
+			}
+		}
+	}
+}
+
 extension UserProfileViewController {
     override func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section != 0 {
@@ -195,10 +281,12 @@ extension UserProfileViewController {
 }
 
 extension UserProfileViewController: UserHeaderDelegate {
-    func clickedOnProfilePicture(_ image: UIImage) {
-        let controller = ImageDetailViewController(images: [LightboxImage(image: image)], startIndex: 0)
-        controller.dynamicBackground = true
-        present(controller, animated: true, completion: nil)
+    func clickedOnProfilePicture(_ image: UIImage?) {
+		let signedInID = KeychainWrapper.standard.string(forKey: "dev.abmgrt.spica.user.id")
+		
+		if user.id == signedInID {
+			updatePfpSourceSheet(nil)
+		}
     }
 
     func showError(title: String, message: String) {

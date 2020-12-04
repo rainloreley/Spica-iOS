@@ -10,6 +10,7 @@
 
 import SwiftKeychainWrapper
 import UIKit
+import Kingfisher
 
 class TabBarController: UITabBarController {
     private lazy var feedViewController = makeFeedViewController()
@@ -26,6 +27,7 @@ class TabBarController: UITabBarController {
         selectedIndex = 0
 		self.delegate = self
         loadMentionsCount()
+		
         mentionsTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(loadMentionsCount), userInfo: nil, repeats: true)
         NotificationCenter.default.addObserver(self, selector: #selector(loadMentionsCount), name: Notification.Name("loadMentionsCount"), object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(openUniversalLink(_:)), name: Notification.Name("openUniversalLink"), object: nil)

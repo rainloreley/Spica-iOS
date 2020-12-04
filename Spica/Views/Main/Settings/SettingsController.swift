@@ -16,6 +16,7 @@ import LocalAuthentication
 protocol SettingsDelegate {
 	func signedOut()
 	func setBiomicSessionToAuthorized()
+	func overrideUIInterfaceStyle(_ style: UIUserInterfaceStyle)
 }
 
 class SettingsController: ObservableObject {
@@ -105,6 +106,15 @@ class SettingsController: ObservableObject {
 		}
 	}
 	
+	@Published var appUISettingTag: UserInterfaceSetting = .auto {
+		didSet {
+			if !isLoadingInformation {
+				UserDefaults.standard.set(appUISettingTag.rawValue, forKey: "userInterfaceSetting")
+				delegate.overrideUIInterfaceStyle(appUISettingTag.uiInterfaceStyle())
+			}
+		}
+	}
+	
 	
 	var delegate: SettingsDelegate!
 	var colorDelegate: ColorPickerControllerDelegate!
@@ -137,6 +147,7 @@ class SettingsController: ObservableObject {
 		showProfileFlagOnPost = !UserDefaults.standard.bool(forKey: "disablePostFlagLoading")
 		rickrollDetection = !UserDefaults.standard.bool(forKey: "rickrollDetectionDisabled")
 		biometricAuthEnabled = UserDefaults.standard.bool(forKey: "biometricAuthEnabled")
+		appUISettingTag = UserInterfaceSetting.init(rawValue: UserDefaults.standard.string(forKey: "userInterfaceSetting") ?? "auto") ?? .auto
 		
 		let authContext = LAContext()
 		var authError: NSError?
@@ -195,6 +206,23 @@ class SettingsController: ObservableObject {
 				sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()
 				sceneDelegate.window?.makeKeyAndVisible()*/
 			}
+		}
+	}
+}
+
+enum UserInterfaceSetting: String {
+	case auto
+	case dark
+	case light
+	
+	func uiInterfaceStyle() -> UIUserInterfaceStyle {
+		switch self {
+			case .auto:
+				return .unspecified
+			case .dark:
+				return .dark
+			case .light:
+				return .light
 		}
 	}
 }

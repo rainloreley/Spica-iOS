@@ -323,6 +323,11 @@ extension FeedViewController: CreatePostDelegate {
 
 extension FeedViewController: SettingsDelegate {
 	
+	func overrideUIInterfaceStyle(_ style: UIUserInterfaceStyle) {
+		let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
+		sceneDelegate.window?.overrideUserInterfaceStyle = style
+	}
+	
 	func signedOut() {
 		let sceneDelegate = self.view.window!.windowScene!.delegate as! SceneDelegate
 		sceneDelegate.window?.rootViewController = sceneDelegate.loadInitialViewController()

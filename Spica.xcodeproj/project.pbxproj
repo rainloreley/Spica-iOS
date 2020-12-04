@@ -89,8 +89,6 @@
 		8BD0C7EC25320F95008D432E /* Mention.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD0C7EB25320F95008D432E /* Mention.swift */; };
 		8BD0C7F1253210DD008D432E /* MicroAPI_Mentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD0C7F0253210DD008D432E /* MicroAPI_Mentions.swift */; };
 		8BD0C7FC25321A52008D432E /* UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD0C7FB25321A52008D432E /* UITableView.swift */; };
-		8BD0C80225321BEA008D432E /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8BD0C80125321BEA008D432E /* Settings.storyboard */; };
-		8BD0C80725321C12008D432E /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD0C80625321C12008D432E /* SettingsViewController.swift */; };
 		8BD712BD2530A0E700D2533C /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8BD712BC2530A0E700D2533C /* Kingfisher */; };
 		8BD712C32530A81D00D2533C /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD712C22530A81D00D2533C /* Date.swift */; };
 		8BD712CB2530AF1E00D2533C /* MicroAPI_Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BD712CA2530AF1E00D2533C /* MicroAPI_Feed.swift */; };
@@ -214,8 +212,6 @@
 		8BD0C7EB25320F95008D432E /* Mention.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mention.swift; sourceTree = "<group>"; };
 		8BD0C7F0253210DD008D432E /* MicroAPI_Mentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Mentions.swift; sourceTree = "<group>"; };
 		8BD0C7FB25321A52008D432E /* UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableView.swift; sourceTree = "<group>"; };
-		8BD0C80125321BEA008D432E /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
-		8BD0C80625321C12008D432E /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		8BD712C22530A81D00D2533C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		8BD712CA2530AF1E00D2533C /* MicroAPI_Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Feed.swift; sourceTree = "<group>"; };
 		8BD712CF2530AF3900D2533C /* MicroAPI_Posts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicroAPI_Posts.swift; sourceTree = "<group>"; };
@@ -420,20 +416,6 @@
 			path = PushServer;
 			sourceTree = "<group>";
 		};
-		8B5C428E2532FBCD007B10BD /* Subviews */ = {
-			isa = PBXGroup;
-			children = (
-				8BA53BB425601230007249F5 /* Notifications */,
-				8B8B808725727E9F003BC1CE /* CreditsView.swift */,
-				8B8B809225728AAF003BC1CE /* UsedLibrariesView.swift */,
-				8B8B809A25728FB9003BC1CE /* LegalNoticeView.swift */,
-				8B8B80A2257292AA003BC1CE /* SelectFlagView.swift */,
-				8B8B80AA2572969C003BC1CE /* SettingsView.swift */,
-				8B8B80AF257296D8003BC1CE /* SettingsController.swift */,
-			);
-			path = Subviews;
-			sourceTree = "<group>";
-		};
 		8B5ECC6F254C522C006EA6B2 /* FlagServer */ = {
 			isa = PBXGroup;
 			children = (
@@ -510,9 +492,13 @@
 		8BD0C80025321BD9008D432E /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				8B5C428E2532FBCD007B10BD /* Subviews */,
-				8BD0C80125321BEA008D432E /* Settings.storyboard */,
-				8BD0C80625321C12008D432E /* SettingsViewController.swift */,
+				8BA53BB425601230007249F5 /* Notifications */,
+				8B8B808725727E9F003BC1CE /* CreditsView.swift */,
+				8B8B809225728AAF003BC1CE /* UsedLibrariesView.swift */,
+				8B8B809A25728FB9003BC1CE /* LegalNoticeView.swift */,
+				8B8B80A2257292AA003BC1CE /* SelectFlagView.swift */,
+				8B8B80AA2572969C003BC1CE /* SettingsView.swift */,
+				8B8B80AF257296D8003BC1CE /* SettingsController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -769,7 +755,6 @@
 			files = (
 				8B199E3A252DFFBB0060A3BE /* LaunchScreen.storyboard in Resources */,
 				8B199E37252DFFBB0060A3BE /* Assets.xcassets in Resources */,
-				8BD0C80225321BEA008D432E /* Settings.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -911,7 +896,6 @@
 				8B08D47B256957B00049A2A5 /* CreatePostController.swift in Sources */,
 				8B35C4562530BF9A003809FA /* CircularProgressBar.swift in Sources */,
 				8B8B80B0257296D8003BC1CE /* SettingsController.swift in Sources */,
-				8BD0C80725321C12008D432E /* SettingsViewController.swift in Sources */,
 				8BBB7F792530E34F004D49BC /* UserHeaderView.swift in Sources */,
 				8B0081EE2531BB05006427FE /* LoginView.swift in Sources */,
 				8B3FED43255EFCA50019748D /* SpicaPushAPI.swift in Sources */,

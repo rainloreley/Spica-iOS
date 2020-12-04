@@ -151,6 +151,17 @@ struct SettingsSubView: View {
 					Text("Bad").tag(3)
 				}).pickerStyle(SegmentedPickerStyle())
 			}.padding(4)
+			
+			VStack(alignment: .leading, spacing: nil) {
+				SettingsSideIcon(image: "wand.and.stars", text: "User Interface style")
+				Picker(selection: $controller.appUISettingTag, label: Text(""), content: {
+					Text("Auto").tag(UserInterfaceSetting.auto)
+					Text("Dark").tag(UserInterfaceSetting.dark)
+					Text("Light").tag(UserInterfaceSetting.light)
+				}).pickerStyle(SegmentedPickerStyle())
+			}.padding(4)
+			
+			
 		}
 		
 		Section(header: Text("Spica")) {

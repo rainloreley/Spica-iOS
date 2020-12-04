@@ -16,7 +16,7 @@ protocol UserHeaderDelegate {
     func showError(title: String, message: String)
     func clickedOnFollowerCount()
     func clickedOnFollowingCount()
-    func clickedOnProfilePicture(_ image: UIImage)
+    func clickedOnProfilePicture(_ image: UIImage?)
 }
 
 class UserHeaderViewController: ObservableObject {
@@ -63,8 +63,9 @@ class UserHeaderViewController: ObservableObject {
     }
 
     func clickProfilePicture(_ image: UIImage?) {
-        if let tempImage = image {
-            delegate.clickedOnProfilePicture(tempImage)
-        }
+		delegate.clickedOnProfilePicture(nil)
+        /*if let tempImage = image {
+			delegate.clickedOnProfilePicture(tempImage)
+        }*/
     }
 }

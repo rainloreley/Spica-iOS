@@ -37,6 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.rootViewController = initialViewController
             self.window = window
             window.tintColor = UserDefaults.standard.colorForKey(key: "globalTintColor")
+			window.overrideUserInterfaceStyle = (UserInterfaceSetting.init(rawValue: UserDefaults.standard.string(forKey: "userInterfaceSetting") ?? "auto") ?? .auto).uiInterfaceStyle()
 
             URLNavigationMap.initialize(navigator: navigator, sceneDelegate: self)
             window.makeKeyAndVisible()

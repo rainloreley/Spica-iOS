@@ -12,6 +12,7 @@ import Alamofire
 import Combine
 import Foundation
 import SwiftKeychainWrapper
+import UIKit
 import SwiftyJSON
 
 extension MicroAPI {
@@ -283,6 +284,31 @@ extension MicroAPI {
             }
         }
     }
+	
+	func updateProfilePicture(_ image: UIImage, promise: @escaping (Result<String, MicroError>) -> Void) {
+		if let imagePNG = image.jpegData(compressionQuality: 0.75) {
+			let base64Image = "data:image/jped;base64,\(imagePNG.base64EncodedString())"
+			let construct: [String: String] = ["image": base64Image]
+			AF.request("https://alles.cx/api/avatar", method: .post, parameters: construct, encoding: JSONEncoding.prettyPrinted, headers: [
+						"Authorization": loadAuthKey()
+			]).responseJSON(queue: .global(qos: .utility)) { [self] (response) in
+				switch response.result {
+				case .success:
+					let possibleError = isError(response)
+					if !possibleError.error.isError {
+						promise(.success(""))
+					} else {
+						return promise(.failure(possibleError))
+					}
+				case let .failure(err):
+					return promise(.failure(.init(error: .init(isError: true, name: err.localizedDescription), action: nil)))
+				}
+			}
+		}
+		else {
+			return promise(.failure(.init(error: .init(isError: true, name: "spicaImageEncodingError", humanDescription: "Spica wasn't able to encode the image"), action: nil)))
+		}
+	}
 
     func loadFollowing(promise: @escaping (Result<[User], MicroError>) -> Void) {
         AF.request("https://micro.alles.cx/api/following", method: .get, headers: [
