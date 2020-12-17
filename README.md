@@ -33,7 +33,7 @@ If you want to contribute please read the [Code of Conduct](CODE_OF_CONDUCT.md) 
 
 ## ⚠️ Disclaimer
 
-If you want to build/install the app, please keep in mind that everything here could be very unstable and/or incomplete. I recommend waiting for the official releases instead.
+If you want to build/install the app, please keep in mind that everything here could be very unstable and/or incomplete. I recommend waiting for an official releases instead.
 
 ## 📄 License
 
